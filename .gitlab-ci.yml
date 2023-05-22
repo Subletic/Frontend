@@ -6,7 +6,6 @@ lint:
   image: trion/ng-cli:16.0.1
   script:
     - npm ci
-    - ng add @angular-eslint/schematics --skip-confirmation
     - npm run lint
   cache:
     key:
