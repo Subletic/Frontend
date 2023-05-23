@@ -1,5 +1,6 @@
 stages:
   - lint
+  - test
 
 lint:
   stage: lint
@@ -14,3 +15,13 @@ lint:
     paths:
       - node_modules
     policy: pull
+
+test:
+  stage: test
+  image: node:14
+
+  before_script:
+    - npm install
+
+  script:
+    - npm run test
