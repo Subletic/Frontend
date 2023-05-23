@@ -18,7 +18,7 @@ lint:
 
 test:
   stage: test
-  image: node:14
+  image: node:18.16.0
 
   before_script:
     - npm install
