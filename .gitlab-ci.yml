@@ -1,0 +1,16 @@
+stages:
+  - lint
+
+lint:
+  stage: lint
+  image: trion/ng-cli:16.0.1
+  script:
+    - npm ci
+    - npm run lint
+  cache:
+    key:
+      files:
+        - package-lock.json
+    paths:
+      - node_modules
+    policy: pull
