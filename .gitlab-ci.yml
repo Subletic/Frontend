@@ -1,6 +1,18 @@
 stages:
+  - build
   - lint
   - test
+
+build:
+  stage: build
+  image: node:18.16.0
+
+  before_script:
+    - npm install
+
+  script:
+    - npm run build
+
 
 lint:
   stage: lint
