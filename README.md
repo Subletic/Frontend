@@ -15,14 +15,14 @@ Already a pro? Just edit this README.md and make it your own. Want to make it ea
 
 ```
 cd existing_repo
-git remote add origin https://gitlab.imn.htwk-leipzig.de/projekt2023-u-live-stream-editor-zur-korrektur-von-untertiteln-gbs-gmbh1/frontend.git
+git remote add origin https://gitlab.imn.htwk-leipzig.de/projekt2023-o-live-stream-editor-zur-korrektur-von-untertiteln-gbs-gmbh1/frontend.git
 git branch -M main
 git push -uf origin main
 ```
 
 ## Integrate with your tools
 
-- [ ] [Set up project integrations](https://gitlab.imn.htwk-leipzig.de/projekt2023-u-live-stream-editor-zur-korrektur-von-untertiteln-gbs-gmbh1/frontend/-/settings/integrations)
+- [ ] [Set up project integrations](https://gitlab.imn.htwk-leipzig.de/projekt2023-o-live-stream-editor-zur-korrektur-von-untertiteln-gbs-gmbh1/frontend/-/settings/integrations)
 
 ## Collaborate with your team
 
