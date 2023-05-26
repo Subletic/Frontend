@@ -34,7 +34,7 @@ test:
 
   before_script:
     - apt update
-    - apt install chromium
+    - apt install -y chromium
     - npm install
     - export CHROME_BIN=/usr/bin/chromium
 
