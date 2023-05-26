@@ -33,8 +33,10 @@ test:
   image: node:18.16.0
 
   before_script:
+    - apt update
+    - apt install chromium
     - npm install
-    - export CHROME_BIN=/usr/bin/chromium-browser
+    - export CHROME_BIN=/usr/bin/chromium
 
 
   script:
