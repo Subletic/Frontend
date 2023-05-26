@@ -34,7 +34,7 @@ test:
 
   before_script:
     - npm install
-    - export CHROME_BIN=/usr/bin/google-chrome
+    - ENV CHROME_BIN=/usr/bin/google-chrome
 
 
   script:
