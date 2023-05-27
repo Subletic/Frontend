@@ -1,21 +1,38 @@
-image: node:16.14.2-bullseye
+# ./github/workflows/main.yml
+name: Test master branch
 
-stages:
-  - setup
-  - test
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
 
-install:
-  stage: setup
-  script:
-    - npm ci
+jobs:
+  build:
+    runs-on: ubuntu-latest
 
-unit test:
-  stage: test
-  before_script:
-    - apt-get update
-    - wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-    - apt install -y ./google-chrome*.deb;
-    - export CHROME_BIN=/usr/bin/google-chrome
-  script:
-    - npm ci
-    - npm run test -- --no-watch --browsers=ChromeHeadlessCI
+    strategy:
+      matrix:
+        node-version: [14.10]
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Cache Node.js modules
+        uses: actions/cache@v2
+        with:
+          # npm cache files are stored in `~/.npm` on Linux/macOS
+          path: ~/.npm
+          key: ${{ runner.OS }}-node-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.OS }}-node-
+            ${{ runner.OS }}-
+      - name: Install dependencies
+        run: npm install
+      - name: Run lint
+        run: npm lint
+      - name: Run tests
+        run: npm test -- --no-watch --no-progress --browsers=ChromeHeadlessCI
