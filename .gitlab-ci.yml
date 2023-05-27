@@ -1,6 +1,7 @@
 stages:
   - build
-  - lint:test
+  - lint
+  - test
 
 build:
   stage: build
@@ -9,7 +10,6 @@ build:
     - npm install
   script:
     - npm run build
-
 
 lint:
   stage: lint
