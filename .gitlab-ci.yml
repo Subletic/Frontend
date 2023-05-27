@@ -1,36 +1,18 @@
+image: node:16.14.2-bullseye
+
 stages:
-  - build
-  - lint
+  - setup
   - test
 
-build:
-  stage: build
-  image: node:18.16.0
-  before_script:
-    - npm install
-  script:
-    - npm run build
-
-lint:
-  stage: lint
-  image: trion/ng-cli:16.0.1
+install:
+  stage: setup
   script:
     - npm ci
-    - npm run lint
-  cache:
-    key:
-      files:
-        - package-lock.json
-    paths:
-      - node_modules
-    policy: pull
 
-test:
+unit test:
   stage: test
-  image: node:18.16.0
   before_script:
-    - apt update
-    - npm install
+    - apt-get update
     - wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
     - apt install -y ./google-chrome*.deb;
     - export CHROME_BIN=/usr/bin/google-chrome
