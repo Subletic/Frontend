@@ -36,6 +36,7 @@ test:
     - apt install -y ./google-chrome*.deb;
     - export CHROME_BIN=/usr/bin/google-chrome
     - npm i -D puppeteer karma-chrome-launcher
+    - npm i -D karma-chrome-launcher
   script:
     - npm ci
     - npm run test -- --no-watch --browsers=ChromeHeadlessCI
