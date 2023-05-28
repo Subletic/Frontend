@@ -28,15 +28,7 @@ lint:
 
 test:
   stage: test
-  image: node:18.16.0
-  before_script:
-    - apt update
-    - npm install
-    - wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-    - apt install -y ./google-chrome*.deb;
-    - export CHROME_BIN=/usr/bin/google-chrome
-    - npm i -D puppeteer karma-chrome-launcher
-    - npm i -D karma-chrome-launcher
+  image: trion/ng-cli-karma:16.0.1
   script:
     - npm ci
-    - npm run test -- --no-watch --browsers=ChromeHeadlessCI
+    - ng test --watch=false
