@@ -12,7 +12,7 @@ build:
 
 
 lint:
-  stage: test
+  stage: linting and testing
   image: trion/ng-cli:16.0.1
   script:
     - npm ci
@@ -26,7 +26,7 @@ lint:
     policy: pull
 
 test:
-  stage: test
+  stage: linting and testing
   image: trion/ng-cli-karma:16.0.1
   script:
     - npm ci
