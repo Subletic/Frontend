@@ -1,7 +1,6 @@
 stages:
   - build
-  - lint
-  - test
+  - verfication
 
 build:
   stage: build
@@ -13,7 +12,7 @@ build:
 
 
 lint:
-  stage: lint
+  stage: verfication
   image: trion/ng-cli:16.0.1
   script:
     - npm ci
@@ -27,7 +26,7 @@ lint:
     policy: pull
 
 test:
-  stage: test
+  stage: verfication
   image: trion/ng-cli-karma:16.0.1
   script:
     - npm ci
