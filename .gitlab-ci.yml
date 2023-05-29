@@ -1,34 +1,29 @@
+# .gitlab-ci.yml
+
 stages:
   - build
-  - lint
   - test
 
-build:
-  stage: build
-  image: node:18.16.0
-  before_script:
-    - npm install
-  script:
-    - npm run build
-
-
 lint:
-  stage: lint
-  image: trion/ng-cli:16.0.1
-  script:
+  stage: build
+  image: node:14
+  before_script:
     - npm ci
+  script:
     - npm run lint
-  cache:
-    key:
-      files:
-        - package-lock.json
-    paths:
-      - node_modules
-    policy: pull
 
 test:
   stage: test
-  image: trion/ng-cli-karma:16.0.1
-  script:
+  image: node:14
+  before_script:
     - npm ci
-    - ng test --watch=false
+  script:
+    - npm run test
+
+build:
+  stage: build
+  image: node:14
+  before_script:
+    - npm ci
+  script:
+    - npm run build
