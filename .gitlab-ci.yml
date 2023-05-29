@@ -1,6 +1,6 @@
 stages:
   - build
-  - test
+  - linting and testing
 
 build:
   stage: build
