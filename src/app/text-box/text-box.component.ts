@@ -15,6 +15,7 @@ export class TextBoxComponent implements OnInit {
   ngOnInit() {
     this.signalRService.receivedMessage.subscribe((message: string) => {
       this.receivedMessage = message;
+      console.log(this.receivedMessage);
     })
   }
 

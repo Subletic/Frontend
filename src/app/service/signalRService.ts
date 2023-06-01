@@ -21,6 +21,7 @@ export class SignalRService {
 
     this.hubConnection.on('ReceiveMessage', (message: string) => {
       this.receivedMessage.next(message); // Notify subscribers about received messages
+      console.log("angekommen");
     });
   }
 }
