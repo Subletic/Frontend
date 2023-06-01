@@ -17,8 +17,8 @@ lint:
   script:
     - npm ci
     - npm run lint
-    -- --format stylish
-    -- --max-warnings=0
+      -- --format stylish
+      -- --max-warnings=0
   cache:
     key:
       files:
