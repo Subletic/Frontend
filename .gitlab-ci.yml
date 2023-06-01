@@ -17,8 +17,6 @@ lint:
   script:
     - npm ci
     - npm run lint
-      -- --format stylish
-      -- --max-warnings=0
   cache:
     key:
       files:
@@ -32,4 +30,5 @@ test:
   image: trion/ng-cli-karma:16.0.1
   script:
     - npm ci
+    - ng test --no-watch --code-coverage
     - ng test --watch=false
