@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ElementRef, ViewChild  } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 
 class Word {
   public text: string;
@@ -105,64 +105,232 @@ class LinkedList {
   templateUrl: './text-box.component.html',
   styleUrls: ['./text-box.component.css']
 })
-export class TextBoxComponent implements OnInit, AfterViewInit {
-  receivedMessage = "";
-  textbox1: TextBox;
-  words = ["Hello,", "World!", "How", "are", "you?"];
+export class TextBoxComponent implements OnInit {
+  
+  @ViewChild('textbox', { static: true }) textboxRef!: ElementRef;
 
-  @ViewChild('textbox', { static: false }) textboxElement?: ElementRef<any> = undefined;
-
-  constructor() {
-    this.textbox1 = new TextBox(0, 0);
-  }
+  textbox: TextBox = new TextBox(0, 0);
 
   ngOnInit() {
-    this.words.forEach((wordText) => {
-      const word = new Word(wordText, 1, 0, 0);
-      this.textbox1.words.add(word);
+    //Umbenannt von $textbox
+    const textbox = this.textboxRef.nativeElement;
+    const textboxId = textbox.getAttribute('data-id');
+
+    const words = ['Hello,', 'World!', 'How', 'are', 'you?'];
+
+    words.forEach((wordText) => {
+      const word = new Word(wordText, 1, 1, 1);
+      this.textbox.words.add(word);
     });
+
+    textbox.innerHTML = this.generateHTML();
+    console.log('Print Text:', this.textbox.printText());
+
+
+     //Zeile 146 ".}).on("mouseover", "span", function() {"
+    textbox.addEventListener('mouseover', (event: MouseEvent) => {
+    
+      const target = event.target as HTMLElement;
+      if (target.tagName === 'SPAN') {
+        const hoveredWord = target.textContent;
+        const wordID = target.id;
+        const currentWord = this.findWordById(Number(wordID));
+
+        console.log('Word: ' + hoveredWord + ', ID: ' + wordID);
+        console.log('Current Word: ', currentWord);
+        console.log('Print Text:', this.textbox.printText());
+      }
+
+      //Zeile 157 $textbox.on("keydown", "span", function(event) {
+      textbox.addEventListener('keydown', (event: KeyboardEvent) => {
+
+        const selectedSpan = event.target as HTMLElement;
+        const currentText = selectedSpan.textContent;
+        const cursorPosition = window.getSelection()?.getRangeAt(0)?.startOffset;
+        const spanId = selectedSpan.id;
+      
+        const isFullSelection = window.getSelection()?.toString().length === currentText?.length;
+
+        /**
+        * This if statement handles the case when the Backspace key is pressed
+        * at the beginning of a word.
+        * Previous Word exists -> Merges with previous Word
+        * PrevWord doesn't exist -> Merges with next Word
+        */
+        if (cursorPosition === 0) {
+          if (event.key === 'Backspace') { // Backspace key is pressed at the beginning
+            const prevSpan = selectedSpan.previousElementSibling as HTMLSpanElement;
+
+            if (isFullSelection) {
+              // Delete the current word when fully selected + Backspacing
+              const currentWord = this.findWordById(Number(spanId));
+              //! 'currentWord' is possibly 'null'. ! POSSIBLE ERROR LOCATION 1
+              if(currentWord) {
+                console.log("Possible Error Location 1.");
+                currentWord.text = '';
+                this.textbox.words.remove(currentWord);
+              }
+              selectedSpan.remove();
+        
+              event.preventDefault();
+              return;
+            }
+
+            if (prevSpan) {
+              const prevWord = this.findWordById(Number(prevSpan.getAttribute('id')!));
+              if (prevWord) {
+                prevWord.text += currentText;
+                const currentWord = this.findWordById(Number(selectedSpan.getAttribute('id')!));
+                if (currentWord) {
+                  this.textbox.words.remove(currentWord); // Remove the current word from the linked list
+                }
+                prevSpan.insertAdjacentElement('afterend', selectedSpan);
+                selectedSpan.remove();
+                prevSpan.textContent = prevWord.text; // Update the text of the previous span
+                prevSpan.focus();
+                event.preventDefault();
+                return;
+              }
+            } else {
+              const nextSpan = selectedSpan.nextElementSibling as HTMLSpanElement;
+            }
+
+            const nextSpan = selectedSpan.nextElementSibling as HTMLSpanElement;
+
+            if (nextSpan) {
+              const nextWord = this.findWordById(Number(nextSpan.getAttribute('id')!));
+              if (nextWord) {
+                nextWord.text = currentText + nextWord.text;
+                const currentWord = this.findWordById(Number(selectedSpan.getAttribute('id')!));
+                if (currentWord) {
+                  this.textbox.words.remove(currentWord); // Remove the current word from the linked list
+                }
+                selectedSpan.remove();
+                nextSpan.focus();
+                event.preventDefault();
+                return;
+              }
+            }
+          }
+        }
+
+        /**
+        * This if statement handles the case when the Space key is pressed without the Shift key in the middle of a word.
+        * Splits the current word into two words at the cursor position
+        * If the text before the cursor is not empty, a new 
+        * empty word is inserted after the current word in the LinkedList.
+        * The new word and the new empty word are displayed in separate 
+        * contenteditable spans, and the focus is set to the new span.
+        */
+        if (event.code === 'Space') { // Space key is pressed in the middle
+
+          //! 'currentText' is possibly 'null'. ! POSSIBLE ERROR LOCATION 2
+          if(currentText && typeof cursorPosition === 'number') {
+            console.log("Possible error location 2.");
+            const wordBeforeCursor = currentText.substring(0, cursorPosition);
+            const wordAfterCursor = currentText.substring(cursorPosition);
+            selectedSpan.textContent = wordBeforeCursor;
+          
+            //! Ab hier großen Teil auf einmal übersetzt, mögliche Fehlerquelle !
+
+            if (wordBeforeCursor !== '') {
+              const newWord = new Word(wordAfterCursor, 1, 1, 1);
+              const currentWord = this.findWordById(Number(spanId));
+              if (currentWord) {
+                this.insertAfter(newWord, currentWord);
+                currentWord.text = wordBeforeCursor;
+                const newSpan = document.createElement('span');
+                newSpan.id = newWord.id.toString();
+                newSpan.contentEditable = 'true';
+                newSpan.textContent = wordAfterCursor;
+                selectedSpan.insertAdjacentText('afterend', ' ');
+                selectedSpan.insertAdjacentElement('afterend', newSpan);
+                newSpan.focus();
+            
+                // Event handling for the new span
+                newSpan.addEventListener('input', () => {
+                  const newText = newSpan.textContent;
+                  const word = this.findWordById(Number(newSpan.id));
+                  if (word) {
+                    if (newText !== null) {
+                      word.setText(newText);
+                    }
+                  }
+                });
+              }
+            } else {
+              const currentWord = this.findWordById(Number(spanId));
+              if (currentWord) {
+                currentWord.setText(wordAfterCursor);
+                selectedSpan.textContent = wordAfterCursor;
+                selectedSpan.insertAdjacentText('beforebegin', ' ');
+                selectedSpan.focus();
+              }
+            }
+            
+            event.preventDefault();
+          }
+        }
+
+        //Unsicher, wo genau folgender Code hin muss nach der Übersetzung von JS..
+
+        const selectedSpan2 = this.textboxRef.nativeElement.querySelector('span:focus');
+        if (selectedSpan2) {
+          const currentText = selectedSpan2.textContent;
+          if(currentText) {
+            selectedSpan2.textContent = currentText.trim();
+          }
+        }
+      })
+    })
   }
 
-  ngAfterViewInit(): void {
-    const textbox1 = this.textbox1;
-    const textboxElement = this.textboxElement?.nativeElement;
+  /**
+   * Finds a word in the text box by its ID.
+   * @param {string} id - The ID of the word to find.
+   * @returns {Word|null} - The found word or null if not found.
+   */
+  generateHTML(): string {
+    const wordElements: string[] = []
+    let current = this.textbox.words.head;
+    while (current) {
+      const wordWithId = `<span id="${current.id}" contenteditable="true">${current.text}</span>`;
+      wordElements.push(wordWithId);
+      current = current.next;
+    }
 
-    if (textboxElement) {
-      textboxElement.innerHTML = textbox1.words.print();
+    return wordElements.join(' ');
+  }
 
-      textboxElement.addEventListener('mouseover', (event: MouseEvent) => {
-        const hoveredWord = (event.target as HTMLElement)?.textContent;
-        const wordID = (event.target as HTMLElement)?.getAttribute('id');
-        const currentWord = this.findWordById(Number(wordID));
+  /**
+   * Inserts a new word after a specified word in the linked list.
+   * @param {Word} newWord - The new word to insert.
+   * @param {Word} prevWord - The word after which the new word should be inserted.
+   */
+  insertAfter(newWord: Word, prevWord: Word): void {
 
-        if (hoveredWord && wordID && currentWord) {
-          console.log('Word: ' + hoveredWord + ', ID: ' + wordID);
-          console.log('Confidence:', currentWord.confidence);
-        }
-      });
+    newWord.id = this.textbox.words.currentIndex;
+    this.textbox.words.currentIndex++;
 
-      // ... Weitere Event-Listener hinzufügen ...
+    newWord.prev = prevWord;
+    newWord.next = prevWord.next;
 
-      textboxElement.addEventListener('keydown', (event: KeyboardEvent) => {
-        const key = event.key;
-        const wordID = (event.target as HTMLElement)?.getAttribute('id');
-        const currentWord = this.findWordById(Number(wordID));
-
-        if (key === 'Backspace' && currentWord?.prev) {
-          const prevWord = currentWord.prev;
-          textbox1.words.remove(currentWord);
-          textboxElement.innerHTML = textbox1.words.print();
-          console.log('Deleted Word:', currentWord.text);
-          console.log('Print Text:', textbox1.printText());
-        }
-      });
-
-      // ... Weitere Event-Listener hinzufügen ...
+    if (prevWord.next) {
+      prevWord.next.prev = newWord;
+    }
+    prevWord.next = newWord;
+    if (prevWord === this.textbox.words.tail) {
+      this.textbox.words.tail = newWord;
     }
   }
 
-   findWordById(id: number): Word | null {
-    let current = this.textbox1.words.head;
+  /**
+   * Finds a word in the text box by its ID.
+   * @param {string} id - The ID of the word to find.
+   * @returns {Word|null} - The found word or null if not found.
+   */
+  findWordById(id: number): Word | null {
+    let current = this.textbox.words.head;
     while (current) {
       if (current.id === id) {
         return current;
@@ -172,4 +340,18 @@ export class TextBoxComponent implements OnInit, AfterViewInit {
     return null;
   }
 
+  /**
+ * Removes empty objects from the LinkedList of words.
+ */
+  removeEmptyObjects(): void {
+    let current = this.textbox.words.head;
+    while (current) {
+      const next = current.next;
+      if (current.text === "") {
+        this.textbox.words.remove(current);
+      }
+      current = next;
+    }
   }
+  
+}
