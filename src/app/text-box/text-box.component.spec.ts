@@ -2,6 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TextBoxComponent } from './text-box.component';
 
+import * as $ from 'jquery';
+
 describe('TextBoxComponent', () => {
   let component: TextBoxComponent;
   let fixture: ComponentFixture<TextBoxComponent>;

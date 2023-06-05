@@ -11,8 +11,6 @@
   margin-left: 15%;
 }
 
-
-
 /* Definiert den Stil für den <h1>-Text im mittleren Container */
 .middle-container h1 {
   font-size: 24px; /* Schriftgröße des Textes */
@@ -33,5 +31,17 @@
   }
 }
 
-  
+.textbox {
+  margin-bottom: 20px;
+}
+.textbox p {
+  user-select: text;
+}
+.textbox span {
+  display: inline;
+  user-select: none;
+}
+.textbox span::after {
+  content: " ";
+}  
   
