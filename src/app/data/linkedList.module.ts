@@ -46,7 +46,7 @@ export class LinkedList {
   
     print() {
       let current = this.head;
-      let words = [];
+      const words = [];
       while (current) {
         words.push(current.word);
         current = current.next;

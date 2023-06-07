@@ -1,7 +1,6 @@
-import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
 import { WordToken } from '../data/wordToken.model';
 import { SpeechBubble } from '../data/speechBubble.model';
-import { LinkedList } from '../data/linkedList.module';
 
 @Component({
   selector: 'app-text-box',
@@ -73,13 +72,15 @@ export class TextBoxComponent implements OnInit {
             return;
           }
 
-          if (prevSpan) {
-            const prevWord = this.findWordById(Number(prevSpan.getAttribute('id')!));
+          if (prevSpan.getAttribute('id') != null) {
+            const prevWord = this.findWordById(Number(prevSpan.getAttribute('id')));
             if (prevWord) {
               prevWord.word += currentText;
-              const currentWord = this.findWordById(Number(selectedSpan.getAttribute('id')!));
-              if (currentWord) {
-                this.textbox.words.remove(currentWord); // Remove the current word from the linked list
+              if (prevSpan.getAttribute('id') != null) {
+                const currentWord = this.findWordById(Number(selectedSpan.getAttribute('id')));
+                if (currentWord) {
+                  this.textbox.words.remove(currentWord); // Remove the current word from the linked list
+                }
               }
               prevSpan.insertAdjacentElement('afterend', selectedSpan);
               selectedSpan.remove();
@@ -88,24 +89,27 @@ export class TextBoxComponent implements OnInit {
               event.preventDefault();
               return;
             }
-          } else {
-            const nextSpan = selectedSpan.nextElementSibling as HTMLSpanElement;
-          }
+          } 
 
           const nextSpan = selectedSpan.nextElementSibling as HTMLSpanElement;
 
           if (nextSpan) {
-            const nextWord = this.findWordById(Number(nextSpan.getAttribute('id')!));
-            if (nextWord) {
-              nextWord.word = currentText + nextWord.word;
-              const currentWord = this.findWordById(Number(selectedSpan.getAttribute('id')!));
-              if (currentWord) {
-                this.textbox.words.remove(currentWord); // Remove the current word from the linked list
+            if(nextSpan.getAttribute('id')){
+              const nextWord = this.findWordById(Number(nextSpan.getAttribute('id')));
+            
+              if (nextWord) {
+                nextWord.word = currentText + nextWord.word;
+                if(selectedSpan.getAttribute('id')){
+                  const currentWord = this.findWordById(Number(selectedSpan.getAttribute('id')));
+                  if (currentWord) {
+                    this.textbox.words.remove(currentWord);
+                  }
+                }
+                selectedSpan.remove();
+                nextSpan.focus();
+                event.preventDefault();
+                return;
               }
-              selectedSpan.remove();
-              nextSpan.focus();
-              event.preventDefault();
-              return;
             }
           }
         }
@@ -132,11 +136,9 @@ export class TextBoxComponent implements OnInit {
           //! Ab hier großen Teil auf einmal übersetzt, mögliche Fehlerquelle !
 
           if (wordBeforeCursor.trim() !== '') {
-            console.log("Betreten 1");
             const newWord = new WordToken(wordAfterCursor, 1, 1, 1, 1);
             const currentWord = this.findWordById(Number(spanId));
             if (currentWord) {
-              console.log("Betreten 2");
               this.insertAfter(newWord, currentWord);
               currentWord.word = wordBeforeCursor;
               const newSpan = document.createElement('span');
@@ -159,7 +161,6 @@ export class TextBoxComponent implements OnInit {
               });
             }
           } else if (wordBeforeCursor.trim() == '') {
-            console.log("Betreten 3");
             const currentWord = this.findWordById(Number(spanId));
             if (currentWord) {
               currentWord.setWord(wordAfterCursor);
@@ -172,10 +173,6 @@ export class TextBoxComponent implements OnInit {
           event.preventDefault();
         }
       }
-
-      
-
-      //Unsicher, wo genau folgender Code hin muss nach der Übersetzung von JS..
 
       const selectedSpan2 = this.textboxRef.nativeElement.querySelector('span:focus');
       if (selectedSpan2) {

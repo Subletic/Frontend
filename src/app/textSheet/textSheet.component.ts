@@ -1,8 +1,7 @@
-import { Component, ViewContainerRef, OnInit, ViewChild } from '@angular/core';
-import { TextBoxComponent } from '../text-box/text-box.component';
+import { Component, OnInit } from '@angular/core';
 import { SpeechBubble } from '../data/speechBubble.model';
 
-class LinkedList {
+export class LinkedList {
     public head: SpeechBubble | null;
     public tail: SpeechBubble | null;
     public currentIndex: number;
@@ -45,13 +44,13 @@ class LinkedList {
     }
   
     print() {
-      let current = this.head;
-      let speechBubbles = [];
-      while (current) {
-        speechBubbles.push(current.words);
-        current = current.next;
-      }
-      return speechBubbles.join(" ");
+        let current = this.head;
+        const speechBubbles = [];
+        while (current) {
+            speechBubbles.push(current.words);
+            current = current.next;
+        }
+        return speechBubbles.join(" ");
     }
 }
 

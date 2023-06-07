@@ -18,7 +18,7 @@ export class SpeechBubble {
   
     printText() {
       let current = this.words.head;
-      let text = [];
+      const text = [];
       while (current) {
         text.push(current.word);
         current = current.next;
