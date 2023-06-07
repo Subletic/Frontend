@@ -1,7 +1,9 @@
-/* Definiert den Stil für den mittleren Container */
 .middle-container {
-    max-width: 70%; /* Maximale Breite des Containers */
-    height: 100vh; /* Höhe des Containers (100% der Bildschirmhöhe) */
+
+    max-width: 1000px;
+    overflow-y: scroll;
+    /*max-width: 70%;  Maximale Breite des Containers */
+    height: 92.4vh; /* Höhe des Containers (100% der Bildschirmhöhe) */
     background-color: var(--container-background-color); /* Hintergrundfarbe des Containers */
     display: flex; /* Verwendet Flexbox für das Layout */
     align-items: center; /* Zentriert den Inhalt vertikal */
@@ -9,6 +11,10 @@
     padding: 0 20px; /* Innenabstand von 0 auf der horizontalen Achse und 20px auf der vertikalen Achse */
     box-sizing: border-box; /* Berücksichtigt den Innenabstand in der Gesamtbreite des Containers */
     margin-left: 15%;
+
+
+    display: flex;
+    flex-direction: column;
   }
   
   /* Definiert den Stil für den <h1>-Text im mittleren Container */

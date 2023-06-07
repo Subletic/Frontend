@@ -1,5 +1,7 @@
 import { WordToken } from './wordToken.model';
 
+//Für die Zukunft: LinkedList mergen zu einer, dieses mal "LinkedList<T>", Problem: Attribute von T?
+
 export class LinkedList {
     public head: WordToken | null;
     public tail: WordToken | null;

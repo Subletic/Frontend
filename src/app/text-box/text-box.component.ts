@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, Input } from '@angular/core';
 import { WordToken } from '../data/wordToken.model';
 import { SpeechBubble } from '../data/speechBubble.model';
 import { LinkedList } from '../data/linkedList.module';
@@ -12,11 +12,10 @@ export class TextBoxComponent implements OnInit {
   
   @ViewChild('textbox', { static: true }) textboxRef!: ElementRef;
 
-  textbox: SpeechBubble = new SpeechBubble(0, 0);
+  @Input() textbox!: SpeechBubble;
 
   ngOnInit() {
     const textbox = this.textboxRef.nativeElement;
-    const textboxId = textbox.getAttribute('data-id');
 
     const words = ['Hello,', 'World!', 'How', 'are', 'you?'];
 

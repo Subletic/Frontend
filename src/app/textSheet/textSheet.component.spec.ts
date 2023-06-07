@@ -1,10 +1,21 @@
-import {Component} from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-@Component({
-    selector: 'app-text-sheet',
-    templateUrl: './textSheet.component.html',
-    styleUrls: ['./textSheet.component.css']
-  })
-  export class TextSheetComponent {
+import { TextBoxComponent } from './text-box.component';
 
-  }
+describe('TextBoxComponent', () => {
+  let component: TextBoxComponent;
+  let fixture: ComponentFixture<TextBoxComponent>;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      declarations: [TextBoxComponent]
+    });
+    fixture = TestBed.createComponent(TextBoxComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});
