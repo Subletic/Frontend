@@ -1,3 +1,4 @@
+import { WordToken } from './wordToken.model';
 
 export class LinkedList {
     public head: WordToken | null;

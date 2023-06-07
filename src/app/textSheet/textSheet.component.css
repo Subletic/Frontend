@@ -1,0 +1,32 @@
+/* Definiert den Stil für den mittleren Container */
+.middle-container {
+    max-width: 70%; /* Maximale Breite des Containers */
+    height: 100vh; /* Höhe des Containers (100% der Bildschirmhöhe) */
+    background-color: var(--container-background-color); /* Hintergrundfarbe des Containers */
+    display: flex; /* Verwendet Flexbox für das Layout */
+    align-items: center; /* Zentriert den Inhalt vertikal */
+    justify-content: center; /* Zentriert den Inhalt horizontal */
+    padding: 0 20px; /* Innenabstand von 0 auf der horizontalen Achse und 20px auf der vertikalen Achse */
+    box-sizing: border-box; /* Berücksichtigt den Innenabstand in der Gesamtbreite des Containers */
+    margin-left: 15%;
+  }
+  
+  /* Definiert den Stil für den <h1>-Text im mittleren Container */
+  .middle-container h1 {
+    font-size: 24px; /* Schriftgröße des Textes */
+    text-align: center; /* Zentriert den Text horizontal */
+    max-width: 100%; /* Maximale Breite des Textes */
+  }
+  
+  @media (max-width: 768px) {
+    /* Anpassungen für Bildschirmgrößen kleiner oder gleich 768px */
+    .middle-container {
+        height: auto; /* Automatische Höhe */
+        padding: 20px; /* Innenabstand von 20px auf allen Seiten */
+        height: 100vh;
+    }
+    
+    .middle-container h1 {
+        font-size: 18px; /* Angepasste Schriftgröße */
+    }
+  }

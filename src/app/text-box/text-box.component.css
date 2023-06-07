@@ -1,6 +1,9 @@
 /* Definiert den Stil für den mittleren Container */
 .middle-container {
-  max-width: 70%; /* Maximale Breite des Containers */
+
+  max-width: 1000px;
+  overflow: auto;
+  /*max-width: 70%;  Maximale Breite des Containers */
   height: 100vh; /* Höhe des Containers (100% der Bildschirmhöhe) */
   background-color: var(--container-background-color); /* Hintergrundfarbe des Containers */
   display: flex; /* Verwendet Flexbox für das Layout */
@@ -32,8 +35,17 @@
 }
 
 .textbox {
+  background-color: white;
+  border: 1px solid black;
+  width: 900px;
+  min-height: 100px; /* Mindesthöhe */
+  max-height: 90%;
+  padding: 10px; /* Abstand zum Inhalt */
+  font-size: 32px; /* Größe der Schrift */
   margin-bottom: 20px;
 }
+
+
 .textbox p {
   user-select: text;
 }
