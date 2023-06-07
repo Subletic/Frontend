@@ -57,7 +57,7 @@ export class LinkedList {
 @Component({
   selector: 'app-text-sheet',
   templateUrl: './textSheet.component.html',
-  styleUrls: ['./textSheet.component.css']
+  styleUrls: ['./textSheet.component.scss']
 })
 export class TextSheetComponent implements OnInit {
 

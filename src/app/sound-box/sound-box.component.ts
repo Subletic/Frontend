@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-sound-box',
   templateUrl: './sound-box.component.html',
-  styleUrls: ['./sound-box.component.css']
+  styleUrls: ['./sound-box.component.scss']
 })
 export class SoundBoxComponent {
   constructor(private router: Router) { }
