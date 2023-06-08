@@ -16,6 +16,15 @@ export class SpeechBubbleExport {
     this.SpeechBubbleContent = speechBubbleContent;
   }
 
+  toJSON() {
+    return JSON.stringify({
+      Id: this.Id,
+      Speaker: this.Speaker,
+      StartTime: this.StartTime,
+      EndTime: this.EndTime,
+      SpeechBubbleContent: this.SpeechBubbleContent
+    });
+  }
   
 }
 
@@ -60,11 +69,15 @@ export class SpeechBubble {
 
     toList(){
       let current = this.words.head;
+      console.log("Current:" + current);
       const wordExportList = [];
       while (current) {
+        console.log("current.getExport(): " + current.getExport());
+        console.log("current: " + current);
         wordExportList.push(current.getExport());
         current = current.next;
       }
+      console.log("wordExportList: " + wordExportList);
       return wordExportList;
     }
 }

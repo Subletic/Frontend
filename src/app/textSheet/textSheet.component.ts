@@ -119,7 +119,7 @@ export class TextSheetComponent implements OnInit {
 
     ngOnInit() {
         
-        const testBubble1 = new SpeechBubble(0, 0);
+        const testBubble1 = new SpeechBubble(0, 0, 0, 0);
         
         this.speechBubbles.add(testBubble1);
     }
@@ -143,11 +143,19 @@ export class TextSheetComponent implements OnInit {
     * The new speech bubble is then added to the list and its representation is logged to the console.
     */
     addNewStandardSpeechBubble() {
-        const testBubble1 = new SpeechBubble(0, 0);
+        const testBubble1 = new SpeechBubble(0, 0, 0, 0);
         
         this.speechBubbles.add(testBubble1);
 
         console.log(this.speechBubbles.toString());
+        
+        const SpeechBubbleExport = testBubble1.getExport();
+
+        console.log(SpeechBubbleExport);
+
+        const speechBubbleJSON = SpeechBubbleExport.toJSON();
+        console.log("JSON: " + speechBubbleJSON);
+
     }
     
     /**

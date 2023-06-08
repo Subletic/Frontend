@@ -12,6 +12,17 @@ export class WordExport {
     this.EndTime = endTime;
     this.Speaker = speaker;
   }
+  
+  toJSON() {
+    return JSON.stringify({
+      Word: this.Word,
+      Confidence: this.Confidence,
+      StartTime: this.StartTime,
+      EndTime: this.EndTime,
+      Speaker: this.Speaker
+    });
+  }
+
 }
 
 export class WordToken {
