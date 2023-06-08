@@ -1,17 +1,40 @@
 import { LinkedList } from './linkedList.module';
+import { WordExport } from './wordToken.model';
+
+export class SpeechBubbleExport {
+  public Id: number;
+  public Speaker: number;
+  public StartTime: number;
+  public EndTime: number;
+  public SpeechBubbleContent: WordExport[];
+
+  constructor(id: number, speaker: number, begin: number, end: number, speechBubbleContent: WordExport[]) {
+    this.Id = id;
+    this.Speaker = speaker;
+    this.StartTime = begin;
+    this.EndTime = end;
+    this.SpeechBubbleContent = speechBubbleContent;
+  }
+
+  
+}
 
 export class SpeechBubble {
     public id: number;
+    public speaker: number;
     public words: LinkedList;
     public begin: number;
+    public end: number;
 
     public prev: SpeechBubble | null;
     public next: SpeechBubble | null;
   
-    constructor(id: number, begin: number) {
-      this.begin = begin;
+    constructor(id: number, speaker: number, begin: number, end: number) {
       this.id = id;
+      this.speaker = speaker;
       this.words = new LinkedList();
+      this.begin = begin;
+      this.end = end;
       this.prev = null;
       this.next = null;
     }
@@ -28,5 +51,20 @@ export class SpeechBubble {
 
     toString() {
       return `[${this.id}, ${this.words.size()}, ${this.begin}]`;
+    }
+
+    
+    getExport() {
+      return new SpeechBubbleExport(this.id, this.speaker, this.begin, this.end, this.toList());
+    }
+
+    toList(){
+      let current = this.words.head;
+      const wordExportList = [];
+      while (current) {
+        wordExportList.push(current.getExport());
+        current = current.next;
+      }
+      return wordExportList;
     }
 }

@@ -1,3 +1,19 @@
+export class WordExport {
+  public Word: string;
+  public Confidence: number;
+  public StartTime: number;
+  public EndTime: number;
+  public Speaker: number;
+
+  constructor (word: string, confidence: number, startTime: number, endTime: number, speaker: number){
+    this.Word = word;
+    this.Confidence = confidence;
+    this.StartTime = startTime;
+    this.EndTime = endTime;
+    this.Speaker = speaker;
+  }
+}
+
 export class WordToken {
   public word: string;
   public confidence: number;
@@ -22,5 +38,9 @@ export class WordToken {
 
   setWord(newWord: string) {
     this.word = newWord;
+  }
+
+  getExport() {
+    return new WordExport(this.word, this.confidence, this.startTime, this.endTime, this.speaker);
   }
 }
