@@ -3,6 +3,13 @@ import { WordToken } from '../data/wordToken.model';
 import { SpeechBubble } from '../data/speechBubble.model';
 import { LinkedList } from '../data/linkedList.module'; // Importiere LinkedList
 
+/**
+ * The TextBoxComponent represents a component that handles the SpeechBubble data.
+ * It provides methods to generate and manipulate the content of a text box.
+ * To directly access and adress every word, Spans are used instead 
+ * of a typical textbox with a singel String.
+ * The data inside the TextBox is directly connected to the data-structure of the speechBubbles.
+ */
 @Component({
   selector: 'app-text-box',
   templateUrl: './text-box.component.html',
@@ -59,7 +66,7 @@ export class TextBoxComponent implements OnInit {
       * PrevWord doesn't exist -> Merges with next Word
       */
       if (cursorPosition === 0) {
-        if (event.key === 'Backspace') { // Backspace key is pressed at the beginning
+        if (event.key === 'Backspace') { 
           const prevSpan = selectedSpan.previousElementSibling as HTMLSpanElement;
 
           if (isFullSelection) {
@@ -81,12 +88,12 @@ export class TextBoxComponent implements OnInit {
               if (prevSpan.getAttribute('id') != null) {
                 const currentWord = this.findWordById(Number(selectedSpan.getAttribute('id')));
                 if (currentWord) {
-                  this.textbox.words.remove(currentWord); // Remove the current word from the linked list
+                  this.textbox.words.remove(currentWord); 
                 }
               }
               prevSpan.insertAdjacentElement('afterend', selectedSpan);
               selectedSpan.remove();
-              prevSpan.textContent = prevWord.word; // Update the text of the previous span
+              prevSpan.textContent = prevWord.word; 
               prevSpan.focus();
               event.preventDefault();
               return;
@@ -135,8 +142,6 @@ export class TextBoxComponent implements OnInit {
           console.log(wordBeforeCursor);
           console.log(wordAfterCursor);
         
-          //! Ab hier großen Teil auf einmal übersetzt, mögliche Fehlerquelle !
-
           if (wordBeforeCursor.trim() !== '') {
             const newWord = new WordToken(wordAfterCursor, 1, 1, 1, 1);
             const currentWord = this.findWordById(Number(spanId));
@@ -148,7 +153,7 @@ export class TextBoxComponent implements OnInit {
               newSpan.contentEditable = 'true';
               newSpan.textContent = wordAfterCursor;
               selectedSpan.insertAdjacentElement('afterend', newSpan);
-              selectedSpan.insertAdjacentText('afterend', ' '); // Leerzeichen wird hier eingefügt
+              selectedSpan.insertAdjacentText('afterend', ' ');
               newSpan.focus();
           
               // Event handling for the new span

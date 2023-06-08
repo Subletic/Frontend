@@ -1,13 +1,5 @@
 <div class="middle-container d-flex align-items-center justify-content-center">
 
-    <!--
-        Was wir brauchen: 
-        LinkedList Attribut aus app-text-boxen. 
-        Diese LinkedList muss geprinted werden wie bei Pascal.
-        Add/Löschen Button.
-
-
-    -->
     <div *ngFor="let speechBubble of getSpeechBubblesArray()">
         <app-text-box [textbox]="speechBubble"></app-text-box>
     </div>

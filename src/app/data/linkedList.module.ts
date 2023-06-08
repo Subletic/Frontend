@@ -44,7 +44,7 @@ export class LinkedList {
       }
     }
   
-    print() {
+    printWordList() {
       let current = this.head;
       const words = [];
       while (current) {
