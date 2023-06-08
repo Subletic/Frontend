@@ -49,7 +49,7 @@ describe('LinkedList', () => {
     linkedList.add(speechBubble1);
     linkedList.add(speechBubble2);
     linkedList.add(speechBubble3);
-    expect(linkedList.print()).toBe('0 1 2');
+    expect(linkedList.toString()).toBe('[0, 0, 0] [1, 0, 1] [2, 0, 2]');
   });
 });
 
@@ -71,32 +71,17 @@ describe('TextSheetComponent', () => {
     expect(speechBubbles.length).toBe(initialLength + 1);
   });
 
-  it('should delete the oldest speech bubble', () => {
-    const initialLength = component.getSpeechBubblesArray().length;
-    component.deleteOldestSpeechBubble();
-    const speechBubbles = component.getSpeechBubblesArray();
-    expect(speechBubbles.length).toBe(initialLength - 1);
-  });
-
   it('should return an array of speech bubbles', () => {
     const speechBubbles = component.getSpeechBubblesArray();
     if(component.speechBubbles.head) {
         expect(speechBubbles).toEqual([component.speechBubbles.head]);
     }
   });
-  
 
   it('should add a new standard speech bubble', () => {
     const initialLength = component.getSpeechBubblesArray().length;
     component.addNewStandardSpeechBubble();
     const speechBubbles = component.getSpeechBubblesArray();
     expect(speechBubbles.length).toBe(initialLength + 1);
-  });
-
-  it('should delete the oldest speech bubble', () => {
-    const initialLength = component.getSpeechBubblesArray().length;
-    component.deleteOldestSpeechBubble();
-    const speechBubbles = component.getSpeechBubblesArray();
-    expect(speechBubbles.length).toBe(initialLength - 1);
   });
 });

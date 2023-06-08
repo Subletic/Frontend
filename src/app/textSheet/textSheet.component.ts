@@ -52,6 +52,26 @@ export class LinkedList {
         }
         return speechBubbles.join(" ");
     }
+
+    toString() {
+      let current = this.head;
+      const speechBubbles = [];
+      while (current) {
+        speechBubbles.push(current.toString());
+        current = current.next;
+      }
+      return speechBubbles.join(" ");
+    }
+
+    size() {
+      let current = this.head;
+      let count = 0;
+      while (current) {
+        count++;
+        current = current.next;
+      }
+      return count;
+    }
 }
 
 @Component({
@@ -84,6 +104,8 @@ export class TextSheetComponent implements OnInit {
         const testBubble1 = new SpeechBubble(0, 0);
         
         this.speechBubbles.add(testBubble1);
+
+        console.log(this.speechBubbles.toString());
     }
     
     deleteOldestSpeechBubble() {

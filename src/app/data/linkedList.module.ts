@@ -53,4 +53,24 @@ export class LinkedList {
       }
       return words.join(" ");
     }
+
+    size() {
+      let current = this.head;
+      let count = 0;
+      while (current) {
+        count++;
+        current = current.next;
+      }
+      return count;
+    }
+
+    toString() {
+      let current = this.head;
+      const elements = [];
+      while (current) {
+        elements.push(current.word);
+        current = current.next;
+      }
+      return elements.join(" ");
+    }
   }

@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
 import { WordToken } from '../data/wordToken.model';
 import { SpeechBubble } from '../data/speechBubble.model';
+import { LinkedList } from '../data/linkedList.module'; // Importiere LinkedList
 
 @Component({
   selector: 'app-text-box',
@@ -15,6 +16,7 @@ export class TextBoxComponent implements OnInit {
 
   ngOnInit() {
     const textbox = this.textboxRef.nativeElement;
+    this.textbox.words = new LinkedList();
 
     const words = ['Hello,', 'World!', 'How', 'are', 'you?'];
 

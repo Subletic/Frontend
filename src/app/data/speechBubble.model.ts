@@ -25,4 +25,8 @@ export class SpeechBubble {
       }
       return '[' + text.join(', ') + ']';
     }
+
+    toString() {
+      return `[${this.id}, ${this.words.size()}, ${this.begin}]`;
+    }
 }
