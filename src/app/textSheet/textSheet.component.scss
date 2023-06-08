@@ -1,0 +1,35 @@
+.middle-container {
+
+    max-width: 1000px;
+    overflow-y: scroll;
+    height: 92.4vh; 
+    background-color: var(--container-background-color); 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    padding: 0 20px; 
+    box-sizing: border-box;
+    margin-left: 15%;
+
+
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .middle-container h1 {
+    font-size: 24px; 
+    text-align: center; 
+    max-width: 100%; 
+  }
+  
+  @media (max-width: 768px) {
+    .middle-container {
+        height: auto; 
+        padding: 20px; 
+        height: 100vh;
+    }
+    
+    .middle-container h1 {
+        font-size: 18px;
+    }
+  }
