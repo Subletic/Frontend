@@ -1,5 +1,20 @@
 import { Component, OnInit } from '@angular/core';
-import { SpeechBubble } from '../data/speechBubble.model';
+import { SpeechBubble, SpeechBubbleExport } from '../data/speechBubble.model';
+import { WordToken } from '../data/wordToken.model';
+
+export class SpeechBubbleChain {
+  public SpeechbubbleChain: SpeechBubbleExport[];
+
+  constructor(SpeechbubbleChain: SpeechBubbleExport[]) {
+    this.SpeechbubbleChain = SpeechbubbleChain;
+  }
+
+  toJSON() {
+    return {
+      SpeechbubbleChain: this.SpeechbubbleChain.map(speechBubble => speechBubble.toJSON())
+    };
+  }
+}
 
 /**
  * The LinkedList class represents a linked list data structure.
@@ -116,12 +131,72 @@ export class LinkedList {
 export class TextSheetComponent implements OnInit {
 
     speechBubbles: LinkedList = new LinkedList;
-
+/*
     ngOnInit() {
         
         const testBubble1 = new SpeechBubble(0, 0, 0, 0);
         
         this.speechBubbles.add(testBubble1);
+
+        const word = new WordToken('Testeingabe', 1, 1, 1, 1);
+
+        if (this.speechBubbles.head) {
+          this.speechBubbles.head.words.add(word);
+        }
+
+        const word2 = new WordToken('weitere', 1, 1, 1, 1);
+
+        this.speechBubbles.head?.words.add(word2);
+
+        const SpeechBubbleExport = testBubble1.getExport();
+
+        
+
+        console.log(SpeechBubbleExport);
+
+        const speechBubbleJSON = SpeechBubbleExport.toJSON();
+        console.log("JSON: " + speechBubbleJSON);
+
+        localStorage.setItem('speechBubbleExport', speechBubbleJSON);
+
+        const speechBubbleJSON2 = localStorage.getItem('speechBubbleExport');
+        console.log(speechBubbleJSON2);
+
+    }
+  */
+
+    ngOnInit() {
+      const testBubble1 = new SpeechBubble(0, 0, 0, 0);
+      this.speechBubbles.add(testBubble1);
+  
+      //const speechBubbleExport = testBubble1.getExport();
+  
+      //console.log(speechBubbleExport);
+  
+      //const speechBubbleJSON = JSON.stringify(speechBubbleExport);
+      //console.log('JSON: ' + speechBubbleJSON);
+  
+      //ocalStorage.setItem('speechBubbleExport', speechBubbleJSON);
+      
+      const word = new WordToken('Testeingabe', 1, 1, 1, 1);
+      this.speechBubbles.head?.words.add(word);
+  
+      const word2 = new WordToken('weitere', 1, 1, 1, 1);
+      this.speechBubbles.head?.words.add(word2);
+
+      testBubble1.words.add(word);
+      testBubble1.words.add(word2);
+
+      const speechBubble1 = testBubble1.getExport();
+
+      testBubble1.words.add(word2);
+
+      const speechBubble2 = testBubble1.getExport();
+
+      const speechBubbleChain = new SpeechBubbleChain([speechBubble1]);
+
+      const json = JSON.stringify(speechBubbleChain.toJSON(), null, 2);
+      console.log(json);
     }
 
     /**
@@ -149,12 +224,13 @@ export class TextSheetComponent implements OnInit {
 
         console.log(this.speechBubbles.toString());
         
-        const SpeechBubbleExport = testBubble1.getExport();
+        //const SpeechBubbleExport = testBubble1.getExport();
 
         console.log(SpeechBubbleExport);
 
-        const speechBubbleJSON = SpeechBubbleExport.toJSON();
-        console.log("JSON: " + speechBubbleJSON);
+        //const speechBubbleJSON = SpeechBubbleExport.toJSON();
+        //console.log("JSON: " + speechBubbleJSON);
+
 
     }
     

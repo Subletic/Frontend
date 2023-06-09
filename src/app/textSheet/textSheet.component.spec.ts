@@ -9,9 +9,9 @@ describe('LinkedList', () => {
 
   beforeEach(() => {
     linkedList = new LinkedList();
-    speechBubble1 = new SpeechBubble(0, 0);
-    speechBubble2 = new SpeechBubble(1, 1);
-    speechBubble3 = new SpeechBubble(2, 2);
+    speechBubble1 = new SpeechBubble(0, 0, 0, 0);
+    speechBubble2 = new SpeechBubble(1, 1, 1, 1);
+    speechBubble3 = new SpeechBubble(2, 2, 2, 2);
   });
 
   it('should add a speech bubble to the list', () => {
