@@ -14,13 +14,13 @@ export class WordExport {
   }
   
   toJSON() {
-    return JSON.stringify({
+    return {
       Word: this.Word,
       Confidence: this.Confidence,
       StartTime: this.StartTime,
       EndTime: this.EndTime,
       Speaker: this.Speaker
-    });
+    };
   }
 
 }

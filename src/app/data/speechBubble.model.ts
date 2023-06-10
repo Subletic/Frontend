@@ -17,15 +17,14 @@ export class SpeechBubbleExport {
   }
 
   toJSON() {
-    return JSON.stringify({
+    return {
       Id: this.Id,
       Speaker: this.Speaker,
       StartTime: this.StartTime,
       EndTime: this.EndTime,
-      SpeechBubbleContent: this.SpeechBubbleContent.map((wordExport) => wordExport.toJSON())
-    });
+      SpeechBubbleContent: this.SpeechBubbleContent.map(wordExport => wordExport.toJSON())
+    };
   }
-  
 }
 
 export class SpeechBubble {

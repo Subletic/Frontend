@@ -168,35 +168,36 @@ export class TextSheetComponent implements OnInit {
     ngOnInit() {
       const testBubble1 = new SpeechBubble(0, 0, 0, 0);
       this.speechBubbles.add(testBubble1);
-  
-      //const speechBubbleExport = testBubble1.getExport();
-  
-      //console.log(speechBubbleExport);
-  
-      //const speechBubbleJSON = JSON.stringify(speechBubbleExport);
-      //console.log('JSON: ' + speechBubbleJSON);
-  
-      //ocalStorage.setItem('speechBubbleExport', speechBubbleJSON);
       
       const word = new WordToken('Testeingabe', 1, 1, 1, 1);
-      this.speechBubbles.head?.words.add(word);
   
       const word2 = new WordToken('weitere', 1, 1, 1, 1);
-      this.speechBubbles.head?.words.add(word2);
 
       testBubble1.words.add(word);
       testBubble1.words.add(word2);
 
-      const speechBubble1 = testBubble1.getExport();
+      const speechBubbleExport1 = testBubble1.getExport();
 
-      testBubble1.words.add(word2);
+      this.exportToJson([speechBubbleExport1]);
+      
+    }
 
-      const speechBubble2 = testBubble1.getExport();
+    /**
+    * Exports a speech bubble list to a JSON file.
+    * @param speechBubbleExportList - An array of SpeechBubbleExport objects representing the speech bubbles.
+    */
+    exportToJson(speechBubbleExportList: SpeechBubbleExport[]) {
 
-      const speechBubbleChain = new SpeechBubbleChain([speechBubble1]);
+      const speechBubbleChain = new SpeechBubbleChain(speechBubbleExportList);
+      const jsonData = speechBubbleChain.toJSON();
+      const jsonString = JSON.stringify(jsonData);
 
-      const json = JSON.stringify(speechBubbleChain.toJSON(), null, 2);
-      console.log(json);
+      const blob = new Blob([jsonString], { type: 'application/json' });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'output.json';
+      link.click();
     }
 
     /**
@@ -223,15 +224,8 @@ export class TextSheetComponent implements OnInit {
         this.speechBubbles.add(testBubble1);
 
         console.log(this.speechBubbles.toString());
-        
-        //const SpeechBubbleExport = testBubble1.getExport();
 
         console.log(SpeechBubbleExport);
-
-        //const speechBubbleJSON = SpeechBubbleExport.toJSON();
-        //console.log("JSON: " + speechBubbleJSON);
-
-
     }
     
     /**
