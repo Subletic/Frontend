@@ -33,8 +33,11 @@ export class WordToken {
   public speaker: number;
   public id: number;
 
+  //relevant for linkedList, objekt is in itself a node instead of having a node-class holding an wordToken object in between
   public prev: WordToken | null;
   public next: WordToken | null;
+
+  private static currentId: number = 0;
 
   constructor(word: string, confidence: number, startTime: number, endTime: number, speaker: number) {
     this.word = word;
@@ -42,9 +45,19 @@ export class WordToken {
     this.startTime = startTime;
     this.endTime = endTime;
     this.speaker = speaker;
-    this.id = 0;
+    this.id = WordToken.getNextId();
     this.prev = null;
     this.next = null;
+  }
+
+  /*ID should be irrelevant, because a new object is only instanziated by: 
+  * 1. an import from backend
+  * 2. an insertAfter() call in text-box.component.
+  * Maybe this should be addressed in refactoring by outsourcing it to this data-directory
+  * On the other hand, frontend-autonomy should be held as low as possible 
+  */
+  private static getNextId(): number {
+    return WordToken.currentId++;
   }
 
   setWord(newWord: string) {

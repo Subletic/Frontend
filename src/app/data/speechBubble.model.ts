@@ -1,4 +1,4 @@
-import { LinkedList } from './linkedList.module';
+import { LinkedList } from './linkedList.model';
 import { WordExport } from './wordToken.model';
 
 export class SpeechBubbleExport {

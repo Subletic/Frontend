@@ -1,7 +1,6 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { SpeechBubble, SpeechBubbleExport } from '../data/speechBubble.model';
 import { WordToken } from '../data/wordToken.model';
-import {SignalRService} from "../service/signalRService";
 
 export class SpeechBubbleChain {
   public SpeechbubbleChain: SpeechBubbleExport[];
@@ -185,7 +184,7 @@ export class TextSheetComponent implements OnInit {
 
     //Attributes for timeCounters, should maybe be refactored elsewhere
     timeSinceFocusOutList: number[] = [];
-    intervalList: any[] = [];
+    intervalList: ReturnType<typeof setInterval>[] = [];
 
     /**
     * Keeps track of the time since the last focusout event for each textbox.

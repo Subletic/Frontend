@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
 import { WordToken } from '../data/wordToken.model';
 import { SpeechBubble } from '../data/speechBubble.model';
-import { LinkedList } from '../data/linkedList.module'; // Importiere LinkedList
+import { LinkedList } from '../data/linkedList.model'; // Importiere LinkedList
 
 /**
  * The TextBoxComponent represents a component that handles the SpeechBubble data.
@@ -257,12 +257,5 @@ export class TextBoxComponent implements OnInit {
       current = next;
     }
   }
-
-  handleFocusOut(index: number) {
-
-    console.log("Betreten");
-
-  }
-
   
 }

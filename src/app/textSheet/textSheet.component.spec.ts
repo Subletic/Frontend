@@ -73,9 +73,8 @@ describe('TextSheetComponent', () => {
 
   it('should return an array of speech bubbles', () => {
     const speechBubbles = component.getSpeechBubblesArray();
-    if(component.speechBubbles.head) {
-        expect(speechBubbles).toEqual([component.speechBubbles.head]);
-    }
+    if(component.speechBubbles.head == null) return;
+    expect(speechBubbles).toEqual([component.speechBubbles.head]);
   });
 
   it('should add a new standard speech bubble', () => {
