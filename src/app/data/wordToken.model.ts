@@ -37,7 +37,7 @@ export class WordToken {
   public prev: WordToken | null;
   public next: WordToken | null;
 
-  private static currentId: number = 0;
+  private static currentId = 0;
 
   constructor(word: string, confidence: number, startTime: number, endTime: number, speaker: number) {
     this.word = word;
