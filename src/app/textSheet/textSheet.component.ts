@@ -187,25 +187,34 @@ export class TextSheetComponent implements OnInit {
     //2. Jede Box hat einzelnen Timer
 
     timeSinceFocusOut: number = 0;
-    interval;
+    interval: any;
 
-    timeSinceFocusOutCounter() {
+    timeSinceFocusOutCounter(index: number) {
 
       this.timeSinceFocusOut = 0;
-      this.interval = setInterval(function () {this.timeSinceFocusOut++}, 500);
+      console.log("huh");
 
+      this.interval = setInterval(() => {
+        this.timeSinceFocusOut++; // Zähle die Zeit seit dem letzten focusout-Ereignis
+        if (this.timeSinceFocusOut >= 5) {
+          console.log("timeSinceFocusOut > 5");
+          this.callExportToJson(index);
+          this.interval = null;
+          // Führe hier die entsprechende Logik für eine Inaktivität von mehr als 5 Sekunden aus
+        }
+      }, 5000);
     }
 
     @HostListener('focusout', ['$event'])
     onFocusOut(event: any, index: number) {
       const boxId = event.target.id; // Eindeutige ID der Box auslesen
 
-      if(this.timeSinceFocusOut > 5) {
+      if(this.timeSinceFocusOut >= 5) {
         console.log("TimeSinceFocusOut > 5");
       }
 
-
-      this.timeSinceFocusOutCounter();
+      clearInterval(this.interval);
+      this.timeSinceFocusOutCounter(index);
     }
  
     /**
