@@ -183,43 +183,49 @@ export class TextSheetComponent implements OnInit {
       this.exportToJson([currentExport]);
     }
 
-    //timers: any[] = []; // Array zum Speichern der Timer für jede Box
-    //inactiveTimeouts: any[] = []; // Array zum Speichern der Inaktivitäts-Timeouts für jede Box
+    //Attributes for timeCounters, should maybe be refactored elsewhere
+    timeSinceFocusOutList: number[] = [];
+    intervalList: any[] = [];
 
-    //1. Das überhaupt hinkriegen mit einem Timer
-    //2. Jede Box hat einzelnen Timer
-
-    timeSinceFocusOut: number = 0;
-    interval: any;
-
+    /**
+    * Keeps track of the time since the last focusout event for each textbox.
+    * Starts a timer for the specified index and performs the corresponding logic
+    * if the inactivity exceeds 5 seconds.
+    * @param index - The index of the textbox.
+    */
     timeSinceFocusOutCounter(index: number) {
 
-      this.timeSinceFocusOut = 0;
-      console.log("huh");
+      this.timeSinceFocusOutList[index] = 0;
+      console.log("huh " + index);
 
-      this.interval = setInterval(() => {
-        this.timeSinceFocusOut++; // Zähle die Zeit seit dem letzten focusout-Ereignis
-        if (this.timeSinceFocusOut >= 5) {
+      this.intervalList[index] = setInterval(() => {
+        this.timeSinceFocusOutList[index]++; // Zähle die Zeit seit dem letzten focusout-Ereignis
+        if (this.timeSinceFocusOutList[index] >= 5) {
           // Führe hier die entsprechende Logik für eine Inaktivität von mehr als 5 Sekunden aus
-          console.log("timeSinceFocusOut > 5");
-          clearInterval(this.interval);
+          console.log("timeSinceFocusOut > 5 bei index " + index);
+          clearInterval(this.intervalList[index]);
           this.callExportToJson(index);
-          this.timeSinceFocusOut = 0;
+          this.timeSinceFocusOutList[index] = 0;
           return;
-          
         } 
       }, 1000);
     }
 
+    /**
+    * Handles the focusout event for the textbox.
+    * Stops the timer for the specified index to prevent duplicate execution,
+    * and starts the timer again for the specified index.
+    * @param event - The focusout event object.
+    * @param index - The index of the textbox.
+    */
     @HostListener('focusout', ['$event'])
-    onFocusOut(event: any, index: number) {
-      const boxId = event.target.id; // Eindeutige ID der Box auslesen
+    onFocusOut(index: number) {
 
-      if(this.timeSinceFocusOut >= 5) {
+      if(this.timeSinceFocusOutList[index] >= 5) {
         console.log("TimeSinceFocusOut > 5");
       }
 
-      clearInterval(this.interval);
+      clearInterval(this.intervalList[index]);
       this.timeSinceFocusOutCounter(index);
     }
  
