@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { SpeechBubble, SpeechBubbleExport } from '../data/speechBubble.model';
 import { WordToken } from '../data/wordToken.model';
+import {SignalRService} from "../service/signalRService";
 
 export class SpeechBubbleChain {
   public SpeechbubbleChain: SpeechBubbleExport[];
@@ -131,39 +132,6 @@ export class LinkedList {
 export class TextSheetComponent implements OnInit {
 
     speechBubbles: LinkedList = new LinkedList;
-/*
-    ngOnInit() {
-        
-        const testBubble1 = new SpeechBubble(0, 0, 0, 0);
-        
-        this.speechBubbles.add(testBubble1);
-
-        const word = new WordToken('Testeingabe', 1, 1, 1, 1);
-
-        if (this.speechBubbles.head) {
-          this.speechBubbles.head.words.add(word);
-        }
-
-        const word2 = new WordToken('weitere', 1, 1, 1, 1);
-
-        this.speechBubbles.head?.words.add(word2);
-
-        const SpeechBubbleExport = testBubble1.getExport();
-
-        
-
-        console.log(SpeechBubbleExport);
-
-        const speechBubbleJSON = SpeechBubbleExport.toJSON();
-        console.log("JSON: " + speechBubbleJSON);
-
-        localStorage.setItem('speechBubbleExport', speechBubbleJSON);
-
-        const speechBubbleJSON2 = localStorage.getItem('speechBubbleExport');
-        console.log(speechBubbleJSON2);
-
-    }
-  */
 
     ngOnInit() {
       const testBubble1 = new SpeechBubble(0, 0, 0, 0);
@@ -200,6 +168,46 @@ export class TextSheetComponent implements OnInit {
       link.click();
     }
 
+    callExportToJson(index: number) {
+      let current = this.speechBubbles.head;
+      for(let i = 0; i < index; i++) {
+        if (current == null) return;
+        current = current.next;
+      }
+      const currentExport = current?.getExport();
+
+      if(currentExport == undefined) return;
+      this.exportToJson([currentExport]);
+    }
+
+    //timers: any[] = []; // Array zum Speichern der Timer für jede Box
+    //inactiveTimeouts: any[] = []; // Array zum Speichern der Inaktivitäts-Timeouts für jede Box
+
+    //1. Das überhaupt hinkriegen mit einem Timer
+    //2. Jede Box hat einzelnen Timer
+
+    timeSinceFocusOut: number = 0;
+    interval;
+
+    timeSinceFocusOutCounter() {
+
+      this.timeSinceFocusOut = 0;
+      this.interval = setInterval(function () {this.timeSinceFocusOut++}, 500);
+
+    }
+
+    @HostListener('focusout', ['$event'])
+    onFocusOut(event: any, index: number) {
+      const boxId = event.target.id; // Eindeutige ID der Box auslesen
+
+      if(this.timeSinceFocusOut > 5) {
+        console.log("TimeSinceFocusOut > 5");
+      }
+
+
+      this.timeSinceFocusOutCounter();
+    }
+ 
     /**
     * Retrieves an array of all speech bubbles in the speechBubbles list.
     * @returns An array of speech bubbles.

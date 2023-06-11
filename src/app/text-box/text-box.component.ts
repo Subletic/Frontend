@@ -138,9 +138,6 @@ export class TextBoxComponent implements OnInit {
           const wordBeforeCursor = currentText.substring(0, cursorPosition);
           const wordAfterCursor = currentText.substring(cursorPosition);
           selectedSpan.textContent = wordBeforeCursor;
-
-          console.log(wordBeforeCursor);
-          console.log(wordAfterCursor);
         
           if (wordBeforeCursor.trim() !== '') {
             const newWord = new WordToken(wordAfterCursor, 1, 1, 1, 1);
@@ -260,5 +257,12 @@ export class TextBoxComponent implements OnInit {
       current = next;
     }
   }
+
+  handleFocusOut(index: number) {
+
+    console.log("Betreten");
+
+  }
+
   
 }
