@@ -27,7 +27,7 @@ lint:
 
 test:
   stage: verification
-  image: node:16-alpine
+  image: trion/ng-cli-karma:16.0.1
   script:
     - npm ci
     - ng test --watch=false
