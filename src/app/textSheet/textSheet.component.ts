@@ -164,15 +164,18 @@ export class TextSheetComponent implements OnInit {
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.download = 'output.json';
+      const id = speechBubbleExportList[0].Id;
+      const name = 'output_' + id.toString();
+
+      link.download = name;
       link.click();
     }
 
     callExportToJson(index: number) {
-      let current = this.speechBubbles.head;
+      let current = this.speechBubbles.tail;
       for(let i = 0; i < index; i++) {
         if (current == null) return;
-        current = current.next;
+        current = current.prev;
       }
       const currentExport = current?.getExport();
 
@@ -197,12 +200,15 @@ export class TextSheetComponent implements OnInit {
       this.interval = setInterval(() => {
         this.timeSinceFocusOut++; // Zähle die Zeit seit dem letzten focusout-Ereignis
         if (this.timeSinceFocusOut >= 5) {
-          console.log("timeSinceFocusOut > 5");
-          this.callExportToJson(index);
-          this.interval = null;
           // Führe hier die entsprechende Logik für eine Inaktivität von mehr als 5 Sekunden aus
-        }
-      }, 5000);
+          console.log("timeSinceFocusOut > 5");
+          clearInterval(this.interval);
+          this.callExportToJson(index);
+          this.timeSinceFocusOut = 0;
+          return;
+          
+        } 
+      }, 1000);
     }
 
     @HostListener('focusout', ['$event'])
@@ -236,14 +242,17 @@ export class TextSheetComponent implements OnInit {
     * The new speech bubble is then added to the list and its representation is logged to the console.
     */
     addNewStandardSpeechBubble() {
-        const testBubble1 = new SpeechBubble(0, 0, 0, 0);
-        
-        this.speechBubbles.add(testBubble1);
+      const testBubble1 = new SpeechBubble(0, 0, 0, 0);
 
-        console.log(this.speechBubbles.toString());
+      this.speechBubbles.add(testBubble1);
 
-        console.log(SpeechBubbleExport);
-    }
+      const speechBubbleArray = this.getSpeechBubblesArray();
+
+      for(let i = 0; i < speechBubbleArray.length; i++) {
+        console.log(speechBubbleArray[i].id + speechBubbleArray[i].words.toString());
+
+      }
+  }
     
     /**
     * Deletes the oldest speech bubble from the speechBubbles list.
