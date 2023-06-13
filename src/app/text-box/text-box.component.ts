@@ -23,14 +23,15 @@ export class TextBoxComponent implements OnInit {
 
   ngOnInit() {
     const textbox = this.textboxRef.nativeElement;
-    this.textbox.words = new LinkedList();
+    //this.textbox.words = new LinkedList();
 
-    const words = ['Hello,', 'World!', 'How', 'are', 'you?'];
+    /*const words = ['Hello,', 'World!', 'How', 'are', 'you?'];
 
     words.forEach((wordText) => {
       const word = new WordToken(wordText, 1, 1, 1, 1);
       this.textbox.words.add(word);
     });
+    */
 
     textbox.innerHTML = this.generateHTML();
     console.log('Print Text:', this.textbox.printText());
@@ -185,6 +186,9 @@ export class TextBoxComponent implements OnInit {
           selectedSpan2.textContent = currentText.trim();
         }
       }
+      this.removeEmptyObjects();
+      this.updateWordColors();
+      
     })
   }
   
@@ -202,7 +206,7 @@ export class TextBoxComponent implements OnInit {
       wordElements.push(wordWithId);
       current = current.next;
     }
-
+    this.updateWordColors();
     return wordElements.join(' ');
   }
 
@@ -258,4 +262,29 @@ export class TextBoxComponent implements OnInit {
     }
   }
   
+  updateWordColors() {
+
+    let current = this.textbox.words.head;
+
+    while (current !== null) {
+      const element = document.getElementById(current.id.toString());
+      if (element == null) return;
+      const confidence = parseFloat(current.confidence.toString());
+
+        let color = '';
+
+        if (confidence >= 0.9) {
+          color = 'black';
+        } else if (confidence >= 0.7) {
+          color = 'yellow';
+        } else if (confidence >= 0.5) {
+          color = 'orange';
+        } else {
+          color = 'red';
+        }
+
+      element.style.color = color;
+      current = current.next;
+    }
+  }
 }

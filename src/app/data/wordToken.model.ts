@@ -23,6 +23,9 @@ export class WordExport {
     };
   }
 
+  toWordToken() {
+    return new WordToken(this.Word, this.Confidence, this.StartTime, this.EndTime, this.Speaker);
+  }
 }
 
 export class WordToken {

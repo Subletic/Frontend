@@ -27,7 +27,6 @@ export class SpeechBubbleExport {
   }
 
   toSpeechBubble(){
-
     let words = new LinkedList();
 
     this.SpeechBubbleContent.forEach(element => {
@@ -35,8 +34,6 @@ export class SpeechBubbleExport {
     });
 
     return new SpeechBubble(this.Id, this.Speaker, this.StartTime, this.EndTime, words);
-
-    
   }
 }
 

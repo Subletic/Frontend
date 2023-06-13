@@ -145,12 +145,15 @@ export class TextSheetComponent implements OnInit {
       const testBubble1 = new SpeechBubble(0, 0, 0, 0);
       this.speechBubbles.add(testBubble1);
 
-      const word = new WordToken('Testeingabe', 1, 1, 1, 1);
+      const word = new WordToken('Testeingabe', 0.2, 1, 1, 1);
   
-      const word2 = new WordToken('weitere', 1, 1, 1, 1);
+      const word2 = new WordToken('von', 0.9, 1, 1, 1);
+
+      const word3 = new WordToken('JSON', 0.7, 1, 1, 1);
 
       testBubble1.words.add(word);
       testBubble1.words.add(word2);
+      testBubble1.words.add(word3);
 
       const speechBubbleExport1 = testBubble1.getExport();
 
@@ -284,8 +287,12 @@ export class TextSheetComponent implements OnInit {
         
         speechBubbleExportArray.push(speechBubbleExport);
       });
+
+      speechBubbleExportArray.forEach (element => {
+        this.speechBubbles.add(element.toSpeechBubble());
+        console.log(element.toSpeechBubble());
+      });
       
-      console.log("SpeechBubbleChain vom Import: " + speechBubbleChain.toJSON());
 
       this.exportToJson(speechBubbleExportArray);
       //return speechBubbleChain;
