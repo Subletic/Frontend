@@ -25,7 +25,13 @@ export class SpeechBubbleExport {
       SpeechBubbleContent: this.SpeechBubbleContent.map(wordExport => wordExport.toJSON())
     };
   }
+
+  toSpeechBubble(){
+    return new SpeechBubble(this.Id, this.Speaker, this.StartTime, this.EndTime)
+  }
 }
+
+
 
 export class SpeechBubble {
     public id: number;

@@ -1,6 +1,7 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { SpeechBubble, SpeechBubbleExport } from '../data/speechBubble.model';
-import { WordToken } from '../data/wordToken.model';
+import { WordToken, WordExport } from '../data/wordToken.model';
+import { SignalRService } from '../service/signalRService';
 
 export class SpeechBubbleChain {
   public SpeechbubbleChain: SpeechBubbleExport[];
@@ -132,10 +133,18 @@ export class TextSheetComponent implements OnInit {
 
     speechBubbles: LinkedList = new LinkedList;
 
+    constructor(private signalRService: SignalRService) {}
+
     ngOnInit() {
+
+      this.signalRService.receivedMessage.subscribe((message: string) => {
+        // Behandlung des empfangenen SignalR-Nachrichtenereignisses
+        console.log('Nachricht erhalten: ' + message);
+      });
+
       const testBubble1 = new SpeechBubble(0, 0, 0, 0);
       this.speechBubbles.add(testBubble1);
-      
+
       const word = new WordToken('Testeingabe', 1, 1, 1, 1);
   
       const word2 = new WordToken('weitere', 1, 1, 1, 1);
@@ -145,9 +154,42 @@ export class TextSheetComponent implements OnInit {
 
       const speechBubbleExport1 = testBubble1.getExport();
 
-      this.exportToJson([speechBubbleExport1]);
+      //this.exportToJson([speechBubbleExport1]);
+
+
+      //Import JSON from Backend
+      const jsonString = `{
+        "SpeechbubbleChain": [
+          {
+            "Id": 0,
+            "Speaker": 0,
+            "StartTime": 0,
+            "EndTime": 0,
+            "SpeechBubbleContent": [
+              {
+                "Word": "Testeingabe",
+                "Confidence": 1,
+                "StartTime": 1,
+                "EndTime": 1,
+                "Speaker": 1
+              },
+              {
+                "Word": "weitere",
+                "Confidence": 1,
+                "StartTime": 1,
+                "EndTime": 1,
+                "Speaker": 1
+              }
+            ]
+          }
+        ]
+      }`;
+      const testi = this.importfromJSON(jsonString);
+    
       
     }
+
+    
 
     /**
     * Exports a speech bubble list to a JSON file.
@@ -160,6 +202,8 @@ export class TextSheetComponent implements OnInit {
       const jsonString = JSON.stringify(jsonData);
 
       const blob = new Blob([jsonString], { type: 'application/json' });
+      
+       
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
@@ -168,6 +212,25 @@ export class TextSheetComponent implements OnInit {
 
       link.download = name;
       link.click();
+    
+
+      fetch('http://localhost:5003', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: jsonString
+      })
+        .then(response => response.json())
+        .then(responseData => {
+          // Erfolgreiche Antwort vom Server erhalten
+          console.log(responseData);
+        })
+        .catch(error => {
+          // Fehler beim Ausführen der Anfrage
+          console.error(error);
+      });
+    
     }
 
     callExportToJson(index: number) {
@@ -180,6 +243,55 @@ export class TextSheetComponent implements OnInit {
 
       if(currentExport == undefined) return;
       this.exportToJson([currentExport]);
+    }
+
+    /**
+    * Imports data from a JSON string and converts it into an array of SpeechBubbleExport objects.
+    * @param jsonString The JSON string to import.
+    * @returns An array of SpeechBubbleExport objects.
+    */
+    importfromJSON(jsonString: string){
+    
+      const jsonData = JSON.parse(jsonString);
+
+      const speechBubbleChain = jsonData.SpeechbubbleChain;
+
+
+      const speechBubbleExportArray: SpeechBubbleExport[] = [];
+      
+      speechBubbleChain.forEach((speechBubbleData: any) => {
+        const speechBubbleContent: WordExport[] = [];
+      
+        speechBubbleData.SpeechBubbleContent.forEach((wordData: any) => {
+          const wordExport = new WordExport(
+            wordData.Word,
+            wordData.Confidence,
+            wordData.StartTime,
+            wordData.EndTime,
+            wordData.Speaker
+          );
+      
+          speechBubbleContent.push(wordExport);
+        });
+      
+        const speechBubbleExport = new SpeechBubbleExport(
+          speechBubbleData.Id,
+          speechBubbleData.Speaker,
+          speechBubbleData.StartTime,
+          speechBubbleData.EndTime,
+          speechBubbleContent
+        );
+        
+        speechBubbleExportArray.push(speechBubbleExport);
+      });
+      
+      console.log("SpeechBubbleChain vom Import: " + speechBubbleChain.toJSON());
+
+      this.exportToJson(speechBubbleExportArray);
+      //return speechBubbleChain;
+      //return speechBubbleExportArray;
+
+      this.speechBubbles.add
     }
 
     //Attributes for timeCounters, should maybe be refactored elsewhere
@@ -204,6 +316,8 @@ export class TextSheetComponent implements OnInit {
           console.log("timeSinceFocusOut > 5 bei index " + index);
           clearInterval(this.intervalList[index]);
           this.callExportToJson(index);
+          
+       
           this.timeSinceFocusOutList[index] = 0;
           return;
         } 
@@ -269,5 +383,7 @@ export class TextSheetComponent implements OnInit {
             this.speechBubbles.remove(this.speechBubbles.head);
         }
     }
+
+
 
 }
