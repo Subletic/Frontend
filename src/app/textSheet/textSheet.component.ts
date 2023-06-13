@@ -137,9 +137,10 @@ export class TextSheetComponent implements OnInit {
 
     ngOnInit() {
 
-      this.signalRService.receivedMessage.subscribe((message: string) => {
-        // Behandlung des empfangenen SignalR-Nachrichtenereignisses
-        console.log('Nachricht erhalten: ' + message);
+      this.signalRService.newBubbleReceived.subscribe(speechBubble => {
+        console.log("Neue SpeechBubble erhalten:", speechBubble);
+        // Hier kannst du den Inhalt der SpeechBubble weiterverarbeiten oder anzeigen
+        this.importfromJSON(speechBubble);
       });
 
       const testBubble1 = new SpeechBubble(0, 0, 0, 0);
@@ -215,7 +216,6 @@ export class TextSheetComponent implements OnInit {
 
       link.download = name;
       link.click();
-    
 
       fetch('http://localhost:5003', {
         method: 'POST',
@@ -253,44 +253,51 @@ export class TextSheetComponent implements OnInit {
     * @param jsonString The JSON string to import.
     * @returns An array of SpeechBubbleExport objects.
     */
-    importfromJSON(jsonString: string){
-    
+    importfromJSON(speechBubbleChain: any){
+
+      /*
+      console.log("id: " + jsonString[0].id);
+
       const jsonData = JSON.parse(jsonString);
 
       const speechBubbleChain = jsonData.SpeechbubbleChain;
-
-
+      */
+     
       const speechBubbleExportArray: SpeechBubbleExport[] = [];
       
       speechBubbleChain.forEach((speechBubbleData: any) => {
         const speechBubbleContent: WordExport[] = [];
+
+        speechBubbleData.speechBubbleContent.forEach((word: any) => {
+            const wordExport = new WordExport(
+              word.word,
+              parseInt(word.confidence),
+              word.startTime,
+              word.endTime,
+              word.speaker
+            )
       
-        speechBubbleData.SpeechBubbleContent.forEach((wordData: any) => {
-          const wordExport = new WordExport(
-            wordData.Word,
-            wordData.Confidence,
-            wordData.StartTime,
-            wordData.EndTime,
-            wordData.Speaker
-          );
-      
-          speechBubbleContent.push(wordExport);
+            speechBubbleContent.push(wordExport);
         });
-      
+
         const speechBubbleExport = new SpeechBubbleExport(
-          speechBubbleData.Id,
-          speechBubbleData.Speaker,
-          speechBubbleData.StartTime,
-          speechBubbleData.EndTime,
+          Math.random(),
+          speechBubbleData.speaker,
+          speechBubbleData.startTime,
+          speechBubbleData.endTime,
           speechBubbleContent
+
         );
-        
+        console.log(speechBubbleExport.Speaker);  
+ 
         speechBubbleExportArray.push(speechBubbleExport);
       });
 
       speechBubbleExportArray.forEach (element => {
+        const normalSpeechBubble = element.toSpeechBubble();
         this.speechBubbles.add(element.toSpeechBubble());
         console.log(element.toSpeechBubble());
+        console.log("SpeechBubbles: " + this.speechBubbles);
       });
       
 
@@ -391,6 +398,20 @@ export class TextSheetComponent implements OnInit {
         }
     }
 
-
+    sendNewSpeechBubble() {
+      fetch('http://localhost:5003/api/speechbubble/send-new-bubble', {
+        method: 'POST',
+      })
+        .then(response => {
+          if (response.ok) {
+            console.log('Neue SpeechBubble wurde erfolgreich gesendet');
+          } else {
+            console.error('Fehler beim Senden der neuen SpeechBubble');
+          }
+        })
+        .catch(error => {
+          console.error('Fehler beim Senden der neuen SpeechBubble:', error);
+        });
+    }
 
 }

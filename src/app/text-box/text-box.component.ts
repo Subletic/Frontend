@@ -206,7 +206,7 @@ export class TextBoxComponent implements OnInit {
       wordElements.push(wordWithId);
       current = current.next;
     }
-    this.updateWordColors();
+    //this.updateWordColors();
     return wordElements.join(' ');
   }
 
@@ -263,7 +263,7 @@ export class TextBoxComponent implements OnInit {
   }
   
   updateWordColors() {
-
+    /*
     let current = this.textbox.words.head;
 
     while (current !== null) {
@@ -286,5 +286,8 @@ export class TextBoxComponent implements OnInit {
       element.style.color = color;
       current = current.next;
     }
+    return
+    */
+    
   }
 }
