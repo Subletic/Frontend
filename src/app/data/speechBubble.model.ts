@@ -27,7 +27,16 @@ export class SpeechBubbleExport {
   }
 
   toSpeechBubble(){
-    return new SpeechBubble(this.Id, this.Speaker, this.StartTime, this.EndTime)
+
+    let words = new LinkedList();
+
+    this.SpeechBubbleContent.forEach(element => {
+      words.add(element.toWordToken());
+    });
+
+    return new SpeechBubble(this.Id, this.Speaker, this.StartTime, this.EndTime, words);
+
+    
   }
 }
 
@@ -43,15 +52,21 @@ export class SpeechBubble {
     public prev: SpeechBubble | null;
     public next: SpeechBubble | null;
   
-    constructor(id: number, speaker: number, begin: number, end: number) {
+    public constructor(id: number, speaker: number, begin: number, end: number, list?: any) {
       this.id = id;
       this.speaker = speaker;
-      this.words = new LinkedList();
+      if(list) {
+        this.words = list;
+      } else {
+        this.words = new LinkedList();
+      }
       this.begin = begin;
       this.end = end;
       this.prev = null;
       this.next = null;
     }
+
+    
   
     printText() {
       let current = this.words.head;
