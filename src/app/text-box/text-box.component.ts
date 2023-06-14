@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
 import { WordToken } from '../data/wordToken.model';
 import { SpeechBubble } from '../data/speechBubble.model';
-import { LinkedList } from '../data/linkedList.module'; // Importiere LinkedList
 
 /**
  * The TextBoxComponent represents a component that handles the SpeechBubble data.
@@ -23,14 +22,10 @@ export class TextBoxComponent implements OnInit {
 
   ngOnInit() {
     const textbox = this.textboxRef.nativeElement;
-    this.textbox.words = new LinkedList();
 
-    const words = ['Hello,', 'World!', 'How', 'are', 'you?'];
-
-    words.forEach((wordText) => {
-      const word = new WordToken(wordText, 1, 1, 1, 1);
-      this.textbox.words.add(word);
-    });
+    if(this.textbox.words.head == null) {
+      this.textbox.words.add( new WordToken('', 1, 1, 1, 1));
+    }
 
     textbox.innerHTML = this.generateHTML();
     console.log('Print Text:', this.textbox.printText());
@@ -138,9 +133,6 @@ export class TextBoxComponent implements OnInit {
           const wordBeforeCursor = currentText.substring(0, cursorPosition);
           const wordAfterCursor = currentText.substring(cursorPosition);
           selectedSpan.textContent = wordBeforeCursor;
-
-          console.log(wordBeforeCursor);
-          console.log(wordAfterCursor);
         
           if (wordBeforeCursor.trim() !== '') {
             const newWord = new WordToken(wordAfterCursor, 1, 1, 1, 1);
@@ -188,7 +180,12 @@ export class TextBoxComponent implements OnInit {
           selectedSpan2.textContent = currentText.trim();
         }
       }
+      //Sorgt noch für Fehler, daher treten noch vereinzelt leere Strings auf
+      //this.removeEmptyObjects();
+      //this.updateWordColors();
     })
+
+    //this.updateWordColors();
   }
   
   /**
@@ -201,11 +198,11 @@ export class TextBoxComponent implements OnInit {
     const wordElements: string[] = []
     let current = this.textbox.words.head;
     while (current) {
-      const wordWithId = `<span id="${current.id}" contenteditable="true">${current.word}</span>`;
+      const wordWithId = `<span id="${current.id}" style="color: ${current.color}" contenteditable="true">${current.word}</span>`;
       wordElements.push(wordWithId);
       current = current.next;
     }
-
+    //this.updateWordColors();
     return wordElements.join(' ');
   }
 
@@ -248,10 +245,11 @@ export class TextBoxComponent implements OnInit {
   }
 
   /**
- * Removes empty objects from the LinkedList of words.
- */
+  * Removes empty objects from the LinkedList of words.
+  */
   removeEmptyObjects(): void {
     let current = this.textbox.words.head;
+
     while (current) {
       const next = current.next;
       if (current.word === "") {
@@ -261,4 +259,37 @@ export class TextBoxComponent implements OnInit {
     }
   }
   
+  /**
+  * Updates the colors of the words based on the confidence value.
+  */
+  updateWordColors() {
+    /*
+    let current = this.textbox.words.head;
+  
+    while (current !== null) {
+      const element = document.getElementById(current.id.toString());
+      if (element == null) return;
+      const confidence = parseFloat(current.confidence.toString());
+  
+      let color = '';
+  
+      if (confidence >= 0.9) {
+        color = '#000000'; // Schwarz (Hexadezimalwert: 000000)
+      } else if (confidence >= 0.7) {
+        color = '#D09114'; // Gelb (Hexadezimalwert: D09114)
+      } else if (confidence >= 0.5) {
+        color = '#CC6600'; // Orange (Hexadezimalwert: CC6600)
+      } else {
+        color = '#BE0101'; // Rot (Hexadezimalwert: BE0101)
+      }
+  
+      element.style.color = color;
+      current = current.next;
+    }
+    return;
+    */
+   return;
+  }
+
+
 }

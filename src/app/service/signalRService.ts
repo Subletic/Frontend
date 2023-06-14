@@ -7,7 +7,7 @@ import { Subject } from 'rxjs';
 })
 export class SignalRService {
   private hubConnection: signalR.HubConnection;
-  public receivedMessage: Subject<string> = new Subject<string>();
+  public newBubbleReceived: Subject<string> = new Subject<string>();
 
   constructor() {
 
@@ -19,9 +19,9 @@ export class SignalRService {
       .then(() => console.log('SignalR connected.'))
       .catch(err => console.error('SignalR connection error: ', err));
 
-    this.hubConnection.on('ReceiveMessage', (message: string) => {
-      this.receivedMessage.next(message); // Notify subscribers about received messages
-      console.log("angekommen");
+    this.hubConnection.on("newBubble", (speechBubble) => {
+      this.newBubbleReceived.next(speechBubble);
+      console.log("Neue SpeechBubble erhalten:", speechBubble);
     });
   }
 }

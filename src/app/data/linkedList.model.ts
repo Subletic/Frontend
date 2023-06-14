@@ -1,4 +1,5 @@
 import { WordToken } from './wordToken.model';
+import { WordExport } from './wordToken.model';
 
 //Für die Zukunft: LinkedList mergen zu einer, dieses mal "LinkedList<T>", Problem: Attribute von T?
 
@@ -12,6 +13,19 @@ export class LinkedList {
       this.tail = null;
       this.currentIndex = 0;
     }
+
+    toJSON(): string {
+      const wordExports: WordExport[] = [];
+      let current = this.head;
+    
+      while (current) {
+        wordExports.push(current.getExport());
+        current = current.next;
+      }
+    
+      return JSON.stringify(wordExports);
+    }
+    
   
     add(word: WordToken) {
       word.id = this.currentIndex;

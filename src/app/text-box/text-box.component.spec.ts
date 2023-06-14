@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TextBoxComponent } from './text-box.component';
 import { SpeechBubble } from '../data/speechBubble.model';
 import { WordToken } from '../data/wordToken.model';
-import { LinkedList } from '../data/linkedList.module'; // Importiere LinkedList
+import { LinkedList } from '../data/linkedList.model';
 
 describe('TextBoxComponent', () => {
   let component: TextBoxComponent;
@@ -17,7 +17,7 @@ describe('TextBoxComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(TextBoxComponent);
     component = fixture.componentInstance;
-    component.textbox = new SpeechBubble(0, 0);
+    component.textbox = new SpeechBubble(0, 0, 0, new LinkedList, 0);
     fixture.detectChanges();
   });
 
@@ -26,7 +26,7 @@ describe('TextBoxComponent', () => {
   });
 
   it('should generate the HTML representation of the textbox content', () => {
-    const speechBubble = new SpeechBubble(0, 0);
+    const speechBubble = new SpeechBubble(0, 0, 0);
     speechBubble.words = new LinkedList(); // Initialisiere die words-Eigenschaft mit einer neuen LinkedList-Instanz
     const wordTexts = ['Hello,', 'World!', 'How', 'are', 'you?'];
     wordTexts.forEach((wordText) => {
@@ -35,13 +35,14 @@ describe('TextBoxComponent', () => {
     component.textbox = speechBubble;
     const generatedHTML = component.generateHTML();
     const expectedHTML = wordTexts
-      .map((wordText, index) => `<span id="${index}" contenteditable="true">${wordText}</span>`)
-      .join(' ');
+    .map((wordText, index) => `<span id="${index}" style="color: #000000" contenteditable="true">${wordText}</span>`)
+    .join(' ');
+
     expect(generatedHTML).toEqual(expectedHTML);
   });
 
   it('should find a word by its ID', () => {
-    const speechBubble = new SpeechBubble(0, 0);
+    const speechBubble = new SpeechBubble(0, 0, 0, new LinkedList, 0);
     speechBubble.words = new LinkedList(); // Initialisiere die words-Eigenschaft mit einer neuen LinkedList-Instanz
     const word1 = new WordToken('Hello', 1, 1, 1, 1);
     const word2 = new WordToken('World', 2, 1, 1, 1);
