@@ -60,7 +60,7 @@ export class SpeechBubble {
         this.id = SpeechBubble.getNextId();
       }
       this.speaker = speaker;
-      if(list) {
+      if(list instanceof LinkedList) {
         this.words = list;
       } else {
         this.words = new LinkedList();

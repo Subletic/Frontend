@@ -57,17 +57,17 @@ describe('SpeechBubble', () => {
   let wordToken2: WordToken;
 
   beforeEach(() => {
-    speechBubble = new SpeechBubble(1, 1, 0, 3);
+    speechBubble = new SpeechBubble(1, 0, 3, LinkedList, 1);
     wordToken1 = new WordToken('Hello', 0.9, 0, 1, 1);
     wordToken2 = new WordToken('World', 0.8, 2, 3, 1);
   });
 
   it('should correctly initialize SpeechBubble instance', () => {
-    expect(speechBubble.id).toBe(1);
     expect(speechBubble.speaker).toBe(1);
     expect(speechBubble.begin).toBe(0);
     expect(speechBubble.end).toBe(3);
     expect(speechBubble.words.size()).toBe(0);
+    expect(speechBubble.id).toBe(1);
   });
 
   it('should add WordToken to SpeechBubble', () => {
