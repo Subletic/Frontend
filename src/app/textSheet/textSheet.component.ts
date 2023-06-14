@@ -274,11 +274,11 @@ export class TextSheetComponent implements OnInit {
         });
 
         const speechBubbleExport = new SpeechBubbleExport(
+          speechBubbleData.id,
           speechBubbleData.speaker,
           speechBubbleData.startTime,
           speechBubbleData.endTime,
-          speechBubbleContent,
-          speechBubbleData.id
+          speechBubbleContent
         );
         console.log(speechBubbleExport.Speaker);  
  

@@ -10,7 +10,7 @@ export class SpeechBubbleExport {
   public EndTime: number;
   public SpeechBubbleContent: WordExport[];
 
-  constructor(speaker: number, begin: number, end: number, speechBubbleContent: WordExport[], id: number) {
+  constructor(id: number, speaker: number, begin: number, end: number, speechBubbleContent: WordExport[]) {
     this.Id = id;
     this.Speaker = speaker;
     this.StartTime = begin;
@@ -100,6 +100,6 @@ export class SpeechBubble {
     }
 
     getExport() {
-      return new SpeechBubbleExport(this.speaker, this.begin, this.end, this.toList(), this.id);
+      return new SpeechBubbleExport(this.id, this.speaker, this.begin, this.end, this.toList());
     }
 }

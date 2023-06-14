@@ -3,6 +3,7 @@ import { TextBoxComponent } from './text-box.component';
 import { SpeechBubble } from '../data/speechBubble.model';
 import { WordToken } from '../data/wordToken.model';
 import { LinkedList } from '../data/linkedList.model'; // Importiere LinkedList
+import { SignalRService } from '../service/signalRService';
 
 describe('TextBoxComponent', () => {
   let component: TextBoxComponent;
