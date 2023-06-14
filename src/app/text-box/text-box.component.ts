@@ -20,18 +20,10 @@ export class TextBoxComponent implements OnInit {
   @ViewChild('textbox', { static: true }) textboxRef!: ElementRef;
 
   @Input() textbox!: SpeechBubble;
+  @Input() idPrefix: string = '';
 
   ngOnInit() {
     const textbox = this.textboxRef.nativeElement;
-    //this.textbox.words = new LinkedList();
-
-    /*const words = ['Hello,', 'World!', 'How', 'are', 'you?'];
-
-    words.forEach((wordText) => {
-      const word = new WordToken(wordText, 1, 1, 1, 1);
-      this.textbox.words.add(word);
-    });
-    */
 
     if(this.textbox.words.head == null) {
       this.textbox.words.add( new WordToken('', 0, 0, 0, 0));
@@ -60,7 +52,7 @@ export class TextBoxComponent implements OnInit {
       const selectedSpan = event.target as HTMLElement;
       const currentText = selectedSpan.textContent;
       const cursorPosition = window.getSelection()?.getRangeAt(0)?.startOffset;
-      const spanId = selectedSpan.id;
+      const spanId = this.idPrefix + '-' + selectedSpan.id;
     
       const isFullSelection = window.getSelection()?.toString().length === currentText?.length;
 
@@ -190,9 +182,12 @@ export class TextBoxComponent implements OnInit {
           selectedSpan2.textContent = currentText.trim();
         }
       }
+      //Sorgt noch für Fehler, daher treten noch vereinzelt leere Strings auf
       //this.removeEmptyObjects();
       this.updateWordColors();
     })
+
+    this.updateWordColors();
   }
   
   /**
@@ -252,8 +247,8 @@ export class TextBoxComponent implements OnInit {
   }
 
   /**
- * Removes empty objects from the LinkedList of words.
- */
+  * Removes empty objects from the LinkedList of words.
+  */
   removeEmptyObjects(): void {
     let current = this.textbox.words.head;
     const removedNodes: Node[] = [];
@@ -267,32 +262,34 @@ export class TextBoxComponent implements OnInit {
     }
   }
   
+  /**
+  * Updates the colors of the words based on the confidence value.
+  */
   updateWordColors() {
-    /*
     let current = this.textbox.words.head;
-
+  
     while (current !== null) {
       const element = document.getElementById(current.id.toString());
       if (element == null) return;
       const confidence = parseFloat(current.confidence.toString());
-
-        let color = '';
-
-        if (confidence >= 0.9) {
-          color = 'black';
-        } else if (confidence >= 0.7) {
-          color = 'yellow';
-        } else if (confidence >= 0.5) {
-          color = 'orange';
-        } else {
-          color = 'red';
-        }
-
+  
+      let color = '';
+  
+      if (confidence >= 0.9) {
+        color = '#000000'; // Schwarz (Hexadezimalwert: 000000)
+      } else if (confidence >= 0.7) {
+        color = '#D09114'; // Gelb (Hexadezimalwert: D09114)
+      } else if (confidence >= 0.5) {
+        color = '#CC6600'; // Orange (Hexadezimalwert: CC6600)
+      } else {
+        color = '#BE0101'; // Rot (Hexadezimalwert: BE0101)
+      }
+  
       element.style.color = color;
       current = current.next;
     }
-    return
-    */
-    
+    return;
   }
+
+
 }
