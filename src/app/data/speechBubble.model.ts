@@ -10,16 +10,12 @@ export class SpeechBubbleExport {
   public EndTime: number;
   public SpeechBubbleContent: WordExport[];
 
-  public CreationTime: String;
-
   constructor(speaker: number, begin: number, end: number, speechBubbleContent: WordExport[], id: number) {
     this.Id = id;
     this.Speaker = speaker;
     this.StartTime = begin;
     this.EndTime = end;
     this.SpeechBubbleContent = speechBubbleContent;
-
-    this.CreationTime = "2023-06-12T12:34:56.789Z";
   }
 
   toJSON() {
@@ -28,7 +24,6 @@ export class SpeechBubbleExport {
       Speaker: this.Speaker,
       StartTime: this.StartTime,
       EndTime: this.EndTime,
-      CreationTime: this.CreationTime,
       SpeechBubbleContent: this.SpeechBubbleContent.map(wordExport => wordExport.toJSON())
     };
   }

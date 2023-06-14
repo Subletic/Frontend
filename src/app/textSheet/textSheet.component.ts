@@ -337,7 +337,6 @@ export class TextSheetComponent implements OnInit {
     * @param event - The focusout event object.
     * @param index - The index of the textbox.
     */
-    @HostListener('focusout')
     onFocusOut(index: number) {
 
       if(this.timeSinceFocusOutList[index] >= 5) {
