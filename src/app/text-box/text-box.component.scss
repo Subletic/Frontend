@@ -1,0 +1,21 @@
+.textbox {
+  background-color: white;
+  width: 900px;
+  min-height: 100px; /* Mindesthöhe */
+  max-height: 90%;
+  padding: 10px; /* Abstand zum Inhalt */
+  font-size: 32px; /* Größe der Schrift */
+  margin: 20px;
+}
+
+.textbox p {
+  user-select: text;
+}
+.textbox span {
+  display: inline;
+  user-select: none;
+}
+.textbox span::after {
+  content: " ";
+}  
+  

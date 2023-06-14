@@ -1,0 +1,16 @@
+<div class="middle-container d-flex align-items-center justify-content-center">
+
+    <div *ngFor="let speechBubble of getSpeechBubblesArray(); let i = index">
+        <!--<app-text-box [textbox]="speechBubble" onFocusOut="handleFocusOut(i)"></app-text-box> -->
+        <app-text-box [textbox]="speechBubble" (focusout)="onFocusOut(i)"></app-text-box>
+        <p>Index: {{ i }}</p>
+    </div>
+
+    <div style="display: flex; justify-content: flex-end; align-items: center;">
+        <button (click)="addNewStandardSpeechBubble()">Textbox hinzufügen</button>
+        <button (click)="sendNewSpeechBubble()">Textbox hinzufuegen ueber Backend</button>
+        <button (click)="deleteOldestSpeechBubble()">oberste Textbox entfernen</button>
+        <button (click)="callExportToJson(0)">Call Export to JSON</button>
+    </div>
+</div>
+  

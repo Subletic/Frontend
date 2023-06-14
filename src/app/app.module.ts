@@ -3,9 +3,16 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
 
+import { SoundBoxComponent } from './sound-box/sound-box.component';
+import { TextBoxComponent } from './text-box/text-box.component';
+import { TextSheetComponent } from './textSheet/textSheet.component';
+
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    SoundBoxComponent,
+    TextSheetComponent,
+    TextBoxComponent
   ],
   imports: [
     BrowserModule
