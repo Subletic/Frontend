@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { SpeechBubble, SpeechBubbleExport } from '../data/speechBubble.model';
 import { WordToken, WordExport } from '../data/wordToken.model';
 import { SignalRService } from '../service/signalRService';
@@ -249,7 +249,6 @@ export class TextSheetComponent implements OnInit {
       });
 
       speechBubbleExportArray.forEach (element => {
-        const normalSpeechBubble = element.toSpeechBubble();
         this.speechBubbles.add(element.toSpeechBubble());
       });
 
@@ -322,7 +321,7 @@ export class TextSheetComponent implements OnInit {
     * The new speech bubble is then added to the list and its representation is logged to the console.
     */
     addNewStandardSpeechBubble() {
-      const testBubble1 = new SpeechBubble(0, 0, 0, 0);
+      const testBubble1 = new SpeechBubble(0, 0, 0);
 
       this.speechBubbles.add(testBubble1);
 

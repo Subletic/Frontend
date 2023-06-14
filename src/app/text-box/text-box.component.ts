@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
 import { WordToken } from '../data/wordToken.model';
 import { SpeechBubble } from '../data/speechBubble.model';
-import { LinkedList } from '../data/linkedList.model'; // Importiere LinkedList
 
 /**
  * The TextBoxComponent represents a component that handles the SpeechBubble data.
@@ -20,13 +19,12 @@ export class TextBoxComponent implements OnInit {
   @ViewChild('textbox', { static: true }) textboxRef!: ElementRef;
 
   @Input() textbox!: SpeechBubble;
-  @Input() idPrefix: string = '';
 
   ngOnInit() {
     const textbox = this.textboxRef.nativeElement;
 
     if(this.textbox.words.head == null) {
-      this.textbox.words.add( new WordToken('', 0, 0, 0, 0));
+      this.textbox.words.add( new WordToken('', 1, 1, 1, 1));
     }
 
     textbox.innerHTML = this.generateHTML();
@@ -52,7 +50,7 @@ export class TextBoxComponent implements OnInit {
       const selectedSpan = event.target as HTMLElement;
       const currentText = selectedSpan.textContent;
       const cursorPosition = window.getSelection()?.getRangeAt(0)?.startOffset;
-      const spanId = this.idPrefix + '-' + selectedSpan.id;
+      const spanId = selectedSpan.id;
     
       const isFullSelection = window.getSelection()?.toString().length === currentText?.length;
 
@@ -184,10 +182,10 @@ export class TextBoxComponent implements OnInit {
       }
       //Sorgt noch für Fehler, daher treten noch vereinzelt leere Strings auf
       //this.removeEmptyObjects();
-      this.updateWordColors();
+      //this.updateWordColors();
     })
 
-    this.updateWordColors();
+    //this.updateWordColors();
   }
   
   /**
@@ -200,7 +198,7 @@ export class TextBoxComponent implements OnInit {
     const wordElements: string[] = []
     let current = this.textbox.words.head;
     while (current) {
-      const wordWithId = `<span id="${current.id}" contenteditable="true">${current.word}</span>`;
+      const wordWithId = `<span id="${current.id}" style="color: ${current.color}" contenteditable="true">${current.word}</span>`;
       wordElements.push(wordWithId);
       current = current.next;
     }
@@ -251,7 +249,6 @@ export class TextBoxComponent implements OnInit {
   */
   removeEmptyObjects(): void {
     let current = this.textbox.words.head;
-    const removedNodes: Node[] = [];
 
     while (current) {
       const next = current.next;
@@ -266,6 +263,7 @@ export class TextBoxComponent implements OnInit {
   * Updates the colors of the words based on the confidence value.
   */
   updateWordColors() {
+    /*
     let current = this.textbox.words.head;
   
     while (current !== null) {
@@ -289,6 +287,8 @@ export class TextBoxComponent implements OnInit {
       current = current.next;
     }
     return;
+    */
+   return;
   }
 
 

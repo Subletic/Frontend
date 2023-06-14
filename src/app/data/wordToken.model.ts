@@ -40,6 +40,8 @@ export class WordToken {
   public prev: WordToken | null;
   public next: WordToken | null;
 
+  public color: string;
+
   private static currentId = 0;
 
   constructor(word: string, confidence: number, startTime: number, endTime: number, speaker: number) {
@@ -51,6 +53,25 @@ export class WordToken {
     this.id = WordToken.getNextId();
     this.prev = null;
     this.next = null;
+
+    this.color = '';
+    this.getColor();
+  }
+
+  /**
+  * Returns the color based on the confidence value.
+  * @returns {string} - The color in hexadecimal format.
+  */
+  getColor() {
+    if (this.confidence >= 0.9) {
+      this.color = '#000000'; // Schwarz (Hexadezimalwert: 000000)
+    } else if (this.confidence >= 0.7) {
+      this.color = '#D09114'; // Gelb (Hexadezimalwert: D09114)
+    } else if (this.confidence >= 0.5) {
+      this.color = '#CC6600'; // Orange (Hexadezimalwert: CC6600)
+    } else {
+      this.color = '#BE0101'; // Rot (Hexadezimalwert: BE0101)
+    }
   }
 
   /*ID should be irrelevant, because a new object is only instanziated by: 

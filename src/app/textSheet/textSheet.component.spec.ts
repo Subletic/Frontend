@@ -2,6 +2,7 @@ import { SpeechBubble, SpeechBubbleExport } from '../data/speechBubble.model';
 import { WordToken } from '../data/wordToken.model';
 import { LinkedList, TextSheetComponent, SpeechBubbleChain } from './textSheet.component';
 import { SignalRService } from '../service/signalRService';
+//import { LinkedList } from '../data/linkedList.model';
 
 describe('LinkedList', () => {
   let linkedList: LinkedList;
@@ -11,9 +12,9 @@ describe('LinkedList', () => {
 
   beforeEach(() => {
     linkedList = new LinkedList();
-    speechBubble1 = new SpeechBubble(0, 0, 0, 0);
-    speechBubble2 = new SpeechBubble(1, 1, 1, 1);
-    speechBubble3 = new SpeechBubble(2, 2, 2, 2);
+    speechBubble1 = new SpeechBubble(0, 0, 0);
+    speechBubble2 = new SpeechBubble(1, 1, 1);
+    speechBubble3 = new SpeechBubble(2, 2, 2);
   });
 
   it('should add a speech bubble to the list', () => {
@@ -48,7 +49,7 @@ describe('LinkedList', () => {
   });
 
   it('should export speech bubbles to JSON', () => {
-    const testBubble1 = new SpeechBubble(0, 0, 0, 0);
+    const testBubble1 = new SpeechBubble(0, 0, 0);
     const word = new WordToken('Testeingabe', 1, 1, 1, 1);
     const word2 = new WordToken('weitere', 1, 1, 1, 1);
     testBubble1.words.add(word);
@@ -63,7 +64,7 @@ describe('LinkedList', () => {
 
   it('should retain correct format after conversion to JSON and back', () => {
     const component = new TextSheetComponent(new SignalRService);
-    const testBubble1 = new SpeechBubble(1, 1, 1, 1);
+    const testBubble1 = new SpeechBubble(1, 1, 1);
     component.speechBubbles.add(testBubble1);
   
     const speechBubbleExport = testBubble1.getExport();

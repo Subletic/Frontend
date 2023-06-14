@@ -57,7 +57,7 @@ describe('SpeechBubble', () => {
   let wordToken2: WordToken;
 
   beforeEach(() => {
-    speechBubble = new SpeechBubble(1, 0, 3, LinkedList, 1);
+    speechBubble = new SpeechBubble(1, 0, 3, new LinkedList, 1);
     wordToken1 = new WordToken('Hello', 0.9, 0, 1, 1);
     wordToken2 = new WordToken('World', 0.8, 2, 3, 1);
   });

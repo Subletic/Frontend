@@ -29,7 +29,7 @@ export class SpeechBubbleExport {
   }
 
   toSpeechBubble(){
-    let words = new LinkedList();
+    const words = new LinkedList();
 
     this.SpeechBubbleContent.forEach(element => {
       words.add(element.toWordToken());
@@ -53,14 +53,14 @@ export class SpeechBubble {
 
     private static currentId = 0;
   
-    public constructor(speaker: number, begin: number, end: number, list?: any, id?: number) {
+    public constructor(speaker: number, begin: number, end: number, list?: LinkedList, id?: number) {
       if(id != null) {
         this.id = id;
       } else {
         this.id = SpeechBubble.getNextId();
       }
       this.speaker = speaker;
-      if(list instanceof LinkedList) {
+      if(list) {
         this.words = list;
       } else {
         this.words = new LinkedList();
