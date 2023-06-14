@@ -3,13 +3,25 @@ import { SpeechBubble, SpeechBubbleExport } from '../data/speechBubble.model';
 import { WordToken, WordExport } from '../data/wordToken.model';
 import { SignalRService } from '../service/signalRService';
 
+/**
+* The SpeechBubbleChain class represents a chain of speech bubbles.
+* It is used for exporting and importing speech bubbles in JSON format.
+*/
 export class SpeechBubbleChain {
   public SpeechbubbleChain: SpeechBubbleExport[];
 
+  /**
+   * Creates an instance of the SpeechBubbleChain class.
+   * @param SpeechbubbleChain The array of speech bubbles in the chain.
+   */
   constructor(SpeechbubbleChain: SpeechBubbleExport[]) {
     this.SpeechbubbleChain = SpeechbubbleChain;
   }
 
+  /**
+   * Converts the SpeechBubbleChain object to a JSON object.
+   * @returns The JSON representation of the SpeechBubbleChain object.
+   */
   toJSON() {
     return {
       SpeechbubbleChain: this.SpeechbubbleChain.map(speechBubble => speechBubble.toJSON())
@@ -122,7 +134,7 @@ export class LinkedList {
 
 /**
  * The TextSheetComponent represents a component that handles the speech bubbles in a text sheet.
- * It provides methods to add and delete speech bubbles, as well as retrieve information about the speech bubbles.
+ * It provides methods to add, delete and manipulate speech bubbles, as well as retrieve information about the speech bubbles.
  */
 @Component({
   selector: 'app-text-sheet',
@@ -131,15 +143,17 @@ export class LinkedList {
 })
 export class TextSheetComponent implements OnInit {
 
+    //Attributes holding all showcased linkedList of Instance SpeechBubble
     speechBubbles: LinkedList = new LinkedList;
 
     constructor(private signalRService: SignalRService) {}
 
     ngOnInit() {
 
+      //On receiving a new Speech Bubble from Backend, this function calls the importfromJSON 
+      //function for all speech Bubbles in the list
       this.signalRService.newBubbleReceived.subscribe(speechBubble => {
         console.log("Neue SpeechBubble erhalten:", speechBubble);
-        // Hier kannst du den Inhalt der SpeechBubble weiterverarbeiten oder anzeigen
         this.importfromJSON(speechBubble);
       });
 
@@ -147,81 +161,28 @@ export class TextSheetComponent implements OnInit {
       this.speechBubbles.add(testBubble1);
 
       const word = new WordToken('Testeingabe', 0.2, 1, 1, 1);
-  
-      const word2 = new WordToken('von', 0.9, 1, 1, 1);
-
-      const word3 = new WordToken('JSON', 0.7, 1, 1, 1);
+      const word2 = new WordToken('aus', 0.9, 1, 1, 1);
+      const word3 = new WordToken('OnInit', 0.7, 1, 1, 1);
 
       testBubble1.words.add(word);
       testBubble1.words.add(word2);
       testBubble1.words.add(word3);
-
-      const speechBubbleExport1 = testBubble1.getExport();
-
-      //this.exportToJson([speechBubbleExport1]);
-
-
-      //Import JSON from Backend
-      const jsonString = `{
-        "SpeechbubbleChain": [
-          {
-            "Id": 0,
-            "Speaker": 0,
-            "StartTime": 0,
-            "EndTime": 0,
-            "SpeechBubbleContent": [
-              {
-                "Word": "Testeingabe",
-                "Confidence": 1,
-                "StartTime": 1,
-                "EndTime": 1,
-                "Speaker": 1
-              },
-              {
-                "Word": "weitere",
-                "Confidence": 1,
-                "StartTime": 1,
-                "EndTime": 1,
-                "Speaker": 1
-              }
-            ]
-          }
-        ]
-      }`;
-      const testi = this.importfromJSON(jsonString);
-    
-      
     }
 
-    
-
     /**
-    * Exports a speech bubble list to a JSON file.
-    * @param speechBubbleExportList - An array of SpeechBubbleExport objects representing the speech bubbles.
+    * Exports a speech bubble list to a JSON file and sends it to a specified API endpoint.
+    * @param speechBubbleExportList - An array of SpeechBubbleExport objects representing the speech bubbles to be exported.
     */
     exportToJson(speechBubbleExportList: SpeechBubbleExport[]) {
 
       const speechBubbleChain = new SpeechBubbleChain(speechBubbleExportList);
       const jsonData = speechBubbleChain.toJSON();
-      const jsonString = JSON.stringify(jsonData);
-
-      const blob = new Blob([jsonString], { type: 'application/json' });
-      
-       
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      const id = speechBubbleExportList[0].Id;
-      const name = 'output_' + id.toString();
-
-      link.download = name;
-      link.click();
 
       fetch('http://localhost:5003/api/speechbubble/update', {
         method: 'POST',
-        body: JSON.stringify(jsonData ), // Übergebe das JSON-Array im Body
+        body: JSON.stringify(jsonData ),
         headers: {
-         'Content-Type': 'application/json' // Setze den Content-Type auf application/json
+         'Content-Type': 'application/json'
         }
       })
         .then(response => {
@@ -234,9 +195,12 @@ export class TextSheetComponent implements OnInit {
         .catch(error => {
           console.error('Fehler beim Senden der neuen SpeechBubble:', error);
         });
-    
     }
 
+    /**
+    * Calls the exportToJson method to export a speech bubble at the specified index.
+    * @param index - The index of the speech bubble to export.
+    */
     callExportToJson(index: number) {
       let current = this.speechBubbles.tail;
       for(let i = 0; i < index; i++) {
@@ -264,7 +228,7 @@ export class TextSheetComponent implements OnInit {
         speechBubbleData.speechBubbleContent.forEach((word: any) => {
             const wordExport = new WordExport(
               word.word,
-              parseInt(word.confidence),
+              word.confidence,
               word.startTime,
               word.endTime,
               word.speaker
@@ -280,24 +244,16 @@ export class TextSheetComponent implements OnInit {
           speechBubbleData.endTime,
           speechBubbleContent
         );
-        console.log(speechBubbleExport.Speaker);  
- 
+
         speechBubbleExportArray.push(speechBubbleExport);
       });
 
       speechBubbleExportArray.forEach (element => {
         const normalSpeechBubble = element.toSpeechBubble();
         this.speechBubbles.add(element.toSpeechBubble());
-        console.log(element.toSpeechBubble());
-        console.log("SpeechBubbles: " + this.speechBubbles);
       });
-      
 
       this.exportToJson(speechBubbleExportArray);
-      //return speechBubbleChain;
-      //return speechBubbleExportArray;
-
-      this.speechBubbles.add
     }
 
     //Attributes for timeCounters, should maybe be refactored elsewhere
@@ -376,7 +332,7 @@ export class TextSheetComponent implements OnInit {
         console.log(speechBubbleArray[i].id + speechBubbleArray[i].words.toString());
 
       }
-  }
+    }
     
     /**
     * Deletes the oldest speech bubble from the speechBubbles list.
@@ -389,6 +345,10 @@ export class TextSheetComponent implements OnInit {
         }
     }
 
+    /**
+    * Sends a request to the server to send a new speech bubble.
+    * This method makes a POST request to the specified API endpoint.
+    */
     sendNewSpeechBubble() {
       fetch('http://localhost:5003/api/speechbubble/send-new-bubble', {
         method: 'POST',
