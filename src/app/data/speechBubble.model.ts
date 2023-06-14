@@ -2,18 +2,24 @@ import { LinkedList } from './linkedList.model';
 import { WordExport } from './wordToken.model';
 
 export class SpeechBubbleExport {
+  
   public Id: number;
+  
   public Speaker: number;
   public StartTime: number;
   public EndTime: number;
   public SpeechBubbleContent: WordExport[];
 
-  constructor(id: number, speaker: number, begin: number, end: number, speechBubbleContent: WordExport[]) {
+  public CreationTime: String;
+
+  constructor(speaker: number, begin: number, end: number, speechBubbleContent: WordExport[], id: number) {
     this.Id = id;
     this.Speaker = speaker;
     this.StartTime = begin;
     this.EndTime = end;
     this.SpeechBubbleContent = speechBubbleContent;
+
+    this.CreationTime = "2023-06-12T12:34:56.789Z";
   }
 
   toJSON() {
@@ -22,6 +28,7 @@ export class SpeechBubbleExport {
       Speaker: this.Speaker,
       StartTime: this.StartTime,
       EndTime: this.EndTime,
+      CreationTime: this.CreationTime,
       SpeechBubbleContent: this.SpeechBubbleContent.map(wordExport => wordExport.toJSON())
     };
   }
@@ -33,7 +40,7 @@ export class SpeechBubbleExport {
       words.add(element.toWordToken());
     });
 
-    return new SpeechBubble(this.Id, this.Speaker, this.StartTime, this.EndTime, words);
+    return new SpeechBubble(this.Speaker, this.StartTime, this.EndTime, words, this.Id);
   }
 }
 
@@ -48,9 +55,15 @@ export class SpeechBubble {
 
     public prev: SpeechBubble | null;
     public next: SpeechBubble | null;
+
+    private static currentId = 0;
   
-    public constructor(id: number, speaker: number, begin: number, end: number, list?: any) {
-      this.id = id;
+    public constructor(speaker: number, begin: number, end: number, list?: any, id?: number) {
+      if(id != null) {
+        this.id = id;
+      } else {
+        this.id = SpeechBubble.getNextId();
+      }
       this.speaker = speaker;
       if(list) {
         this.words = list;
@@ -63,7 +76,9 @@ export class SpeechBubble {
       this.next = null;
     }
 
-    
+    private static getNextId(): number {
+      return SpeechBubble.currentId++;
+    }
   
     printText() {
       let current = this.words.head;
@@ -90,6 +105,6 @@ export class SpeechBubble {
     }
 
     getExport() {
-      return new SpeechBubbleExport(this.id, this.speaker, this.begin, this.end, this.toList());
+      return new SpeechBubbleExport(this.speaker, this.begin, this.end, this.toList(), this.id);
     }
 }

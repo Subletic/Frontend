@@ -143,7 +143,7 @@ export class TextSheetComponent implements OnInit {
         this.importfromJSON(speechBubble);
       });
 
-      const testBubble1 = new SpeechBubble(0, 0, 0, 0);
+      const testBubble1 = new SpeechBubble(0, 0, 0);
       this.speechBubbles.add(testBubble1);
 
       const word = new WordToken('Testeingabe', 0.2, 1, 1, 1);
@@ -217,22 +217,23 @@ export class TextSheetComponent implements OnInit {
       link.download = name;
       link.click();
 
-      fetch('http://localhost:5003', {
+      fetch('http://localhost:5003/api/speechbubble/update', {
         method: 'POST',
+        body: JSON.stringify(jsonData ), // Übergebe das JSON-Array im Body
         headers: {
-          'Content-Type': 'application/json'
-        },
-        body: jsonString
+         'Content-Type': 'application/json' // Setze den Content-Type auf application/json
+        }
       })
-        .then(response => response.json())
-        .then(responseData => {
-          // Erfolgreiche Antwort vom Server erhalten
-          console.log(responseData);
+        .then(response => {
+          if (response.ok) {
+            console.log('Neue SpeechBubble wurde erfolgreich gesendet');
+          } else {
+            console.error('Fehler beim Senden der neuen SpeechBubble');
+          }
         })
         .catch(error => {
-          // Fehler beim Ausführen der Anfrage
-          console.error(error);
-      });
+          console.error('Fehler beim Senden der neuen SpeechBubble:', error);
+        });
     
     }
 
@@ -254,14 +255,6 @@ export class TextSheetComponent implements OnInit {
     * @returns An array of SpeechBubbleExport objects.
     */
     importfromJSON(speechBubbleChain: any){
-
-      /*
-      console.log("id: " + jsonString[0].id);
-
-      const jsonData = JSON.parse(jsonString);
-
-      const speechBubbleChain = jsonData.SpeechbubbleChain;
-      */
      
       const speechBubbleExportArray: SpeechBubbleExport[] = [];
       
@@ -281,12 +274,11 @@ export class TextSheetComponent implements OnInit {
         });
 
         const speechBubbleExport = new SpeechBubbleExport(
-          Math.random(),
           speechBubbleData.speaker,
           speechBubbleData.startTime,
           speechBubbleData.endTime,
-          speechBubbleContent
-
+          speechBubbleContent,
+          speechBubbleData.id
         );
         console.log(speechBubbleExport.Speaker);  
  
@@ -345,7 +337,7 @@ export class TextSheetComponent implements OnInit {
     * @param event - The focusout event object.
     * @param index - The index of the textbox.
     */
-    @HostListener('focusout', ['$event'])
+    @HostListener('focusout')
     onFocusOut(index: number) {
 
       if(this.timeSinceFocusOutList[index] >= 5) {

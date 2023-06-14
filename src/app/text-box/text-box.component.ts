@@ -33,6 +33,10 @@ export class TextBoxComponent implements OnInit {
     });
     */
 
+    if(this.textbox.words.head == null) {
+      this.textbox.words.add( new WordToken('', 0, 0, 0, 0));
+    }
+
     textbox.innerHTML = this.generateHTML();
     console.log('Print Text:', this.textbox.printText());
 
@@ -186,9 +190,8 @@ export class TextBoxComponent implements OnInit {
           selectedSpan2.textContent = currentText.trim();
         }
       }
-      this.removeEmptyObjects();
+      //this.removeEmptyObjects();
       this.updateWordColors();
-      
     })
   }
   
@@ -253,6 +256,8 @@ export class TextBoxComponent implements OnInit {
  */
   removeEmptyObjects(): void {
     let current = this.textbox.words.head;
+    const removedNodes: Node[] = [];
+
     while (current) {
       const next = current.next;
       if (current.word === "") {
