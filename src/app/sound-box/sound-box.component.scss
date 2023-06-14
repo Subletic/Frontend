@@ -10,6 +10,12 @@
   box-sizing: border-box;
 }
 
+/* is for the alignment of the elements*/
+#mover {
+  float:left;
+  margin-right: 30px;
+}
+
 /* Definiert den Stil für den <h1>-Text im mittleren Container */
 .middle-container h1 {
   font-size: 24px;
@@ -19,17 +25,9 @@
 
 /* Definiert den Stil für den Sound-Container */
 .sound-container {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 100px;
-  background-color: var(--container-background-color);;
+  background-color: var(--container-background-color);
   display: flex;
-  align-items: center;
-  justify-content: flex-start;
   padding: 10px;
-  border: none;
 }
 
 /* Definiert den Stil für den Play-Button */
@@ -42,15 +40,16 @@
   outline: none;
   cursor: pointer;
   border: none;
+  background: var(--container-background-color);
 }
 
 /* Definiert den Stil für das Play-Button-Bild */
 .play-button-image {
-  width: 70px;
-  height: 70px;
+  width: 33px;
   object-fit: cover;
   border-radius: 70%;
   border: none;
+  background: var(--container-background-color);
 }
 
 /* Definiert den Stil für den Sound-Button */
@@ -63,26 +62,20 @@
   outline: none;
   cursor: pointer;
   border: none;
+  background: var(--container-background-color);
 }
 
 /* Definiert den Stil für das Sound-Button-Bild */
 .button-image-1 {
   width: 30px;
-  height: 30px;
-  object-fit: cover;
-  border-radius: 70%;
-  border: none;
 }
 
 /* Definiert den Stil für den Sound-Button */
-.sound-button {
+.voice-bar {
+  background-image: repeating-linear-gradient(90deg, #00458b 0%, 1%, #00458b 10%, rgb(81, 75, 255) 0%, white 4%);
+  width: 1000px;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: none;
-  border-radius: 20%;
-  outline: none;
-  cursor: pointer;
+  height: 35px;
 }
 
 /* Definiert den Stil für das Sound-Button-Bild */
@@ -93,18 +86,18 @@
   border-radius: 30%;
 }
 
+/* contains all elements of the bottom soundbar*/
+.soundbar-button-container{
+  margin-left: auto;
+  margin-right: auto;
+}
+
 /* Definiert den Stil für die Hover-Effekte */
 .play-button-image:hover,
 .button-image-1:hover {
   transform: scale(1.1);
 }
 
-/* Definiert den Stil für die rechten Abstände zwischen den Buttons */
-.play-button:not(:last-child),
-.sound-button-1:not(:last-child),
-.sound-button:not(:last-child) {
-  margin-right: 32px;
-}
 
 /* Media Queries für verschiedene Bildschirmgrößen */
 @media (max-width: 800px) {
