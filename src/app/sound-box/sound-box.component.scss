@@ -10,6 +10,12 @@
   box-sizing: border-box;
 }
 
+/* is for the alignment of the elements*/
+#mover {
+  float:left;
+  margin-right: 30px;
+}
+
 /* Definiert den Stil für den <h1>-Text im mittleren Container */
 .middle-container h1 {
   font-size: 24px;
@@ -19,17 +25,9 @@
 
 /* Definiert den Stil für den Sound-Container */
 .sound-container {
-  position: relative;
-bottom: -5px;
-left: 0;
-background-color: var(--container-background-color);
-display: flex;
-align-items: center;
-justify-content: flex-start;
-padding: 10px;
-border: none;
-margin-left: auto;
-margin-right: auto;
+  background-color: var(--container-background-color);
+  display: flex;
+  padding: 10px;
 }
 
 /* Definiert den Stil für den Play-Button */
@@ -47,7 +45,7 @@ margin-right: auto;
 
 /* Definiert den Stil für das Play-Button-Bild */
 .play-button-image {
-  width: 30px;
+  width: 33px;
   object-fit: cover;
   border-radius: 70%;
   border: none;
@@ -70,16 +68,11 @@ margin-right: auto;
 /* Definiert den Stil für das Sound-Button-Bild */
 .button-image-1 {
   width: 30px;
-  height: 30px;
-  object-fit: cover;
-  border-radius: 70%;
-  border: none;
-  background: var(--container-background-color);
 }
 
 /* Definiert den Stil für den Sound-Button */
 .voice-bar {
-  background-image: repeating-linear-gradient(90deg, white 0%, white 2%, blue 2%, rgb(81, 75, 255) 4%, white 4%);
+  background-image: repeating-linear-gradient(90deg, #00458b 0%, 1%, #00458b 10%, rgb(81, 75, 255) 0%, white 4%);
   width: 1000px;
   display: flex;
   height: 35px;
@@ -93,18 +86,18 @@ margin-right: auto;
   border-radius: 30%;
 }
 
+/* contains all elements of the bottom soundbar*/
+.soundbar-button-container{
+  margin-left: auto;
+  margin-right: auto;
+}
+
 /* Definiert den Stil für die Hover-Effekte */
 .play-button-image:hover,
 .button-image-1:hover {
   transform: scale(1.1);
 }
 
-/* Definiert den Stil für die rechten Abstände zwischen den Buttons */
-.play-button:not(:last-child),
-.sound-button-1:not(:last-child),
-.sound-button:not(:last-child) {
-  margin-right: 32px;
-}
 
 /* Media Queries für verschiedene Bildschirmgrößen */
 @media (max-width: 800px) {
