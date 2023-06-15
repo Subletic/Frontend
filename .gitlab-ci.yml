@@ -1,7 +1,7 @@
 stages:
   - build
   - verification
-  - build
+  - build-docker
 
 build:
   stage: build
@@ -34,14 +34,11 @@ test:
     - ng test --no-watch --code-coverage
     - ng test --watch=false
 
-stages:
-  - build
-
 build-docker:
   variables:
     KANIKO_ARGS: ""
     KANIKO_BUILD_CONTEXT: $CI_PROJECT_DIR
-  stage: build
+  stage: build-docker
   image:
     name: gcr.io/kaniko-project/executor:v1.10.0-debug
     entrypoint: [""]
