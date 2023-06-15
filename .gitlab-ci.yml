@@ -1,6 +1,7 @@
 stages:
   - build
   - verification
+  - build
 
 build:
   stage: build
@@ -32,3 +33,21 @@ test:
     - npm ci
     - ng test --no-watch --code-coverage
     - ng test --watch=false
+
+stages:
+  - build
+
+build-docker:
+  variables:
+    KANIKO_ARGS: ""
+    KANIKO_BUILD_CONTEXT: $CI_PROJECT_DIR
+  stage: build
+  image:
+    name: gcr.io/kaniko-project/executor:v1.10.0-debug
+    entrypoint: [""]
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+  script:
+    - mkdir -p /kaniko/.docker
+    - DOCKERFILE_PATH=${DOCKERFILE_PATH:-"$KANIKO_BUILD_CONTEXT/Dockerfile"}
+    - /kaniko/executor --context $KANIKO_BUILD_CONTEXT --dockerfile $DOCKERFILE_PATH --destination $CI_REGISTRY_IMAGE:latest $KANIKO_ARGS
