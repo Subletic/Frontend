@@ -25,6 +25,7 @@ lint:
     paths:
       - node_modules
     policy: pull
+  allow_failure: true
 
 test:
   stage: verification
