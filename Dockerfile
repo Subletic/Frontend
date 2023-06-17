@@ -20,7 +20,7 @@ RUN npm install -g @angular/cli
 COPY . /app
 
 # generate build
-RUN ng build
+RUN ng build --configuration=production
 
 ############
 ### prod ###
