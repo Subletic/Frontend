@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { SpeechBubble, SpeechBubbleExport } from '../data/speechBubble.model';
 import { WordToken, WordExport } from '../data/wordToken.model';
 import { SignalRService } from '../service/signalRService';
+import {environment} from "../../environments/environment";
 
 /**
 * The SpeechBubbleChain class represents a chain of speech bubbles.
@@ -38,13 +39,13 @@ export class LinkedList {
     public head: SpeechBubble | null;
     public tail: SpeechBubble | null;
     public currentIndex: number;
-  
+
     constructor() {
       this.head = null;
       this.tail = null;
       this.currentIndex = 0;
     }
-  
+
     /**
     * Adds a speech bubble to the linked list.
     * Assigns a unique ID to the speech bubble and updates the head and tail pointers.
@@ -53,7 +54,7 @@ export class LinkedList {
     add(speechBubble: SpeechBubble) {
         speechBubble.id = this.currentIndex;
       this.currentIndex++;
-  
+
       if (!this.head) {
         this.head = speechBubble;
         this.tail = speechBubble;
@@ -65,7 +66,7 @@ export class LinkedList {
         }
       }
     }
-  
+
     /**
     * Removes a speech bubble from the linked list.
     * Updates the head and tail pointers and adjusts the next and previous references.
@@ -85,7 +86,7 @@ export class LinkedList {
         speechBubble.next.prev = speechBubble.prev;
       }
     }
-  
+
     /**
     * Prints the word lists of all speech bubbles in the linked list.
     * Returns a string representation of the word lists.
@@ -150,7 +151,7 @@ export class TextSheetComponent implements OnInit {
 
     ngOnInit() {
 
-      //On receiving a new Speech Bubble from Backend, this function calls the importfromJSON 
+      //On receiving a new Speech Bubble from Backend, this function calls the importfromJSON
       //function for all speech Bubbles in the list
       this.signalRService.newBubbleReceived.subscribe(speechBubble => {
         console.log("Neue SpeechBubble erhalten:", speechBubble);
@@ -178,7 +179,7 @@ export class TextSheetComponent implements OnInit {
       const speechBubbleChain = new SpeechBubbleChain(speechBubbleExportList);
       const jsonData = speechBubbleChain.toJSON();
 
-      fetch('http://localhost:5003/api/speechbubble/update', {
+      fetch(environment.apiURL + '/api/speechbubble/update', {
         method: 'POST',
         body: JSON.stringify(jsonData ),
         headers: {
@@ -219,9 +220,9 @@ export class TextSheetComponent implements OnInit {
     * @returns An array of SpeechBubbleExport objects.
     */
     importfromJSON(speechBubbleChain: any){
-     
+
       const speechBubbleExportArray: SpeechBubbleExport[] = [];
-      
+
       speechBubbleChain.forEach((speechBubbleData: any) => {
         const speechBubbleContent: WordExport[] = [];
 
@@ -233,7 +234,7 @@ export class TextSheetComponent implements OnInit {
               word.endTime,
               word.speaker
             )
-      
+
             speechBubbleContent.push(wordExport);
         });
 
@@ -277,11 +278,11 @@ export class TextSheetComponent implements OnInit {
           console.log("timeSinceFocusOut > 5 bei index " + index);
           clearInterval(this.intervalList[index]);
           this.callExportToJson(index);
-          
-       
+
+
           this.timeSinceFocusOutList[index] = 0;
           return;
-        } 
+        }
       }, 1000);
     }
 
@@ -301,7 +302,7 @@ export class TextSheetComponent implements OnInit {
       clearInterval(this.intervalList[index]);
       this.timeSinceFocusOutCounter(index);
     }
- 
+
     /**
     * Retrieves an array of all speech bubbles in the speechBubbles list.
     * @returns An array of speech bubbles.
@@ -332,7 +333,7 @@ export class TextSheetComponent implements OnInit {
 
       }
     }
-    
+
     /**
     * Deletes the oldest speech bubble from the speechBubbles list.
     * The head speech bubble is removed from the list.
@@ -349,7 +350,7 @@ export class TextSheetComponent implements OnInit {
     * This method makes a POST request to the specified API endpoint.
     */
     sendNewSpeechBubble() {
-      fetch('http://localhost:5003/api/speechbubble/send-new-bubble', {
+      fetch(environment.apiURL + '/api/speechbubble/send-new-bubble', {
         method: 'POST',
       })
         .then(response => {
