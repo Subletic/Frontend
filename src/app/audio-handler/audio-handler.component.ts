@@ -1,4 +1,5 @@
 import {Component} from '@angular/core';
+import {SignalRService} from "../service/signalRService";
 
 @Component({
   selector: 'app-audio-handler',
@@ -13,15 +14,10 @@ export class AudioHandlerComponent {
   private audioContext = new AudioContext();
   private sourceNode: AudioBufferSourceNode | null = null;
 
-  constructor() {
-    this.audioContext = new AudioContext();
 
-    // Establish connection to WebSocket running on backend
-    // const connection = new WebSocket(environment.apiURL.replace('http', 'ws') + '/audio');
-    const connection = new WebSocket("ws://localhost:3000");
-    console.log("Audio-Websocket connected!");
-    // connection.addEventListener('message', (event) => this.handleAudioData(event));
-    connection.onmessage = (event) => this.handleAudioData(event);
+  constructor(private signalRService: SignalRService) {
+    this.signalRService.receivedAudioStream.subscribe((newChunk) => {this.handleAudioData(newChunk)});
+    this.audioContext = new AudioContext();
   }
 
   public resumePlayback(): void {
@@ -32,16 +28,16 @@ export class AudioHandlerComponent {
     this.audioContext.resume().then(() => console.log('Playback resumed successfully.'));
   }
 
-  private handleAudioData(event: MessageEvent): void {
+  private handleAudioData(newChunk: Int16Array): void {
     // Add received audio data to buffer
-    const audioData = event.data;
-    console.log(audioData);
-    // const audioSamples = this.convertToPCM(audioData);
-    this.audioBuffer.push(audioData);
+    // const audioSamples = this.convertToPCM(newChunk);
+    this.audioBuffer.push(newChunk);
 
     // Check if buffer is full
     if (this.audioBuffer.length >= this.bufferLength) {
-      this.audioBuffer.shift(); // Remove oldest audio data
+      console.log(this.audioBuffer.length);
+      this.audioBuffer.slice(48000);
+      console.log(this.audioBuffer.length);
     }
 
     // Update playing audio
@@ -50,9 +46,11 @@ export class AudioHandlerComponent {
     }
   }
 
-  private convertToPCM(data: ArrayBuffer): Int16Array {
+  // Probably not needed anymore
+  private convertToPCM(data: Int16Array): Int16Array {
     console.log(typeof data)
     // Convert data to Int16Array for PCM audio
+    // Data is received in 1s chunks (48kHz * 2 bytes per sample = 96kB/s)
     const dataView = new DataView(data);
     const pcmData = new Int16Array(data.byteLength / 2); // Assuming 16-bit PCM audio
 
