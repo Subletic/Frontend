@@ -18,14 +18,19 @@ export class SignalRService {
       .build();
 
     this.hubConnection.start()
-      .then(() => console.log('SignalR connected.'))
+      .then(() => {
+        console.log('SignalR connected.')
+        this.initStreamConnection();
+      })
       .catch(err => console.error('SignalR connection error: ', err));
 
     this.hubConnection.on("newBubble", (speechBubble) => {
       this.newBubbleReceived.next(speechBubble);
       console.log("Neue SpeechBubble erhalten:", speechBubble);
     });
+  }
 
+  private initStreamConnection(): void {
     this.hubConnection.stream("ReceiveAudioStream").subscribe({
       next: (data: Int16Array) => {
         this.receivedAudioStream.next(data);
