@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {SignalRService} from "../service/signalRService";
 
 @Component({
@@ -6,7 +6,7 @@ import {SignalRService} from "../service/signalRService";
   templateUrl: './audio-handler.component.html',
   styleUrls: ['./audio-handler.component.scss']
 })
-export class AudioHandlerComponent {
+export class AudioHandlerComponent implements OnInit {
   private audioBuffer: Int16Array[] = [];
   private bufferSizeInSeconds = 120;
   private sampleRate = 48000;
@@ -16,8 +16,15 @@ export class AudioHandlerComponent {
 
 
   constructor(private signalRService: SignalRService) {
-    this.signalRService.receivedAudioStream.subscribe((newChunk) => {this.handleAudioData(newChunk)});
     this.audioContext = new AudioContext();
+  }
+
+  ngOnInit() {
+    
+    this.signalRService.receivedAudioStream.subscribe((newChunk) => {
+      this.handleAudioData(newChunk)
+    });
+  
   }
 
   public resumePlayback(): void {
