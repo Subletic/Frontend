@@ -34,7 +34,6 @@ export class SignalRService {
     this.hubConnection.stream("ReceiveAudioStream").subscribe({
       next: (data: Int16Array) => {
         this.receivedAudioStream.next(data);
-        console.log(data);
       },
       complete: () => {
         console.log("Stream completed");

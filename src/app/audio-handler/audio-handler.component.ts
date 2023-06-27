@@ -7,84 +7,77 @@ import {SignalRService} from "../service/signalRService";
   styleUrls: ['./audio-handler.component.scss']
 })
 export class AudioHandlerComponent implements OnInit {
-  private audioBuffer: Int16Array[] = [];
   private bufferSizeInSeconds = 120;
   private sampleRate = 48000;
-  private bufferLength = this.bufferSizeInSeconds * this.sampleRate;
+  private maxBufferLength = this.bufferSizeInSeconds * this.sampleRate;
+  private audioBuffer: Int16Array = new Int16Array(this.maxBufferLength);
   private audioContext = new AudioContext();
   private sourceNode: AudioBufferSourceNode | null = null;
-
+  private elementsInBuffer = 0;
+  private nodeAudioBuffer = this.audioContext.createBuffer(1, this.maxBufferLength, this.sampleRate);
 
   constructor(private signalRService: SignalRService) {
-    this.audioContext = new AudioContext();
+    this.sourceNode = this.audioContext.createBufferSource();
+    this.sourceNode.buffer = this.nodeAudioBuffer;
   }
 
   ngOnInit() {
-    
     this.signalRService.receivedAudioStream.subscribe((newChunk) => {
       this.handleAudioData(newChunk)
     });
-  
   }
 
   public resumePlayback(): void {
+    console.log(this.sourceNode)
     if (this.sourceNode) {
+      if (!this.sourceNode.buffer) return;
+      console.log(this.sourceNode.buffer.getChannelData(0));
       this.sourceNode.start();
+      this.audioContext.resume().then(() => console.log('Playback resumed successfully.'));
     }
+  }
 
-    this.audioContext.resume().then(() => console.log('Playback resumed successfully.'));
+  private concatenateInt16Arrays(a: Int16Array, b: Int16Array): Int16Array {
+    const c = new Int16Array(a.length + b.length);
+    c.set(a);
+    c.set(b, a.length);
+    return c;
   }
 
   private handleAudioData(newChunk: Int16Array): void {
     // Add received audio data to buffer
-    // const audioSamples = this.convertToPCM(newChunk);
-    this.audioBuffer.push(newChunk);
 
     // Check if buffer is full
-    if (this.audioBuffer.length >= this.bufferLength) {
-      console.log(this.audioBuffer.length);
-      this.audioBuffer.slice(48000);
-      console.log(this.audioBuffer.length);
+    if (this.elementsInBuffer + 48000 > this.maxBufferLength) {
+      console.log(this.elementsInBuffer);
+      const clonedArray = this.audioBuffer.slice(48000, 5760000);
+
+      this.audioBuffer = this.concatenateInt16Arrays(clonedArray, newChunk);
+
+      this.elementsInBuffer -= 48000;
+      console.log(this.elementsInBuffer);
     }
+
+    const offset = this.elementsInBuffer;
+    this.audioBuffer.set(newChunk, offset);
+    this.elementsInBuffer += newChunk.length;
 
     // Update playing audio
-    if (this.sourceNode) {
-      this.updatePlayableBuffer();
-    }
-  }
-
-  // Probably not needed anymore
-  private convertToPCM(data: Int16Array): Int16Array {
-    console.log(typeof data)
-    // Convert data to Int16Array for PCM audio
-    // Data is received in 1s chunks (48kHz * 2 bytes per sample = 96kB/s)
-    const dataView = new DataView(data);
-    const pcmData = new Int16Array(data.byteLength / 2); // Assuming 16-bit PCM audio
-
-    for (let i = 0; i < pcmData.length; i++) {
-      pcmData[i] = dataView.getInt16(i * 2, true);
-    }
-
-    return pcmData;
+    this.updatePlayableBuffer();
   }
 
   private updatePlayableBuffer(): void {
-    if (this.sourceNode) {
-      // Create single channel audio buffer with sampling rate of 48kHz
-      const audioBuffer = this.audioContext.createBuffer(1, this.bufferLength, this.sampleRate);
-      const channelData = audioBuffer.getChannelData(0);
+    // Create single channel audio buffer with sampling rate of 48kHz
+    this.nodeAudioBuffer.getChannelData(0).set(this.audioBuffer);
+    this.sourceNode?.buffer?.getChannelData(0).set(this.nodeAudioBuffer.getChannelData(0));
 
-      let offset = 0;
-      for (let i = 0; i < this.audioBuffer.length; i++) {
-        channelData.set(this.audioBuffer[i], offset);
-        offset += this.audioBuffer[i].length;
-      }
+    console.log("Channel data updated successfully.");
 
-      // Create source Node, connect it to the audio context and start playing
-      this.sourceNode = this.audioContext.createBufferSource();
-      this.sourceNode.buffer = audioBuffer;
-      this.sourceNode.connect(this.audioContext.destination);
+    if (!this.sourceNode) {
+      return;
     }
+
+    this.sourceNode.connect(this.audioContext.destination);
   }
 
   private stopAudio() {
