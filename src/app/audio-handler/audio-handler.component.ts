@@ -48,9 +48,7 @@ export class AudioHandlerComponent implements OnInit {
     }
 
     // Update playing audio
-    if (this.sourceNode) {
       this.updatePlayableBuffer();
-    }
   }
 
   // Probably not needed anymore
@@ -69,7 +67,6 @@ export class AudioHandlerComponent implements OnInit {
   }
 
   private updatePlayableBuffer(): void {
-    if (this.sourceNode) {
       // Create single channel audio buffer with sampling rate of 48kHz
       const audioBuffer = this.audioContext.createBuffer(1, this.bufferLength, this.sampleRate);
       const channelData = audioBuffer.getChannelData(0);
@@ -84,14 +81,24 @@ export class AudioHandlerComponent implements OnInit {
       this.sourceNode = this.audioContext.createBufferSource();
       this.sourceNode.buffer = audioBuffer;
       this.sourceNode.connect(this.audioContext.destination);
-    }
+
   }
 
-  private stopAudio() {
+  public stopAudio() {
     if (this.sourceNode) {
       this.sourceNode.stop();
       this.sourceNode.disconnect();
       this.sourceNode = null;
     }
+  }
+
+  public playOrStopAudio() {
+
+    if (this.sourceNode !== null) {
+      this.resumePlayback();
+    } else {
+      this.stopAudio();
+    }
+
   }
 }
