@@ -80,11 +80,21 @@ export class AudioHandlerComponent implements OnInit {
     this.sourceNode.connect(this.audioContext.destination);
   }
 
-  private stopAudio() {
+  public stopAudio() {
     if (this.sourceNode) {
       this.sourceNode.stop();
       this.sourceNode.disconnect();
       this.sourceNode = null;
     }
+  }
+
+  public playOrStopAudio() {
+
+    if (this.sourceNode !== null) {
+      this.resumePlayback();
+    } else {
+      this.stopAudio();
+    }
+
   }
 }

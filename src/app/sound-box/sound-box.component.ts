@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
+import { AudioHandlerComponent } from '../audio-handler/audio-handler.component';
 
 /**
  * The SoundBoxComponent represents a component that displays the bottom bar of the application.
@@ -12,7 +13,16 @@ import { Router } from '@angular/router';
   styleUrls: ['./sound-box.component.scss']
 })
 export class SoundBoxComponent {
-  constructor(private router: Router) { }
+
+  @ViewChild('audioHandler') audioHandler!: AudioHandlerComponent;
+
+  constructor(private router: Router) {}
+
+  playButton() {
+
+    this.audioHandler.playOrStopAudio();
+
+  }
 
   handleButtonClick() {
     console.log("hallo");
