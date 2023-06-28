@@ -54,9 +54,9 @@
 .play-button-image {
   width: 30px;
   object-fit: cover;
-  //border-radius: 70%;
   border: none;
   background: var(--container-background-color);
+  transition: transform 0.3s;
 }
 
 /* Definiert den Stil für den Sound-Button */
@@ -75,6 +75,10 @@
 /* Definiert den Stil für das Sound-Button-Bild */
 .button-image-1 {
   width: 30px;
+}
+
+.button-image-1:hover {
+  transform: scale(1.1);
 }
 
 /* Definiert den Stil für den Sound-Button 
