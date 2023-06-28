@@ -3,7 +3,12 @@
 html,body{
   margin: 0;
   height: 100%;
+  
+  background-color: var(--background-color);
 }
 :root {
-    --container-background-color: #f2f2f2;
+    --container-background-color: #ffffff;
+    --textsheet-background-color: #ffffff;
+    --background-color: #f3f3f3;
   }
+
