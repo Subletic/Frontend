@@ -15,13 +15,13 @@ import { AudioHandlerComponent } from '../audio-handler/audio-handler.component'
 export class SoundBoxComponent {
 
   @ViewChild('audioHandler') audioHandler!: AudioHandlerComponent;
+  public isSvg1Active: boolean = true;
 
   constructor(private router: Router) {}
 
   playButton() {
-
+    this.isSvg1Active = !this.isSvg1Active;
     this.audioHandler.playOrStopAudio();
-
   }
 
   handleButtonClick() {

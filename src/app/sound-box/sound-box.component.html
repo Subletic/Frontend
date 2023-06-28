@@ -4,7 +4,7 @@
   <div class="soundbar-button-container">
     <!-- Play Button  -->
     <button class="play-button mover" (click)="playButton()">
-      <img src="assets/play.svg" alt="Button Image" class="button-image-1">
+      <img [src]="isSvg1Active ? 'assets/play.svg' : 'assets/pause.svg'" alt="Button Image" class="button-image-1">
     </button>
 
     <!-- Move back Button -->

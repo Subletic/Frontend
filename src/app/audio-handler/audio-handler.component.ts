@@ -15,6 +15,7 @@ export class AudioHandlerComponent implements OnInit {
   private sourceNode: AudioBufferSourceNode | null = null;
   private elementsInBuffer = 0;
   private nodeAudioBuffer = this.audioContext.createBuffer(1, this.maxBufferLength, this.sampleRate);
+  private isSourceNodeStarted = false;
 
   constructor(private signalRService: SignalRService) {
     this.sourceNode = this.audioContext.createBufferSource();
@@ -28,11 +29,15 @@ export class AudioHandlerComponent implements OnInit {
   }
 
   public resumePlayback(): void {
+    
     console.log(this.sourceNode)
     if (this.sourceNode) {
       if (!this.sourceNode.buffer) return;
       console.log(this.sourceNode.buffer.getChannelData(0));
-      this.sourceNode.start();
+      if(this.isSourceNodeStarted === false){
+        this.sourceNode.start();
+        this.isSourceNodeStarted = true;
+      }
       this.audioContext.resume().then(() => console.log('Playback resumed successfully.'));
     }
   }
@@ -80,20 +85,20 @@ export class AudioHandlerComponent implements OnInit {
     this.sourceNode.connect(this.audioContext.destination);
   }
 
-  public stopAudio() {
-    if (this.sourceNode) {
-      this.sourceNode.stop();
-      this.sourceNode.disconnect();
-      this.sourceNode = null;
+  public pauseAudio() {
+    if (this.audioContext.state === 'running') {
+      this.audioContext.suspend().then(() => {
+        console.log('Audio paused successfully.');
+      });
     }
   }
 
   public playOrStopAudio() {
 
-    if (this.sourceNode !== null) {
+    if (this.audioContext.state !== 'running') {
       this.resumePlayback();
     } else {
-      this.stopAudio();
+      this.pauseAudio();
     }
 
   }
