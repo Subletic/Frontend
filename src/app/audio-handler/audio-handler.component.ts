@@ -10,7 +10,7 @@ export class AudioHandlerComponent implements OnInit {
   private bufferSizeInSeconds = 120;
   private sampleRate = 48000;
   private maxBufferLength = this.bufferSizeInSeconds * this.sampleRate;
-  private audioBuffer: Int16Array = new Int16Array(this.maxBufferLength);
+  private audioBuffer: Float32Array = new Float32Array(this.maxBufferLength);
   private audioContext = new AudioContext();
   private sourceNode: AudioBufferSourceNode | null = null;
   private elementsInBuffer = 0;
@@ -42,30 +42,35 @@ export class AudioHandlerComponent implements OnInit {
     }
   }
 
-  private concatenateInt16Arrays(a: Int16Array, b: Int16Array): Int16Array {
-    const c = new Int16Array(a.length + b.length);
+  private concatenateFloat32Arrays(a: Float32Array, b: Float32Array): Float32Array {
+    const c = new Float32Array(a.length + b.length);
     c.set(a);
     c.set(b, a.length);
     return c;
   }
 
   private handleAudioData(newChunk: Int16Array): void {
-    // Add received audio data to buffer
+    //convert from Int16 to Float32
+    const float32Chunk = new Float32Array(newChunk.length);
+    for (let i = 0; i < newChunk.length; i++) {
+      float32Chunk[i] = newChunk[i] / 32767;  // Skalierung auf den Bereich von -1 bis 1
+    }
 
     // Check if buffer is full
     if (this.elementsInBuffer + 48000 > this.maxBufferLength) {
       console.log(this.elementsInBuffer);
       const clonedArray = this.audioBuffer.slice(48000, 5760000);
 
-      this.audioBuffer = this.concatenateInt16Arrays(clonedArray, newChunk);
+      this.audioBuffer = this.concatenateFloat32Arrays(clonedArray, float32Chunk);
 
       this.elementsInBuffer -= 48000;
       console.log(this.elementsInBuffer);
     }
 
     const offset = this.elementsInBuffer;
-    this.audioBuffer.set(newChunk, offset);
-    this.elementsInBuffer += newChunk.length;
+    this.audioBuffer.set(float32Chunk, offset);
+    this.elementsInBuffer += float32Chunk.length;
+
 
     // Update playing audio
     this.updatePlayableBuffer();
@@ -73,7 +78,7 @@ export class AudioHandlerComponent implements OnInit {
 
   private updatePlayableBuffer(): void {
     // Create single channel audio buffer with sampling rate of 48kHz
-    this.nodeAudioBuffer.getChannelData(0).set(this.audioBuffer);
+    this.nodeAudioBuffer.getChannelData(0).set(this.audioBuffer.subarray(0, this.elementsInBuffer));
     this.sourceNode?.buffer?.getChannelData(0).set(this.nodeAudioBuffer.getChannelData(0));
 
     console.log("Channel data updated successfully.");
