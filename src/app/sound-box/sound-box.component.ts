@@ -15,7 +15,7 @@ import { AudioHandlerComponent } from '../audio-handler/audio-handler.component'
 export class SoundBoxComponent {
 
   @ViewChild('audioHandler') audioHandler!: AudioHandlerComponent;
-  public isSvg1Active: boolean = true;
+  public isSvg1Active = true;
 
   constructor(private router: Router) {}
 
