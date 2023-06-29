@@ -2,6 +2,7 @@ import { SpeechBubble, SpeechBubbleExport } from '../data/speechBubble.model';
 import { WordToken } from '../data/wordToken.model';
 import { LinkedList, TextSheetComponent, SpeechBubbleChain } from './textSheet.component';
 import { SignalRService } from '../service/signalRService';
+import { identity } from 'rxjs';
 //import { LinkedList } from '../data/linkedList.model';
 
 describe('LinkedList', () => {
@@ -47,6 +48,8 @@ describe('LinkedList', () => {
     }
     expect(linkedList.tail).toBe(speechBubble3);
   });
+
+
 
   it('should export speech bubbles to JSON', () => {
     const testBubble1 = new SpeechBubble(0, 0, 0);
@@ -110,4 +113,23 @@ describe('TextSheetComponent', () => {
     const speechBubbles = component.getSpeechBubblesArray();
     expect(speechBubbles.length).toBe(initialLength + 1);
   });
+
+  it('should remove a speech bubble', () => {
+    const initialLength = component.getSpeechBubblesArray().length;
+
+    
+    const newSpeechBubble = new SpeechBubble(0, 0, 0);
+    component.speechBubbles.add(newSpeechBubble);
+
+    component.deleteSpeechBubble(newSpeechBubble.id);
+
+    const speechBubbles = component.getSpeechBubblesArray();
+    expect(speechBubbles.length).toBe(initialLength);
+    expect(speechBubbles).not.toContain(newSpeechBubble);
+  });
+
 });
+
+
+
+    

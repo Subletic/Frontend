@@ -151,11 +151,17 @@ export class TextSheetComponent implements OnInit {
 
   ngOnInit() {
 
-    //On receiving a new Speech Bubble from Backend, this function calls the importfromJSON
+    //On receiving a new SpeechBubble from Backend, this function calls the importfromJSON
     //function for all speech Bubbles in the list
+    //and the other function deletes a Speechbubble from the list
     this.signalRService.newBubbleReceived.subscribe(speechBubble => {
       console.log("Neue SpeechBubble erhalten:", speechBubble);
       this.importfromJSON(speechBubble);
+    });
+
+    this.signalRService.oldBubbledeleted.subscribe(id => {
+      console.log("Alte SpeechBubble gelöscht:", id);
+      this.deleteSpeechBubble(id);
     });
 
     const testBubble1 = new SpeechBubble(0, 0, 0);
@@ -168,6 +174,8 @@ export class TextSheetComponent implements OnInit {
     testBubble1.words.add(word);
     testBubble1.words.add(word2);
     testBubble1.words.add(word3);
+
+
   }
 
   /**
@@ -333,6 +341,8 @@ export class TextSheetComponent implements OnInit {
 
     }
   }
+    
+  
 
   /**
   * Deletes the oldest speech bubble from the speechBubbles list.
@@ -344,19 +354,23 @@ export class TextSheetComponent implements OnInit {
           this.speechBubbles.remove(this.speechBubbles.head);
       }
 
-      fetch(environment.apiURL + '/api/speechbubble/delete-oldest-bubble', {
-        method: 'POST',
-      })
-        .then(response => {
-          if (response.ok) {
-            console.log('Älteste SpeechBubble wurde erfolgreich gelöscht');
-          } else {
-            console.error('Fehler beim Löschen der ältesten SpeechBubble');
-          }
-        })
-        .catch(error => {
-          console.error('Fehler beim Löschen der ältesten SpeechBubble:', error);
-        });
+  }
+
+  /**
+  * Deletes a speech bubble from the speechBubbles list based on the id.
+  * The speech bubble is removed from the list.
+  */
+  deleteSpeechBubble(id: number) {
+
+    let current = this.speechBubbles.head;
+
+      while (current) {
+        if(current.id == id) {
+            this.speechBubbles.remove(current);
+        }
+        current = current.next;
+      }
+      
   }
 
   /**
@@ -378,5 +392,4 @@ export class TextSheetComponent implements OnInit {
         console.error('Fehler beim Senden der neuen SpeechBubble:', error);
       });
   }
-
 }
