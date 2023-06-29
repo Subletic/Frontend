@@ -37,19 +37,19 @@
  
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #afafaf; 
+  background: var(--color-grey); 
   border-radius: 12px;
   width: 12px;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: #A1A1A1; 
+  background: var(--color-grey-hoverover); 
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:active {
-  background: #838383; 
+  background: var(--color-grey-onclick); 
 }
 
   
