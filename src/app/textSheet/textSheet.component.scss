@@ -2,7 +2,8 @@
 
     max-width: 1000px;
     overflow-y: scroll;
-    height: 92.4vh; 
+    overflow-x: hidden;
+    height: 95.65vh; 
     display: flex; 
     align-items: center; 
     justify-content: center; 
@@ -11,9 +12,10 @@
     margin-left: auto;
     margin-right: auto;
 
-
     display: flex;
     flex-direction: column;
+
+    background-color: var(--textsheet-background-color);
   }
   
   .middle-container h1 {
@@ -21,6 +23,35 @@
     text-align: center; 
     max-width: 100%; 
   }
+
+
+  /* width */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+/* Handle */
+::-webkit-scrollbar-track {
+  background: var(--background-color); 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: var(--color-grey); 
+  border-radius: 12px;
+  width: 12px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-grey-hoverover); 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:active {
+  background: var(--color-grey-onclick); 
+}
+
   
   @media (max-width: 768px) {
     .middle-container {
@@ -33,3 +64,5 @@
         font-size: 18px;
     }
   }
+
+  

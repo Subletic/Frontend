@@ -1,39 +1,48 @@
+<app-audio-handler #audioHandler></app-audio-handler>
+
 <div class="sound-container fixed-bottom d-flex align-items-center justify-content-start">
   <div class="soundbar-button-container">
     <!-- Play Button  -->
-    <button class="play-button"id="mover" (click)="handleButtonClick()">
-      <img src="assets/PlayButton.svg" alt="Button Image" class="play-button-image">
+    <button class="play-button mover" (click)="playButton()">
+      <img [src]="isSvg1Active ? 'assets/play.svg' : 'assets/pause.svg'" alt="Button Image" class="button-image-1" 
+      (mousedown)="isSvg1Active ? buttonImage.src='assets/playOnClick.svg' : buttonImage.src='assets/pauseOnClick.svg'" 
+      (mouseup)="buttonImage.src=isSvg1Active ? 'assets/play.svg' : 'assets/pause.svg'" #buttonImage>
     </button>
-  
+
     <!-- Move back Button -->
-    <button class="sound-button-1" id="mover" (click)="handleButtonClick()">
+    <button class="sound-button-1 mover" (click)="handleButtonClick()">
       <img src="assets/back-Button.png" alt="Button Image" class="button-image-1">
     </button>
-  
+
     <!-- Move forward Button -->
-    <button class="sound-button-1" id="mover" (click)="handleButtonClick()">
+    <button class="sound-button-1 mover" (click)="handleButtonClick()">
       <img src="assets/forward-Button.png" alt="Button Image" class="button-image-1">
     </button>
-  
-    <!-- the sound-->
-    <div class="voice-bar" id="mover" (click)="handleButtonClick()">
-      
+
+    <!-- the sound
+    <div class="voice-bar mover">
+
     </div>
-  
+    -->
+    <!-- the sound-->
+    <div class="audio-bar mover">
+      <img src="assets/audiobarBeispiel.svg" alt="Button Image">
+    </div>
+
     <!-- speed Button-->
-    <button class="sound-button-1" id="mover" (click)="handleButtonClick()">
+    <button class="sound-button-1 mover" (click)="handleButtonClick()">
       <img src="assets/speed.png" alt="Button Image" class="button-image-1">
     </button>
-  
+
     <!-- Off and On the sound Button -->
-    <button class="sound-button-1" id="mover"(click)="handleButtonClick()">
+    <button class="sound-button-1 mover" (click)="handleButtonClick()">
       <img src="assets/soundonoff.png" alt="Button Image" class="button-image-1">
     </button>
-    
+
     <!-- settings Button -->
-    <button class="sound-button-1" id="mover" (click)="handleButtonClick()">
-      <img src="assets/settings2.png" alt="Button Image" class="button-image-1">
+    <button class="sound-button-1 mover" (click)="handleButtonClick()">
+      <img src="assets/settings2.png" alt="Button Image" class="button-image-1" >
     </button>
   </div>
 </div>
-  
+
