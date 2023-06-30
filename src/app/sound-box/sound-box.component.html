@@ -10,13 +10,17 @@
     </button>
 
     <!-- Move back Button -->
-    <button class="sound-button-1 mover" (click)="handleButtonClick()">
-      <img src="assets/back-Button.png" alt="Button Image" class="button-image-1">
+    <button class="sound-button-1 mover" (click)="skipBackwardButton()">
+      <img src="assets/back.svg" alt="Button Image" class="button-image-2" 
+      (mousedown)=" buttonImage2.src='assets/backOnClick.svg'"
+      (mouseup)=" buttonImage2.src='assets/back.svg'" #buttonImage2>
     </button>
 
     <!-- Move forward Button -->
-    <button class="sound-button-1 mover" (click)="handleButtonClick()">
-      <img src="assets/forward-Button.png" alt="Button Image" class="button-image-1">
+    <button class="sound-button-1 mover" (click)="skipForwardButton()">
+      <img src="assets/forward.svg" alt="Button Image" class="button-image-2"
+      (mousedown)=" buttonImage3.src='assets/forwardOnClick.svg'" 
+      (mouseup)=" buttonImage3.src='assets/forward.svg'" #buttonImage3>
     </button>
 
     <!-- the sound
@@ -30,7 +34,7 @@
     </div>
 
     <!-- speed Button-->
-    <button class="sound-button-1 mover" (click)="handleButtonClick()">
+    <button class="sound-button-1 mover" (click)="changePlaybackSpeedButton()">
       <img src="assets/speed.png" alt="Button Image" class="button-image-1">
     </button>
 
@@ -40,9 +44,13 @@
     </button>
 
     <!-- settings Button -->
-    <button class="sound-button-1 mover" (click)="handleButtonClick()">
+    <button class="sound-button-1 mover" (click)="openPopup()">
       <img src="assets/settings2.png" alt="Button Image" class="button-image-1" >
     </button>
   </div>
+</div>
+
+<div *ngIf="isPopupOpen" class="popup-container">
+  <!-- Popup-Inhalt hier einfügen -->
 </div>
 

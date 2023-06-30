@@ -22,6 +22,11 @@ export class AudioHandlerComponent implements OnInit {
   private elementsInBuffer = 0;
   private nodeAudioBuffer = this.audioContext.createBuffer(1, this.maxBufferLength, this.sampleRate);
   private isSourceNodeStarted = false;
+  // Variable for the number of seconds to skip
+  private skipSeconds = 5;
+  //Variable for the speed to play audio in
+  private playbackSpeed = 1;
+  private jumpCounter = 0;
 
   constructor(private signalRService: SignalRService) {
     // Create the source node and assign the node audio buffer
@@ -44,6 +49,7 @@ export class AudioHandlerComponent implements OnInit {
     console.log(this.sourceNode)
     if (this.sourceNode) {
       if (!this.sourceNode.buffer) return;
+      this.sourceNode.playbackRate.value = this.playbackSpeed;
       console.log(this.sourceNode.buffer.getChannelData(0));
       if(this.isSourceNodeStarted === false){
         this.sourceNode.start();
@@ -113,8 +119,19 @@ export class AudioHandlerComponent implements OnInit {
       return;
     }
 
+    this.sourceNode.playbackRate.value = this.playbackSpeed;
+
     // Connect the source node to the audio context destination
     this.sourceNode.connect(this.audioContext.destination);
+  }
+
+  public setPlaybackSpeed(speed: number): void {
+    this.playbackSpeed = speed;
+    
+    if (this.sourceNode) {
+
+      this.sourceNode.playbackRate.value = this.playbackSpeed;
+    }
   }
   
   /**
@@ -140,4 +157,75 @@ export class AudioHandlerComponent implements OnInit {
     }
 
   }
+
+  public skipForward() {
+    if (this.audioContext.state !== 'running') {
+      return;
+    }
+  
+    const currentTime = this.audioContext.currentTime + this.jumpCounter;
+    const targetTime = Math.min(currentTime + this.skipSeconds, this.audioBuffer.length / this.sampleRate);
+
+    this.pauseAudio();
+  
+    if (this.sourceNode) {
+      if (this.isSourceNodeStarted) {
+        this.sourceNode.stop();
+        this.isSourceNodeStarted = false;
+      }
+      this.sourceNode.disconnect();
+      this.sourceNode = null;
+    }
+  
+    this.sourceNode = this.audioContext.createBufferSource();
+    this.sourceNode.buffer = this.nodeAudioBuffer;
+    this.sourceNode.connect(this.audioContext.destination);
+  
+    this.jumpCounter = this.jumpCounter + this.skipSeconds;
+  
+    this.audioContext.resume().then(() => {
+      if (!this.sourceNode) return;
+  
+      this.updatePlayableBuffer();
+  
+      this.sourceNode.start(0, targetTime);
+      this.isSourceNodeStarted = true;
+    });
+  }
+  
+  public skipBackward() {
+    if (this.audioContext.state !== 'running') {
+      return;
+    }
+  
+    const currentTime = this.audioContext.currentTime + this.jumpCounter;
+    const targetTime = Math.max(currentTime - this.skipSeconds, 0);
+
+    this.pauseAudio();
+  
+    if (this.sourceNode) {
+      if (this.isSourceNodeStarted) {
+        this.sourceNode.stop();
+        this.isSourceNodeStarted = false;
+      }
+      this.sourceNode.disconnect();
+      this.sourceNode = null;
+    }
+  
+    this.sourceNode = this.audioContext.createBufferSource();
+    this.sourceNode.buffer = this.nodeAudioBuffer;
+    this.sourceNode.connect(this.audioContext.destination);
+  
+    this.jumpCounter = this.jumpCounter - this.skipSeconds;
+
+
+    this.audioContext.resume().then(() => {
+      if (!this.sourceNode) return;
+      this.updatePlayableBuffer();
+      this.sourceNode.start(0, targetTime);
+      this.isSourceNodeStarted = true;
+    });
+  }
+   
+
 }
