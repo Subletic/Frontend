@@ -28,6 +28,15 @@ export class SoundBoxComponent {
     console.log("hallo");
     this.router.navigate(['/weitereSeite']);
   }
+
+  skipBackwardButton() {
+    this.audioHandler.skipBackward();
+  }
+
+  skipForwardButton() {
+    this.audioHandler.skipForward();
+  }
+
 }
 
 

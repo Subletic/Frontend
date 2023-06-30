@@ -22,6 +22,8 @@ export class AudioHandlerComponent implements OnInit {
   private elementsInBuffer = 0;
   private nodeAudioBuffer = this.audioContext.createBuffer(1, this.maxBufferLength, this.sampleRate);
   private isSourceNodeStarted = false;
+  // Variable for the number of seconds to skip
+  private skipSeconds = 5;
 
   constructor(private signalRService: SignalRService) {
     // Create the source node and assign the node audio buffer
@@ -140,4 +142,32 @@ export class AudioHandlerComponent implements OnInit {
     }
 
   }
+
+  public skipForward() {
+    const currentTime = this.audioContext.currentTime;
+    const newTime = currentTime + this.skipSeconds;
+  
+    if (newTime <= this.nodeAudioBuffer.duration) {
+      this.sourceNode?.stop();
+      this.sourceNode = this.audioContext.createBufferSource();
+      this.sourceNode.buffer = this.nodeAudioBuffer;
+      this.sourceNode.connect(this.audioContext.destination);
+      this.sourceNode.start(0, newTime);
+    }
+  }
+  
+  public skipBackward() {
+    const currentTime = this.audioContext.currentTime;
+    const newTime = currentTime - this.skipSeconds;
+  
+    if (newTime >= 0) {
+      this.sourceNode?.stop();
+      this.sourceNode = this.audioContext.createBufferSource();
+      this.sourceNode.buffer = this.nodeAudioBuffer;
+      this.sourceNode.connect(this.audioContext.destination);
+      this.sourceNode.start(0, newTime);
+    }
+  }
+   
+
 }
