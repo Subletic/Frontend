@@ -73,7 +73,17 @@
   width: 30px;
 }
 
+/* Definiert den Stil für das Sound-Button-Bild */
+.button-image-2 {
+  width: 30px;
+  margin-top: 4.8px;
+}
+
 .button-image-1:hover {
+  transform: scale(1.1);
+}
+
+.button-image-2:hover {
   transform: scale(1.1);
 }
 

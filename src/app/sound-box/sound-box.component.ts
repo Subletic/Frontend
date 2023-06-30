@@ -16,6 +16,7 @@ export class SoundBoxComponent {
 
   @ViewChild('audioHandler') audioHandler!: AudioHandlerComponent;
   public isSvg1Active = true;
+  public isPopupOpen = false;
 
   constructor(private router: Router) {}
 
@@ -28,6 +29,23 @@ export class SoundBoxComponent {
     console.log("hallo");
     this.router.navigate(['/weitereSeite']);
   }
+
+  skipBackwardButton() {
+    this.audioHandler.skipBackward();
+  }
+
+  skipForwardButton() {
+    this.audioHandler.skipForward();
+  }
+
+  changePlaybackSpeedButton() {
+    this.audioHandler.setPlaybackSpeed(0.7);
+  }
+
+  openPopup() {
+    this.isPopupOpen = true;
+  }
+
 }
 
 
