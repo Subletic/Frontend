@@ -158,6 +158,7 @@ export class TextSheetComponent implements OnInit {
         this.importfromJSON(speechBubble);
       });
 
+      /*
       const testBubble1 = new SpeechBubble(0, 0, 0);
       this.speechBubbles.add(testBubble1);
 
@@ -168,6 +169,7 @@ export class TextSheetComponent implements OnInit {
       testBubble1.words.add(word);
       testBubble1.words.add(word2);
       testBubble1.words.add(word3);
+      */
     }
 
     /**

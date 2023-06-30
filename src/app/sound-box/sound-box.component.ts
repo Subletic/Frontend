@@ -37,6 +37,10 @@ export class SoundBoxComponent {
     this.audioHandler.skipForward();
   }
 
+  changePlaybackSpeedButton() {
+    this.audioHandler.setPlaybackSpeed(0.7);
+  }
+
 }
 
 
