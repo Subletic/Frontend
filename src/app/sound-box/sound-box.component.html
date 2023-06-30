@@ -44,9 +44,13 @@
     </button>
 
     <!-- settings Button -->
-    <button class="sound-button-1 mover" (click)="handleButtonClick()">
+    <button class="sound-button-1 mover" (click)="openPopup()">
       <img src="assets/settings2.png" alt="Button Image" class="button-image-1" >
     </button>
   </div>
+</div>
+
+<div *ngIf="isPopupOpen" class="popup-container">
+  <!-- Popup-Inhalt hier einfügen -->
 </div>
 

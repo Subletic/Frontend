@@ -16,6 +16,7 @@ export class SoundBoxComponent {
 
   @ViewChild('audioHandler') audioHandler!: AudioHandlerComponent;
   public isSvg1Active = true;
+  public isPopupOpen = false;
 
   constructor(private router: Router) {}
 
@@ -39,6 +40,10 @@ export class SoundBoxComponent {
 
   changePlaybackSpeedButton() {
     this.audioHandler.setPlaybackSpeed(0.7);
+  }
+
+  openPopup() {
+    this.isPopupOpen = true;
   }
 
 }
