@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import * as signalR from '@microsoft/signalr';
 import {Subject} from 'rxjs';
 import {environment} from "../../environments/environment";
+import { LinkedList } from '../data/linkedList.model';
 
 @Injectable({
   providedIn: 'root'
@@ -9,6 +10,8 @@ import {environment} from "../../environments/environment";
 export class SignalRService {
   private hubConnection: signalR.HubConnection;
   public newBubbleReceived: Subject<string> = new Subject<string>();
+  public oldBubbledeleted: Subject<number> = new Subject<number>();
+  
   public receivedAudioStream: Subject<Int16Array> = new Subject<Int16Array>();
 
   constructor() {
@@ -27,6 +30,11 @@ export class SignalRService {
     this.hubConnection.on("newBubble", (speechBubble) => {
       this.newBubbleReceived.next(speechBubble);
       console.log("Neue SpeechBubble erhalten:", speechBubble);
+    });
+
+    this.hubConnection.on("deleteBubble", (id) => {
+      this.oldBubbledeleted.next(id);
+      console.log("Alte SpeechBubble gelöscht:", id);
     });
   }
 
