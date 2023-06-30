@@ -19,29 +19,30 @@
       <img src="assets/forward-Button.png" alt="Button Image" class="button-image-1">
     </button>
 
-    <!-- the sound
-    <div class="voice-bar mover">
-
-    </div>
-    -->
-    <!-- the sound-->
+    <!-- audiobar -->
     <div class="audio-bar mover">
       <img src="assets/audiobarBeispiel.svg" alt="Button Image">
     </div>
 
-    <!-- speed Button-->
+    <!-- speed Button -->
     <button class="sound-button-1 mover" (click)="handleButtonClick()">
-      <img src="assets/speed.png" alt="Button Image" class="button-image-1">
+      <img src="assets/speed.png" alt="Button Image" class="button-image-1"
+      (mousedown)=" buttonImage3.src='assets/speed.svg'" 
+      (mouseup)=" buttonImage3.src='assets/speed.svg'" #buttonImage3>
     </button>
 
-    <!-- Off and On the sound Button -->
+    <!-- sound Button -->
     <button class="sound-button-1 mover" (click)="handleButtonClick()">
-      <img src="assets/soundonoff.png" alt="Button Image" class="button-image-1">
+      <img src="assets/sound.png" alt="Button Image" class="button-image-1"
+      (mousedown)=" buttonImage3.src='assets/soundOnClick.svg'" 
+      (mouseup)=" buttonImage3.src='assets/sound.svg'" #buttonImage3>
     </button>
 
     <!-- settings Button -->
     <button class="sound-button-1 mover" (click)="handleButtonClick()">
-      <img src="assets/settings2.png" alt="Button Image" class="button-image-1" >
+      <img src="assets/settings.svg" alt="Button Image" class="button-image-1"
+      (mousedown)=" buttonImage3.src='assets/settingsOnClick.svg'" 
+      (mouseup)=" buttonImage3.src='assets/settings.svg'" #buttonImage3>
     </button>
   </div>
 </div>
