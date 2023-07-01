@@ -1,12 +1,13 @@
 .textbox {
   background-color: white;
   width: 900px;
-  height: 300px; /* Beispielhöhe */
-  padding: 10px;
-  font-size: 40px;
+  min-height: 100px; 
+  max-height: 90%;
+  padding: 10px; 
+  font-size: 40px; 
   margin: 20px;
+
   font-family: "Calibri", sans-serif;
-  overflow-y: none;
 }
 
 .textbox p {
