@@ -18,7 +18,16 @@ export class SoundBoxComponent {
   public isSvg1Active = true;
   public isPopupOpen = false;
 
-  constructor(private router: Router) {}
+  public showMiniWindow = false;
+  public audioProgress = 0;
+
+  public isPopoverOpen: boolean = false;
+
+  public volume = 10;
+
+  constructor(private router: Router) {
+
+  }
 
   playButton() {
     this.isSvg1Active = !this.isSvg1Active;
@@ -42,8 +51,24 @@ export class SoundBoxComponent {
     this.audioHandler.setPlaybackSpeed(0.7);
   }
 
+  changeAudio() {
+    this.audioHandler.setAudioContextVolume(0);
+  }
+
+  openMiniWindow() {
+    this.showMiniWindow = true;
+  }
+
+  updateAudioProgress(progress: number) {
+    this.audioProgress = progress;
+  }
+
   openPopup() {
     this.isPopupOpen = true;
+  }
+
+  togglePopover() {
+    this.isPopoverOpen = !this.isPopoverOpen;
   }
 
 }

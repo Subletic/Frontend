@@ -35,8 +35,17 @@
       (mouseup)=" buttonImage4.src='assets/speed.svg'" #buttonImage4>
     </button>
 
-    <!-- sound Button -->
-    <button class="sound-button-1 mover" (click)="handleButtonClick()">
+
+    <!-- sound Button 
+    <button class="sound-button-1 mover" (click)="changeAudio()">
+      <img src="assets/sound.svg" alt="Button Image" class="button-image-2" draggable="false">
+    </button>
+    <div *ngIf="showMiniWindow" class="mini-window">
+      <mat-slider min="1" max="5" step="0.5" [(ngModel)]="volume"></mat-slider>
+    </div>
+    -->
+
+    <button class="sound-button-1 mover" (click)="togglePopover()">
       <img src="assets/sound.svg" alt="Button Image" class="button-image-2" draggable="false">
     </button>
 
@@ -48,3 +57,5 @@
     </button>
   </div>
 </div>
+
+<app-slider-popup [isPopoverOpen]="isPopoverOpen"></app-slider-popup>

@@ -165,4 +165,19 @@
       max-width: 200px;
       height: auto;
   }
+
+
+
+
+  .mini-window {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 100px;
+    height: 200px;
+    background-color: #f1f1f1;
+    border: 1px solid #ccc;
+    padding: 10px;
+  }
+  
 }

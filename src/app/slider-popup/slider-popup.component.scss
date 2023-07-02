@@ -1,0 +1,37 @@
+.slider-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    background: transparent;
+    border-radius: 17px; 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  mat-slider {
+    width: 250px;
+  }
+
+  input {
+    //appearance: slider-vertical;
+  }
+
+
+
+  /*
+  
+  .vertical-slider {
+    writing-mode: bt-lr;
+    appearance: slider-vertical;
+    height: 220px;
+    border-radius: 20px;
+    width: 60px;
+    color: #0147B1;
+  }
+
+  */
+
+  .vertical-slider {
+
+  }

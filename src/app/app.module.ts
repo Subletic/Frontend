@@ -9,17 +9,24 @@ import { TextBoxComponent } from './text-box/text-box.component';
 import { TextSheetComponent } from './textSheet/textSheet.component';
 import { AudioHandlerComponent } from './audio-handler/audio-handler.component';
 
+import {MatSliderModule} from '@angular/material/slider';
+import { SliderPopupComponent } from './slider-popup/slider-popup.component';
+
+
+
 @NgModule({
   declarations: [
     AppComponent,
     SoundBoxComponent,
     TextSheetComponent,
     TextBoxComponent,
-    AudioHandlerComponent
+    AudioHandlerComponent,
+    SliderPopupComponent
   ],
   imports: [
     BrowserModule,
-    FormsModule
+    FormsModule,
+    MatSliderModule
   ],
   providers: [],
   bootstrap: [AppComponent]

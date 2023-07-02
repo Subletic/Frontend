@@ -28,6 +28,8 @@ export class AudioHandlerComponent implements OnInit {
   private playbackSpeed = 1;
   private jumpCounter = 0;
 
+  private gainNode: GainNode = this.audioContext.createGain();
+
   constructor(private signalRService: SignalRService) {
     // Create the source node and assign the node audio buffer
     this.sourceNode = this.audioContext.createBufferSource();
@@ -226,6 +228,22 @@ export class AudioHandlerComponent implements OnInit {
       this.isSourceNodeStarted = true;
     });
   }
+
+  setAudioContextVolume(volume: number): void {
+    // Überprüfe und begrenze den Lautstärkewert zwischen 0 und 1
+    if (volume < 0) {
+      volume = 0;
+    } else if (volume > 1) {
+      volume = 1;
+    }
+  
+    // Setze die Lautstärke des GainNodes
+    this.gainNode.gain.value = volume;
+
+    this.gainNode.connect(this.audioContext.destination);
+
+  }
+
    
 
 }
