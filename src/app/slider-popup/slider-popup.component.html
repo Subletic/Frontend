@@ -1,12 +1,9 @@
-
-<div class="slider-container">
-    <div class="vertical-slider">
-        <mat-slider min="0" max="100" step="1" vertical>
-            <input matSliderThumb>
-        </mat-slider> 
+<div class="slider-wrapper" #sliderWrapper>
+    <div class="slider-container">
+        <input type="range" id="volume-slider" min="-100" max="100" value="0" class="styled-slider slider-progress" (input)="onVolumeChange($event)"  >
     </div>
+    <div class="slider-triangle"></div>
 </div>
-
 <!--
     <input class="vertical-slider" type="range" min="0" max="100" step="1" value="50">
     <div class="end-marker"></div>

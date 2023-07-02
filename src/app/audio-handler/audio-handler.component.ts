@@ -41,7 +41,46 @@ export class AudioHandlerComponent implements OnInit {
     this.signalRService.receivedAudioStream.subscribe((newChunk) => {
       this.handleAudioData(newChunk)
     });
+
+
+    this.createNodes();
   }
+
+  private createNodes() {
+    this.gainNode = this.audioContext.createGain();
+    this.gainNode.gain.value = 0;
+    if(!this.sourceNode) return;
+    this.sourceNode.connect(this.gainNode);
+    this.gainNode.connect(this.audioContext.destination);
+  }
+
+  public setVolume(volume: number) {
+
+    console.log("Finaler Volume Wert" + volume);
+
+    if (this.gainNode) {
+      this.gainNode.gain.setValueAtTime(volume, this.audioContext.currentTime);
+    }
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   /**
    * Resumes audio playback and starts the source node if not started.
@@ -227,23 +266,6 @@ export class AudioHandlerComponent implements OnInit {
       this.sourceNode.start(0, targetTime);
       this.isSourceNodeStarted = true;
     });
-  }
-
-  setAudioContextVolume(volume: number): void {
-    // Überprüfe und begrenze den Lautstärkewert zwischen 0 und 1
-    if (volume < 0) {
-      volume = 0;
-    } else if (volume > 1) {
-      volume = 1;
-    }
-  
-    // Setze die Lautstärke des GainNodes
-    this.gainNode.gain.value = volume;
-
-    this.gainNode.connect(this.audioContext.destination);
-
-  }
-
-   
+  }  
 
 }
