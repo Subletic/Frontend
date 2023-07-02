@@ -1,8 +1,8 @@
 .slider-wrapper {
-    position: fixed;
-    top: 50%;
-    left: 95%;
-    transform: translate(-50%, -50%) rotate(-90deg);;
+    position: absolute;
+    top: calc(--slider-top);
+    left: var(--slider-left);
+    transform: translate(-50%, -50%) rotate(-90deg) translate(140px, -20px);
 
     width: 220px;
     height: 40px;
@@ -32,6 +32,7 @@
     height: 20px;
     background-color: rgba(255, 255, 255, 1);
     z-index: 2;
+
   }
   
   .slider-triangle:before {
@@ -53,6 +54,7 @@ https://toughengineer.github.io/demo/slider-styler*/
 input[type=range].styled-slider {
     width: 15em;
     -webkit-appearance: none;
+    appearance: none;
   }
   
 /*progress support*/

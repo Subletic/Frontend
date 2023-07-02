@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, AfterViewInit, Renderer2, HostListener  } from '@angular/core';
+import { Component, ViewChild, ElementRef, HostListener  } from '@angular/core';
 import { Router } from '@angular/router';
 import { AudioHandlerComponent } from '../audio-handler/audio-handler.component';
 
@@ -15,7 +15,7 @@ import { SliderPopupComponent } from '../slider-popup/slider-popup.component';
   templateUrl: './sound-box.component.html',
   styleUrls: ['./sound-box.component.scss']
 })
-export class SoundBoxComponent implements AfterViewInit {
+export class SoundBoxComponent {
 
   @ViewChild('audioHandler') audioHandler!: AudioHandlerComponent;
   
@@ -28,41 +28,32 @@ export class SoundBoxComponent implements AfterViewInit {
     this.updatePosition();
   }
 
-  updatePosition() {
-     const soundButtonElement = this.soundButton.nativeElement;
-    const soundButtonRect = soundButtonElement.getBoundingClientRect();
 
-    // Berechnung der gewünschten Position des SliderPopup
-    const calculatedTopValue = (soundButtonRect.top + soundButtonRect.height) + 'px';
-    const calculatedLeftValue = soundButtonRect.left + 'px';
-
-    const position = {
-      top: calculatedTopValue,
-      left: calculatedLeftValue
-    };
-
-    this.sliderPopup.updateSliderPosition(position);
+  @HostListener('document:click', ['$event'])
+onDocumentClick(event: MouseEvent) {
+  const clickedElement = event.target as HTMLElement;
+  const isInsideSoundButton = this.soundButton.nativeElement.contains(clickedElement);
+  const isInsideSliderPopup = this.sliderPopup.elementRef.nativeElement.contains(clickedElement);
+  
+  if (!isInsideSoundButton && !isInsideSliderPopup) {
+    this.closePopoverAudio();
   }
+}
 
-  test() {
-    this.sliderPopup.updateSliderPosition({ top: '10px', left: '20px' });
+
+
+  /*
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    const clickedElement = event.target as HTMLElement;
+    const isInsideSoundButton = this.soundButton.nativeElement.contains(clickedElement);
+    const isInsideSliderPopup = this.sliderPopup.elementRef.nativeElement.contains(clickedElement);
+  
+    if (!isInsideSoundButton && !isInsideSliderPopup) {
+      this.closePopoverAudio();
+    }
   }
-
-
-  ngAfterViewInit() {
-    /*
-    const sliderWrapper = this.renderer.selectRootElement('.slider-wrapper');
-    const parentElement = sliderWrapper.parentElement;
-    const parentWidth = parentElement.offsetWidth;
-    const sliderWrapperWidth = sliderWrapper.offsetWidth;
-    const desiredLeft = parentWidth - sliderWrapperWidth;
-
-    this.renderer.setStyle(sliderWrapper, 'left', `${desiredLeft}px`);
-    */
-
-
-
-  }
+  */
 
   public isSvg1Active = true;
   public isPopupOpen = false;
@@ -74,19 +65,27 @@ export class SoundBoxComponent implements AfterViewInit {
 
   public volume = 0.5;
 
-  constructor(private router: Router, private renderer: Renderer2) {
+  constructor(private router: Router, private elementRef: ElementRef) {
 
   }
 
+  /** Updates the position of the slider Pop-Up so it's always above the sound button.
+   * 
+   */
+  updatePosition() {
+    const soundButtonElement = this.soundButton.nativeElement;
+    const soundButtonRect = soundButtonElement.getBoundingClientRect();
 
+    const calculatedTopValue = (soundButtonRect.top + soundButtonRect.height) + 'px';
+    const calculatedLeftValue = soundButtonRect.left + 'px';
 
+    const position = {
+      top: calculatedTopValue,
+      left: calculatedLeftValue
+    };
 
-
-
-
-
-
-
+    this.sliderPopup.updateSliderPosition(position);
+  }
 
   playButton() {
     this.isSvg1Active = !this.isSvg1Active;
@@ -122,22 +121,18 @@ export class SoundBoxComponent implements AfterViewInit {
     this.isPopupOpen = true;
   }
 
-  togglePopover() {
+  togglePopoverAudio() {
     this.isPopoverOpen = !this.isPopoverOpen;
   }
 
-
-
-  onVolumeChange(volume: number) {
-    console.log("PEW");
-    console.log(this.volume);
-    this.volume = volume;
-    //console.log(this.volume);
-    this.audioHandler.setVolume(this.volume);
+  closePopoverAudio() {
+    this.isPopoverOpen = false;
   }
 
-
-
+  onVolumeChange(volume: number) {
+    this.volume = volume;
+    this.audioHandler.setVolume(this.volume);
+  }
 
 }
 

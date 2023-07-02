@@ -11,20 +11,24 @@ export class SliderPopupComponent {
   @Input() volume: number = 50;
   @Output() volumeChange = new EventEmitter<number>();
 
-  constructor(private elementRef: ElementRef) { }
+  constructor(public elementRef: ElementRef) { }
 
   updateSliderPosition(position: { top: string, left: string }) {
-    
-
+    const soundButtonContainer = this.elementRef.nativeElement.querySelector('.sound-button-container');
     const sliderWrapper = this.elementRef.nativeElement.querySelector('.slider-wrapper');
-    sliderWrapper.style.top = position.top;
-    sliderWrapper.style.left = position.left;
+  
+    const soundButtonRect = soundButtonContainer.getBoundingClientRect();
+    const soundButtonPosition = {
+      top: `${soundButtonRect.top}px`,
+      left: `${soundButtonRect.left}px`
+    };
+  
+    sliderWrapper.style.setProperty('--slider-left', soundButtonPosition.left);
+    sliderWrapper.style.setProperty('--slider-top', soundButtonPosition.top);
   }
 
   ngOnInit(): void {
-    
     this.setupSlider();
-
   }
 
   setupSlider(): void {

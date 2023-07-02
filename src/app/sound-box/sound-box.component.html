@@ -29,15 +29,20 @@
     </div>
 
     <!-- speed Button -->
-    <button class="sound-button-1 mover" (click)="test()">
+    <button class="sound-button-1 mover" (click)="skipForwardButton()">
       <img src="assets/speed.svg" alt="Button Image" class="button-image-4" draggable="false"
       (mousedown)=" buttonImage4.src='assets/speed.svg'" 
       (mouseup)=" buttonImage4.src='assets/speed.svg'" #buttonImage4>
     </button>
 
-    <button class="sound-button-1 mover" (click)="togglePopover()" #soundButton>
-      <img src="assets/sound.svg" alt="Button Image" class="button-image-2" draggable="false">
-    </button>
+    <!-- sound button-->
+    <div class="sound-button-container">
+      <button class="sound-button-1 mover" (click)="togglePopoverAudio()" #soundButton>
+        <img src="assets/sound.svg" alt="Button Image" class="button-image-2" draggable="false">
+        <app-slider-popup [isPopoverOpen]="isPopoverOpen" [(volume)]="volume" (volumeChange)="onVolumeChange($event)" #sliderPopup></app-slider-popup>
+      </button>
+    </div>
+
 
     <!-- settings Button -->
     <button class="sound-button-1 mover" (click)="handleButtonClick()">
@@ -47,5 +52,3 @@
     </button>
   </div>
 </div>
-
-<app-slider-popup [isPopoverOpen]="isPopoverOpen" [(volume)]="volume" (volumeChange)="onVolumeChange($event)" #sliderPopup></app-slider-popup>
