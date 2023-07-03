@@ -8,6 +8,7 @@ import { SoundBoxComponent } from './sound-box/sound-box.component';
 import { TextBoxComponent } from './text-box/text-box.component';
 import { TextSheetComponent } from './textSheet/textSheet.component';
 import { AudioHandlerComponent } from './audio-handler/audio-handler.component';
+import { SettingsComponent } from './settings/settings.component';
 
 @NgModule({
   declarations: [
@@ -15,7 +16,8 @@ import { AudioHandlerComponent } from './audio-handler/audio-handler.component';
     SoundBoxComponent,
     TextSheetComponent,
     TextBoxComponent,
-    AudioHandlerComponent
+    AudioHandlerComponent,
+    SettingsComponent
   ],
   imports: [
     BrowserModule,

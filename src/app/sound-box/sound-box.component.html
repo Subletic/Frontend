@@ -41,7 +41,7 @@
     </button>
 
     <!-- settings Button -->
-    <button class="sound-button-1 mover" (click)="handleButtonClick()">
+    <button class="sound-button-1 mover" (click)="openModal('settings')">
       <img src="assets/settings.svg" alt="Button Image" class="button-image-3"
       (mousedown)=" buttonImage6.src='assets/settingsOnClick.svg'" 
       (mouseup)=" buttonImage6.src='assets/settings.svg'" #buttonImage6>
@@ -49,7 +49,7 @@
   </div>
 </div>
 
-<div *ngIf="isPopupOpen" class="popup-container">
-  <!-- Popup-Inhalt hier einfügen -->
-</div>
-
+<settings-modal id="settings">
+  <h1>Einstellungen</h1>
+  <button (click)="closeModal('settings');">Abbrechen</button>
+</settings-modal>
