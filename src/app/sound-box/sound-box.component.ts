@@ -1,8 +1,7 @@
-import { Component, ViewChild, ElementRef, HostListener  } from '@angular/core';
+import { Component, ViewChild, ElementRef, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { AudioHandlerComponent } from '../audio-handler/audio-handler.component';
-
-import { SliderPopupComponent } from '../slider-popup/slider-popup.component';
+import { SliderPopupComponent } from './slider-popup/slider-popup.component';
 
 
 /**
@@ -18,42 +17,8 @@ import { SliderPopupComponent } from '../slider-popup/slider-popup.component';
 export class SoundBoxComponent {
 
   @ViewChild('audioHandler') audioHandler!: AudioHandlerComponent;
-  
-
   @ViewChild('soundButton', { static: false }) soundButton!: ElementRef;
   @ViewChild(SliderPopupComponent) sliderPopup!: SliderPopupComponent;
-
-  @HostListener('window:resize')
-  onWindowResize() {
-    this.updatePosition();
-  }
-
-
-  @HostListener('document:click', ['$event'])
-onDocumentClick(event: MouseEvent) {
-  const clickedElement = event.target as HTMLElement;
-  const isInsideSoundButton = this.soundButton.nativeElement.contains(clickedElement);
-  const isInsideSliderPopup = this.sliderPopup.elementRef.nativeElement.contains(clickedElement);
-  
-  if (!isInsideSoundButton && !isInsideSliderPopup) {
-    this.closePopoverAudio();
-  }
-}
-
-
-
-  /*
-  @HostListener('document:click', ['$event'])
-  onDocumentClick(event: MouseEvent) {
-    const clickedElement = event.target as HTMLElement;
-    const isInsideSoundButton = this.soundButton.nativeElement.contains(clickedElement);
-    const isInsideSliderPopup = this.sliderPopup.elementRef.nativeElement.contains(clickedElement);
-  
-    if (!isInsideSoundButton && !isInsideSliderPopup) {
-      this.closePopoverAudio();
-    }
-  }
-  */
 
   public isSvg1Active = true;
   public isPopupOpen = false;
@@ -61,19 +26,32 @@ onDocumentClick(event: MouseEvent) {
   public showMiniWindow = false;
   public audioProgress = 0;
 
-  public isPopoverOpen: boolean = false;
+  public isPopoverOpen = false;
 
-  public volume = 0.5;
+  public volume100 = 0;
 
-  constructor(private router: Router, private elementRef: ElementRef) {
+  constructor(private router: Router, private elementRef: ElementRef) {}
 
+  @HostListener('window:resize')
+  onWindowResize() {
+    this.updatePosition();
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentMouseDown(event: MouseEvent) {
+    const clickedElement = event.target as HTMLElement;
+    const isInsideSoundButton = this.soundButton.nativeElement.contains(clickedElement);
+    if (!isInsideSoundButton) {
+      this.closePopoverAudio();
+    } 
   }
 
   /** Updates the position of the slider Pop-Up so it's always above the sound button.
    * 
    */
   updatePosition() {
-    const soundButtonElement = this.soundButton.nativeElement;
+    /*
+     const soundButtonElement = this.soundButton.nativeElement;
     const soundButtonRect = soundButtonElement.getBoundingClientRect();
 
     const calculatedTopValue = (soundButtonRect.top + soundButtonRect.height) + 'px';
@@ -85,6 +63,9 @@ onDocumentClick(event: MouseEvent) {
     };
 
     this.sliderPopup.updateSliderPosition(position);
+    */
+
+    this.sliderPopup.updateSliderPosition();
   }
 
   playButton() {
@@ -129,9 +110,19 @@ onDocumentClick(event: MouseEvent) {
     this.isPopoverOpen = false;
   }
 
+  /** Calls setVolume Function in audioHandler with volume number between -1 and 1. 
+   * 
+   */
   onVolumeChange(volume: number) {
-    this.volume = volume;
-    this.audioHandler.setVolume(this.volume);
+    this.audioHandler.setVolume(volume);
+  }
+
+  /**
+   * Safes the inital volume number between -100 and 100, 
+   * so the next slider can be instantiated with the last-current-value of the old one.
+   */
+  onVolume100Change(volume100: number) {
+    this.volume100 = volume100;
   }
 
 }

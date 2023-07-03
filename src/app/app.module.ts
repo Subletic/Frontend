@@ -10,7 +10,7 @@ import { TextSheetComponent } from './textSheet/textSheet.component';
 import { AudioHandlerComponent } from './audio-handler/audio-handler.component';
 
 import {MatSliderModule} from '@angular/material/slider';
-import { SliderPopupComponent } from './slider-popup/slider-popup.component';
+import { SliderPopupComponent } from './sound-box/slider-popup/slider-popup.component';
 
 
 

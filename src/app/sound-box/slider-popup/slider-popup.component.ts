@@ -1,20 +1,40 @@
-import { Component, Input, Output, EventEmitter, ElementRef } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ElementRef, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 
+/**
+ * Represents a popup that includes a slider for controlling the audio volume.
+ */
 @Component({
   selector: 'app-slider-popup',
   templateUrl: './slider-popup.component.html',
   styleUrls: ['./slider-popup.component.scss']
 })
-export class SliderPopupComponent {
-  
-  @Input() isPopoverOpen: boolean = false;
-  @Input() volume: number = 50;
+export class SliderPopupComponent implements OnInit, AfterViewInit  {
+
+  @Input() volume!: number;
+  private volume100 = 0;
+
   @Output() volumeChange = new EventEmitter<number>();
+  @Output() volume100Change = new EventEmitter<number>();
+
+  @ViewChild('volumeSlider', { static: false }) volumeSlider!: ElementRef<HTMLInputElement>;
 
   constructor(public elementRef: ElementRef) { }
 
-  updateSliderPosition(position: { top: string, left: string }) {
+  ngOnInit(): void {
+    this.setupSlider();
+  }
+
+  ngAfterViewInit() {
+    this.volumeSlider.nativeElement.value = this.volume.toString();
+    this.setupSlider();
+  }
+
+  /**
+  * Updates the position of the slider based on the position of the sound button.
+  */
+  updateSliderPosition() {
     const soundButtonContainer = this.elementRef.nativeElement.querySelector('.sound-button-container');
+    if (!soundButtonContainer) return;
     const sliderWrapper = this.elementRef.nativeElement.querySelector('.slider-wrapper');
   
     const soundButtonRect = soundButtonContainer.getBoundingClientRect();
@@ -27,10 +47,9 @@ export class SliderPopupComponent {
     sliderWrapper.style.setProperty('--slider-top', soundButtonPosition.top);
   }
 
-  ngOnInit(): void {
-    this.setupSlider();
-  }
-
+  /**
+   * Sets up the slider so it has a colored bar from bottom to the thumb 
+   */
   setupSlider(): void {
     document.querySelectorAll<HTMLInputElement>('input[type="range"].slider-progress').forEach((e: HTMLInputElement) => {
       e.style.setProperty('--value', e.value);
@@ -40,9 +59,16 @@ export class SliderPopupComponent {
     });
   }
 
+  /**
+   * Emits info about the changed values in the slider so they can then be send elsewhere.
+   * @param event - Input value from slider
+   */
   onVolumeChange(event: any) {
-    this.volume = parseInt(event.target.value, 10) / 100;
+    const target = event.target as HTMLInputElement;
+    this.volume100 = parseInt(target.value, 10);
+    this.volume = parseInt(target.value, 10) / 100;
     this.volumeChange.emit(this.volume);
+    this.volume100Change.emit(this.volume100);
   }
 
 }

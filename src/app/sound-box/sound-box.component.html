@@ -36,12 +36,12 @@
     </button>
 
     <!-- sound button-->
-    <div class="sound-button-container">
-      <button class="sound-button-1 mover" (click)="togglePopoverAudio()" #soundButton>
-        <img src="assets/sound.svg" alt="Button Image" class="button-image-2" draggable="false">
-        <app-slider-popup [isPopoverOpen]="isPopoverOpen" [(volume)]="volume" (volumeChange)="onVolumeChange($event)" #sliderPopup></app-slider-popup>
-      </button>
-    </div>
+    <button class="sound-button-1 mover" (click)="togglePopoverAudio()" tabindex="0" #soundButton>
+      <img src="assets/sound.svg" alt="Button Image" class="button-image-2" draggable="false">
+      <div *ngIf="isPopoverOpen" (click)="$event.stopPropagation()">
+        <app-slider-popup  [(volume)]="volume100" (volumeChange)="onVolumeChange($event)" (volume100Change)="onVolume100Change($event)" #sliderPopup></app-slider-popup>
+      </div>
+    </button>
 
 
     <!-- settings Button -->

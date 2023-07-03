@@ -1,4 +1,4 @@
-.slider-wrapper {
+  .slider-wrapper {
     position: absolute;
     top: calc(--slider-top);
     left: var(--slider-left);
@@ -47,18 +47,19 @@
     border-color: rgba(255, 255, 255, 1) transparent transparent transparent;
   }
 
+  /// Code not generated on a website, but slightly improved by us
+  /// -----------------------------------------------------------------------------------------------------------
+
   /*generated with Input range slider CSS style generator (version 20211225)
   https://toughengineer.github.io/demo/slider-styler*/
-  /*generated with Input range slider CSS style generator (version 20211225)
-https://toughengineer.github.io/demo/slider-styler*/
-input[type=range].styled-slider {
+  input[type=range].styled-slider {
     width: 15em;
     -webkit-appearance: none;
     appearance: none;
   }
   
-/*progress support*/
-input[type=range].styled-slider.slider-progress {
+  /*progress support*/
+  input[type=range].styled-slider.slider-progress {
     --range: calc(var(--max) - var(--min));
     --ratio: calc((var(--value) - var(--min)) / var(--range));
     --sx: calc(0.5 * 1.5em + var(--ratio) * (100% - 1.5em));
@@ -198,3 +199,4 @@ input[type=range].styled-slider.slider-progress {
     border-right-width: 0;
   }
   
+  /// -----------------------------------------------------------------------------------------------------------

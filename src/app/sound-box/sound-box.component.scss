@@ -1,4 +1,3 @@
-/* Definiert den Stil für den mittleren Container */
 .middle-container {
   width: 100%;
   height: 100vh;
@@ -18,14 +17,12 @@
   margin-left: 15px;
 }
 
-/* Definiert den Stil für den <h1>-Text im mittleren Container */
 .middle-container h1 {
   font-size: 24px;
   text-align: center;
   max-width: 100%;
 }
 
-/* Definiert den Stil für den Sound-Container */
 .sound-container {
   background-color: var(--container-background-color);
   display: flex;
@@ -33,7 +30,6 @@
   border-top: #b0b0b0 1px solid;
 }
 
-/* Definiert den Stil für den Play-Button */
 .play-button {
   display: flex;
   align-items: center;
@@ -46,7 +42,6 @@
   background: var(--container-background-color);
 }
 
-/* Definiert den Stil für das Play-Button-Bild */
 .play-button-image {
   width: 30px;
   object-fit: cover;
@@ -55,7 +50,6 @@
   transition: transform 0.3s;
 }
 
-/* Definiert den Stil für den Sound-Button */
 .sound-button-1 {
   display: flex;
   align-items: center;
@@ -68,24 +62,21 @@
   background: var(--container-background-color);
 }
 
-/* Definiert den Stil für das Sound-Button-Bild */
+//Different button-images should be fixed later
 .button-image-1 {
   width: 30px;
 }
 
-/* Definiert den Stil für das Sound-Button-Bild */
 .button-image-2 {
   width: 30px;
   margin-top: 4.8px;
 }
 
-/* Definiert den Stil für das Sound-Button-Bild */
 .button-image-3 {
   width: 30px;
   margin-top: 2.2px;
 }
 
-/* Definiert den Stil für das Sound-Button-Bild */
 .button-image-4 {
   width: 35px;
   margin-top: 8px;
@@ -107,24 +98,13 @@
   transform: scale(1.1);
 }
 
-/* Definiert den Stil für den Sound-Button 
-.voice-bar {
-  background-image: repeating-linear-gradient(90deg, #00458b 0%, 1%, #00458b 10%, rgb(81, 75, 255) 0%, white 4%);
-  width: 1000px;
-  display: flex;
-  height: 35px;
-}
-*/
 .audio-bar {
-  
-  //background-image: repeating-linear-gradient(90deg, #00458b 0%, 1%, #00458b 10%, rgb(81, 75, 255) 0%, white 4%);
   width: 1000px;
   display: flex;
   height: 35px;
   overflow: hidden;
 }
 
-/* Definiert den Stil für das Sound-Button-Bild */
 .sound-button-image {
   width: 1000px;
   height: 70px;
@@ -138,7 +118,6 @@
   margin-right: auto;
 }
 
-/* Definiert den Stil für die Hover-Effekte */
 .play-button-image:hover,
 .button-image-1:hover {
   transform: scale(1.1);
@@ -148,23 +127,6 @@
   position: relative;
 }
 
-
-
-.app-slider-popup {
-  
-}
-
-
-
-
-
-
-
-
-
-
-
-/* Media Queries für verschiedene Bildschirmgrößen */
 @media (max-width: 800px) {
   .middle-container {
       padding: 20px;

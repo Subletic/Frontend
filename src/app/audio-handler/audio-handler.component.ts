@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {SignalRService} from "../service/signalRService";
 
-
 /**
  * The AudioHandlerComponent represents a component that handles audio playback and buffering.
  */
@@ -42,45 +41,19 @@ export class AudioHandlerComponent implements OnInit {
       this.handleAudioData(newChunk)
     });
 
-
     this.createNodes();
   }
 
-  private createNodes() {
+  /**
+   * Creates audio nodes and connects them.
+   */
+  public createNodes() {
     this.gainNode = this.audioContext.createGain();
     this.gainNode.gain.value = 0;
     if(!this.sourceNode) return;
     this.sourceNode.connect(this.gainNode);
     this.gainNode.connect(this.audioContext.destination);
   }
-
-  public setVolume(volume: number) {
-
-    console.log("Finaler Volume Wert" + volume);
-
-    if (this.gainNode) {
-      this.gainNode.gain.setValueAtTime(volume, this.audioContext.currentTime);
-    }
-  }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   /**
    * Resumes audio playback and starts the source node if not started.
@@ -166,11 +139,14 @@ export class AudioHandlerComponent implements OnInit {
     this.sourceNode.connect(this.audioContext.destination);
   }
 
+  /**
+   * Sets the playback speed of the audio.
+   * @param speed - The playback speed to set.
+   */
   public setPlaybackSpeed(speed: number): void {
     this.playbackSpeed = speed;
     
     if (this.sourceNode) {
-
       this.sourceNode.playbackRate.value = this.playbackSpeed;
     }
   }
@@ -199,6 +175,9 @@ export class AudioHandlerComponent implements OnInit {
 
   }
 
+  /**
+   * Skips forward in the audio playback by the specified number of seconds.
+   */
   public skipForward() {
     if (this.audioContext.state !== 'running') {
       return;
@@ -234,6 +213,9 @@ export class AudioHandlerComponent implements OnInit {
     });
   }
   
+  /**
+   * Skips backward in the audio playback by the specified number of seconds.
+   */
   public skipBackward() {
     if (this.audioContext.state !== 'running') {
       return;
@@ -267,5 +249,27 @@ export class AudioHandlerComponent implements OnInit {
       this.isSourceNodeStarted = true;
     });
   }  
+
+  public getGainNode() {
+    return this.gainNode;
+  }
+
+  public getSourceNode() {
+    return this.sourceNode;
+  }
+
+  public getNodeAudioBuffer() {
+    return this.nodeAudioBuffer;
+  }
+
+  /**
+ * Sets the volume of the audio.
+ * @param volume - The volume level to set.
+ */
+  public setVolume(volume: number) {
+    if (!this.gainNode) return;
+    this.gainNode.gain.setValueAtTime(volume, this.audioContext.currentTime);
+    
+  }
 
 }
