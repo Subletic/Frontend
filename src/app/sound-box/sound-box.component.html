@@ -49,7 +49,4 @@
   </div>
 </div>
 
-<settings-modal id="settings">
-  <h1>Einstellungen</h1>
-  <button (click)="closeModal('settings');">Abbrechen</button>
-</settings-modal>
+<settings-modal id="settings" (secondsChange)="onSecondsChange($event)"></settings-modal>

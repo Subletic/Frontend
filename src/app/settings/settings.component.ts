@@ -1,10 +1,10 @@
-﻿/*
-from Jason Watmore (@cornflourblue) https://github.com/cornflourblue/angular-9-custom-modal
-*/
-import { Component, ViewEncapsulation, ElementRef, Input, OnInit, OnDestroy } from '@angular/core';
+﻿import { Component, ViewEncapsulation, ElementRef, Input, Output, OnInit, OnDestroy, EventEmitter } from '@angular/core';
 import { SettingsService } from './settings.service';
 
-
+/**
+ * The SettingsComponent represents a settings modal that allows users to configure certain options.
+ * It is based on Jason Watmore's custom modal implementation (https://github.com/cornflourblue/angular-9-custom-modal).
+ */
 @Component({ 
     selector: 'settings-modal', 
     templateUrl: 'settings.component.html', 
@@ -12,49 +12,73 @@ import { SettingsService } from './settings.service';
     encapsulation: ViewEncapsulation.None
 })
 export class SettingsComponent implements OnInit, OnDestroy {
-    @Input() id!: string;
+    @Input() id!: string;   // The unique identifier for the settings modal
+    @Output() secondsChange = new EventEmitter<number>();   // Event emitter to notify parent components of changes
     private element: any;
+    sprungweite: number = 5;
 
     constructor(private settingsService: SettingsService, private el: ElementRef) {
         this.element = el.nativeElement;
     }
 
     ngOnInit(): void {
-        // ensure id attribute exists
+        // Ensure that the "id" attribute exists for the modal
         if (!this.id) {
             console.error('modal must have an id');
             return;
         }
 
-        // move element to bottom of page (just before </body>) so it can be displayed above everything else
+        // Move the element to the bottom of the page (just before </body>) so it can be displayed above everything else
         document.body.appendChild(this.element);
 
-        // close modal on background click
+        // Close the modal when clicking on the background
         this.element.addEventListener('click', (el: MouseEvent) => {
             if (el.target instanceof HTMLElement && el.target.className === 'settings-modal') {
                 this.close();
             }
         });
 
-        // add self (this modal instance) to the modal service so it's accessible from controllers
+        // Add this modal instance to the settings service so it can be accessed from other components
         this.settingsService.add(this);
     }
 
-    // remove self from modal service when component is destroyed
+    // Remove this modal instance from the settings service when the component is destroyed
     ngOnDestroy(): void {
         this.settingsService.remove(this.id);
         this.element.remove();
     }
 
-    // open modal
+    // Open the modal and display it on the screen
     open(): void {
         this.element.style.display = 'block';
         document.body.classList.add('settings-modal-open');
+        console.log("Sprungweite: ", this.sprungweite);
     }
 
-    // close modal
+    // Close the modal and hide it from the screen
     close(): void {
         this.element.style.display = 'none';
         document.body.classList.remove('settings-modal-open');
+    }
+
+    // Apply the settings changes and emit the "secondsChange" event to notify the parent component
+    apply() {
+        console.log("Sprungweite applied: ", this.sprungweite);
+        this.secondsChange.emit(this.sprungweite);
+        this.close();
+
+    }
+
+    // Check if the current "sprungweite" value is valid (between 1 and 120)
+    checkSprungweite() {
+        if (this.sprungweite > 120 || this.sprungweite < 1) {
+          return false;
+        }
+        return true;
+    }
+    
+     // Get the background color defined in the CSS variable "--color-main-blue"
+    getBackgroundColor() : string {
+        return getComputedStyle(document.documentElement).getPropertyValue('--color-main-blue');
     }
 }

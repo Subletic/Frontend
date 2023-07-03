@@ -2,6 +2,8 @@ import { Component, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { AudioHandlerComponent } from '../audio-handler/audio-handler.component';
 import { SettingsService } from '../settings/settings.service';
+import { SettingsComponent } from '../settings/settings.component';
+
 /**
  * The SoundBoxComponent represents a component that displays the bottom bar of the application.
  * It contains buttons for user interaction with sound and program settings.
@@ -15,6 +17,8 @@ import { SettingsService } from '../settings/settings.service';
 export class SoundBoxComponent {
 
   @ViewChild('audioHandler') audioHandler!: AudioHandlerComponent;
+  @ViewChild(SettingsComponent) settingsComponent!: SettingsComponent;
+
   public isSvg1Active = true;
   public bodyText: string = '';
 
@@ -48,7 +52,11 @@ export class SoundBoxComponent {
 
   closeModal(id: string) {
     this.settingsService.close(id);
-}
+  }
+
+  onSecondsChange(seconds: number){
+    this.audioHandler.setSkipSeconds(seconds);
+  }
 }
 
 

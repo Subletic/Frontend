@@ -227,5 +227,8 @@ export class AudioHandlerComponent implements OnInit {
     });
   }
    
+  setSkipSeconds(seconds: number) {
+    this.skipSeconds = seconds;
+  }
 
 }

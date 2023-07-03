@@ -9,6 +9,12 @@ import { TextBoxComponent } from './text-box/text-box.component';
 import { TextSheetComponent } from './textSheet/textSheet.component';
 import { AudioHandlerComponent } from './audio-handler/audio-handler.component';
 import { SettingsComponent } from './settings/settings.component';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
+import { ReactiveFormsModule } from '@angular/forms';
+
 
 @NgModule({
   declarations: [
@@ -21,7 +27,12 @@ import { SettingsComponent } from './settings/settings.component';
   ],
   imports: [
     BrowserModule,
-    FormsModule
+    FormsModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatIconModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
