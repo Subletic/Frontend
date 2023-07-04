@@ -40,3 +40,6 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+#settings-component
+src/settings/settings.component.spec.ts
