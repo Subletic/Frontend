@@ -2,11 +2,11 @@
 from Jason Watmore (@cornflourblue) https://github.com/cornflourblue/angular-9-custom-modal
 */
 
-settings-modal {
+:host {
     /* modals are hidden by default */
     display: none;
 
-    .settings-modal {
+    &.settings-modal {
         /* modal container fixed across whole screen */
         position: fixed;
         width:500px;
@@ -21,7 +21,7 @@ settings-modal {
         /* enables scrolling for tall modals*/ 
         overflow: auto;
 
-        .settings-modal-body {
+        &-body {
             padding: 20px;
             background: #ffffff;
             
@@ -31,7 +31,7 @@ settings-modal {
         }
     }
 
-    .settings-modal-background {
+    &-background {
         /* modal background fixed across whole screen */
         position: fixed;
         top: 0;
@@ -47,12 +47,12 @@ settings-modal {
         z-index: 900;
     }
 
-    .buttons-container {
+    & .buttons-container {
         display: flex;
         justify-content: flex-end;
     }
 
-    .mat-form-field-underline {
+    & .mat-form-field-underline {
         /* Ändere die Farbe auf Rot */
         border-bottom: var(--color-main-blue);
     }
