@@ -1,15 +1,26 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { AudioHandlerComponent } from './audio-handler.component';
+import { SignalRService } from '../service/signalRService';
 
 describe('AudioHandlerComponent', () => {
   let component: AudioHandlerComponent;
+  let fixture: ComponentFixture<AudioHandlerComponent>;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      declarations: [AudioHandlerComponent],
+      providers: [SignalRService]
+    }).compileComponents();
+  });
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      declarations: [AudioHandlerComponent],
-    });
-    const fixture = TestBed.createComponent(AudioHandlerComponent);
+    fixture = TestBed.createComponent(AudioHandlerComponent);
     component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create the component', () => {
+    expect(component).toBeTruthy();
   });
 
   it('should convert Int16Array to Float32Array successfully', () => {
@@ -21,4 +32,19 @@ describe('AudioHandlerComponent', () => {
     expect(component['audioBuffer'].subarray(0, int16Array.length)).toEqual(expectedFloat32Array);
   });
 
+  it('should create audio nodes in createNodes method', () => {
+    component.createNodes();
+    expect(component.getGainNode()).toBeTruthy();
+    expect(component.getSourceNode()).toBeTruthy();
+    if(component.getSourceNode()) return;
+    expect(component.getSourceNode()?.buffer).toEqual(component.getNodeAudioBuffer());
+  });
+
+  it('should set the volume in setVolume method', () => {
+    const volume = 0.5;
+    component.createNodes();
+    component.setVolume(volume);
+    expect(component.getVolume()).toEqual(volume);
+  });
+  
 });

@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {SignalRService} from "../service/signalRService";
 
-
 /**
  * The AudioHandlerComponent represents a component that handles audio playback and buffering.
  */
@@ -11,6 +10,7 @@ import {SignalRService} from "../service/signalRService";
   styleUrls: ['./audio-handler.component.scss']
 })
 export class AudioHandlerComponent implements OnInit {
+
   // Constants for audio buffering and sampling
   private bufferSizeInSeconds = 120;
   private sampleRate = 48000;
@@ -28,6 +28,9 @@ export class AudioHandlerComponent implements OnInit {
   private playbackSpeed = 1;
   private jumpCounter = 0;
 
+  private gainNode: GainNode = this.audioContext.createGain();
+  private volume = 0;
+
   constructor(private signalRService: SignalRService) {
     // Create the source node and assign the node audio buffer
     this.sourceNode = this.audioContext.createBufferSource();
@@ -39,6 +42,19 @@ export class AudioHandlerComponent implements OnInit {
     this.signalRService.receivedAudioStream.subscribe((newChunk) => {
       this.handleAudioData(newChunk)
     });
+
+    this.createNodes();
+  }
+
+  /**
+   * Creates audio nodes and connects them.
+   */
+  public createNodes() {
+    this.gainNode = this.audioContext.createGain();
+    this.gainNode.gain.value = 0;
+    if(!this.sourceNode) return;
+    this.sourceNode.connect(this.gainNode);
+    this.gainNode.connect(this.audioContext.destination);
   }
 
   /**
@@ -125,11 +141,14 @@ export class AudioHandlerComponent implements OnInit {
     this.sourceNode.connect(this.audioContext.destination);
   }
 
+  /**
+   * Sets the playback speed of the audio.
+   * @param speed - The playback speed to set.
+   */
   public setPlaybackSpeed(speed: number): void {
     this.playbackSpeed = speed;
     
     if (this.sourceNode) {
-
       this.sourceNode.playbackRate.value = this.playbackSpeed;
     }
   }
@@ -158,6 +177,9 @@ export class AudioHandlerComponent implements OnInit {
 
   }
 
+  /**
+   * Skips forward in the audio playback by the specified number of seconds.
+   */
   public skipForward() {
     if (this.audioContext.state !== 'running') {
       return;
@@ -187,12 +209,20 @@ export class AudioHandlerComponent implements OnInit {
       if (!this.sourceNode) return;
   
       this.updatePlayableBuffer();
-  
+
+      this.createNodes();
+      this.reapplyVolume();
+
       this.sourceNode.start(0, targetTime);
       this.isSourceNodeStarted = true;
     });
+
+    //this.reapplyVolume();
   }
   
+  /**
+   * Skips backward in the audio playback by the specified number of seconds.
+   */
   public skipBackward() {
     if (this.audioContext.state !== 'running') {
       return;
@@ -222,10 +252,43 @@ export class AudioHandlerComponent implements OnInit {
     this.audioContext.resume().then(() => {
       if (!this.sourceNode) return;
       this.updatePlayableBuffer();
+      
+      this.createNodes();
+      this.reapplyVolume();
+
       this.sourceNode.start(0, targetTime);
       this.isSourceNodeStarted = true;
     });
+  }  
+
+  public reapplyVolume() {
+    this.gainNode.gain.setValueAtTime(this.volume, this.audioContext.currentTime);
   }
-   
+
+  public getGainNode(): GainNode {
+    return this.gainNode;
+  }
+
+  public getSourceNode() {
+    return this.sourceNode;
+  }
+
+  public getNodeAudioBuffer() {
+    return this.nodeAudioBuffer;
+  }
+
+  /**
+ * Sets the volume of the audio.
+ * @param volume - The volume level to set.
+ */
+  public setVolume(volume: number) {
+    this.volume = volume;
+    if (!this.gainNode) return;
+    this.gainNode.gain.setValueAtTime(this.volume, this.audioContext.currentTime);
+  }
+
+  public getVolume() {
+    return this.volume;
+  }
 
 }

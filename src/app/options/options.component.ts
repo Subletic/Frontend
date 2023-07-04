@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input} from '@angular/core';
 
 @Component({
   selector: 'app-options-popup',
@@ -8,11 +8,6 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 export class PopupComponent {
   @Input() top = 0;
   @Input() left = 0;
-  @Output() close = new EventEmitter<void>();
 
   inputValue = '';
-
-  closePopup() {
-    this.close.emit();
-  }
 }
