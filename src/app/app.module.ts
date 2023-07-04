@@ -16,6 +16,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { ReactiveFormsModule } from '@angular/forms';
 
 
+import {MatSliderModule} from '@angular/material/slider';
+import { SliderPopupComponent } from './sound-box/slider-popup/slider-popup.component';
+
+
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -23,7 +28,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     TextSheetComponent,
     TextBoxComponent,
     AudioHandlerComponent,
-    SettingsComponent
+    SettingsComponent,
+    SliderPopupComponent
   ],
   imports: [
     BrowserModule,
@@ -32,7 +38,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     MatFormFieldModule,
     MatInputModule,
     MatIconModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatSliderModule
   ],
   providers: [],
   bootstrap: [AppComponent]
