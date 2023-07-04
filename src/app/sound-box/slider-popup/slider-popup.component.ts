@@ -63,7 +63,7 @@ export class SliderPopupComponent implements OnInit, AfterViewInit  {
    * Emits info about the changed values in the slider so they can then be send elsewhere.
    * @param event - Input value from slider
    */
-  onVolumeChange(event: any) {
+  onVolumeChange(event: Event) {
     const target = event.target as HTMLInputElement;
     this.volume100 = parseInt(target.value, 10);
     this.volume = parseInt(target.value, 10) / 100;

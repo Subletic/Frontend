@@ -10,6 +10,7 @@ import {SignalRService} from "../service/signalRService";
   styleUrls: ['./audio-handler.component.scss']
 })
 export class AudioHandlerComponent implements OnInit {
+
   // Constants for audio buffering and sampling
   private bufferSizeInSeconds = 120;
   private sampleRate = 48000;
@@ -28,6 +29,7 @@ export class AudioHandlerComponent implements OnInit {
   private jumpCounter = 0;
 
   private gainNode: GainNode = this.audioContext.createGain();
+  private volume = 0;
 
   constructor(private signalRService: SignalRService) {
     // Create the source node and assign the node audio buffer
@@ -207,10 +209,15 @@ export class AudioHandlerComponent implements OnInit {
       if (!this.sourceNode) return;
   
       this.updatePlayableBuffer();
-  
+
+      this.createNodes();
+      this.reapplyVolume();
+
       this.sourceNode.start(0, targetTime);
       this.isSourceNodeStarted = true;
     });
+
+    //this.reapplyVolume();
   }
   
   /**
@@ -245,12 +252,20 @@ export class AudioHandlerComponent implements OnInit {
     this.audioContext.resume().then(() => {
       if (!this.sourceNode) return;
       this.updatePlayableBuffer();
+      
+      this.createNodes();
+      this.reapplyVolume();
+
       this.sourceNode.start(0, targetTime);
       this.isSourceNodeStarted = true;
     });
   }  
 
-  public getGainNode() {
+  public reapplyVolume() {
+    this.gainNode.gain.setValueAtTime(this.volume, this.audioContext.currentTime);
+  }
+
+  public getGainNode(): GainNode {
     return this.gainNode;
   }
 
@@ -267,9 +282,13 @@ export class AudioHandlerComponent implements OnInit {
  * @param volume - The volume level to set.
  */
   public setVolume(volume: number) {
+    this.volume = volume;
     if (!this.gainNode) return;
-    this.gainNode.gain.setValueAtTime(volume, this.audioContext.currentTime);
-    
+    this.gainNode.gain.setValueAtTime(this.volume, this.audioContext.currentTime);
+  }
+
+  public getVolume() {
+    return this.volume;
   }
 
 }

@@ -40,11 +40,11 @@ describe('AudioHandlerComponent', () => {
     expect(component.getSourceNode()?.buffer).toEqual(component.getNodeAudioBuffer());
   });
 
-  /*
   it('should set the volume in setVolume method', () => {
     const volume = 0.5;
+    component.createNodes();
     component.setVolume(volume);
-    expect(component.getGainNode().gain.value).toEqual(volume);
+    expect(component.getVolume()).toEqual(volume);
   });
-  */
+  
 });

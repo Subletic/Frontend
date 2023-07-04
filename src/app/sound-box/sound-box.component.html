@@ -29,7 +29,7 @@
     </div>
 
     <!-- speed Button -->
-    <button class="sound-button-1 mover" (click)="skipForwardButton()">
+    <button class="sound-button-1 mover" (click)="changePlaybackSpeedButton()">
       <img src="assets/speed.svg" alt="Button Image" class="button-image-4" draggable="false"
       (mousedown)=" buttonImage4.src='assets/speed.svg'" 
       (mouseup)=" buttonImage4.src='assets/speed.svg'" #buttonImage4>
@@ -38,7 +38,7 @@
     <!-- sound button-->
     <button class="sound-button-1 mover" (click)="togglePopoverAudio()" tabindex="0" #soundButton>
       <img src="assets/sound.svg" alt="Button Image" class="button-image-2" draggable="false">
-      <div *ngIf="isPopoverOpen" (click)="$event.stopPropagation()">
+      <div *ngIf="isPopoverOpen" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()" tabindex="0">
         <app-slider-popup  [(volume)]="volume100" (volumeChange)="onVolumeChange($event)" (volume100Change)="onVolume100Change($event)" #sliderPopup></app-slider-popup>
       </div>
     </button>

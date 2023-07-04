@@ -23,9 +23,6 @@ export class SoundBoxComponent {
   public isSvg1Active = true;
   public isPopupOpen = false;
 
-  public showMiniWindow = false;
-  public audioProgress = 0;
-
   public isPopoverOpen = false;
 
   public volume100 = 0;
@@ -50,21 +47,6 @@ export class SoundBoxComponent {
    * 
    */
   updatePosition() {
-    /*
-     const soundButtonElement = this.soundButton.nativeElement;
-    const soundButtonRect = soundButtonElement.getBoundingClientRect();
-
-    const calculatedTopValue = (soundButtonRect.top + soundButtonRect.height) + 'px';
-    const calculatedLeftValue = soundButtonRect.left + 'px';
-
-    const position = {
-      top: calculatedTopValue,
-      left: calculatedLeftValue
-    };
-
-    this.sliderPopup.updateSliderPosition(position);
-    */
-
     this.sliderPopup.updateSliderPosition();
   }
 
@@ -88,14 +70,6 @@ export class SoundBoxComponent {
 
   changePlaybackSpeedButton() {
     this.audioHandler.setPlaybackSpeed(0.7);
-  }
-
-  openMiniWindow() {
-    this.showMiniWindow = true;
-  }
-
-  updateAudioProgress(progress: number) {
-    this.audioProgress = progress;
   }
 
   openPopup() {
