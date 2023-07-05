@@ -13,10 +13,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
-import { ReactiveFormsModule } from '@angular/forms';
 
 
-import {MatSliderModule} from '@angular/material/slider';
+import { MatSliderModule } from '@angular/material/slider';
 import { SliderPopupComponent } from './sound-box/slider-popup/slider-popup.component';
 
 
@@ -38,7 +37,6 @@ import { SliderPopupComponent } from './sound-box/slider-popup/slider-popup.comp
     MatFormFieldModule,
     MatInputModule,
     MatIconModule,
-    ReactiveFormsModule,
     MatSliderModule
   ],
   providers: [],

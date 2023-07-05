@@ -16,6 +16,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
     @Output() secondsChange = new EventEmitter<number>();   // Event emitter to notify parent components of changes
     private element: any;
     sprungweite: number = 5;
+    initialSprungweite: number = 5;
 
     constructor(private settingsService: SettingsService, private el: ElementRef) {
         this.element = el.nativeElement;
@@ -52,7 +53,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
     open(): void {
         this.element.style.display = 'block';
         document.body.classList.add('settings-modal-open');
-        console.log("Sprungweite: ", this.sprungweite);
+        this.initialSprungweite = this.sprungweite;
     }
 
     // Close the modal and hide it from the screen
@@ -61,9 +62,13 @@ export class SettingsComponent implements OnInit, OnDestroy {
         document.body.classList.remove('settings-modal-open');
     }
 
+    cancel(): void {
+        this.sprungweite = this.initialSprungweite;
+        this.close();
+    }
+
     // Apply the settings changes and emit the "secondsChange" event to notify the parent component
     apply() {
-        console.log("Sprungweite applied: ", this.sprungweite);
         this.secondsChange.emit(this.sprungweite);
         this.close();
 

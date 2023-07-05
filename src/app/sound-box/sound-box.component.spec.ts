@@ -4,6 +4,12 @@ import { SoundBoxComponent } from './sound-box.component';
 import { AudioHandlerComponent } from '../audio-handler/audio-handler.component';
 import { SliderPopupComponent } from './slider-popup/slider-popup.component';
 import { By } from '@angular/platform-browser';
+import { SettingsComponent } from '../settings/settings.component';
+import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { FormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('SoundBoxComponent', () => {
   let component: SoundBoxComponent;
@@ -11,8 +17,8 @@ describe('SoundBoxComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule],
-      declarations: [SoundBoxComponent, AudioHandlerComponent, SliderPopupComponent]
+      imports: [RouterTestingModule, MatIconModule, MatFormFieldModule, FormsModule, MatInputModule, BrowserAnimationsModule],
+      declarations: [SoundBoxComponent, AudioHandlerComponent, SliderPopupComponent, SettingsComponent]
     }).compileComponents();
   });
 
@@ -55,12 +61,6 @@ describe('SoundBoxComponent', () => {
     fixture.detectChanges();
   
     expect(component.audioHandler.skipForward).toHaveBeenCalled();
-  });
-
-  it('should set isPopupOpen to true on openPopup', () => {
-    component.openPopup();
-
-    expect(component.isPopupOpen).toBeTruthy();
   });
 
   it('should toggle isPopoverOpen on togglePopoverAudio', () => {
