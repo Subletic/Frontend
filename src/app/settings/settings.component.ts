@@ -88,6 +88,9 @@ export class SettingsComponent implements OnInit, OnDestroy {
         return getComputedStyle(document.documentElement).getPropertyValue('--color-main-blue');
     }
 
+    /** Calls reload request to backend, then reloads webpage after 2 seconds
+     * 
+     */
     callBackendReload() {
 
         fetch(environment.apiURL + '/api/restart', {
@@ -98,7 +101,6 @@ export class SettingsComponent implements OnInit, OnDestroy {
               console.log('Called for restart');
               setTimeout(() => {
                 window.location.reload();
-                console.log("Self-restart");
               }, 2000);
             } else {
               console.error('Error with calling restart');
