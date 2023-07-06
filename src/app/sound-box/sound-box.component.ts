@@ -58,10 +58,22 @@ export class SoundBoxComponent {
   }
 
   @HostListener('document:keydown', ['$event'])
-  playStop(event: KeyboardEvent) {
-    if (event.altKey && event.key === 's') {
-      this.isSvg1Active = !this.isSvg1Active;
-      this.audioHandler.playOrStopAudio();
+  handleKeyboardEvent(event: KeyboardEvent) {
+    if (event.ctrlKey && event.altKey) {
+      if (event.key === 'd') {
+        this.isSvg1Active = !this.isSvg1Active;
+        console.log("played or stopped");
+        this.audioHandler.playOrStopAudio();
+        event.preventDefault();
+      } else if (event.key === 'y') {
+        console.log("skipBack");
+        this.audioHandler.skipBackward();
+        event.preventDefault();
+      } else if (event.key === 'w') {
+        console.log("skipForward");
+        this.audioHandler.skipForward();
+        event.preventDefault();
+      }
     }
   }
 
@@ -74,22 +86,8 @@ export class SoundBoxComponent {
     this.audioHandler.skipBackward();
   }
 
-  @HostListener('document:keydown', ['$event'])
-  skipBackward(event: KeyboardEvent) {
-    if (event.altKey && event.key === 'a') {
-      this.audioHandler.skipBackward();
-    }
-  }
-
   skipForwardButton() {
     this.audioHandler.skipForward();
-  }
-
-  @HostListener('document:keydown', ['$event'])
-  skipForward(event: KeyboardEvent) {
-    if (event.altKey && event.key === 'd') {
-      this.audioHandler.skipForward();
-    }
   }
 
   changePlaybackSpeedButton() {
