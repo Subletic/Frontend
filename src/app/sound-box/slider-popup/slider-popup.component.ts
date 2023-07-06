@@ -32,8 +32,8 @@ export class SliderPopupComponent implements OnInit, AfterViewInit  {
   /**
   * Updates the position of the slider based on the position of the sound button.
   */
-  updateSliderPosition() {
-    const soundButtonContainer = this.elementRef.nativeElement.querySelector('.sound-button-container');
+  updateElementPosition() {
+    const soundButtonContainer = this.elementRef.nativeElement.querySelector();
     if (!soundButtonContainer) return;
     const sliderWrapper = this.elementRef.nativeElement.querySelector('.slider-wrapper');
   
@@ -67,6 +67,7 @@ export class SliderPopupComponent implements OnInit, AfterViewInit  {
     const target = event.target as HTMLInputElement;
     this.volume100 = parseInt(target.value, 10);
     this.volume = parseInt(target.value, 10) / 100;
+    console.log(this.volume);
     this.volumeChange.emit(this.volume);
     this.volume100Change.emit(this.volume100);
   }

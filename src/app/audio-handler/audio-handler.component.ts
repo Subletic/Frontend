@@ -147,9 +147,11 @@ export class AudioHandlerComponent implements OnInit {
    */
   public setPlaybackSpeed(speed: number): void {
     this.playbackSpeed = speed;
+    console.log("New playbackSpeed in AudioHandler" + this.playbackSpeed);
     
     if (this.sourceNode) {
       this.sourceNode.playbackRate.value = this.playbackSpeed;
+      console.log("New playbackRate.value = " + this.sourceNode.playbackRate.value + " set.");
     }
   }
   

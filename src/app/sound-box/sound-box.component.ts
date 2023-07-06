@@ -4,6 +4,7 @@ import { AudioHandlerComponent } from '../audio-handler/audio-handler.component'
 import { SettingsService } from '../settings/settings.service';
 import { SettingsComponent } from '../settings/settings.component';
 import { SliderPopupComponent } from './slider-popup/slider-popup.component';
+import { SpeedPopupComponent } from './speed-popup/speed-popup.component';
 
 
 /**
@@ -21,13 +22,19 @@ export class SoundBoxComponent {
   @ViewChild('audioHandler') audioHandler!: AudioHandlerComponent;
   @ViewChild(SettingsComponent) settingsComponent!: SettingsComponent;
   @ViewChild('soundButton', { static: false }) soundButton!: ElementRef;
+  @ViewChild('speedButton', { static: false }) speedButton!: ElementRef;
+
   @ViewChild(SliderPopupComponent) sliderPopup!: SliderPopupComponent;
+  @ViewChild(SpeedPopupComponent) speedPopup!: SpeedPopupComponent;
 
   public isPopupOpen = false;
   public isPopoverOpen = false;
   public volume100 = 0;
   public isSvg1Active = true;
   public bodyText: string = '';
+
+  public isSpeedPopoverOpen = false;
+  public speedValue = 1;
 
   constructor(private router: Router, private elementRef: ElementRef, private settingsService: SettingsService) {}
 
@@ -40,16 +47,21 @@ export class SoundBoxComponent {
   onDocumentMouseDown(event: MouseEvent) {
     const clickedElement = event.target as HTMLElement;
     const isInsideSoundButton = this.soundButton.nativeElement.contains(clickedElement);
+    const isInsideSpeedButton = this.speedButton.nativeElement.contains(clickedElement);
     if (!isInsideSoundButton) {
       this.closePopoverAudio();
     } 
+    if (!isInsideSpeedButton) {
+      this.closePopoverSpeed();
+    }
   }
 
   /** Updates the position of the slider Pop-Up so it's always above the sound button.
    * 
    */
   updatePosition() {
-    this.sliderPopup.updateSliderPosition();
+    this.sliderPopup.updateElementPosition();
+    this.speedPopup.updateElementPosition();
   }
 
   playButton() {
@@ -98,6 +110,7 @@ export class SoundBoxComponent {
    */
   onVolumeChange(volume: number) {
     this.audioHandler.setVolume(volume);
+    console.log("Emitted volume -_-");
   }
 
   /**
@@ -107,6 +120,37 @@ export class SoundBoxComponent {
   onVolume100Change(volume100: number) {
     this.volume100 = volume100;
   }
+
+
+  switchSpeedPopover() {
+    this.isSpeedPopoverOpen = !this.isSpeedPopoverOpen;
+  }
+
+  closePopoverSpeed() {
+    this.isSpeedPopoverOpen = false;
+  }
+
+  
+  onSpeedChange(speed: number) {
+    this.speedValue = speed;
+    console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+    console.log("Received speed " + this.speedValue + " from s-p");
+    this.audioHandler.setPlaybackSpeed(this.speedValue);
+  }
+  
+
+  /*
+  onSpeedChange(event: Event) {
+    
+    const target = event.target as HTMLInputElement;
+    this.speedValue = parseInt(target.value);
+
+    console.log("Received speed " + this.speedValue + " from s-p");
+    this.audioHandler.setPlaybackSpeed(this.speedValue);
+  }
+  */
+
+
 
 }
 

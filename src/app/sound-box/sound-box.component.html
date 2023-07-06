@@ -29,11 +29,16 @@
     </div>
 
     <!-- speed Button -->
-    <button class="sound-button-1 mover" (click)="changePlaybackSpeedButton()">
+    <button class="sound-button-1 mover" (click)="switchSpeedPopover()" #speedButton>
       <img src="assets/speed.svg" alt="Button Image" class="button-image-4" draggable="false"
       (mousedown)=" buttonImage4.src='assets/speed.svg'" 
       (mouseup)=" buttonImage4.src='assets/speed.svg'" #buttonImage4>
+      <div *ngIf="isSpeedPopoverOpen" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()" tabindex="0">
+        <app-speed-popup> [(speedValue)]="speedValue" (speedChange)="onSpeedChange($event)" #speedPopup</app-speed-popup>
+      </div>
     </button>
+
+    <!--  (speedChange)="onSpeedChange($event)"     -->
 
     <!-- sound button-->
     <button class="sound-button-1 mover" (click)="togglePopoverAudio()" tabindex="0" #soundButton>

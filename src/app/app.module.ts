@@ -17,6 +17,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { MatSliderModule } from '@angular/material/slider';
 import { SliderPopupComponent } from './sound-box/slider-popup/slider-popup.component';
+import { SpeedPopupComponent } from './sound-box/speed-popup/speed-popup.component';
 
 
 
@@ -28,7 +29,8 @@ import { SliderPopupComponent } from './sound-box/slider-popup/slider-popup.comp
     TextBoxComponent,
     AudioHandlerComponent,
     SettingsComponent,
-    SliderPopupComponent
+    SliderPopupComponent,
+    SpeedPopupComponent
   ],
   imports: [
     BrowserModule,
