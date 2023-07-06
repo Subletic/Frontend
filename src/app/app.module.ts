@@ -9,7 +9,8 @@ import { TextBoxComponent } from './text-box/text-box.component';
 import { TextSheetComponent } from './textSheet/textSheet.component';
 import { AudioHandlerComponent } from './audio-handler/audio-handler.component';
 
-import {MatSliderModule} from '@angular/material/slider';
+
+import { MatSliderModule } from '@angular/material/slider';
 import { SliderPopupComponent } from './sound-box/slider-popup/slider-popup.component';
 
 
@@ -21,6 +22,7 @@ import { SliderPopupComponent } from './sound-box/slider-popup/slider-popup.comp
     TextSheetComponent,
     TextBoxComponent,
     AudioHandlerComponent,
+    SettingsComponent,
     SliderPopupComponent
   ],
   imports: [
