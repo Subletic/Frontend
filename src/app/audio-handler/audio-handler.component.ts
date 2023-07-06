@@ -259,7 +259,7 @@ export class AudioHandlerComponent implements OnInit {
       this.sourceNode.start(0, targetTime);
       this.isSourceNodeStarted = true;
     });
-  }  
+  }   
 
   public reapplyVolume() {
     this.gainNode.gain.setValueAtTime(this.volume, this.audioContext.currentTime);
@@ -289,6 +289,10 @@ export class AudioHandlerComponent implements OnInit {
 
   public getVolume() {
     return this.volume;
+  }
+   
+  setSkipSeconds(seconds: number) {
+    this.skipSeconds = seconds;
   }
 
 }
