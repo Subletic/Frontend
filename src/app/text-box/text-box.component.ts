@@ -5,7 +5,7 @@ import { SpeechBubble } from '../data/speechBubble.model';
 /**
  * The TextBoxComponent represents a component that handles the SpeechBubble data.
  * It provides methods to generate and manipulate the content of a text box.
- * To directly access and adress every word, Spans are used instead 
+ * To directly access and adress every word, Spans are used instead
  * of a typical textbox with a singel String.
  * The data inside the TextBox is directly connected to the data-structure of the speechBubbles.
  */
@@ -15,7 +15,7 @@ import { SpeechBubble } from '../data/speechBubble.model';
   styleUrls: ['./text-box.component.scss']
 })
 export class TextBoxComponent implements OnInit {
-  
+
   @ViewChild('textbox', { static: true }) textboxRef!: ElementRef;
 
   @Input() textbox!: SpeechBubble;
@@ -31,7 +31,7 @@ export class TextBoxComponent implements OnInit {
     console.log('Print Text:', this.textbox.printText());
 
     textbox.addEventListener('mouseover', (event: MouseEvent) => {
-    
+
       const target = event.target as HTMLElement;
       if (target.tagName === 'SPAN') {
         const hoveredWord = target.textContent;
@@ -51,7 +51,7 @@ export class TextBoxComponent implements OnInit {
       const currentText = selectedSpan.textContent;
       const cursorPosition = window.getSelection()?.getRangeAt(0)?.startOffset;
       const spanId = selectedSpan.id;
-    
+
       const isFullSelection = window.getSelection()?.toString().length === currentText?.length;
 
       /**
@@ -61,7 +61,7 @@ export class TextBoxComponent implements OnInit {
       * PrevWord doesn't exist -> Merges with next Word
       */
       if (cursorPosition === 0) {
-        if (event.key === 'Backspace') { 
+        if (event.key === 'Backspace') {
           const prevSpan = selectedSpan.previousElementSibling as HTMLSpanElement;
 
           if (isFullSelection) {
@@ -71,7 +71,7 @@ export class TextBoxComponent implements OnInit {
               this.textbox.words.remove(currentWord);
             }
             selectedSpan.remove();
-      
+
             event.preventDefault();
             return;
           }
@@ -83,24 +83,24 @@ export class TextBoxComponent implements OnInit {
               if (prevSpan.getAttribute('id') != null) {
                 const currentWord = this.findWordById(Number(selectedSpan.getAttribute('id')));
                 if (currentWord) {
-                  this.textbox.words.remove(currentWord); 
+                  this.textbox.words.remove(currentWord);
                 }
               }
               prevSpan.insertAdjacentElement('afterend', selectedSpan);
               selectedSpan.remove();
-              prevSpan.textContent = prevWord.word; 
+              prevSpan.textContent = prevWord.word;
               prevSpan.focus();
               event.preventDefault();
               return;
             }
-          } 
+          }
 
           const nextSpan = selectedSpan.nextElementSibling as HTMLSpanElement;
 
           if (nextSpan) {
             if(nextSpan.getAttribute('id')){
               const nextWord = this.findWordById(Number(nextSpan.getAttribute('id')));
-            
+
               if (nextWord) {
                 nextWord.word = currentText + nextWord.word;
                 if(selectedSpan.getAttribute('id')){
@@ -122,9 +122,9 @@ export class TextBoxComponent implements OnInit {
       /**
       * This if statement handles the case when the Space key is pressed without the Shift key in the middle of a word.
       * Splits the current word into two words at the cursor position
-      * If the text before the cursor is not empty, a new 
+      * If the text before the cursor is not empty, a new
       * empty word is inserted after the current word in the LinkedList.
-      * The new word and the new empty word are displayed in separate 
+      * The new word and the new empty word are displayed in separate
       * contenteditable spans, and the focus is set to the new span.
       */
       if (event.code === 'Space') {
@@ -133,7 +133,7 @@ export class TextBoxComponent implements OnInit {
           const wordBeforeCursor = currentText.substring(0, cursorPosition);
           const wordAfterCursor = currentText.substring(cursorPosition);
           selectedSpan.textContent = wordBeforeCursor;
-        
+
           if (wordBeforeCursor.trim() !== '') {
             const newWord = new WordToken(wordAfterCursor, 1, 1, 1, 1);
             const currentWord = this.findWordById(Number(spanId));
@@ -147,7 +147,7 @@ export class TextBoxComponent implements OnInit {
               selectedSpan.insertAdjacentElement('afterend', newSpan);
               selectedSpan.insertAdjacentText('afterend', ' ');
               newSpan.focus();
-          
+
               // Event handling for the new span
               newSpan.addEventListener('input', () => {
                 const newText = newSpan.textContent;
@@ -177,7 +177,11 @@ export class TextBoxComponent implements OnInit {
       if (selectedSpan2) {
         const currentText = selectedSpan2.textContent;
         if(currentText) {
-          selectedSpan2.textContent = currentText.trim();
+          // frontend!21: Firefox resets the caret position on content assigning, only do it when it matters
+          const currentTextTrimmed = currentText.trim();
+          if (currentText !== currentTextTrimmed) {
+            selectedSpan2.textContent = currentTextTrimmed;
+          }
         }
       }
       //Sorgt noch für Fehler, daher treten noch vereinzelt leere Strings auf
@@ -187,7 +191,7 @@ export class TextBoxComponent implements OnInit {
 
     //this.updateWordColors();
   }
-  
+
   /**
   * Generates the HTML representation of the textbox content.
   * Each word in the textbox is wrapped in a <span> element with a unique ID and the contenteditable attribute.
@@ -214,10 +218,10 @@ export class TextBoxComponent implements OnInit {
   insertAfter(newWord: WordToken, prevWord: WordToken): void {
     newWord.id = this.textbox.words.currentIndex;
     this.textbox.words.currentIndex++;
-  
+
     newWord.prev = prevWord;
     newWord.next = prevWord.next;
-  
+
     if (prevWord.next) {
       prevWord.next.prev = newWord;
     }
@@ -226,7 +230,7 @@ export class TextBoxComponent implements OnInit {
       this.textbox.words.tail = newWord;
     }
   }
-  
+
 
   /**
    * Finds a word in the text box by its ID.
@@ -258,21 +262,21 @@ export class TextBoxComponent implements OnInit {
       current = next;
     }
   }
-  
+
   /**
   * Updates the colors of the words based on the confidence value.
   */
   updateWordColors() {
     /*
     let current = this.textbox.words.head;
-  
+
     while (current !== null) {
       const element = document.getElementById(current.id.toString());
       if (element == null) return;
       const confidence = parseFloat(current.confidence.toString());
-  
+
       let color = '';
-  
+
       if (confidence >= 0.9) {
         color = '#000000'; // Schwarz (Hexadezimalwert: 000000)
       } else if (confidence >= 0.7) {
@@ -282,7 +286,7 @@ export class TextBoxComponent implements OnInit {
       } else {
         color = '#BE0101'; // Rot (Hexadezimalwert: BE0101)
       }
-  
+
       element.style.color = color;
       current = current.next;
     }
