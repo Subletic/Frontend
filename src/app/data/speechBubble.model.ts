@@ -39,6 +39,8 @@ export class SpeechBubbleExport {
   }
 }
 
+
+
 export class SpeechBubble {
     public id: number;
     public speaker: number;

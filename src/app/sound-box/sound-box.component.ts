@@ -1,8 +1,6 @@
 import { Component, ViewChild, ElementRef, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { AudioHandlerComponent } from '../audio-handler/audio-handler.component';
-import { SettingsService } from '../settings/settings.service';
-import { SettingsComponent } from '../settings/settings.component';
 import { SliderPopupComponent } from './slider-popup/slider-popup.component';
 
 
@@ -19,17 +17,17 @@ import { SliderPopupComponent } from './slider-popup/slider-popup.component';
 export class SoundBoxComponent {
 
   @ViewChild('audioHandler') audioHandler!: AudioHandlerComponent;
-  @ViewChild(SettingsComponent) settingsComponent!: SettingsComponent;
   @ViewChild('soundButton', { static: false }) soundButton!: ElementRef;
   @ViewChild(SliderPopupComponent) sliderPopup!: SliderPopupComponent;
 
-  public isPopupOpen = false;
-  public isPopoverOpen = false;
-  public volume100 = 0;
   public isSvg1Active = true;
-  public bodyText: string = '';
+  public isPopupOpen = false;
 
-  constructor(private router: Router, private elementRef: ElementRef, private settingsService: SettingsService) {}
+  public isPopoverOpen = false;
+
+  public volume100 = 0;
+
+  constructor(private router: Router, private elementRef: ElementRef) {}
 
   @HostListener('window:resize')
   onWindowResize() {
@@ -74,17 +72,10 @@ export class SoundBoxComponent {
     this.audioHandler.setPlaybackSpeed(0.7);
   }
 
-  openModal(id: string) {
-    this.settingsService.open(id);
+  openPopup() {
+    this.isPopupOpen = true;
   }
 
-  closeModal(id: string) {
-    this.settingsService.close(id);
-  }
-
-  onSecondsChange(seconds: number){
-    this.audioHandler.setSkipSeconds(seconds);
-  }
   togglePopoverAudio() {
     this.isPopoverOpen = !this.isPopoverOpen;
   }

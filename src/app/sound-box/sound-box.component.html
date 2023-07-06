@@ -44,13 +44,11 @@
     </button>
 
 
-      <!-- settings Button -->
-      <button class="sound-button-1 mover" (click)="openModal('settings')">
-        <img src="assets/settings.svg" alt="Button Image" class="button-image-3"
-        (mousedown)=" buttonImage6.src='assets/settingsOnClick.svg'" 
-        (mouseup)=" buttonImage6.src='assets/settings.svg'" #buttonImage6>
-      </button>
+    <!-- settings Button -->
+    <button class="sound-button-1 mover" (click)="handleButtonClick()">
+      <img src="assets/settings.svg" alt="Button Image" class="button-image-3" draggable="false"
+      (mousedown)=" buttonImage6.src='assets/settingsOnClick.svg'" 
+      (mouseup)=" buttonImage6.src='assets/settings.svg'" #buttonImage6>
+    </button>
   </div>
 </div>
-
-<settings-modal id="settings" (secondsChange)="onSecondsChange($event)"></settings-modal>
