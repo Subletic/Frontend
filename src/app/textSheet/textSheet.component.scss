@@ -3,24 +3,7 @@
     max-width: 1000px;
     overflow-y: scroll;
     overflow-x: hidden;
-    //height: 95.65vh; 
-    
-    min-height: 95.65%;
-    max-height: 95.65%;
-
-    margin-left: Auto;
-    margin-right: Auto;
-
-    background-color: var(--textsheet-background-color);
-  }
-  
-  .middle-container h1 {
-    font-size: 24px; 
-    text-align: center; 
-    max-width: 100%; 
-  }
-
-  .innerBoxes {
+    height: 95.65vh; 
     display: flex; 
     align-items: center; 
     justify-content: center; 
@@ -32,7 +15,16 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+
+    background-color: var(--textsheet-background-color);
   }
+  
+  .middle-container h1 {
+    font-size: 24px; 
+    text-align: center; 
+    max-width: 100%; 
+  }
+
 
   /* width */
 ::-webkit-scrollbar {

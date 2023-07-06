@@ -52,6 +52,9 @@ export class LinkedList {
     * @param speechBubble - The speech bubble to be added.
     */
     add(speechBubble: SpeechBubble) {
+        speechBubble.id = this.currentIndex;
+      this.currentIndex++;
+
       if (!this.head) {
         this.head = speechBubble;
         this.tail = speechBubble;
@@ -152,14 +155,26 @@ export class TextSheetComponent implements OnInit {
     //function for all speech Bubbles in the list
     //and the other function deletes a Speechbubble from the list
     this.signalRService.newBubbleReceived.subscribe(speechBubble => {
-      console.log("Neue SpeechBubble erhalten: ", speechBubble);
+      console.log("Neue SpeechBubble erhalten:", speechBubble);
       this.importfromJSON(speechBubble);
     });
 
     this.signalRService.oldBubbledeleted.subscribe(id => {
-      console.log("Speechbubble gelöscht: ", id);
+      console.log("Alte SpeechBubble gelöscht:", id);
       this.deleteSpeechBubble(id);
     });
+
+    const testBubble1 = new SpeechBubble(0, 0, 0);
+    this.speechBubbles.add(testBubble1);
+
+    const word = new WordToken('Testeingabe', 0.2, 1, 1, 1);
+    const word2 = new WordToken('aus', 0.9, 1, 1, 1);
+    const word3 = new WordToken('OnInit', 0.7, 1, 1, 1);
+
+    testBubble1.words.add(word);
+    testBubble1.words.add(word2);
+    testBubble1.words.add(word3);
+
 
   }
 
@@ -230,8 +245,6 @@ export class TextSheetComponent implements OnInit {
 
           speechBubbleContent.push(wordExport);
       });
-
-      //constructor(id: number, speaker: number, begin: number, end: number, speechBubbleContent: WordExport[])
 
       const speechBubbleExport = new SpeechBubbleExport(
         speechBubbleData.id,

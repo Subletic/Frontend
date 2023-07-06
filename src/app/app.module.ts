@@ -15,8 +15,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-
-import { MatSliderModule } from '@angular/material/slider';
+import {MatSliderModule} from '@angular/material/slider';
 import { SliderPopupComponent } from './sound-box/slider-popup/slider-popup.component';
 
 
@@ -28,7 +27,6 @@ import { SliderPopupComponent } from './sound-box/slider-popup/slider-popup.comp
     TextSheetComponent,
     TextBoxComponent,
     AudioHandlerComponent,
-    SettingsComponent,
     SliderPopupComponent
   ],
   imports: [
