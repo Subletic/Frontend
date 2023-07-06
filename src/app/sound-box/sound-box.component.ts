@@ -4,7 +4,6 @@ import { AudioHandlerComponent } from '../audio-handler/audio-handler.component'
 import { SettingsService } from '../settings/settings.service';
 import { SettingsComponent } from '../settings/settings.component';
 import { SliderPopupComponent } from './slider-popup/slider-popup.component';
-import {environment} from "../../environments/environment";
 
 
 /**
@@ -107,27 +106,6 @@ export class SoundBoxComponent {
    */
   onVolume100Change(volume100: number) {
     this.volume100 = volume100;
-  }
-
-  callBackendReload() {
-
-    fetch(environment.apiURL + '/api/restart', {
-      method: 'POST',
-    })
-      .then(response => {
-        if (response.ok) {
-          console.log('Called for restart');
-          setTimeout(() => {
-            window.location.reload();
-            console.log("Self-restart");
-          }, 2000);
-        } else {
-          console.error('Error with calling restart');
-        }
-      })
-      .catch(error => {
-        console.error('Error with calling restart:', error);
-      });
   }
 
 }
