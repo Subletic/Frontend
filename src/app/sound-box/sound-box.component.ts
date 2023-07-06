@@ -55,6 +55,14 @@ export class SoundBoxComponent {
     this.audioHandler.playOrStopAudio();
   }
 
+  @HostListener('document:keydown', ['$event'])
+  playStop(event: KeyboardEvent) {
+    if (event.altKey && event.key === 's') {
+      this.isSvg1Active = !this.isSvg1Active;
+      this.audioHandler.playOrStopAudio();
+    }
+  }
+
   handleButtonClick() {
     console.log("hallo");
     this.router.navigate(['/weitereSeite']);
@@ -64,8 +72,22 @@ export class SoundBoxComponent {
     this.audioHandler.skipBackward();
   }
 
+  @HostListener('document:keydown', ['$event'])
+  skipBackward(event: KeyboardEvent) {
+    if (event.altKey && event.key === 'a') {
+      this.audioHandler.skipBackward();
+    }
+  }
+
   skipForwardButton() {
     this.audioHandler.skipForward();
+  }
+
+  @HostListener('document:keydown', ['$event'])
+  skipForward(event: KeyboardEvent) {
+    if (event.altKey && event.key === 'd') {
+      this.audioHandler.skipForward();
+    }
   }
 
   changePlaybackSpeedButton() {
@@ -98,6 +120,9 @@ export class SoundBoxComponent {
   onVolume100Change(volume100: number) {
     this.volume100 = volume100;
   }
+
+
+
 
 }
 
