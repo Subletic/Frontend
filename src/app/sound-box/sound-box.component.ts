@@ -111,12 +111,16 @@ export class SoundBoxComponent {
 
   callBackendReload() {
 
-    fetch(environment.apiURL + '/api/speechbubble/restart', {
+    fetch(environment.apiURL + '/api/restart', {
       method: 'POST',
     })
       .then(response => {
         if (response.ok) {
           console.log('Called for restart');
+          setTimeout(() => {
+            window.location.reload();
+            console.log("Self-restart");
+          }, 2000);
         } else {
           console.error('Error with calling restart');
         }

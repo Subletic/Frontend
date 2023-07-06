@@ -1,5 +1,6 @@
 ﻿import { Component, ViewEncapsulation, ElementRef, Input, Output, OnInit, OnDestroy, EventEmitter } from '@angular/core';
 import { SettingsService } from './settings.service';
+import {environment} from "../../environments/environment";
 
 /**
  * The SettingsComponent represents a settings modal that allows users to configure certain options.
@@ -86,4 +87,25 @@ export class SettingsComponent implements OnInit, OnDestroy {
     getBackgroundColor() : string {
         return getComputedStyle(document.documentElement).getPropertyValue('--color-main-blue');
     }
+
+    callBackendReload() {
+
+        fetch(environment.apiURL + '/api/restart', {
+          method: 'POST',
+        })
+          .then(response => {
+            if (response.ok) {
+              console.log('Called for restart');
+              setTimeout(() => {
+                window.location.reload();
+                console.log("Self-restart");
+              }, 2000);
+            } else {
+              console.error('Error with calling restart');
+            }
+          })
+          .catch(error => {
+            console.error('Error with calling restart:', error);
+          });
+      }
 }

@@ -52,6 +52,25 @@ settings-modal {
         justify-content: flex-end;
     }
 
+    //SCSS for temporary reload button ~Finn --------
+    .button-image {
+        width: 30px;
+        margin-top: 2.2px;
+    }
+
+    .reload-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: transparent;
+        border-radius: 20%;
+        outline: none;
+        cursor: pointer;
+        border: none;
+        background: var(--container-background-color);
+    }
+    //End SCSS for reload --------------------
+
     .mat-form-field-underline {
         /* Ändere die Farbe auf Rot */
         border-bottom: var(--color-main-blue);
