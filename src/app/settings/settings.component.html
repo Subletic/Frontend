@@ -13,6 +13,16 @@
             <input matInput type="number" placeholder="Zahl eingeben" [(ngModel)]="sprungweite" #sprungweiteInput="ngModel" min="1" required max="120" required>
             <mat-error class="mat-error" *ngIf="!sprungweiteInput.valid">Ungültiger Wert</mat-error>
         </mat-form-field>
+
+        <div class="reload-button">
+            <p>Reload Backend</p>
+            <button (click)="callBackendReload()" class="reload-button">
+                <img src="assets/reload.svg" alt="Button Image" class="button-image"
+                (mousedown)=" buttonImage7.src='assets/reloadOnClick.svg'" 
+                (mouseup)=" buttonImage7.src='assets/reload.svg'" #buttonImage7>
+            </button>
+        </div>
+
         <div class="buttons-container">
             <button mat-stroked-button class="settings-button" [style.color]="getBackgroundColor()" (click)="apply();" [disabled]="!checkSprungweite()">Ok</button>
             <button mat-stroked-button class="settings-button" [style.color]="getBackgroundColor()" (click)="cancel();">Abbrechen</button>
