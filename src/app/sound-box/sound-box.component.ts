@@ -84,7 +84,7 @@ export class SoundBoxComponent {
     this.audioHandler.playOrStopAudio();
     this.isAudioPlaying = this.audioHandler.getIsAudioPlaying();
   }
-
+  
   /**
    * Calls skipBackward() function in audioHandler.
    */

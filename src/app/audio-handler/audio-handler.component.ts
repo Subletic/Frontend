@@ -13,7 +13,7 @@ import {SignalRService} from "../service/signalRService";
 export class AudioHandlerComponent implements OnInit {
 
   // Constants for audio buffering and sampling
-  private bufferSizeInSeconds = 120;
+  private bufferSizeInSeconds = 60 * 5;
   private sampleRate = 48000;
   private maxBufferLength = this.bufferSizeInSeconds * this.sampleRate;
   // Audio buffers and context
@@ -64,13 +64,13 @@ export class AudioHandlerComponent implements OnInit {
    * Resumes audio playback and starts the source node if not started.
    */
   public resumePlayback(): void {
-    
+
     console.log(this.sourceNode)
     if (this.sourceNode) {
       if (!this.sourceNode.buffer) return;
       this.sourceNode.playbackRate.value = this.playbackSpeed;
       console.log(this.sourceNode.buffer.getChannelData(0));
-      if(this.isSourceNodeStarted === false){
+      if(!this.isSourceNodeStarted){
         this.sourceNode.start();
         this.isSourceNodeStarted = true;
       }
@@ -151,12 +151,12 @@ export class AudioHandlerComponent implements OnInit {
    */
   public setPlaybackSpeed(speed: number): void {
     this.playbackSpeed = speed;
-    
+
     if (this.sourceNode) {
       this.sourceNode.playbackRate.value = this.playbackSpeed;
     }
   }
-  
+
   /**
    * Pauses audio playback by suspending the audio context.
    */
@@ -190,12 +190,12 @@ export class AudioHandlerComponent implements OnInit {
     if (this.audioContext.state !== 'running') {
       return;
     }
-  
+
     const currentTime = this.audioContext.currentTime + this.jumpCounter;
     const targetTime = Math.min(currentTime + this.skipSeconds, this.audioBuffer.length / this.sampleRate);
 
     this.pauseAudio();
-  
+
     if (this.sourceNode) {
       if (this.isSourceNodeStarted) {
         this.sourceNode.stop();
@@ -204,16 +204,16 @@ export class AudioHandlerComponent implements OnInit {
       this.sourceNode.disconnect();
       this.sourceNode = null;
     }
-  
+
     this.sourceNode = this.audioContext.createBufferSource();
     this.sourceNode.buffer = this.nodeAudioBuffer;
     this.sourceNode.connect(this.audioContext.destination);
-  
+
     this.jumpCounter = this.jumpCounter + this.skipSeconds;
-  
+
     this.audioContext.resume().then(() => {
       if (!this.sourceNode) return;
-  
+
       this.updatePlayableBuffer();
 
       this.createNodes();
@@ -225,7 +225,7 @@ export class AudioHandlerComponent implements OnInit {
 
     //this.reapplyVolume();
   }
-  
+
   /**
    * Skips backward in the audio playback by the specified number of seconds.
    */
@@ -233,12 +233,12 @@ export class AudioHandlerComponent implements OnInit {
     if (this.audioContext.state !== 'running') {
       return;
     }
-  
+
     const currentTime = this.audioContext.currentTime + this.jumpCounter;
     const targetTime = Math.max(currentTime - this.skipSeconds, 0);
 
     this.pauseAudio();
-  
+
     if (this.sourceNode) {
       if (this.isSourceNodeStarted) {
         this.sourceNode.stop();
@@ -247,25 +247,25 @@ export class AudioHandlerComponent implements OnInit {
       this.sourceNode.disconnect();
       this.sourceNode = null;
     }
-  
+
     this.sourceNode = this.audioContext.createBufferSource();
     this.sourceNode.buffer = this.nodeAudioBuffer;
     this.sourceNode.connect(this.audioContext.destination);
-  
+
     this.jumpCounter = this.jumpCounter - this.skipSeconds;
 
 
     this.audioContext.resume().then(() => {
       if (!this.sourceNode) return;
       this.updatePlayableBuffer();
-      
+
       this.createNodes();
       this.reapplyVolume();
 
       this.sourceNode.start(0, targetTime);
       this.isSourceNodeStarted = true;
     });
-  }   
+  }
 
   public reapplyVolume() {
     this.gainNode.gain.setValueAtTime(this.volume, this.audioContext.currentTime);
