@@ -41,29 +41,12 @@ export class SpeedPopupComponent implements AfterViewInit  {
   }
 
   /**
-   * Sets up the slider so it has a colored bar from bottom to the thumb 
-   */
-  setupSlider(): void {
-    document.querySelectorAll<HTMLInputElement>('input[type="range"].slider-progress').forEach((e: HTMLInputElement) => {
-      e.style.setProperty('--value', e.value);
-      e.style.setProperty('--min', e.min === '' ? '0' : e.min);
-      e.style.setProperty('--max', e.max === '' ? '100' : e.max);
-      e.addEventListener('input', () => e.style.setProperty('--value', e.value));
-    });
-  }
-
-
-
-
-  /**
    * Emits info about the changed value of the speed value so it can then be send elsewhere.
    * @param speed - Input value
    */
   emitNewSpeed(speed: number) {
     this.speedValue = speed;
-    console.log(this.speedValue);
     this.speedChange.emit(this.speedValue);
-    console.log("Emitted Speed in speed-popup: " + this.speedValue);
   }
 
 }

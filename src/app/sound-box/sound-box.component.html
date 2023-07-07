@@ -34,7 +34,7 @@
       (mousedown)=" buttonImage4.src='assets/speed.svg'" 
       (mouseup)=" buttonImage4.src='assets/speed.svg'" #buttonImage4>
       <div *ngIf="isSpeedPopoverOpen" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()" tabindex="0">
-        <app-speed-popup> [(speedValue)]="speedValue" (speedChange)="onSpeedChange($event)" #speedPopup</app-speed-popup>
+        <app-speed-popup [speedValue]="speedValue" (speedChange)="onSpeedChange($event)" #speedPopup></app-speed-popup>
       </div>
     </button>
 

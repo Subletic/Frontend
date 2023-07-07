@@ -110,7 +110,6 @@ export class SoundBoxComponent {
    */
   onVolumeChange(volume: number) {
     this.audioHandler.setVolume(volume);
-    console.log("Emitted volume -_-");
   }
 
   /**
@@ -133,8 +132,6 @@ export class SoundBoxComponent {
   
   onSpeedChange(speed: number) {
     this.speedValue = speed;
-    console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-    console.log("Received speed " + this.speedValue + " from s-p");
     this.audioHandler.setPlaybackSpeed(this.speedValue);
   }
   

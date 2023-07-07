@@ -2,7 +2,7 @@
     position: absolute;
     top: calc(--slider-top);
     left: var(--slider-left);
-    transform: translate(-50%, -50%) translate(-30px, -50px);
+    transform: translate(-50%, -50%) translate(-19px, -50px);
 
     width: 220px;
     height: 40px;
@@ -21,19 +21,31 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 
     z-index: 5;
+  }
+
+  .speed-button {
+    margin-left: 3px;
+    margin-right: 3px;
+    background-color: transparent;
+    border: none;
+    font-size: 20px;
+    color: var(--color-main-blue);
+  }
+
+  .speed-button:hover {
+    transform: scale(1.1);
   }
   
   .speed-triangle {
     position: absolute;
     transform: rotate(45deg);
-    //left: 50%;
-    top: 70%;
-    width: 20px;
-    height: 20px;
-    //background-color: rgba(255, 255, 255, 1);
-    background-color: red;
+    top: 78%;
+    width: 12px;
+    height: 12px;
+    background-color: rgba(255, 255, 255, 1);
     z-index: 10;
 
   }
