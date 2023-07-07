@@ -4,7 +4,7 @@
     left: var(--slider-left);
     transform: translate(-50%, -50%) translate(-19px, -50px);
 
-    width: 220px;
+    width: 310px;
     height: 40px;
 
     display: flex;
@@ -33,6 +33,11 @@
     border: none;
     font-size: 20px;
     color: var(--color-main-blue);
+  }
+
+  .currentValue {
+    border-radius: 12px;
+    background-color: rgba(175, 175, 175, 0.1);
   }
 
   .speed-button:hover {

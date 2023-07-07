@@ -1,44 +1,19 @@
-import { Component, Input, Output, EventEmitter, ElementRef, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ElementRef } from '@angular/core';
 
 /**
- * Represents a popup that includes a slider for controlling the audio volume.
+ * Represents a popup that includes button for controlling the audio speed.
  */
 @Component({
   selector: 'app-speed-popup',
   templateUrl: './speed-popup.component.html',
   styleUrls: ['./speed-popup.component.scss']
 })
-export class SpeedPopupComponent implements AfterViewInit  {
+export class SpeedPopupComponent  {
 
   @Input() speedValue!: number;
-
   @Output() speedChange = new EventEmitter<number>();
 
   constructor(public elementRef: ElementRef) { }
-
-  ngAfterViewInit() {
-    
-    //aktuelles Element sollte eventuell grauen hintergrundkreis bekommen oder so?
-  
-  }
-
-  /**
-  * Updates the position of the slider based on the position of the sound button.
-  */
-  updateElementPosition() {
-    const speedButtonContainer = this.elementRef.nativeElement.querySelector();
-    if (!speedButtonContainer) return;
-    const speedWrapper = this.elementRef.nativeElement.querySelector('.speed-wrapper');
-  
-    const speedButtonRect = speedButtonContainer.getBoundingClientRect();
-    const speedButtonPosition = {
-      top: `${speedButtonRect.top}px`,
-      left: `${speedButtonRect.left}px`
-    };
-  
-    speedWrapper.style.setProperty('--slider-left', speedButtonPosition.left);
-    speedWrapper.style.setProperty('--slider-top', speedButtonPosition.top);
-  }
 
   /**
    * Emits info about the changed value of the speed value so it can then be send elsewhere.
@@ -48,5 +23,5 @@ export class SpeedPopupComponent implements AfterViewInit  {
     this.speedValue = speed;
     this.speedChange.emit(this.speedValue);
   }
-
+  
 }

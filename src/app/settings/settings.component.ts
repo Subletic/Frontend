@@ -7,7 +7,7 @@ import {environment} from "../../environments/environment";
  * It is based on Jason Watmore's custom modal implementation (https://github.com/cornflourblue/angular-9-custom-modal).
  */
 @Component({ 
-    selector: 'settings-modal', 
+    selector: 'app-settings-modal', 
     templateUrl: 'settings.component.html', 
     styleUrls: ['settings.component.scss'],
     encapsulation: ViewEncapsulation.None
