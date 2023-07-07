@@ -23,7 +23,7 @@ app-settings {
 
         .settings-body {
             padding: 20px;
-            background: #ffffff;
+            background: var(--textsheet-background-color);
             
             border-radius: 12px;
             /* margin exposes part of the modal background */
@@ -40,7 +40,7 @@ app-settings {
         left: 0;
 
         /* semi-transparent black  */
-        background-color: #000000;
+        background-color: var(--color-black);
         opacity: 0.75;
         
         /* z-index must be below .settings and above everything else  */
