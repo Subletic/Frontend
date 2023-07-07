@@ -7,7 +7,7 @@ import {environment} from "../../environments/environment";
  * It is based on Jason Watmore's custom modal implementation (https://github.com/cornflourblue/angular-9-custom-modal).
  */
 @Component({ 
-    selector: 'settings-modal', 
+    selector: 'app-settings', 
     templateUrl: 'settings.component.html', 
     styleUrls: ['settings.component.scss'],
     encapsulation: ViewEncapsulation.None
@@ -15,11 +15,11 @@ import {environment} from "../../environments/environment";
 export class SettingsComponent implements OnInit, OnDestroy {
     @Input() id!: string;   // The unique identifier for the settings modal
     @Output() secondsChange = new EventEmitter<number>();   // Event emitter to notify parent components of changes
-    private element: any;
-    sprungweite: number = 5;
-    initialSprungweite: number = 5;
+    private element!: HTMLElement;
+    sprungweite = 5;
+    initialSprungweite = 5;
 
-    constructor(private settingsService: SettingsService, private el: ElementRef) {
+    constructor(private settingsService: SettingsService, private el: ElementRef<HTMLElement>) {
         this.element = el.nativeElement;
     }
 
@@ -35,7 +35,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
         // Close the modal when clicking on the background
         this.element.addEventListener('click', (el: MouseEvent) => {
-            if (el.target instanceof HTMLElement && el.target.className === 'settings-modal') {
+            if (el.target instanceof HTMLElement && el.target.className === 'settings') {
                 this.close();
             }
         });
@@ -53,14 +53,14 @@ export class SettingsComponent implements OnInit, OnDestroy {
     // Open the modal and display it on the screen
     open(): void {
         this.element.style.display = 'block';
-        document.body.classList.add('settings-modal-open');
+        document.body.classList.add('settings-open');
         this.initialSprungweite = this.sprungweite;
     }
 
     // Close the modal and hide it from the screen
     close(): void {
         this.element.style.display = 'none';
-        document.body.classList.remove('settings-modal-open');
+        document.body.classList.remove('settings-open');
     }
 
     cancel(): void {

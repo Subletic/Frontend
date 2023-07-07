@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {SignalRService} from "../service/signalRService";
 
+
 /**
  * The AudioHandlerComponent represents a component that handles audio playback and buffering.
  */
@@ -30,6 +31,8 @@ export class AudioHandlerComponent implements OnInit {
 
   private gainNode: GainNode = this.audioContext.createGain();
   private volume = 0;
+
+  private isAudioPlaying = false;
 
   constructor(private signalRService: SignalRService) {
     // Create the source node and assign the node audio buffer
@@ -73,6 +76,7 @@ export class AudioHandlerComponent implements OnInit {
       }
       // Resume the audio context to resume playback
       this.audioContext.resume().then(() => console.log('Playback resumed successfully.'));
+      this.isAudioPlaying = true;
     }
   }
 
@@ -162,6 +166,8 @@ export class AudioHandlerComponent implements OnInit {
         console.log('Audio paused successfully.');
       });
     }
+
+    this.isAudioPlaying = false;
   }
 
   /**
@@ -290,9 +296,17 @@ export class AudioHandlerComponent implements OnInit {
   public getVolume() {
     return this.volume;
   }
-
-  setSkipSeconds(seconds: number) {
+   
+  public setSkipSeconds(seconds: number) {
     this.skipSeconds = seconds;
+  }
+
+  /** 
+   * Returns the current status of the audio playback. 
+   * @returns {boolean} True if audio is currently playing, false otherwise. 
+   */
+  public getIsAudioPlaying(): boolean {
+    return this.isAudioPlaying;
   }
 
 }

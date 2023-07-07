@@ -32,14 +32,14 @@ describe('SoundBoxComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should toggle isSvg1Active and call playOrStopAudio on playButton click', () => {
+  it('should toggle isAudioPlaying and call playOrStopAudio on playButton click', () => {
     spyOn(component.audioHandler, 'playOrStopAudio');
 
     const playButton = fixture.debugElement.query(By.css('.play-button'));
     playButton.triggerEventHandler('click', null);
     fixture.detectChanges();
 
-    expect(component.isSvg1Active).toBeFalsy();
+    expect(component.isAudioPlaying).toBeFalsy();
     expect(component.audioHandler.playOrStopAudio).toHaveBeenCalled();
   });
 
@@ -63,19 +63,19 @@ describe('SoundBoxComponent', () => {
     expect(component.audioHandler.skipForward).toHaveBeenCalled();
   });
 
-  it('should toggle isPopoverOpen on togglePopoverAudio', () => {
-    component.isPopoverOpen = false;
-    component.togglePopoverAudio();
-    expect(component.isPopoverOpen).toBeTruthy();
+  it('should toggle isAudioPopoverOpen on togglePopoverAudio', () => {
+    component.isAudioPopoverOpen = false;
+    component.switchPopoverAudio();
+    expect(component.isAudioPopoverOpen).toBeTruthy();
 
-    component.togglePopoverAudio();
-    expect(component.isPopoverOpen).toBeFalsy();
+    component.switchPopoverAudio();
+    expect(component.isAudioPopoverOpen).toBeFalsy();
   });
 
-  it('should set isPopoverOpen to false on closePopoverAudio', () => {
-    component.isPopoverOpen = true;
+  it('should set isAudioPopoverOpen to false on closePopoverAudio', () => {
+    component.isAudioPopoverOpen = true;
     component.closePopoverAudio();
-    expect(component.isPopoverOpen).toBeFalsy();
+    expect(component.isAudioPopoverOpen).toBeFalsy();
   });
 
   it('should call setVolume on onVolumeChange', () => {

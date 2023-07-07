@@ -2,11 +2,11 @@
 from Jason Watmore (@cornflourblue) https://github.com/cornflourblue/angular-9-custom-modal
 */
 
-settings-modal {
+app-settings {
     /* modals are hidden by default */
     display: none;
 
-    .settings-modal {
+    .settings {
         /* modal container fixed across whole screen */
         position: fixed;
         width:500px;
@@ -15,15 +15,15 @@ settings-modal {
         left:50%;
         transform: translate(-50%, -50%);
 
-        /* z-index must be higher than .settings-modal-background */
+        /* z-index must be higher than .settings-background */
         z-index: 1000;
         
         /* enables scrolling for tall modals*/ 
         overflow: auto;
 
-        .settings-modal-body {
+        .settings-body {
             padding: 20px;
-            background: #ffffff;
+            background: var(--textsheet-background-color);
             
             border-radius: 12px;
             /* margin exposes part of the modal background */
@@ -31,7 +31,7 @@ settings-modal {
         }
     }
 
-    .settings-modal-background {
+    .settings-background {
         /* modal background fixed across whole screen */
         position: fixed;
         top: 0;
@@ -40,10 +40,10 @@ settings-modal {
         left: 0;
 
         /* semi-transparent black  */
-        background-color: #000000;
+        background-color: var(--color-black);
         opacity: 0.75;
         
-        /* z-index must be below .settings-modal and above everything else  */
+        /* z-index must be below .settings and above everything else  */
         z-index: 900;
     }
 
@@ -72,12 +72,11 @@ settings-modal {
     //End SCSS for reload --------------------
 
     .mat-form-field-underline {
-        /* Ändere die Farbe auf Rot */
         border-bottom: var(--color-main-blue);
     }
 }
 
-body.settings-modal-open {
+body.settings-open {
     /* body overflow is hidden to hide main scrollbar when modal window is open */
     overflow: hidden;
 }
@@ -85,7 +84,6 @@ body.settings-modal-open {
 .top-of-div {
     display: flex;
     justify-content: space-between;
-    //align-items: baseline;
 }
 
 .settings-button {

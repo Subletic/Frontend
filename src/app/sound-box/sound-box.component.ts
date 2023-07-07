@@ -1,10 +1,9 @@
 import { Component, ViewChild, ElementRef, HostListener } from '@angular/core';
-import { Router } from '@angular/router';
 import { AudioHandlerComponent } from '../audio-handler/audio-handler.component';
 import { SettingsService } from '../settings/settings.service';
 import { SettingsComponent } from '../settings/settings.component';
 import { SliderPopupComponent } from './slider-popup/slider-popup.component';
-
+import { SpeedPopupComponent } from './speed-popup/speed-popup.component';
 
 /**
  * The SoundBoxComponent represents a component that displays the bottom bar of the application.
@@ -19,105 +18,144 @@ import { SliderPopupComponent } from './slider-popup/slider-popup.component';
 export class SoundBoxComponent {
 
   @ViewChild('audioHandler') audioHandler!: AudioHandlerComponent;
-  @ViewChild(SettingsComponent) settingsComponent!: SettingsComponent;
   @ViewChild('soundButton', { static: false }) soundButton!: ElementRef;
+  @ViewChild('speedButton', { static: false }) speedButton!: ElementRef;
+
   @ViewChild(SliderPopupComponent) sliderPopup!: SliderPopupComponent;
+  @ViewChild(SpeedPopupComponent) speedPopup!: SpeedPopupComponent;
+  @ViewChild(SettingsComponent) settingsComponent!: SettingsComponent;
 
   public isPopupOpen = false;
-  public isPopoverOpen = false;
+  public isAudioPopoverOpen = false;
   public volume100 = 0;
-  public isSvg1Active = true;
-  public bodyText: string = '';
+  public isAudioPlaying = false;
+  public bodyText = '';
 
-  constructor(private router: Router, private elementRef: ElementRef, private settingsService: SettingsService) {}
+  public isSpeedPopoverOpen = false;
+  public speedValue = 1;
 
-  @HostListener('window:resize')
-  onWindowResize() {
-    this.updatePosition();
-  }
+  constructor (private settingsService: SettingsService) {}
 
+  /**
+   * Closes Popups if click outside of popup occurs.
+   * 
+   * @param event - Any click event triggered by user.
+   */
   @HostListener('document:click', ['$event'])
   onDocumentMouseDown(event: MouseEvent) {
     const clickedElement = event.target as HTMLElement;
     const isInsideSoundButton = this.soundButton.nativeElement.contains(clickedElement);
+    const isInsideSpeedButton = this.speedButton.nativeElement.contains(clickedElement);
     if (!isInsideSoundButton) {
       this.closePopoverAudio();
     } 
+    if (!isInsideSpeedButton) {
+      this.closePopoverSpeed();
+    }
   }
 
-  /** Updates the position of the slider Pop-Up so it's always above the sound button.
+  /**
+   * Shortcuts for play/pause, skipBack and skipForwards.
    * 
+   * @param event - Any key event triggered by user.
    */
-  updatePosition() {
-    this.sliderPopup.updateSliderPosition();
-  }
-
-  playButton() {
-    this.isSvg1Active = !this.isSvg1Active;
-    this.audioHandler.playOrStopAudio();
-  }
-
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
     if (event.ctrlKey && event.altKey) {
       if (event.key === 'd') {
-        this.isSvg1Active = !this.isSvg1Active;
-        console.log("played or stopped");
         this.audioHandler.playOrStopAudio();
+        this.isAudioPlaying = this.audioHandler.getIsAudioPlaying();
         event.preventDefault();
       } else if (event.key === 'y') {
-        console.log("skipBack");
         this.audioHandler.skipBackward();
         event.preventDefault();
       } else if (event.key === 'w') {
-        console.log("skipForward");
         this.audioHandler.skipForward();
         event.preventDefault();
       }
     }
   }
 
-  handleButtonClick() {
-    console.log("hallo");
-    this.router.navigate(['/weitereSeite']);
+  /**
+   * Handles playButton press. Calls playOrStopAudio() in audiohandler and
+   * switches isAudioPlaying for Icon-Change
+   */
+  playButton() {
+    this.audioHandler.playOrStopAudio();
+    this.isAudioPlaying = this.audioHandler.getIsAudioPlaying();
   }
-
+  
+  /**
+   * Calls skipBackward() function in audioHandler.
+   */
   skipBackwardButton() {
     this.audioHandler.skipBackward();
   }
 
+  /**
+   * Calls skipForward() function in audioHandler.
+   */
   skipForwardButton() {
     this.audioHandler.skipForward();
   }
 
-  changePlaybackSpeedButton() {
-    this.audioHandler.setPlaybackSpeed(0.7);
-  }
-
+  /**
+   * Opens Settings-Window
+   * @param {string} id - Id of the Window to open.
+   */
   openModal(id: string) {
     this.settingsService.open(id);
   }
 
+  /**
+   * Closes Settings-Window
+   * @param {string} id - Id of the Window to close.
+   */
   closeModal(id: string) {
     this.settingsService.close(id);
   }
 
-  onSecondsChange(seconds: number){
-    this.audioHandler.setSkipSeconds(seconds);
-  }
-  togglePopoverAudio() {
-    this.isPopoverOpen = !this.isPopoverOpen;
+  /**
+   * Switches isAudioPopoverOpen Boolean to the negated value.
+   */
+  switchPopoverAudio() {
+    this.isAudioPopoverOpen = !this.isAudioPopoverOpen;
   }
 
+  /**
+   * Sets isSpeedPopoverOpen to false, causing the Speed Popover to close.
+   */
   closePopoverAudio() {
-    this.isPopoverOpen = false;
+    this.isAudioPopoverOpen = false;
+  }
+
+  /**
+   * Switches isSpeedPopoverOpen Boolean to the negated value.
+   */
+  switchSpeedPopover() {
+    this.isSpeedPopoverOpen = !this.isSpeedPopoverOpen;
+  }
+
+  /**
+   * Sets isSpeedPopoverOpen to false, causing the Speed Popover to close.
+   */
+  closePopoverSpeed() {
+    this.isSpeedPopoverOpen = false;
   }
 
   /** Calls setVolume Function in audioHandler with volume number between -1 and 1. 
-   * 
+   * @param {number} volume - The new volume value. 
    */
   onVolumeChange(volume: number) {
     this.audioHandler.setVolume(volume);
+  }
+
+  /** 
+   * Sets the number of seconds to skip in the audio handler. 
+   * @param {number} seconds - The number of seconds to skip. 
+   */
+  onSecondsChange(seconds: number){
+    this.audioHandler.setSkipSeconds(seconds);
   }
 
   /**
@@ -128,9 +166,13 @@ export class SoundBoxComponent {
     this.volume100 = volume100;
   }
 
-
-
-
+  /**
+   * Calls setPlaybackSpeed Function in AudioHandler with emitted speedValue from speed-popup.
+   */
+  onSpeedChange(speed: number) {
+    this.speedValue = speed;
+    this.audioHandler.setPlaybackSpeed(this.speedValue);
+  }
 }
 
 

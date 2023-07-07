@@ -10,7 +10,8 @@ import { Component, Input, Output, EventEmitter, ElementRef, OnInit, ViewChild, 
 })
 export class SliderPopupComponent implements OnInit, AfterViewInit  {
 
-  @Input() volume!: number;
+  //Volume is value between -1 and 1, volume100 between -100 and 100 for slider capability
+  @Input() volume = 0;
   private volume100 = 0;
 
   @Output() volumeChange = new EventEmitter<number>();
@@ -27,24 +28,6 @@ export class SliderPopupComponent implements OnInit, AfterViewInit  {
   ngAfterViewInit() {
     this.volumeSlider.nativeElement.value = this.volume.toString();
     this.setupSlider();
-  }
-
-  /**
-  * Updates the position of the slider based on the position of the sound button.
-  */
-  updateSliderPosition() {
-    const soundButtonContainer = this.elementRef.nativeElement.querySelector('.sound-button-container');
-    if (!soundButtonContainer) return;
-    const sliderWrapper = this.elementRef.nativeElement.querySelector('.slider-wrapper');
-  
-    const soundButtonRect = soundButtonContainer.getBoundingClientRect();
-    const soundButtonPosition = {
-      top: `${soundButtonRect.top}px`,
-      left: `${soundButtonRect.left}px`
-    };
-  
-    sliderWrapper.style.setProperty('--slider-left', soundButtonPosition.left);
-    sliderWrapper.style.setProperty('--slider-top', soundButtonPosition.top);
   }
 
   /**
@@ -69,6 +52,21 @@ export class SliderPopupComponent implements OnInit, AfterViewInit  {
     this.volume = parseInt(target.value, 10) / 100;
     this.volumeChange.emit(this.volume);
     this.volume100Change.emit(this.volume100);
+  }
+
+  /**
+   * Returns the current volume100 value.
+   */
+  getVolume100(): number {
+    return this.volume100;
+  }
+
+  /**
+   * Sets new value for volume100 attribute.
+   * @param {number} volume100 - New value for volume100 attribute.
+   */
+  setVolume100(volume100: number) {
+    this.volume100 = volume100;
   }
 
 }

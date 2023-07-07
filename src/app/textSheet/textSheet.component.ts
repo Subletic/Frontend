@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { SpeechBubble, SpeechBubbleExport } from '../data/speechBubble.model';
-import { WordToken, WordExport } from '../data/wordToken.model';
+import { WordExport } from '../data/wordToken.model';
 import { SignalRService } from '../service/signalRService';
 import {environment} from "../../environments/environment";
 
