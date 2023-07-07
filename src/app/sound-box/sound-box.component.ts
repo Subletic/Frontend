@@ -100,7 +100,7 @@ export class SoundBoxComponent {
   }
 
   /**
-   * Opens Settings-Modal-Window
+   * Opens Settings-Window
    * @param {string} id - Id of the Window to open.
    */
   openModal(id: string) {
@@ -108,7 +108,7 @@ export class SoundBoxComponent {
   }
 
   /**
-   * Closes Settings-Modal-Window
+   * Closes Settings-Window
    * @param {string} id - Id of the Window to close.
    */
   closeModal(id: string) {

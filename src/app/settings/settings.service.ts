@@ -7,10 +7,10 @@ import { Injectable } from '@angular/core';
 @Injectable({ providedIn: 'root' })
 export class SettingsService {
     // Array to store references to active settings modals
-    private modals: any[] = [];
+    private modals: Modal[] = [];
 
     // Add a new settings modal to the service
-    add(modal: any) {
+    add(modal: Modal) {
         this.modals.push(modal);
     }
 
@@ -22,12 +22,22 @@ export class SettingsService {
     // Open a specific settings modal based on its ID
     open(id: string) {
         const modal = this.modals.find(x => x.id === id);
-        modal.open();
+        if (modal) {
+            modal.open();
+        }
     }
 
     // Close a specific settings modal based on its ID
     close(id: string) {
         const modal = this.modals.find(x => x.id === id);
-        modal.close();
+        if (modal) {
+            modal.close();
+        }
     }   
+}
+
+interface Modal {
+    id: string;
+    open(): void;
+    close(): void;
 }
