@@ -4,9 +4,9 @@
   <div class="soundbar-button-container">
     <!-- Play Button  -->
     <button class="play-button mover" (click)="playButton()">
-      <img [src]="isAudioPlaying ? 'assets/play.svg' : 'assets/pause.svg'" alt="Button Image" class="button-image-1" draggable="false"
-      (mousedown)="isAudioPlaying ? buttonImage.src='assets/playOnClick.svg' : buttonImage.src='assets/pauseOnClick.svg'" 
-      (mouseup)="buttonImage.src=isAudioPlaying ? 'assets/play.svg' : 'assets/pause.svg'" #buttonImage>
+      <img [src]="isAudioPlaying ? 'assets/pause.svg' : 'assets/play.svg'" alt="Button Image" class="button-image-1" draggable="false"
+      (mousedown)="isAudioPlaying ? buttonImage.src='assets/pauseOnClick.svg' : buttonImage.src='assets/playOnClick.svg'" 
+      (mouseup)="buttonImage.src=isAudioPlaying ? 'assets/pause.svg' : 'assets/play.svg'" #buttonImage>
     </button>
 
     <!-- Move back Button -->

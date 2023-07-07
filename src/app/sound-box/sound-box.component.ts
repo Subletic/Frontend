@@ -28,7 +28,7 @@ export class SoundBoxComponent {
   public isPopupOpen = false;
   public isAudioPopoverOpen = false;
   public volume100 = 0;
-  public isAudioPlaying = true;
+  public isAudioPlaying = false;
   public bodyText = '';
 
   public isSpeedPopoverOpen = false;
