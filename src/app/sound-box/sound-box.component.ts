@@ -47,13 +47,9 @@ export class SoundBoxComponent {
   onDocumentMouseDown(event: MouseEvent) {
     const clickedElement = event.target as HTMLElement;
     const isInsideSoundButton = this.soundButton.nativeElement.contains(clickedElement);
-    const isInsideSpeedButton = this.speedButton.nativeElement.contains(clickedElement);
     if (!isInsideSoundButton) {
       this.closePopoverAudio();
     } 
-    if (!isInsideSpeedButton) {
-      this.closePopoverSpeed();
-    }
   }
 
   /** Updates the position of the slider Pop-Up so it's always above the sound button.
@@ -67,6 +63,26 @@ export class SoundBoxComponent {
   playButton() {
     this.isSvg1Active = !this.isSvg1Active;
     this.audioHandler.playOrStopAudio();
+  }
+
+  @HostListener('document:keydown', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    if (event.ctrlKey && event.altKey) {
+      if (event.key === 'd') {
+        this.isSvg1Active = !this.isSvg1Active;
+        console.log("played or stopped");
+        this.audioHandler.playOrStopAudio();
+        event.preventDefault();
+      } else if (event.key === 'y') {
+        console.log("skipBack");
+        this.audioHandler.skipBackward();
+        event.preventDefault();
+      } else if (event.key === 'w') {
+        console.log("skipForward");
+        this.audioHandler.skipForward();
+        event.preventDefault();
+      }
+    }
   }
 
   handleButtonClick() {
@@ -120,7 +136,6 @@ export class SoundBoxComponent {
     this.volume100 = volume100;
   }
 
-
   switchSpeedPopover() {
     this.isSpeedPopoverOpen = !this.isSpeedPopoverOpen;
   }
@@ -134,9 +149,8 @@ export class SoundBoxComponent {
     this.speedValue = speed;
     this.audioHandler.setPlaybackSpeed(this.speedValue);
   }
-  
 
-  /*
+    /*
   onSpeedChange(event: Event) {
     
     const target = event.target as HTMLInputElement;
@@ -146,7 +160,6 @@ export class SoundBoxComponent {
     this.audioHandler.setPlaybackSpeed(this.speedValue);
   }
   */
-
 
 
 }
