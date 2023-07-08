@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
+import { Component, AfterViewInit, ViewChild, ElementRef, Input } from '@angular/core';
 import { WordToken } from '../data/wordToken.model';
 import { SpeechBubble } from '../data/speechBubble.model';
 
@@ -6,7 +6,7 @@ import { SpeechBubble } from '../data/speechBubble.model';
  * The TextBoxComponent represents a component that handles the SpeechBubble data.
  * It provides methods to generate and manipulate the content of a text box.
  * To directly access and adress every word, Spans are used instead
- * of a typical textbox with a singel String.
+ * of a typical textbox with a single String.
  * The data inside the TextBox is directly connected to the data-structure of the speechBubbles.
  */
 @Component({
@@ -14,13 +14,13 @@ import { SpeechBubble } from '../data/speechBubble.model';
   templateUrl: './text-box.component.html',
   styleUrls: ['./text-box.component.scss']
 })
-export class TextBoxComponent implements OnInit {
+export class TextBoxComponent implements AfterViewInit {
 
   @ViewChild('textbox', { static: true }) textboxRef!: ElementRef;
 
   @Input() textbox!: SpeechBubble;
 
-  ngOnInit() {
+  ngAfterViewInit() {
     const textbox = this.textboxRef.nativeElement;
 
     if(this.textbox.words.head == null) {
@@ -28,8 +28,6 @@ export class TextBoxComponent implements OnInit {
     }
 
     textbox.innerHTML = this.generateHTML();
-    console.log('Print Text:', this.textbox.printText());
-
     textbox.addEventListener('mouseover', (event: MouseEvent) => {
 
       const target = event.target as HTMLElement;
@@ -42,8 +40,8 @@ export class TextBoxComponent implements OnInit {
         console.log('Current Word: ', currentWord);
         console.log('Print Text:', this.textbox.printText());
       }
-
     })
+
 
     textbox.addEventListener('keydown', (event: KeyboardEvent) => {
 
@@ -51,139 +49,16 @@ export class TextBoxComponent implements OnInit {
       const currentText = selectedSpan.textContent;
       const cursorPosition = window.getSelection()?.getRangeAt(0)?.startOffset;
       const spanId = selectedSpan.id;
+      const isInFullSelection = window.getSelection()?.toString().length === currentText?.length;
 
-      const isFullSelection = window.getSelection()?.toString().length === currentText?.length;
-
-      /**
-      * This if statement handles the case when the Backspace key is pressed
-      * at the beginning of a word.
-      * Previous Word exists -> Merges with previous Word
-      * PrevWord doesn't exist -> Merges with next Word
-      */
-      if (cursorPosition === 0) {
-        if (event.key === 'Backspace') {
-          const prevSpan = selectedSpan.previousElementSibling as HTMLSpanElement;
-
-          if (isFullSelection) {
-            const currentWord = this.findWordById(Number(spanId));
-            if(currentWord) {
-              currentWord.word = '';
-              this.textbox.words.remove(currentWord);
-            }
-            selectedSpan.remove();
-
-            event.preventDefault();
-            return;
-          }
-
-          if (prevSpan.getAttribute('id') != null) {
-            const prevWord = this.findWordById(Number(prevSpan.getAttribute('id')));
-            if (prevWord) {
-              prevWord.word += currentText;
-              if (prevSpan.getAttribute('id') != null) {
-                const currentWord = this.findWordById(Number(selectedSpan.getAttribute('id')));
-                if (currentWord) {
-                  this.textbox.words.remove(currentWord);
-                }
-              }
-              prevSpan.insertAdjacentElement('afterend', selectedSpan);
-              selectedSpan.remove();
-              prevSpan.textContent = prevWord.word;
-              prevSpan.focus();
-              event.preventDefault();
-              return;
-            }
-          }
-
-          const nextSpan = selectedSpan.nextElementSibling as HTMLSpanElement;
-
-          if (nextSpan) {
-            if(nextSpan.getAttribute('id')){
-              const nextWord = this.findWordById(Number(nextSpan.getAttribute('id')));
-
-              if (nextWord) {
-                nextWord.word = currentText + nextWord.word;
-                if(selectedSpan.getAttribute('id')){
-                  const currentWord = this.findWordById(Number(selectedSpan.getAttribute('id')));
-                  if (currentWord) {
-                    this.textbox.words.remove(currentWord);
-                  }
-                }
-                selectedSpan.remove();
-                nextSpan.focus();
-                event.preventDefault();
-                return;
-              }
-            }
-          }
-        }
+      if (cursorPosition === 0 && event.key === 'Backspace') {
+        this.handleBackspacePressAtStart(selectedSpan, currentText, isInFullSelection, spanId, event)
       }
 
-      /**
-      * This if statement handles the case when the Space key is pressed without the Shift key in the middle of a word.
-      * Splits the current word into two words at the cursor position
-      * If the text before the cursor is not empty, a new
-      * empty word is inserted after the current word in the LinkedList.
-      * The new word and the new empty word are displayed in separate
-      * contenteditable spans, and the focus is set to the new span.
-      */
       if (event.code === 'Space') {
-
-        if(currentText && typeof cursorPosition === 'number') {
-          const wordBeforeCursor = currentText.substring(0, cursorPosition);
-          const wordAfterCursor = currentText.substring(cursorPosition);
-          selectedSpan.textContent = wordBeforeCursor;
-
-          if (wordBeforeCursor.trim() !== '') {
-            const newWord = new WordToken(wordAfterCursor, 1, 1, 1, 1);
-            const currentWord = this.findWordById(Number(spanId));
-            if (currentWord) {
-              this.insertAfter(newWord, currentWord);
-              currentWord.word = wordBeforeCursor;
-              const newSpan = document.createElement('span');
-              newSpan.id = newWord.id.toString();
-              newSpan.contentEditable = 'true';
-              newSpan.textContent = wordAfterCursor;
-              selectedSpan.insertAdjacentElement('afterend', newSpan);
-              selectedSpan.insertAdjacentText('afterend', ' ');
-              newSpan.focus();
-
-              // Event handling for the new span
-              newSpan.addEventListener('input', () => {
-                const newText = newSpan.textContent;
-                const word = this.findWordById(Number(newSpan.id));
-                if (word) {
-                  if (newText !== null) {
-                    word.setWord(newText);
-                  }
-                }
-              });
-            }
-          } else if (wordBeforeCursor.trim() == '') {
-            const currentWord = this.findWordById(Number(spanId));
-            if (currentWord) {
-              currentWord.setWord(wordAfterCursor);
-              selectedSpan.textContent = wordAfterCursor;
-              selectedSpan.insertAdjacentText('beforebegin', ' ');
-              selectedSpan.focus();
-            }
-          }
-
-          event.preventDefault();
-        }
+        this.handleSpacePress(selectedSpan, currentText, cursorPosition, spanId, event);
       }
 
-      const selectedSpan2 = this.textboxRef.nativeElement.querySelector('span:focus');
-      if (selectedSpan2) {
-        const currentText = selectedSpan2.textContent;
-        if(currentText) {
-          // frontend!21: Firefox resets the caret position on content assigning, only do it when it matters
-          const currentTextTrimmed = currentText.trim();
-          if (currentText !== currentTextTrimmed) {
-            selectedSpan2.textContent = currentTextTrimmed;
-          }
-        }
-      }
       //Sorgt noch für Fehler, daher treten noch vereinzelt leere Strings auf
       //this.removeEmptyObjects();
       //this.updateWordColors();
@@ -193,10 +68,177 @@ export class TextBoxComponent implements OnInit {
   }
 
   /**
+   * This function handles the case when the Backspace key is pressed at the start of a word.
+   * Word is in full selection -> Delete as a whole
+   * Previous Word exists -> Merges with previous Word
+   * PrevWord doesn't exist -> Merges with next Word
+   * 
+   * @param selectedSpan - The event target as an HTMLElement
+   * @param currentText - The textContent of the selected Span
+   * @param cursorPosition - The cursor position at the time of the call
+   * @param isInFullSelection - Boolean that states if the currentWort is fully selected by user
+   * @param event - The keyboard event triggered by user.
+   * 
+   * @pre Function should be called when backspace is pressed at start of a word
+   */
+  public handleBackspacePressAtStart(selectedSpan: HTMLElement, currentText: String | null, isInFullSelection: boolean, spanId: String, event: KeyboardEvent) {
+    const prevSpan = selectedSpan.previousElementSibling as HTMLSpanElement;
+
+    if (isInFullSelection) {
+      this.isInFullSelectionDeletion(selectedSpan, spanId, event);
+      return;
+    }
+
+    if (!prevSpan.getAttribute('id') != null) {
+      this.mergeWithPreviousWord(selectedSpan, currentText, prevSpan, event);
+      return;
+    }
+
+    const nextSpan = selectedSpan.nextElementSibling as HTMLSpanElement;
+    if (nextSpan) {
+      this.mergeWithFollowingWord(selectedSpan, currentText, nextSpan, event);
+      return;
+    }
+  }
+
+  /**
+   * Handles the case that the whole word is in selection and backspace is pressed.
+   * Deletes the currentWord in the data structure.
+   * 
+   * @param selectedSpan - The event target as an HTMLElement
+   * @param spanId - Id of the selectedSpan
+   * @param event - The keyboard event triggered by user.
+   */
+  public isInFullSelectionDeletion(selectedSpan: HTMLElement, spanId: String, event: KeyboardEvent) {
+    const currentWord = this.findWordById(Number(spanId));
+    if(!currentWord) return;
+    currentWord.word = '';
+    this.textbox.words.remove(currentWord);
+    selectedSpan.remove();
+    event.preventDefault();
+    return;
+  }
+
+  /**
+   * Merges the current Word with the previous one,
+   * both within the data structure as well as for the spans.
+   * 
+   * @param selectedSpan - The event target as an HTMLElement
+   * @param currentText - The textContent of the selected Span
+   * @param prevSpan - The previous Span to merge into
+   * @param event - The keyboard event triggered by user.
+   * 
+   * @pre There needs to be a previous word
+   */
+  public mergeWithPreviousWord(selectedSpan: HTMLElement, currentText: String | null, prevSpan: HTMLSpanElement, event: KeyboardEvent) {
+    const prevWord = this.findWordById(Number(prevSpan.getAttribute('id')));
+    if (!prevWord) return;
+    prevWord.word += currentText;
+    if (!prevSpan.getAttribute('id')) return;
+    const currentWord = this.findWordById(Number(selectedSpan.getAttribute('id')));
+    if (!currentWord) return;
+    this.textbox.words.remove(currentWord);
+    prevSpan.insertAdjacentElement('afterend', selectedSpan);
+    selectedSpan.remove();
+    prevSpan.textContent = prevWord.word;
+    prevSpan.focus();
+    event.preventDefault();
+    return;
+  }
+
+  /**
+   * Merges the current Word with the next one,
+   * both within the data structure as well as for the spans.
+   * 
+   * @param selectedSpan - The event target as an HTMLElement
+   * @param currentText - The textContent of the selected Span
+   * @param nextSpan - The following Span to merge into
+   * @param event - The keyboard event triggered by user.
+   * 
+   * @pre There needs to be a following word
+   */
+  public mergeWithFollowingWord(selectedSpan: HTMLElement, currentText: String | null, nextSpan: HTMLSpanElement ,event: KeyboardEvent) {
+    if (!nextSpan) return;
+    if(!nextSpan.getAttribute('id')) return;
+    const nextWord = this.findWordById(Number(nextSpan.getAttribute('id')));
+
+    if (!nextWord) return;
+    nextWord.word = currentText + nextWord.word;
+    if(!selectedSpan.getAttribute('id')) return;
+    const currentWord = this.findWordById(Number(selectedSpan.getAttribute('id')));
+    if (!currentWord) return;
+    this.textbox.words.remove(currentWord);
+    selectedSpan.remove();
+    nextSpan.focus();
+    event.preventDefault();
+    return; 
+  }
+
+  /**
+    * This function handles the case when the Space key is pressed without the Shift key in the middle of a word.
+    * Splits the current word into two words at the cursor position
+    * If the text before the cursor is not empty, a new
+    * empty word is inserted after the current word in the LinkedList.
+    * The new word and the new empty word are displayed in separate
+    * contenteditable spans, and the focus is set to the new span.
+    * 
+    * @param selectedSpan - The event target as an HTMLElement
+    * @param currentText - The textContent of the selected Span
+    * @param cursorPosition - The cursor position at the time of the call
+    * @param spanId - Id of the selectedSpan
+    * @param event - The keyboard event triggered by user.
+    */
+  public handleSpacePress(selectedSpan: HTMLElement, currentText: String | null, cursorPosition: number | undefined, spanId: String, event: KeyboardEvent) {
+    if(!(currentText && typeof cursorPosition === 'number')) return;
+    const wordBeforeCursor = currentText.substring(0, cursorPosition);
+    const wordAfterCursor = currentText.substring(cursorPosition);
+    selectedSpan.textContent = wordBeforeCursor;
+
+    if (wordBeforeCursor.trim() !== '') {
+      const currentWord = this.findWordById(Number(spanId));
+      if (!currentWord) return;
+      const newWord = new WordToken(wordAfterCursor, 1 ,currentWord.startTime, currentWord.endTime, currentWord.speaker);
+
+      currentWord.confidence = 1;
+      this.insertAfter(newWord, currentWord);
+      currentWord.word = wordBeforeCursor;
+
+      const newSpan = document.createElement('span');
+      newSpan.id = newWord.id.toString();
+      newSpan.contentEditable = 'true';
+      newSpan.textContent = wordAfterCursor;
+
+      selectedSpan.insertAdjacentElement('afterend', newSpan);
+      selectedSpan.insertAdjacentText('afterend', ' ');
+      newSpan.focus();
+      // Event handling for the new span
+      newSpan.addEventListener('input', () => {
+        const newText = newSpan.textContent;
+        const word = this.findWordById(Number(newSpan.id));
+        if (!word || !newText) return;
+        word.setWord(newText);
+        
+      });
+      
+    } else if (wordBeforeCursor.trim() == '') {
+      const currentWord = this.findWordById(Number(spanId));
+      if (!currentWord) return;
+      currentWord.setWord(wordAfterCursor);
+      selectedSpan.textContent = wordAfterCursor;
+      selectedSpan.insertAdjacentText('beforebegin', ' ');
+      selectedSpan.focus();
+      
+    }
+
+    event.preventDefault();
+  }
+
+
+  /**
   * Generates the HTML representation of the textbox content.
   * Each word in the textbox is wrapped in a <span> element with a unique ID and the contenteditable attribute.
   * The generated HTML string contains all the word elements separated by a space.
-  @returns The HTML string representing the textbox content.
+  * @returns The HTML string representing the textbox content.
   */
   generateHTML(): string {
     const wordElements: string[] = []
@@ -230,7 +272,6 @@ export class TextBoxComponent implements OnInit {
       this.textbox.words.tail = newWord;
     }
   }
-
 
   /**
    * Finds a word in the text box by its ID.
