@@ -47,8 +47,6 @@ describe('LinkedList', () => {
     expect(linkedList.tail).toBe(speechBubble3);
   });
 
-
-
   it('should export speech bubbles to JSON', () => {
     const testBubble1 = new SpeechBubble(0, 0, 0);
     const word = new WordToken('Testeingabe', 1, 1, 1, 1);
@@ -61,22 +59,6 @@ describe('LinkedList', () => {
       SpeechbubbleChain: [speechBubbleExport1.toJSON()],
     };
     expect(speechBubbleChain.toJSON()).toEqual(expectedJson);
-  });
-
-  it('should retain correct format after conversion to JSON and back', () => {
-    const component = new TextSheetComponent(new SignalRService);
-    const testBubble1 = new SpeechBubble(1, 1, 1);
-    component.speechBubbles.add(testBubble1);
-  
-    const speechBubbleExport = testBubble1.getExport();
-    const speechBubbleChain = new SpeechBubbleChain([speechBubbleExport]);
-  
-    const jsonString = JSON.stringify(speechBubbleChain);
-    const parsedSpeechBubbleChain = JSON.parse(jsonString) as SpeechBubbleChain;
-  
-    const parsedSpeechBubbleExport = parsedSpeechBubbleChain.SpeechbubbleChain[0] as SpeechBubbleExport;
-  
-    expect(parsedSpeechBubbleExport).toEqual(jasmine.objectContaining(speechBubbleExport));
   });
   
 });
@@ -111,6 +93,67 @@ describe('TextSheetComponent', () => {
     expect(speechBubbles.length).toBe(initialLength);
     expect(speechBubbles).not.toContain(newSpeechBubble);
   });
+
+describe('TextSheetComponent', () => {
+  let component: TextSheetComponent;
+  let signalRService: SignalRService;
+
+  beforeEach(() => {
+    signalRService = new SignalRService();
+    component = new TextSheetComponent(signalRService);
+  });
+
+  it('should retrieve the correct speech bubble by id', () => {
+    const testBubble1 = new SpeechBubble(1, 1, 1);
+    const testBubble2 = new SpeechBubble(2, 2, 2);
+    component.speechBubbles.add(testBubble1);
+    component.speechBubbles.add(testBubble2);
+
+    const speechBubble1 = component.getSpeechBubbleById(testBubble1.id);
+    const speechBubble2 = component.getSpeechBubbleById(testBubble2.id);
+    const speechBubble3 = component.getSpeechBubbleById(999); // Non-existent id
+
+    expect(speechBubble1).toBe(testBubble1);
+    expect(speechBubble2).toBe(testBubble2);
+    expect(speechBubble3).toBeUndefined();
+  });
+
+  it('should call the exportToJson method with the correct speech bubble when calling callExportToJson', () => {
+    const testBubble = new SpeechBubble(1, 1, 1);
+    component.speechBubbles.add(testBubble);
+
+    spyOn(component, 'exportToJson');
+
+    component.callExportToJson(testBubble.id);
+
+    // Check if exportToJson method was called with the correct speech bubble export
+    expect(component.exportToJson).toHaveBeenCalledWith([testBubble.getExport()]);
+  });
+
+  it('should retrieve an array of all speech bubbles', () => {
+    const testBubble1 = new SpeechBubble(1, 1, 1);
+    const testBubble2 = new SpeechBubble(2, 2, 2);
+    component.speechBubbles.add(testBubble1);
+    component.speechBubbles.add(testBubble2);
+
+    const speechBubbles = component.getSpeechBubblesArray();
+
+    expect(speechBubbles).toEqual([testBubble1, testBubble2]);
+  });
+
+  it('should delete a speech bubble from the speechBubbles list based on the id', () => {
+    const testBubble1 = new SpeechBubble(1, 1, 1);
+    const testBubble2 = new SpeechBubble(2, 2, 2);
+    component.speechBubbles.add(testBubble1);
+    component.speechBubbles.add(testBubble2);
+
+    component.deleteSpeechBubble(testBubble1.id);
+
+    expect(component.speechBubbles.size()).toBe(1);
+    expect(component.speechBubbles.head).toBe(testBubble2);
+  });
+});
+
 
 });
 

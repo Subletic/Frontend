@@ -83,45 +83,6 @@ export class TextSheetComponent implements OnInit {
       }
     });
   }
-  
-  
-  
-
-
-
-
-      /*
-      let speechBubbleContent: WordExport[] = [];
-      speechBubbleExport.SpeechBubbleContent.forEach(element => {
-        const wordToAdd = new WordExport(element.Word, element.Confidence, element.StartTime, element.EndTime, element.Speaker);
-        speechBubbleContent.push(wordToAdd);
-        console.log("5: " + speechBubbleContent);
-      });
-
-      let speechBubbleImport = new SpeechBubbleExport(speechBubbleExport.Id, speechBubbleExport.Speaker, speechBubbleExport.StartTime, speechBubbleExport.EndTime, speechBubbleContent);
-      
-      
-      this.speechBubbles.add(speechBubbleImport.toSpeechBubble());
-
-      
-    });
-    */
-  
-  
-    /*
-    speechBubbleExportArray.forEach((element: SpeechBubbleExport) => {
-      const speechBubble = element.toSpeechBubble();
-      if (speechBubble) {
-        this.speechBubbles.add(speechBubble);
-      }
-    });
-  
-    this.exportToJson(speechBubbleExportArray);
-    */
-  
-  
-  
-  
 
   /**
   * Handles the focusout event for the textbox.
@@ -139,7 +100,7 @@ export class TextSheetComponent implements OnInit {
     this.timeSinceFocusOutCounter(id);
   }
 
-  private getSpeechBubbleById(id: number): SpeechBubble | undefined {
+  public getSpeechBubbleById(id: number): SpeechBubble | undefined {
     let current = this.speechBubbles.head;
   
     while (current) {
@@ -197,20 +158,20 @@ export class TextSheetComponent implements OnInit {
 
     fetch(environment.apiURL + '/api/speechbubble/update', {
       method: 'POST',
-      body: JSON.stringify(jsonData ),
+      body: JSON.stringify(jsonData),
       headers: {
         'Content-Type': 'application/json'
       }
     })
       .then(response => {
         if (response.ok) {
-          console.log('Neue SpeechBubble wurde erfolgreich gesendet');
+          console.log('Aktualisierte SpeechBubble wurde erfolgreich gesendet');
         } else {
-          console.error('Fehler beim Senden der neuen SpeechBubble');
+          console.error('Fehler beim Senden der aktualisierten SpeechBubble');
         }
       })
       .catch(error => {
-        console.error('Fehler beim Senden der neuen SpeechBubble:', error);
+        console.error('Fehler beim Senden der aktualisierten SpeechBubble:', error);
       });
   }
 
