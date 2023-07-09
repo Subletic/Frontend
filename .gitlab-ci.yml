@@ -34,6 +34,10 @@ test:
     - npm ci
     - ng test --no-watch --code-coverage
     - ng test --watch=false
+  coverage: '/Statements.*?(\d+(?:\.\d+)?)%/'
+  artifacts:
+    paths:
+      - coverage/
 
 build-docker:
   variables:
