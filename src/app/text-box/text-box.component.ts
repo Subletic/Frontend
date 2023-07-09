@@ -33,16 +33,42 @@ export class TextBoxComponent implements AfterViewInit {
 
     textbox.innerHTML = this.generateHTML();
 
-    
     textbox.addEventListener('mouseover', (event: MouseEvent) => {
       this.logInfoAboutTextbox(event);
     })
-    
     
     textbox.addEventListener('keydown', (event: KeyboardEvent) => {
       this.handleKeyboardEventTextbox(event);
     })
 
+    /**
+     * The keydown function doesn't cover the latest change of the .textContent 
+     * Attribute of a span, because typescript prioritises the keydown EventListener instead of 
+     * updating the .textContent of the span first.
+     * Therefore, there needs to be a keyup listener that updates
+     * the data structure so the words are always correct when send 
+     * to backend. (keydown > update .textContent > keyup)
+     */
+    textbox.addEventListener('keyup', (event: KeyboardEvent) => {
+      this.updateWord(event);
+    })
+  }
+
+  /**
+  * Generates the HTML representation of the textbox content.
+  * Each word in the textbox is wrapped in a <span> element with a unique ID and the contenteditable attribute.
+  * The generated HTML string contains all the word elements separated by a space.
+  * @returns The HTML string representing the textbox content.
+  */
+  public generateHTML(): string {
+    const wordElements: string[] = []
+    let current = this.textbox.words.head;
+    while (current) {
+      const wordWithId = `<span id="${current.id}" style="color: ${current.color}" contenteditable="true">${current.word}</span>`;
+      wordElements.push(wordWithId);
+      current = current.next;
+    }
+    return wordElements.join(' ');
   }
 
   /**
@@ -86,6 +112,7 @@ export class TextBoxComponent implements AfterViewInit {
     if (event.code === 'Space') {
       this.handleSpacePress(selectedSpan, currentText, cursorPosition, spanId, event);
     }
+
   }
 
   /**
@@ -273,23 +300,20 @@ export class TextBoxComponent implements AfterViewInit {
     if(!span) return;
     span.style.color = '#000000';
   }
-  
 
   /**
-  * Generates the HTML representation of the textbox content.
-  * Each word in the textbox is wrapped in a <span> element with a unique ID and the contenteditable attribute.
-  * The generated HTML string contains all the word elements separated by a space.
-  * @returns The HTML string representing the textbox content.
-  */
-  public generateHTML(): string {
-    const wordElements: string[] = []
-    let current = this.textbox.words.head;
-    while (current) {
-      const wordWithId = `<span id="${current.id}" style="color: ${current.color}" contenteditable="true">${current.word}</span>`;
-      wordElements.push(wordWithId);
-      current = current.next;
-    }
-    return wordElements.join(' ');
+   * Updates the word the event is about in the data structure.
+   * 
+   * @param event - Any KeyboardEvent
+   */
+  public updateWord(event: KeyboardEvent) {
+    const selectedSpan = event.target as HTMLElement;
+    const currentText = selectedSpan.textContent;
+    const word = this.findWordById(Number(selectedSpan.id));
+    if(!word) return;
+    if(!currentText) return;
+    word.setWord(currentText);
+    selectedSpan.textContent = currentText;
   }
 
   /**
