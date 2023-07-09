@@ -92,24 +92,10 @@ describe('TextSheetComponent', () => {
     expect(component.speechBubbles.head).toBeDefined();
   });
 
-  it('should add a new standard speech bubble', () => {
-    const initialLength = component.getSpeechBubblesArray().length;
-    component.addNewStandardSpeechBubble();
-    const speechBubbles = component.getSpeechBubblesArray();
-    expect(speechBubbles.length).toBe(initialLength + 1);
-  });
-
   it('should return an array of speech bubbles', () => {
     const speechBubbles = component.getSpeechBubblesArray();
     if(component.speechBubbles.head == null) return;
     expect(speechBubbles).toEqual([component.speechBubbles.head]);
-  });
-
-  it('should add a new standard speech bubble', () => {
-    const initialLength = component.getSpeechBubblesArray().length;
-    component.addNewStandardSpeechBubble();
-    const speechBubbles = component.getSpeechBubblesArray();
-    expect(speechBubbles.length).toBe(initialLength + 1);
   });
 
   it('should remove a speech bubble', () => {

@@ -1,30 +1,30 @@
 export class WordExport {
-  public Word: string;
-  public Confidence: number;
-  public StartTime: number;
-  public EndTime: number;
-  public Speaker: number;
+  public word: string;
+  public confidence: number;
+  public startTime: number;
+  public endTime: number;
+  public speaker: number;
 
   constructor (word: string, confidence: number, startTime: number, endTime: number, speaker: number){
-    this.Word = word;
-    this.Confidence = confidence;
-    this.StartTime = startTime;
-    this.EndTime = endTime;
-    this.Speaker = speaker;
+    this.word = word;
+    this.confidence = confidence;
+    this.startTime = startTime;
+    this.endTime = endTime;
+    this.speaker = speaker;
   }
   
   toJSON() {
     return {
-      Word: this.Word,
-      Confidence: this.Confidence,
-      StartTime: this.StartTime,
-      EndTime: this.EndTime,
-      Speaker: this.Speaker
+      Word: this.word,
+      Confidence: this.confidence,
+      StartTime: this.startTime,
+      EndTime: this.endTime,
+      Speaker: this.speaker
     };
   }
 
   toWordToken() {
-    return new WordToken(this.Word, this.Confidence, this.StartTime, this.EndTime, this.Speaker);
+    return new WordToken(this.word, this.confidence, this.startTime, this.endTime, this.speaker);
   }
 }
 
@@ -90,5 +90,14 @@ export class WordToken {
 
   getExport() {
     return new WordExport(this.word, this.confidence, this.startTime, this.endTime, this.speaker);
+  }
+
+  remove() {
+    if (this.prev) {
+      this.prev.next = this.next;
+    }
+    if (this.next) {
+      this.next.prev = this.prev;
+    }
   }
 }

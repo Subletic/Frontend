@@ -3,39 +3,38 @@ import { WordExport } from './wordToken.model';
 
 export class SpeechBubbleExport {
   
-  public Id: number;
-  
-  public Speaker: number;
-  public StartTime: number;
-  public EndTime: number;
-  public SpeechBubbleContent: WordExport[];
+  public id: number;
+  public speaker: number;
+  public startTime: number;
+  public endTime: number;
+  public speechBubbleContent: WordExport[];
 
   constructor(id: number, speaker: number, begin: number, end: number, speechBubbleContent: WordExport[]) {
-    this.Id = id;
-    this.Speaker = speaker;
-    this.StartTime = begin;
-    this.EndTime = end;
-    this.SpeechBubbleContent = speechBubbleContent;
+    this.id = id;
+    this.speaker = speaker;
+    this.startTime = begin;
+    this.endTime = end;
+    this.speechBubbleContent = speechBubbleContent;
   }
 
   toJSON() {
     return {
-      Id: this.Id,
-      Speaker: this.Speaker,
-      StartTime: this.StartTime,
-      EndTime: this.EndTime,
-      SpeechBubbleContent: this.SpeechBubbleContent.map(wordExport => wordExport.toJSON())
+      Id: this.id,
+      Speaker: this.speaker,
+      StartTime: this.startTime,
+      EndTime: this.endTime,
+      SpeechBubbleContent: this.speechBubbleContent.map(wordExport => wordExport.toJSON())
     };
   }
 
   toSpeechBubble(){
     const words = new LinkedList();
 
-    this.SpeechBubbleContent.forEach(element => {
+    this.speechBubbleContent.forEach(element => {
       words.add(element.toWordToken());
     });
 
-    return new SpeechBubble(this.Speaker, this.StartTime, this.EndTime, words, this.Id);
+    return new SpeechBubble(this.speaker, this.startTime, this.endTime, words, this.id);
   }
 }
 
@@ -69,11 +68,17 @@ export class SpeechBubble {
       this.next = null;
     }
 
+    /**
+     * Returns a new id.
+     */
     private static getNextId(): number {
       return SpeechBubble.currentId++;
     }
   
-    printText() {
+    /**
+     * Prints the word-list of this speechbubble.
+     */
+    public printText() {
       let current = this.words.head;
       const text = [];
       while (current) {
@@ -83,11 +88,17 @@ export class SpeechBubble {
       return '[' + text.join(', ') + ']';
     }
 
-    toString() {
+    /** 
+     * Returns a String with basic information about this speechbubble.
+     */
+    public toString() {
       return `[${this.id}, ${this.words.size()}, ${this.begin}]`;
     }
 
-    toList(){
+    /** 
+     * Returns a wordExportList representing the current word-list of this instance of a speechbubble.
+     */
+    public toList() {
       let current = this.words.head;
       const wordExportList = [];
       while (current) {
@@ -97,7 +108,27 @@ export class SpeechBubble {
       return wordExportList;
     }
 
-    getExport() {
+    /**
+     * Returns an SpeechBubblExport Object for this instance of a speechbubble.
+     */
+    public getExport() {
       return new SpeechBubbleExport(this.id, this.speaker, this.begin, this.end, this.toList());
+    }
+
+    /**
+     * Removes empty Words from the words LinkedList
+     */
+    public removeEmptyWords() {
+      let current = this.words.head;
+      while (current) {
+        if (current.word === '') {
+          if(this.words.tail == current) {
+            if(!current.prev) return;
+            this.words.tail = current.prev;
+          }
+          current.remove();
+        } 
+        current = current.next;
+      }
     }
 }

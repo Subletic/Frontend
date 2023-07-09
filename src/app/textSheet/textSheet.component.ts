@@ -5,6 +5,251 @@ import { SignalRService } from '../service/signalRService';
 import {environment} from "../../environments/environment";
 
 /**
+ * The TextSheetComponent represents a component that handles the speech bubbles in a text sheet.
+ * It provides methods to add, delete and manipulate speech bubbles, as well as retrieve information about the speech bubbles.
+ */
+@Component({
+  selector: 'app-text-sheet',
+  templateUrl: './textSheet.component.html',
+  styleUrls: ['./textSheet.component.scss']
+})
+export class TextSheetComponent implements OnInit {
+
+  //Attribute holding all showcased linkedList of Instance SpeechBubble
+  speechBubbles: LinkedList = new LinkedList;
+
+  timeSinceFocusOutList: Map<number, number> = new Map<number, number>();
+  intervalList: ReturnType<typeof setInterval>[] = [];
+
+  constructor(private signalRService: SignalRService) {}
+
+  ngOnInit() {
+
+    this.signalRService.newBubbleReceived.subscribe(SpeechBubbleExportList => {
+      console.log("Neue SpeechBubble erhalten: ", SpeechBubbleExportList);
+      this.importfromJSON(SpeechBubbleExportList);
+    });
+
+    this.signalRService.oldBubbledeleted.subscribe(id => {
+      console.log("Speechbubble gelöscht: ", id);
+      this.deleteSpeechBubble(id);
+    });
+
+  }
+
+  /**
+  * Imports data from a JSON string and converts it into an array of SpeechBubbleExport objects.
+  * @param jsonString The JSON string to import.
+  * @returns An array of SpeechBubbleExport objects.
+  */
+  public importfromJSON(speechBubbleChain: SpeechBubbleExport[]) {
+    if (!speechBubbleChain || !Array.isArray(speechBubbleChain)) {
+      console.error('Invalid speechBubbleChain object.');
+      return;
+    }
+  
+    const speechBubbleExportArray: SpeechBubbleExport[] = [];
+    
+    speechBubbleChain.forEach((speechBubbleExport: SpeechBubbleExport) => {
+      const speechBubbleContent: WordExport[] = [];
+  
+      speechBubbleExport.speechBubbleContent.forEach((word: WordExport) => {
+        const wordExport = new WordExport(
+          word.word,
+          word.confidence,
+          word.startTime,
+          word.endTime,
+          word.speaker
+        );
+  
+        speechBubbleContent.push(wordExport);
+      });
+  
+      const speechBubbleExport2 = new SpeechBubbleExport(
+        speechBubbleExport.id,
+        speechBubbleExport.speaker,
+        speechBubbleExport.startTime,
+        speechBubbleExport.endTime,
+        speechBubbleContent
+      );
+  
+      speechBubbleExportArray.push(speechBubbleExport2);
+    });
+  
+    speechBubbleExportArray.forEach((element: SpeechBubbleExport) => {
+      const speechBubble = element.toSpeechBubble();
+      if (speechBubble) {
+        this.speechBubbles.add(speechBubble);
+      }
+    });
+  }
+  
+  
+  
+
+
+
+
+      /*
+      let speechBubbleContent: WordExport[] = [];
+      speechBubbleExport.SpeechBubbleContent.forEach(element => {
+        const wordToAdd = new WordExport(element.Word, element.Confidence, element.StartTime, element.EndTime, element.Speaker);
+        speechBubbleContent.push(wordToAdd);
+        console.log("5: " + speechBubbleContent);
+      });
+
+      let speechBubbleImport = new SpeechBubbleExport(speechBubbleExport.Id, speechBubbleExport.Speaker, speechBubbleExport.StartTime, speechBubbleExport.EndTime, speechBubbleContent);
+      
+      
+      this.speechBubbles.add(speechBubbleImport.toSpeechBubble());
+
+      
+    });
+    */
+  
+  
+    /*
+    speechBubbleExportArray.forEach((element: SpeechBubbleExport) => {
+      const speechBubble = element.toSpeechBubble();
+      if (speechBubble) {
+        this.speechBubbles.add(speechBubble);
+      }
+    });
+  
+    this.exportToJson(speechBubbleExportArray);
+    */
+  
+  
+  
+  
+
+  /**
+  * Handles the focusout event for the textbox.
+  * Stops the timer for the specified index to prevent duplicate execution,
+  * and starts the timer again for the specified index.
+  * @param event - The focusout event object.
+  * @param index - The index of the textbox.
+  */
+  public onFocusOut(id: number) {
+
+    const speechBubble = this.getSpeechBubbleById(id);
+    if (!speechBubble) return;
+  
+    clearInterval(this.intervalList[id]);
+    this.timeSinceFocusOutCounter(id);
+  }
+
+  private getSpeechBubbleById(id: number): SpeechBubble | undefined {
+    let current = this.speechBubbles.head;
+  
+    while (current) {
+      if (current.id === id) {
+        return current;
+      }
+      current = current.next;
+    }
+    return undefined;
+  }
+
+  /**
+  * Keeps track of the time since the last focusout event for each textbox.
+  * Starts a timer for the specified speechbubble and performs the corresponding logic
+  * if the inactivity exceeds 5 seconds.
+  * @param id - The id of the speechbubble to set a counter for
+  */
+  public timeSinceFocusOutCounter(id: number) {
+    this.timeSinceFocusOutList.set(id, 0);
+  
+    this.intervalList[id] = setInterval(() => {
+      const currentValue = this.timeSinceFocusOutList.get(id) || 0;
+      this.timeSinceFocusOutList.set(id, currentValue + 1);
+  
+      if (currentValue >= 5) {
+        clearInterval(this.intervalList[id]);
+        this.callExportToJson(id);
+        this.timeSinceFocusOutList.set(id, 0);
+        return;
+      }
+    }, 1000);
+  }
+
+  /**
+  * Calls the exportToJson method to export a speech bubble with the specified id.
+  * @param id - The id of the speech bubble to export.
+  */
+  public callExportToJson(id: number) {
+    const speechBubbleToExport = this.getSpeechBubbleById(id);
+    if(!speechBubbleToExport) return;
+    speechBubbleToExport.removeEmptyWords(); 
+    const currentExport = speechBubbleToExport.getExport();
+    if(currentExport == undefined) return;
+    this.exportToJson([currentExport]);
+  }
+
+  /**
+  * Exports a speech bubble list to a JSON file and sends it to a specified API endpoint.
+  * @param speechBubbleExportList - An array of SpeechBubbleExport objects representing the speech bubbles to be exported.
+  */
+  public exportToJson(speechBubbleExportList: SpeechBubbleExport[]) {
+
+    const speechBubbleChain = new SpeechBubbleChain(speechBubbleExportList);
+    const jsonData = speechBubbleChain.toJSON();
+
+    fetch(environment.apiURL + '/api/speechbubble/update', {
+      method: 'POST',
+      body: JSON.stringify(jsonData ),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(response => {
+        if (response.ok) {
+          console.log('Neue SpeechBubble wurde erfolgreich gesendet');
+        } else {
+          console.error('Fehler beim Senden der neuen SpeechBubble');
+        }
+      })
+      .catch(error => {
+        console.error('Fehler beim Senden der neuen SpeechBubble:', error);
+      });
+  }
+
+  /**
+  * Retrieves an array of all speech bubbles in the speechBubbles list.
+  * @returns An array of speech bubbles.
+  */
+  public getSpeechBubblesArray(): SpeechBubble[] {
+      let current = this.speechBubbles.head;
+      const speechBubbles: SpeechBubble[] = [];
+      while (current) {
+        speechBubbles.push(current);
+        current = current.next;
+      }
+      return speechBubbles;
+    }
+
+  /**
+  * Deletes a speech bubble from the speechBubbles list based on the id.
+  * The speech bubble is removed from the list.
+  * 
+  * @param id - The id of the speechbubble to be removed.
+  */
+  public deleteSpeechBubble(id: number) {
+
+    let current = this.speechBubbles.head;
+
+    while (current) {
+
+      if(current.id == id) {
+          this.speechBubbles.remove(current);
+          return;
+      }
+      current = current.next;
+    }  
+  }
+}
+
+/**
 * The SpeechBubbleChain class represents a chain of speech bubbles.
 * It is used for exporting and importing speech bubbles in JSON format.
 */
@@ -128,255 +373,4 @@ export class LinkedList {
       }
       return count;
     }
-}
-
-/**
- * The TextSheetComponent represents a component that handles the speech bubbles in a text sheet.
- * It provides methods to add, delete and manipulate speech bubbles, as well as retrieve information about the speech bubbles.
- */
-@Component({
-  selector: 'app-text-sheet',
-  templateUrl: './textSheet.component.html',
-  styleUrls: ['./textSheet.component.scss']
-})
-export class TextSheetComponent implements OnInit {
-
-  //Attributes holding all showcased linkedList of Instance SpeechBubble
-  speechBubbles: LinkedList = new LinkedList;
-
-  constructor(private signalRService: SignalRService) {}
-
-  ngOnInit() {
-
-    //On receiving a new SpeechBubble from Backend, this function calls the importfromJSON
-    //function for all speech Bubbles in the list
-    //and the other function deletes a Speechbubble from the list
-    this.signalRService.newBubbleReceived.subscribe(speechBubble => {
-      console.log("Neue SpeechBubble erhalten: ", speechBubble);
-      this.importfromJSON(speechBubble);
-    });
-
-    this.signalRService.oldBubbledeleted.subscribe(id => {
-      console.log("Speechbubble gelöscht: ", id);
-      this.deleteSpeechBubble(id);
-    });
-
-  }
-
-  /**
-  * Exports a speech bubble list to a JSON file and sends it to a specified API endpoint.
-  * @param speechBubbleExportList - An array of SpeechBubbleExport objects representing the speech bubbles to be exported.
-  */
-  exportToJson(speechBubbleExportList: SpeechBubbleExport[]) {
-
-    const speechBubbleChain = new SpeechBubbleChain(speechBubbleExportList);
-    const jsonData = speechBubbleChain.toJSON();
-
-    fetch(environment.apiURL + '/api/speechbubble/update', {
-      method: 'POST',
-      body: JSON.stringify(jsonData ),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-      .then(response => {
-        if (response.ok) {
-          console.log('Neue SpeechBubble wurde erfolgreich gesendet');
-        } else {
-          console.error('Fehler beim Senden der neuen SpeechBubble');
-        }
-      })
-      .catch(error => {
-        console.error('Fehler beim Senden der neuen SpeechBubble:', error);
-      });
-  }
-
-  /**
-  * Calls the exportToJson method to export a speech bubble at the specified index.
-  * @param index - The index of the speech bubble to export.
-  */
-  callExportToJson(index: number) {
-    let current = this.speechBubbles.tail;
-    for(let i = 0; i < index; i++) {
-      if (current == null) return;
-      current = current.prev;
-    }
-    const currentExport = current?.getExport();
-
-    if(currentExport == undefined) return;
-    this.exportToJson([currentExport]);
-  }
-
-  /**
-  * Imports data from a JSON string and converts it into an array of SpeechBubbleExport objects.
-  * @param jsonString The JSON string to import.
-  * @returns An array of SpeechBubbleExport objects.
-  */
-  importfromJSON(speechBubbleChain: any){
-
-    const speechBubbleExportArray: SpeechBubbleExport[] = [];
-
-    speechBubbleChain.forEach((speechBubbleData: any) => {
-      const speechBubbleContent: WordExport[] = [];
-
-      speechBubbleData.speechBubbleContent.forEach((word: any) => {
-          const wordExport = new WordExport(
-            word.word,
-            word.confidence,
-            word.startTime,
-            word.endTime,
-            word.speaker
-          )
-
-          speechBubbleContent.push(wordExport);
-      });
-
-      //constructor(id: number, speaker: number, begin: number, end: number, speechBubbleContent: WordExport[])
-
-      const speechBubbleExport = new SpeechBubbleExport(
-        speechBubbleData.id,
-        speechBubbleData.speaker,
-        speechBubbleData.startTime,
-        speechBubbleData.endTime,
-        speechBubbleContent
-      );
-
-      speechBubbleExportArray.push(speechBubbleExport);
-    });
-
-    speechBubbleExportArray.forEach (element => {
-      this.speechBubbles.add(element.toSpeechBubble());
-    });
-
-    this.exportToJson(speechBubbleExportArray);
-  }
-
-  //Attributes for timeCounters, should maybe be refactored elsewhere
-  timeSinceFocusOutList: number[] = [];
-  intervalList: ReturnType<typeof setInterval>[] = [];
-
-  /**
-  * Keeps track of the time since the last focusout event for each textbox.
-  * Starts a timer for the specified index and performs the corresponding logic
-  * if the inactivity exceeds 5 seconds.
-  * @param index - The index of the textbox.
-  */
-  timeSinceFocusOutCounter(index: number) {
-
-    this.timeSinceFocusOutList[index] = 0;
-    console.log("huh " + index);
-
-    this.intervalList[index] = setInterval(() => {
-      this.timeSinceFocusOutList[index]++; // Zähle die Zeit seit dem letzten focusout-Ereignis
-      if (this.timeSinceFocusOutList[index] >= 5) {
-        // Führe hier die entsprechende Logik für eine Inaktivität von mehr als 5 Sekunden aus
-        console.log("timeSinceFocusOut > 5 bei index " + index);
-        clearInterval(this.intervalList[index]);
-        this.callExportToJson(index);
-
-
-        this.timeSinceFocusOutList[index] = 0;
-        return;
-      }
-    }, 1000);
-  }
-
-  /**
-  * Handles the focusout event for the textbox.
-  * Stops the timer for the specified index to prevent duplicate execution,
-  * and starts the timer again for the specified index.
-  * @param event - The focusout event object.
-  * @param index - The index of the textbox.
-  */
-  onFocusOut(index: number) {
-
-    if(this.timeSinceFocusOutList[index] >= 5) {
-      console.log("TimeSinceFocusOut > 5");
-    }
-
-    clearInterval(this.intervalList[index]);
-    this.timeSinceFocusOutCounter(index);
-  }
-
-  /**
-  * Retrieves an array of all speech bubbles in the speechBubbles list.
-  * @returns An array of speech bubbles.
-  */
-  getSpeechBubblesArray(): SpeechBubble[] {
-      let current = this.speechBubbles.head;
-      const speechBubbles: SpeechBubble[] = [];
-      while (current) {
-        speechBubbles.push(current);
-        current = current.next;
-      }
-      return speechBubbles;
-    }
-
-  /**
-  * Adds a new standard speech bubble to the speechBubbles list.
-  * The new speech bubble is then added to the list and its representation is logged to the console.
-  */
-  addNewStandardSpeechBubble() {
-    const testBubble1 = new SpeechBubble(0, 0, 0);
-
-    this.speechBubbles.add(testBubble1);
-
-    const speechBubbleArray = this.getSpeechBubblesArray();
-
-    for(let i = 0; i < speechBubbleArray.length; i++) {
-      console.log(speechBubbleArray[i].id + speechBubbleArray[i].words.toString());
-
-    }
-  }
-    
-  
-
-  /**
-  * Deletes the oldest speech bubble from the speechBubbles list.
-  * The head speech bubble is removed from the list.
-  */
-  deleteOldestSpeechBubble() {
-
-      if(this.speechBubbles.head){
-          this.speechBubbles.remove(this.speechBubbles.head);
-      }
-
-  }
-
-  /**
-  * Deletes a speech bubble from the speechBubbles list based on the id.
-  * The speech bubble is removed from the list.
-  */
-  deleteSpeechBubble(id: number) {
-
-    let current = this.speechBubbles.head;
-
-      while (current) {
-        if(current.id == id) {
-            this.speechBubbles.remove(current);
-        }
-        current = current.next;
-      }
-      
-  }
-
-  /**
-  * Sends a request to the server to send a new speech bubble.
-  * This method makes a POST request to the specified API endpoint.
-  */
-  sendNewSpeechBubble() {
-    fetch(environment.apiURL + '/api/speechbubble/send-new-bubble', {
-      method: 'POST',
-    })
-      .then(response => {
-        if (response.ok) {
-          console.log('Neue SpeechBubble wurde erfolgreich gesendet');
-        } else {
-          console.error('Fehler beim Senden der neuen SpeechBubble');
-        }
-      })
-      .catch(error => {
-        console.error('Fehler beim Senden der neuen SpeechBubble:', error);
-      });
-  }
 }

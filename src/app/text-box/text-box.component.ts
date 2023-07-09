@@ -17,9 +17,13 @@ import { SpeechBubble } from '../data/speechBubble.model';
 export class TextBoxComponent implements AfterViewInit {
 
   @ViewChild('textbox', { static: true }) textboxRef!: ElementRef;
-
   @Input() textbox!: SpeechBubble;
 
+  /**
+   * After Init of View, generates the Words from the data structure
+   * inside the textbox. Adds event listeners to the textbox and generates
+   * an empty words in case that the list of words is empty.
+   */
   ngAfterViewInit() {
     const textbox = this.textboxRef.nativeElement;
 
@@ -28,42 +32,63 @@ export class TextBoxComponent implements AfterViewInit {
     }
 
     textbox.innerHTML = this.generateHTML();
+
+    
     textbox.addEventListener('mouseover', (event: MouseEvent) => {
-
-      const target = event.target as HTMLElement;
-      if (target.tagName === 'SPAN') {
-        const hoveredWord = target.textContent;
-        const wordID = target.id;
-        const currentWord = this.findWordById(Number(wordID));
-
-        console.log('Word: ' + hoveredWord + ', ID: ' + wordID);
-        console.log('Current Word: ', currentWord);
-        console.log('Print Text:', this.textbox.printText());
-      }
+      this.logInfoAboutTextbox(event);
     })
-
-
+    
+    
     textbox.addEventListener('keydown', (event: KeyboardEvent) => {
-
-      const selectedSpan = event.target as HTMLElement;
-      const currentText = selectedSpan.textContent;
-      const cursorPosition = window.getSelection()?.getRangeAt(0)?.startOffset;
-      const spanId = selectedSpan.id;
-      const isInFullSelection = window.getSelection()?.toString().length === currentText?.length;
-
-      if (cursorPosition === 0 && event.key === 'Backspace') {
-        this.handleBackspacePressAtStart(selectedSpan, currentText, isInFullSelection, spanId, event)
-      }
-
-      if (event.code === 'Space') {
-        this.handleSpacePress(selectedSpan, currentText, cursorPosition, spanId, event);
-      }
-
-      //Sorgt noch für Fehler, daher treten noch vereinzelt leere Strings auf
-      //this.removeEmptyObjects();
-      //this.updateWordColors();
+      this.handleKeyboardEventTextbox(event);
     })
 
+  }
+
+  /**
+   * Prints info about a certain textbox when its hovered over.
+   * 
+   * @param event - Any MouseEvent on the Textbox
+   */
+  public logInfoAboutTextbox(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+    if (!(target.tagName === 'SPAN')) return;
+      const hoveredWord = target.textContent;
+      const wordID = target.id;
+      const currentWord = this.findWordById(Number(wordID));
+
+      console.log('Word: ' + hoveredWord + ', ID: ' + wordID);
+      console.log('Current Word: ', currentWord);
+      console.log('Print Text:', this.textbox.printText());
+  }
+
+  /**
+   * Handles KeyboardEvent on Textbox. 
+   * Covers 2 cases: Space is pressend and Backspace is pressed at position 0.
+   * Calls either handleBackSpacePressAtStart() or handleSpacePress() as follower functions.
+   * 
+   * @param event - Any KeyboardEvent on the textbox
+   * 
+   * @pre should be added as event listener to a textbox Element 
+   * 
+   */
+  public handleKeyboardEventTextbox(event: KeyboardEvent) {
+    const selectedSpan = event.target as HTMLElement;
+    const currentText = selectedSpan.textContent;
+    const cursorPosition = window.getSelection()?.getRangeAt(0)?.startOffset;
+    const spanId = selectedSpan.id;
+    const isInFullSelection = window.getSelection()?.toString().length === currentText?.length;
+
+    if (cursorPosition === 0 && event.key === 'Backspace') {
+      this.handleBackspacePressAtStart(selectedSpan, currentText, isInFullSelection, spanId, event)
+    }
+
+    if (event.code === 'Space') {
+      this.handleSpacePress(selectedSpan, currentText, cursorPosition, spanId, event);
+    }
+
+    //Sorgt noch für Fehler, daher treten noch vereinzelt leere Strings auf
+    //this.removeEmptyObjects();
     //this.updateWordColors();
   }
 
@@ -81,7 +106,7 @@ export class TextBoxComponent implements AfterViewInit {
    * 
    * @pre Function should be called when backspace is pressed at start of a word
    */
-  public handleBackspacePressAtStart(selectedSpan: HTMLElement, currentText: String | null, isInFullSelection: boolean, spanId: String, event: KeyboardEvent) {
+  public handleBackspacePressAtStart(selectedSpan: HTMLElement, currentText: string | null, isInFullSelection: boolean, spanId: string, event: KeyboardEvent) {
     const prevSpan = selectedSpan.previousElementSibling as HTMLSpanElement;
 
     if (isInFullSelection) {
@@ -109,7 +134,7 @@ export class TextBoxComponent implements AfterViewInit {
    * @param spanId - Id of the selectedSpan
    * @param event - The keyboard event triggered by user.
    */
-  public isInFullSelectionDeletion(selectedSpan: HTMLElement, spanId: String, event: KeyboardEvent) {
+  public isInFullSelectionDeletion(selectedSpan: HTMLElement, spanId: string, event: KeyboardEvent) {
     const currentWord = this.findWordById(Number(spanId));
     if(!currentWord) return;
     currentWord.word = '';
@@ -130,7 +155,7 @@ export class TextBoxComponent implements AfterViewInit {
    * 
    * @pre There needs to be a previous word
    */
-  public mergeWithPreviousWord(selectedSpan: HTMLElement, currentText: String | null, prevSpan: HTMLSpanElement, event: KeyboardEvent) {
+  public mergeWithPreviousWord(selectedSpan: HTMLElement, currentText: string | null, prevSpan: HTMLSpanElement, event: KeyboardEvent) {
     const prevWord = this.findWordById(Number(prevSpan.getAttribute('id')));
     if (!prevWord) return;
     prevWord.word += currentText;
@@ -157,7 +182,7 @@ export class TextBoxComponent implements AfterViewInit {
    * 
    * @pre There needs to be a following word
    */
-  public mergeWithFollowingWord(selectedSpan: HTMLElement, currentText: String | null, nextSpan: HTMLSpanElement ,event: KeyboardEvent) {
+  public mergeWithFollowingWord(selectedSpan: HTMLElement, currentText: string | null, nextSpan: HTMLSpanElement, event: KeyboardEvent) {
     if (!nextSpan) return;
     if(!nextSpan.getAttribute('id')) return;
     const nextWord = this.findWordById(Number(nextSpan.getAttribute('id')));
@@ -188,7 +213,7 @@ export class TextBoxComponent implements AfterViewInit {
     * @param spanId - Id of the selectedSpan
     * @param event - The keyboard event triggered by user.
     */
-  public handleSpacePress(selectedSpan: HTMLElement, currentText: String | null, cursorPosition: number | undefined, spanId: String, event: KeyboardEvent) {
+  public handleSpacePress(selectedSpan: HTMLElement, currentText: string | null, cursorPosition: number | undefined, spanId: string, event: KeyboardEvent) {
     if(!(currentText && typeof cursorPosition === 'number')) return;
     const wordBeforeCursor = currentText.substring(0, cursorPosition);
     const wordAfterCursor = currentText.substring(cursorPosition);
@@ -232,7 +257,6 @@ export class TextBoxComponent implements AfterViewInit {
 
     event.preventDefault();
   }
-
 
   /**
   * Generates the HTML representation of the textbox content.
