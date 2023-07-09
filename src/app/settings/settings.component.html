@@ -8,11 +8,15 @@
             </button>
         </div>  
         
-        <mat-form-field class="form-field">
-            <mat-label>Sprungweite in Sekunden</mat-label>
-            <input matInput type="number" placeholder="Zahl eingeben" [(ngModel)]="sprungweite" #sprungweiteInput="ngModel" min="1" required max="120" required>
-            <mat-error class="mat-error" *ngIf="!sprungweiteInput.valid">Ungültiger Wert</mat-error>
-        </mat-form-field>
+        <div class="seconds-container">
+            <div class="seconds-label-container">
+                <div id="seconds-name-label" class="seconds-name-label">Sprungweite</div>
+                <div class="seconds-value-label">{{seconds}} Sekunden</div>
+            </div>
+            <div class="slider">
+                <input type="range" id="seconds-slider" min="1" max="20" class="styled-slider slider-progress" [(ngModel)]="seconds" #secondsInput="ngModel" #secondsSlider>
+            </div>
+        </div>  
 
         <div class="reload-button">
             <p>Reload Backend</p>
@@ -24,7 +28,7 @@
         </div>
 
         <div class="buttons-container">
-            <button mat-stroked-button class="settings-button" [style.color]="getBackgroundColor()" (click)="apply();" [disabled]="!checkSprungweite()">Ok</button>
+            <button mat-stroked-button class="settings-button" [style.color]="getBackgroundColor()" (click)="apply();">Ok</button>
             <button mat-stroked-button class="settings-button" [style.color]="getBackgroundColor()" (click)="cancel();">Abbrechen</button>
         </div>
     </div>
