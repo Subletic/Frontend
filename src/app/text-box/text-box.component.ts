@@ -108,7 +108,6 @@ export class TextBoxComponent implements AfterViewInit {
    */
   public handleBackspacePressAtStart(selectedSpan: HTMLElement, currentText: string | null, isInFullSelection: boolean, spanId: string, event: KeyboardEvent) {
     const prevSpan = selectedSpan.previousElementSibling as HTMLSpanElement;
-
     if (isInFullSelection) {
       this.isInFullSelectionDeletion(selectedSpan, spanId, event);
       return;
