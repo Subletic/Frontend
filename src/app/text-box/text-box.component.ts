@@ -86,10 +86,6 @@ export class TextBoxComponent implements AfterViewInit {
     if (event.code === 'Space') {
       this.handleSpacePress(selectedSpan, currentText, cursorPosition, spanId, event);
     }
-
-    //Sorgt noch für Fehler, daher treten noch vereinzelt leere Strings auf
-    //this.removeEmptyObjects();
-    //this.updateWordColors();
   }
 
   /**
@@ -166,6 +162,7 @@ export class TextBoxComponent implements AfterViewInit {
     selectedSpan.remove();
     prevSpan.textContent = prevWord.word;
     prevSpan.focus();
+    this.adjustColor(prevSpan.getAttribute('id'));
     event.preventDefault();
     return;
   }
@@ -194,6 +191,7 @@ export class TextBoxComponent implements AfterViewInit {
     this.textbox.words.remove(currentWord);
     selectedSpan.remove();
     nextSpan.focus();
+    this.adjustColor(nextSpan.getAttribute('id'));
     event.preventDefault();
     return; 
   }
@@ -217,11 +215,13 @@ export class TextBoxComponent implements AfterViewInit {
     const wordBeforeCursor = currentText.substring(0, cursorPosition);
     const wordAfterCursor = currentText.substring(cursorPosition);
     selectedSpan.textContent = wordBeforeCursor;
+    this.adjustColor(selectedSpan.getAttribute('id'));
 
     if (wordBeforeCursor.trim() !== '') {
       const currentWord = this.findWordById(Number(spanId));
       if (!currentWord) return;
       const newWord = new WordToken(wordAfterCursor, 1 ,currentWord.startTime, currentWord.endTime, currentWord.speaker);
+      currentWord.updateWordColor();
 
       currentWord.confidence = 1;
       this.insertAfter(newWord, currentWord);
@@ -234,6 +234,7 @@ export class TextBoxComponent implements AfterViewInit {
 
       selectedSpan.insertAdjacentElement('afterend', newSpan);
       selectedSpan.insertAdjacentText('afterend', ' ');
+
       newSpan.focus();
       // Event handling for the new span
       newSpan.addEventListener('input', () => {
@@ -258,12 +259,29 @@ export class TextBoxComponent implements AfterViewInit {
   }
 
   /**
+   * Checks if Element needs to adjust its color.
+   * 
+   * @param currentText - The Text the word started with
+   * @param newText - The possibly adjusted text
+   * @param spanId - The id of the span of this word
+   */
+  public adjustColor(spanId: string | null) {
+    const changedWord = this.findWordById(Number(spanId));
+    if(!changedWord) return;
+    if(!spanId) return;
+    const span =  document.getElementById(spanId);
+    if(!span) return;
+    span.style.color = '#000000';
+  }
+  
+
+  /**
   * Generates the HTML representation of the textbox content.
   * Each word in the textbox is wrapped in a <span> element with a unique ID and the contenteditable attribute.
   * The generated HTML string contains all the word elements separated by a space.
   * @returns The HTML string representing the textbox content.
   */
-  generateHTML(): string {
+  public generateHTML(): string {
     const wordElements: string[] = []
     let current = this.textbox.words.head;
     while (current) {
@@ -271,7 +289,6 @@ export class TextBoxComponent implements AfterViewInit {
       wordElements.push(wordWithId);
       current = current.next;
     }
-    //this.updateWordColors();
     return wordElements.join(' ');
   }
 
@@ -280,7 +297,7 @@ export class TextBoxComponent implements AfterViewInit {
    * @param {Word} newWord - The new word to insert.
    * @param {Word} prevWord - The word after which the new word should be inserted.
    */
-  insertAfter(newWord: WordToken, prevWord: WordToken): void {
+  public insertAfter(newWord: WordToken, prevWord: WordToken): void {
     newWord.id = this.textbox.words.currentIndex;
     this.textbox.words.currentIndex++;
 
@@ -301,7 +318,7 @@ export class TextBoxComponent implements AfterViewInit {
    * @param {string} id - The ID of the word to find.
    * @returns {Word|null} - The found word or null if not found.
    */
-  findWordById(id: number): WordToken | null {
+  public findWordById(id: number): WordToken | null {
     let current = this.textbox.words.head;
     while (current) {
       if (current.id === id) {
@@ -315,7 +332,7 @@ export class TextBoxComponent implements AfterViewInit {
   /**
   * Removes empty objects from the LinkedList of words.
   */
-  removeEmptyObjects(): void {
+  public removeEmptyObjects(): void {
     let current = this.textbox.words.head;
 
     while (current) {
@@ -326,38 +343,5 @@ export class TextBoxComponent implements AfterViewInit {
       current = next;
     }
   }
-
-  /**
-  * Updates the colors of the words based on the confidence value.
-  */
-  updateWordColors() {
-    /*
-    let current = this.textbox.words.head;
-
-    while (current !== null) {
-      const element = document.getElementById(current.id.toString());
-      if (element == null) return;
-      const confidence = parseFloat(current.confidence.toString());
-
-      let color = '';
-
-      if (confidence >= 0.9) {
-        color = '#000000'; // Schwarz (Hexadezimalwert: 000000)
-      } else if (confidence >= 0.7) {
-        color = '#D09114'; // Gelb (Hexadezimalwert: D09114)
-      } else if (confidence >= 0.5) {
-        color = '#CC6600'; // Orange (Hexadezimalwert: CC6600)
-      } else {
-        color = '#BE0101'; // Rot (Hexadezimalwert: BE0101)
-      }
-
-      element.style.color = color;
-      current = current.next;
-    }
-    return;
-    */
-   return;
-  }
-
 
 }

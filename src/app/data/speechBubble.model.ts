@@ -1,5 +1,5 @@
 import { LinkedList } from './linkedList.model';
-import { WordExport } from './wordToken.model';
+import { WordExport, WordToken } from './wordToken.model';
 
 export class SpeechBubbleExport {
   
@@ -17,7 +17,7 @@ export class SpeechBubbleExport {
     this.speechBubbleContent = speechBubbleContent;
   }
 
-  toJSON() {
+  public toJSON() {
     return {
       Id: this.id,
       Speaker: this.speaker,
@@ -27,7 +27,7 @@ export class SpeechBubbleExport {
     };
   }
 
-  toSpeechBubble(){
+  public toSpeechBubble(){
     const words = new LinkedList();
 
     this.speechBubbleContent.forEach(element => {
@@ -130,5 +130,20 @@ export class SpeechBubble {
         } 
         current = current.next;
       }
+    }
+
+    /** 
+     * Returns the WordToken with the specified id if it exists.
+     */
+    public getWordTokenById(id: number): WordToken | undefined {
+      let current = this.words.head;
+    
+      while (current) {
+        if (current.id === id) {
+          return current;
+        }
+        current = current.next;
+      }
+      return undefined;
     }
 }

@@ -134,7 +134,7 @@ describe('TextBoxComponent', () => {
   
   describe('handleBackspacePressAtStart', () => {
     it('should delete word if in full selection', () => {
-      let selectedSpan = document.getElementById('span');
+      const selectedSpan = document.getElementById('span');
       if(!selectedSpan) return;
       selectedSpan.textContent = 'test';
       const event = new KeyboardEvent('keydown', { key: 'Backspace' });
@@ -142,7 +142,7 @@ describe('TextBoxComponent', () => {
       expect(component.textbox.words.head).toBeNull();
     });
      it('should merge with previous word if exists', () => {
-      let selectedSpan = document.getElementById('span');
+      const selectedSpan = document.getElementById('span');
       if(!selectedSpan) return;
       selectedSpan.textContent = 'test';
       const prevSpan = document.createElement('span');
@@ -154,7 +154,7 @@ describe('TextBoxComponent', () => {
       }
     });
      it('should merge with following word if no previous word exists', () => {
-      let selectedSpan = document.getElementById('span');
+      const selectedSpan = document.getElementById('span');
       if(!selectedSpan) return;
       selectedSpan.textContent = 'test';
       const nextSpan = document.createElement('span');
@@ -188,6 +188,15 @@ describe('TextBoxComponent', () => {
       }
     });
   });
+
+   describe('generateHTML', () => {
+    it('should generate HTML representation of the textbox content', () => {
+      component.textbox.words.add(new WordToken('test', 1, 1, 1, 1));
+      const html = component.generateHTML();
+      expect(html).toContain('<span id="0" style="color: #000000" contenteditable="true"></span> <span id="1" style="color: #000000" contenteditable="true">test</span>');
+    });
+  });
+
   
 
 });

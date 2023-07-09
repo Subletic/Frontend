@@ -2,6 +2,8 @@ import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { AudioHandlerComponent } from './audio-handler.component';
 import { SignalRService } from '../service/signalRService';
 
+//Hard to implement meaningfull tests because most methods work directly on the Web Audio API - Audio Elements
+
 describe('AudioHandlerComponent', () => {
   let component: AudioHandlerComponent;
   let fixture: ComponentFixture<AudioHandlerComponent>;

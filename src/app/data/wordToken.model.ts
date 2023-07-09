@@ -13,7 +13,7 @@ export class WordExport {
     this.speaker = speaker;
   }
   
-  toJSON() {
+  public toJSON() {
     return {
       Word: this.word,
       Confidence: this.confidence,
@@ -23,7 +23,7 @@ export class WordExport {
     };
   }
 
-  toWordToken() {
+  public toWordToken() {
     return new WordToken(this.word, this.confidence, this.startTime, this.endTime, this.speaker);
   }
 }
@@ -62,7 +62,7 @@ export class WordToken {
   * Returns the color based on the confidence value.
   * @returns {string} - The color in hexadecimal format.
   */
-  getColor() {
+  public getColor() {
     if (this.confidence >= 0.9) {
       this.color = '#000000'; // Schwarz (Hexadezimalwert: 000000)
     } else if (this.confidence >= 0.7) {
@@ -84,20 +84,43 @@ export class WordToken {
     return WordToken.currentId++;
   }
 
-  setWord(newWord: string) {
+  /**
+   * Sets the text of the current object to a new value.
+   * 
+   * @param newWord - the new text to set to
+   */
+  public setWord(newWord: string) {
     this.word = newWord;
   }
 
-  getExport() {
+  /**
+   * Returns an WordExport Objekt similiar to this Instance of WordToken
+   */
+  public getExport() {
     return new WordExport(this.word, this.confidence, this.startTime, this.endTime, this.speaker);
   }
 
-  remove() {
+  /**
+   * Removes this node from the data structure
+   */
+  public remove() {
     if (this.prev) {
       this.prev.next = this.next;
     }
     if (this.next) {
       this.next.prev = this.prev;
     }
+  }
+
+  /**
+  * Updates the colors of the word.
+  * 
+  * @pre Should only be called if the confidence actually changed.
+  */
+  public updateWordColor() {
+
+    this.confidence = 1;
+    this.color = '#000000';
+    return;
   }
 }

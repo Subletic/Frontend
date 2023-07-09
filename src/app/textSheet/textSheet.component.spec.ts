@@ -1,4 +1,4 @@
-import { SpeechBubble, SpeechBubbleExport } from '../data/speechBubble.model';
+import { SpeechBubble } from '../data/speechBubble.model';
 import { WordToken } from '../data/wordToken.model';
 import { LinkedList, TextSheetComponent, SpeechBubbleChain } from './textSheet.component';
 import { SignalRService } from '../service/signalRService';
@@ -65,9 +65,11 @@ describe('LinkedList', () => {
 
 describe('TextSheetComponent', () => {
   let component: TextSheetComponent;
+  let signalRService: SignalRService;
 
   beforeEach(() => {
-    component = new TextSheetComponent(new SignalRService);
+    signalRService = new SignalRService();
+    component = new TextSheetComponent(signalRService);
   });
 
   it('should initialize with a speech bubble', () => {
@@ -94,15 +96,6 @@ describe('TextSheetComponent', () => {
     expect(speechBubbles).not.toContain(newSpeechBubble);
   });
 
-describe('TextSheetComponent', () => {
-  let component: TextSheetComponent;
-  let signalRService: SignalRService;
-
-  beforeEach(() => {
-    signalRService = new SignalRService();
-    component = new TextSheetComponent(signalRService);
-  });
-
   it('should retrieve the correct speech bubble by id', () => {
     const testBubble1 = new SpeechBubble(1, 1, 1);
     const testBubble2 = new SpeechBubble(2, 2, 2);
@@ -126,7 +119,6 @@ describe('TextSheetComponent', () => {
 
     component.callExportToJson(testBubble.id);
 
-    // Check if exportToJson method was called with the correct speech bubble export
     expect(component.exportToJson).toHaveBeenCalledWith([testBubble.getExport()]);
   });
 
@@ -154,9 +146,4 @@ describe('TextSheetComponent', () => {
   });
 });
 
-
-});
-
-
-
-    
+  

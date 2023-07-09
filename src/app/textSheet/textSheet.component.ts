@@ -26,12 +26,10 @@ export class TextSheetComponent implements OnInit {
   ngOnInit() {
 
     this.signalRService.newBubbleReceived.subscribe(SpeechBubbleExportList => {
-      console.log("Neue SpeechBubble erhalten: ", SpeechBubbleExportList);
       this.importfromJSON(SpeechBubbleExportList);
     });
 
     this.signalRService.oldBubbledeleted.subscribe(id => {
-      console.log("Speechbubble gelöscht: ", id);
       this.deleteSpeechBubble(id);
     });
 
