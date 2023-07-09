@@ -197,6 +197,39 @@ describe('TextBoxComponent', () => {
     });
   });
 
-  
+  it('should not add an empty word if textbox.words.head is null', () => {
+    const textbox = component.textbox;
+    textbox.words.head = null;
+    spyOn(textbox.words, 'add');
 
+    component.ngAfterViewInit();
+
+    expect(textbox.words.add).toHaveBeenCalledWith(jasmine.any(Object));
+  });
+
+  it('should not merge with following word if the next span ID is null', () => {
+    const selectedSpan = document.createElement('span');
+    const currentText = 'Test';
+    const nextSpan = document.createElement('span');
+    nextSpan.id = '';
+    const event = new KeyboardEvent('keydown', { code: 'Space' });
+    spyOn(component, 'findWordById');
+
+    component.mergeWithFollowingWord(selectedSpan, currentText, nextSpan, event);
+
+    expect(component.findWordById).not.toHaveBeenCalled();
+  });  
+
+  it('should not handle space press if currentText or cursorPosition is null', () => {
+    const selectedSpan = document.createElement('span');
+    const currentText = null;
+    const cursorPosition = 5;
+    const spanId = '123';
+    const event = new KeyboardEvent('keydown', { code: 'Space' });
+    spyOn(component, 'findWordById');
+
+    component.handleSpacePress(selectedSpan, currentText, cursorPosition, spanId, event);
+
+    expect(component.findWordById).not.toHaveBeenCalled();
+  });  
 });

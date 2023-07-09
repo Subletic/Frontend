@@ -48,5 +48,27 @@ describe('AudioHandlerComponent', () => {
     component.setVolume(volume);
     expect(component.getVolume()).toEqual(volume);
   });
+
+  it('should not resume playback if sourceNode is null', () => {
+    component['sourceNode'] = null;
+    spyOn(component['audioContext'], 'resume');
+
+    component.resumePlayback();
+
+    expect(component['audioContext'].resume).not.toHaveBeenCalled();
+    expect(component['isAudioPlaying']).toBeFalse();
+  });
+
+  it('should not resume playback if sourceNode.buffer is null', () => {
+    component['sourceNode'] = component['audioContext'].createBufferSource();
+    component['sourceNode'].buffer = null;
+    spyOn(component['audioContext'], 'resume');
+
+    component.resumePlayback();
+
+    expect(component['audioContext'].resume).not.toHaveBeenCalled();
+    expect(component['isAudioPlaying']).toBeFalse();
+  });
+
   
 });
