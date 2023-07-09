@@ -93,4 +93,41 @@ describe('SoundBoxComponent', () => {
 
     expect(component.volume100).toEqual(volume100);
   });
+
+  
+  it('should close popups when clicking outside', () => {
+    // Arrange
+    const mockClickedElement = document.createElement('div');
+    const mockSoundButtonElement = document.createElement('div');
+    const mockSpeedButtonElement = document.createElement('div');
+    const mockEvent = new MouseEvent('click');
+    mockClickedElement.appendChild(mockSoundButtonElement);
+    mockClickedElement.appendChild(mockSpeedButtonElement);
+    spyOnProperty(mockEvent, 'target').and.returnValue(mockClickedElement);
+    spyOn(component.soundButton.nativeElement, 'contains').and.returnValue(false);
+    spyOn(component.speedButton.nativeElement, 'contains').and.returnValue(false);
+    spyOn(component, 'closePopoverAudio');
+    spyOn(component, 'closePopoverSpeed');
+  
+    // Act
+    component.onDocumentMouseDown(mockEvent);
+  
+    // Assert
+    expect(component.closePopoverAudio).toHaveBeenCalled();
+    expect(component.closePopoverSpeed).toHaveBeenCalled();
+  });
+
+ 
+  
+
+
+  
+  
+  
+
+
+  
+
+
+  
 });

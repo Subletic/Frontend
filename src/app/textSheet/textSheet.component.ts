@@ -41,7 +41,7 @@ export class TextSheetComponent implements OnInit {
   * @returns An array of SpeechBubbleExport objects.
   */
   public importfromJSON(speechBubbleChain: SpeechBubbleExport[]) {
-    if (!speechBubbleChain || !Array.isArray(speechBubbleChain)) {
+    if (!speechBubbleChain || speechBubbleChain.length === 0) {
       console.error('Invalid speechBubbleChain object.');
       return;
     }
