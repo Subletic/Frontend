@@ -232,4 +232,67 @@ describe('TextBoxComponent', () => {
 
     expect(component.findWordById).not.toHaveBeenCalled();
   });  
+  
+});
+
+describe('TextBoxComponent', () => {
+  let component: TextBoxComponent;
+  let selectedSpan: HTMLElement;
+  let currentText: string;
+  let prevSpan: HTMLSpanElement;
+  let event: KeyboardEvent;
+
+  beforeEach(() => {
+    component = new TextBoxComponent();
+    component.textbox = new SpeechBubble(1, 1, 1);
+    component.textbox.words = new LinkedList();
+    selectedSpan = document.createElement('span');
+    currentText = 'Word';
+    prevSpan = document.createElement('span');
+    event = new KeyboardEvent('keydown');
+  });
+
+  it('should merge with previous word when word is in full selection', () => {
+    // Arrange
+    selectedSpan.textContent = currentText;
+    selectedSpan.id = '1';
+    const currentWord = new WordToken(currentText, 1, 1, 1, 1);
+    const prevWord = new WordToken('Previous', 1, 1, 1, 1);
+    component.textbox.words.add(prevWord);
+    component.textbox.words.add(currentWord);
+
+    // Act
+    component.isInFullSelectionDeletion(selectedSpan, '1', event);
+
+    // Assert
+    expect(component.textbox.words.size()).toBe(1);
+    expect(component.textbox.words.head).toBe(prevWord);
+    expect(component.textbox.words.tail).toBe(prevWord);
+    expect(prevSpan.getAttribute('id')).toBeNull();
+    expect(selectedSpan.parentNode).toBeNull();
+  });
+
+  it('should merge with previous word when previous word exists', () => {
+    // Arrange
+    selectedSpan.textContent = currentText;
+    selectedSpan.id = '2';
+    const currentWord = new WordToken(currentText, 1, 1, 1, 1);
+    const prevWord = new WordToken('Previous', 1, 1, 1, 1);
+    component.textbox.words.add(prevWord);
+    component.textbox.words.add(currentWord);
+    spyOn(component, 'findWordById').and.returnValues(prevWord, currentWord);
+  
+    // Act
+    component.mergeWithPreviousWord(selectedSpan, currentText, prevSpan, event);
+  
+    // Assert
+    expect(component.textbox.words.size()).toBe(2);
+    expect(component.textbox.words.head).toBe(prevWord);
+    expect(component.textbox.words.tail).toBe(currentWord);
+    expect(prevSpan.getAttribute('id')).toBeNull();
+    expect(event.defaultPrevented).toBeFalse();
+  
+  });
+
+  
 });

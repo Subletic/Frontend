@@ -173,6 +173,21 @@ export class SoundBoxComponent {
     this.speedValue = speed;
     this.audioHandler.setPlaybackSpeed(this.speedValue);
   }
+
+  /**
+   * Returns the SettingsService Element of this Instance
+   */
+  getSettingsService(): SettingsService {
+    return this.settingsService;
+  }
+
+  /**
+   * Sets the settingService of this instance
+   */
+  setSettingsService(settingsService: SettingsService) {
+    this.settingsService = settingsService;
+  }
+
 }
 
 

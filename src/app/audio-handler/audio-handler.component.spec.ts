@@ -96,6 +96,21 @@ describe('AudioHandlerComponent', () => {
     expect(component['audioContext'].resume).not.toHaveBeenCalled();
     expect(component['isAudioPlaying']).toBeFalse();
   });
-  
-  
+
+  it('should set the skip seconds', () => {
+    // Arrange
+    const seconds = 10;
+    // Act
+    component.setSkipSeconds(seconds);
+    // Assert
+    expect(component['skipSeconds']).toEqual(seconds);
+  });
+
+  it('should return the node audio buffer', () => {
+    // Arrange
+    // Act
+    const nodeAudioBuffer = component.getNodeAudioBuffer();
+    // Assert
+    expect(nodeAudioBuffer).toBeDefined();
+  });
 });
