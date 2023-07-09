@@ -197,6 +197,102 @@ describe('TextBoxComponent', () => {
     });
   });
 
-  
+  it('should not add an empty word if textbox.words.head is null', () => {
+    const textbox = component.textbox;
+    textbox.words.head = null;
+    spyOn(textbox.words, 'add');
 
+    component.ngAfterViewInit();
+
+    expect(textbox.words.add).toHaveBeenCalledWith(jasmine.any(Object));
+  });
+
+  it('should not merge with following word if the next span ID is null', () => {
+    const selectedSpan = document.createElement('span');
+    const currentText = 'Test';
+    const nextSpan = document.createElement('span');
+    nextSpan.id = '';
+    const event = new KeyboardEvent('keydown', { code: 'Space' });
+    spyOn(component, 'findWordById');
+
+    component.mergeWithFollowingWord(selectedSpan, currentText, nextSpan, event);
+
+    expect(component.findWordById).not.toHaveBeenCalled();
+  });  
+
+  it('should not handle space press if currentText or cursorPosition is null', () => {
+    const selectedSpan = document.createElement('span');
+    const currentText = null;
+    const cursorPosition = 5;
+    const spanId = '123';
+    const event = new KeyboardEvent('keydown', { code: 'Space' });
+    spyOn(component, 'findWordById');
+
+    component.handleSpacePress(selectedSpan, currentText, cursorPosition, spanId, event);
+
+    expect(component.findWordById).not.toHaveBeenCalled();
+  });  
+  
+});
+
+describe('TextBoxComponent', () => {
+  let component: TextBoxComponent;
+  let selectedSpan: HTMLElement;
+  let currentText: string;
+  let prevSpan: HTMLSpanElement;
+  let event: KeyboardEvent;
+
+  beforeEach(() => {
+    component = new TextBoxComponent();
+    component.textbox = new SpeechBubble(1, 1, 1);
+    component.textbox.words = new LinkedList();
+    selectedSpan = document.createElement('span');
+    currentText = 'Word';
+    prevSpan = document.createElement('span');
+    event = new KeyboardEvent('keydown');
+  });
+
+  it('should merge with previous word when word is in full selection', () => {
+    // Arrange
+    selectedSpan.textContent = currentText;
+    selectedSpan.id = '1';
+    const currentWord = new WordToken(currentText, 1, 1, 1, 1);
+    const prevWord = new WordToken('Previous', 1, 1, 1, 1);
+    component.textbox.words.add(prevWord);
+    component.textbox.words.add(currentWord);
+
+    // Act
+    component.isInFullSelectionDeletion(selectedSpan, '1', event);
+
+    // Assert
+    expect(component.textbox.words.size()).toBe(1);
+    expect(component.textbox.words.head).toBe(prevWord);
+    expect(component.textbox.words.tail).toBe(prevWord);
+    expect(prevSpan.getAttribute('id')).toBeNull();
+    expect(selectedSpan.parentNode).toBeNull();
+  });
+
+  it('should merge with previous word when previous word exists', () => {
+    // Arrange
+    selectedSpan.textContent = currentText;
+    selectedSpan.id = '2';
+    const currentWord = new WordToken(currentText, 1, 1, 1, 1);
+    const prevWord = new WordToken('Previous', 1, 1, 1, 1);
+    component.textbox.words.add(prevWord);
+    component.textbox.words.add(currentWord);
+    spyOn(component, 'findWordById').and.returnValues(prevWord, currentWord);
+  
+    // Act
+    component.mergeWithPreviousWord(selectedSpan, currentText, prevSpan, event);
+  
+    // Assert
+    expect(component.textbox.words.size()).toBe(2);
+    expect(component.textbox.words.head).toBe(prevWord);
+    expect(component.textbox.words.tail).toBe(currentWord);
+    expect(prevSpan.getAttribute('id')).toBeNull();
+    expect(event.defaultPrevented).toBeFalse();
+  
+  });
+
+  
 });

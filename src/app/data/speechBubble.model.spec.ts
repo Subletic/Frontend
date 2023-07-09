@@ -112,6 +112,23 @@ describe('SpeechBubble', () => {
     expect(speechBubbleExport.speechBubbleContent[0]).toEqual(wordToken1.getExport());
     expect(speechBubbleExport.speechBubbleContent[1]).toEqual(wordToken2.getExport());
   });
+
+  it('should not remove any words when the LinkedList is empty', () => {
+    // Arrange
+    const wordToken = new WordToken("", 1, 1, 1, 1);
+    let linkedList = new LinkedList();
+    linkedList.add(wordToken);
+
+    const speechBubble = new SpeechBubble(1, 0, 10, linkedList);
+  
+    // Act
+    speechBubble.removeEmptyWords();
+  
+    // Assert
+    expect(speechBubble.words.head).toBe(wordToken);
+    expect(speechBubble.words.tail).toBe(wordToken);
+  });
+  
 });
 
 describe('LinkedList', () => {

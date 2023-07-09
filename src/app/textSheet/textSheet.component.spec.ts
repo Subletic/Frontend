@@ -1,4 +1,4 @@
-import { SpeechBubble } from '../data/speechBubble.model';
+import { SpeechBubble, SpeechBubbleExport } from '../data/speechBubble.model';
 import { WordToken } from '../data/wordToken.model';
 import { LinkedList, TextSheetComponent, SpeechBubbleChain } from './textSheet.component';
 import { SignalRService } from '../service/signalRService';
@@ -144,6 +144,73 @@ describe('TextSheetComponent', () => {
     expect(component.speechBubbles.size()).toBe(1);
     expect(component.speechBubbles.head).toBe(testBubble2);
   });
+
+  it('should not import from invalid speechBubbleChain object', () => {
+    spyOn(console, 'error');
+    spyOn(component, 'getSpeechBubbleById').and.returnValue(undefined);
+    const speechBubbleExportNull: SpeechBubbleExport[] = [];
+    component.importfromJSON(speechBubbleExportNull);
+    expect(console.error).toHaveBeenCalledWith('Invalid speechBubbleChain object.');
+  });
+
+  it('should return early if speechBubble is falsy', () => {
+    // Arrange
+    const id = 1;
+    spyOn(component, 'getSpeechBubbleById').and.returnValue(undefined);
+    spyOn(window, 'clearInterval');
+    spyOn(component, 'timeSinceFocusOutCounter');
+    
+    // Act
+    component.onFocusOut(id);
+    
+    // Assert
+    expect(component.getSpeechBubbleById).toHaveBeenCalledWith(id);
+    expect(window.clearInterval).not.toHaveBeenCalled();
+    expect(component.timeSinceFocusOutCounter).not.toHaveBeenCalled();
+  });
+
+  it('should return early if speechBubbleToExport is falsy', () => {
+    // Arrange
+    const id = 1;
+    spyOn(component, 'getSpeechBubbleById').and.returnValue(undefined);
+    spyOn(component, 'exportToJson');
+    
+    // Act
+    component.callExportToJson(id);
+    
+    // Assert
+    expect(component.getSpeechBubbleById).toHaveBeenCalledWith(id);
+    expect(component.exportToJson).not.toHaveBeenCalled();
+  });
+
+  it('should start a timer and call callExportToJson after 5 seconds of inactivity', () => {
+    // Arrange
+    jasmine.clock().install();
+    const id = 1;
+    let callExportToJsonCalled = false;
+    spyOn(component, 'callExportToJson').and.callFake(() => {
+      callExportToJsonCalled = true;
+    });
+  
+    // Act
+    component.timeSinceFocusOutCounter(id);
+  
+    // Fast-forward time by 5 seconds
+    jasmine.clock().tick(5000);
+  
+    // Assert
+    expect(callExportToJsonCalled).toBe(false);
+  
+    // Clean up
+    jasmine.clock().uninstall();
+  });
+  
+  
+  
+  
+
+
 });
+
 
   
