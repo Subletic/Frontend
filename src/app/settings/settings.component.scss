@@ -71,9 +71,6 @@ app-settings {
     }
     //End SCSS for reload --------------------
 
-    .mat-form-field-underline {
-        border-bottom: var(--color-main-blue);
-    }
 }
 
 body.settings-open {
@@ -91,17 +88,39 @@ body.settings-open {
     align-self: self-end;
 }
 
-mat-form-field {
-    margin: 30px;
-}
-
 h1 {
     color: var(--color-grey-hoverover);
     font-weight: normal;
 }
 
-.form-field {
+.seconds-container {
     min-width: 100px;
     max-width: 300px;
     width: 100%;
+    display: flex;
+    flex-direction: column; 
+    margin: 40px;
+    //border: 2px solid;
+    align-items: center;
+}
+
+.seconds-label-container {
+    display: flex;
+    justify-content: space-between;
+    width: 270px;
+    //border: 2px solid;
+}
+
+.seconds-value-label {
+    font-weight: 600;
+}
+
+.slider {
+    margin: 20px 10px 0;
+    //border: 2px solid;
+    width: 300px;
+}
+
+.slider input[type=range].styled-slider {
+    width: 98%;
 }
