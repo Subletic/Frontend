@@ -38,6 +38,7 @@ export class TextBoxComponent implements AfterViewInit {
     })
     
     textbox.addEventListener('keydown', (event: KeyboardEvent) => {
+      console.log(event);
       this.handleKeyboardEventTextbox(event);
     })
 
@@ -264,6 +265,7 @@ export class TextBoxComponent implements AfterViewInit {
 
       newSpan.focus();
       // Event handling for the new span
+      /*
       newSpan.addEventListener('input', () => {
         const newText = newSpan.textContent;
         const word = this.findWordById(Number(newSpan.id));
@@ -271,6 +273,7 @@ export class TextBoxComponent implements AfterViewInit {
         word.setWord(newText);
         
       });
+      */
       
     } else if (wordBeforeCursor.trim() == '') {
       const currentWord = this.findWordById(Number(spanId));
