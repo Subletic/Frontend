@@ -324,16 +324,15 @@ describe('TextBoxComponent', () => {
     words.add(new WordToken('are', 0.6, 6, 8, 1));
     words.add(new WordToken('you?', 0.5, 8, 10, 1));
   
-    let speechBubble = new SpeechBubble(1, 0, 10, words);
+    const speechBubble = new SpeechBubble(1, 0, 10, words);
 
     component.textbox = speechBubble;
     fixture.detectChanges();
 
     component.ngAfterViewInit();
 
-    let event = new KeyboardEvent('keydown', { key: ' '});
+    const event = new KeyboardEvent('keydown', { key: ' '});
 
-    //const selectedSpan = '<span id="0" style="color: #000000" contenteditable="true">Hello</span>';
     const selectedSpan = fixture.nativeElement.querySelector('span')
     const currentText = 'Hello';
     const cursorPosition = 2;
@@ -353,17 +352,16 @@ describe('TextBoxComponent', () => {
     words.add(new WordToken('are', 0.6, 6, 8, 1));
     words.add(new WordToken('you?', 0.5, 8, 10, 1));
   
-    let speechBubble = new SpeechBubble(1, 0, 10, words);
+    const speechBubble = new SpeechBubble(1, 0, 10, words);
 
     component.textbox = speechBubble;
     fixture.detectChanges();
 
     component.ngAfterViewInit();
 
-    let event = new KeyboardEvent('keydown', { key: ' '});
+    const event = new KeyboardEvent('keydown', { key: ' '});
 
-    //const selectedSpan = '<span id="0" style="color: #000000" contenteditable="true">Hello</span>';
-    const selectedSpan = fixture.nativeElement.querySelector('span')
+    const selectedSpan = fixture.nativeElement.querySelector('span');
     const currentText = 'Hello';
     const cursorPosition = 0;
     const spanId = '0';
@@ -373,6 +371,94 @@ describe('TextBoxComponent', () => {
     expect(selectedSpan.textContent).toBe('Hello');
   });
 
+  it('should handle full selection', () => {
+
+    const words = new LinkedList();
+    words.add(new WordToken('Hello', 0.9, 1, 2, 1));
+    words.add(new WordToken('world,', 0.8, 2, 4, 1));
+    words.add(new WordToken('how', 0.7, 4, 6, 1));
+    words.add(new WordToken('are', 0.6, 6, 8, 1));
+    words.add(new WordToken('you?', 0.5, 8, 10, 1));
+  
+    const speechBubble = new SpeechBubble(1, 0, 10, words);
+
+    component.textbox = speechBubble;
+    fixture.detectChanges();
+
+    component.ngAfterViewInit();
+
+    const event = new KeyboardEvent('keydown', { key: ' '});
+
+    const selectedSpan = fixture.nativeElement.querySelector('span');
+    const currentText = 'Hello';
+    const spanId = '0';
+
+    component.handleBackspacePressAtStart(selectedSpan, currentText, true, spanId, event);
+    if(component.textbox.words.head) {
+      expect(component.textbox.words.head.word).toBe('world,');
+    }
+  });
+
+  it('should handle merge with following from handleBackspace', () => {
+
+    const words = new LinkedList();
+    words.add(new WordToken('Hello', 0.9, 1, 2, 1));
+    words.add(new WordToken('world,', 0.8, 2, 4, 1));
+    words.add(new WordToken('how', 0.7, 4, 6, 1));
+    words.add(new WordToken('are', 0.6, 6, 8, 1));
+    words.add(new WordToken('you?', 0.5, 8, 10, 1));
+  
+    const speechBubble = new SpeechBubble(1, 0, 10, words);
+
+    component.textbox = speechBubble;
+    fixture.detectChanges();
+
+    component.ngAfterViewInit();
+
+    const event = new KeyboardEvent('keydown', { key: ' '});
+
+    const selectedSpan = document.getElementById('0');
+    const currentText = 'Hello';
+    const spanId = '0';
+
+    if(selectedSpan) {
+      component.handleBackspacePressAtStart(selectedSpan, currentText, false, spanId, event);
+    if(component.textbox.words.head) {
+      expect(component.textbox.words.head.word).toBe('Helloworld,');
+    }
+    }
+  });
+
+
+  it('should handle merge with previous from handleBackspace', () => {
+
+    const words = new LinkedList();
+    words.add(new WordToken('Hello', 0.9, 1, 2, 1));
+    words.add(new WordToken('world,', 0.8, 2, 4, 1));
+    words.add(new WordToken('how', 0.7, 4, 6, 1));
+    words.add(new WordToken('are', 0.6, 6, 8, 1));
+    words.add(new WordToken('you?', 0.5, 8, 10, 1));
+  
+    const speechBubble = new SpeechBubble(1, 0, 10, words);
+
+    component.textbox = speechBubble;
+    fixture.detectChanges();
+
+    component.ngAfterViewInit();
+
+    const event = new KeyboardEvent('keydown', { key: ' '});
+
+    const selectedSpan = document.getElementById('1');
+    const currentText = 'world,';
+    const spanId = '1';
+
+    if(selectedSpan) {
+      component.handleBackspacePressAtStart(selectedSpan, currentText, false, spanId, event);
+    }
+    if(component.textbox.words.head) {
+      expect(component.textbox.words.head.word).toBe('Helloworld,');
+    }
+  });
 
 
 

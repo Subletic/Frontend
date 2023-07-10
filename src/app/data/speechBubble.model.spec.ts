@@ -116,7 +116,7 @@ describe('SpeechBubble', () => {
   it('should not remove any words when the LinkedList is empty', () => {
     // Arrange
     const wordToken = new WordToken("", 1, 1, 1, 1);
-    let linkedList = new LinkedList();
+    const linkedList = new LinkedList();
     linkedList.add(wordToken);
 
     const speechBubble = new SpeechBubble(1, 0, 10, linkedList);

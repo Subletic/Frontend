@@ -137,9 +137,11 @@ export class TextBoxComponent implements AfterViewInit {
       return;
     }
 
-    if (!prevSpan.getAttribute('id') != null) {
-      this.mergeWithPreviousWord(selectedSpan, currentText, prevSpan, event);
-      return;
+    if(prevSpan) {
+      if (!prevSpan.getAttribute('id') != null) {
+        this.mergeWithPreviousWord(selectedSpan, currentText, prevSpan, event);
+        return;
+      }
     }
 
     const nextSpan = selectedSpan.nextElementSibling as HTMLSpanElement;
