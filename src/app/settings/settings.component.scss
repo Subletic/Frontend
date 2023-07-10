@@ -1,0 +1,126 @@
+﻿/*
+from Jason Watmore (@cornflourblue) https://github.com/cornflourblue/angular-9-custom-modal
+*/
+
+app-settings {
+    /* modals are hidden by default */
+    display: none;
+
+    .settings {
+        /* modal container fixed across whole screen */
+        position: fixed;
+        width:500px;
+        height:600px;
+        top:50%;
+        left:50%;
+        transform: translate(-50%, -50%);
+
+        /* z-index must be higher than .settings-background */
+        z-index: 1000;
+        
+        /* enables scrolling for tall modals*/ 
+        overflow: auto;
+
+        .settings-body {
+            padding: 20px;
+            background: var(--textsheet-background-color);
+            
+            border-radius: 12px;
+            /* margin exposes part of the modal background */
+            margin: 40px;
+        }
+    }
+
+    .settings-background {
+        /* modal background fixed across whole screen */
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+
+        /* semi-transparent black  */
+        background-color: var(--color-black);
+        opacity: 0.75;
+        
+        /* z-index must be below .settings and above everything else  */
+        z-index: 900;
+    }
+
+    .buttons-container {
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    //SCSS for temporary reload button ~Finn --------
+    .button-image {
+        width: 30px;
+        margin-top: 2.2px;
+    }
+
+    .reload-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: transparent;
+        border-radius: 20%;
+        outline: none;
+        cursor: pointer;
+        border: none;
+        background: var(--container-background-color);
+    }
+    //End SCSS for reload --------------------
+
+}
+
+body.settings-open {
+    /* body overflow is hidden to hide main scrollbar when modal window is open */
+    overflow: hidden;
+}
+
+.top-of-div {
+    display: flex;
+    justify-content: space-between;
+}
+
+.settings-button {
+    margin: 10px;
+    align-self: self-end;
+}
+
+h1 {
+    color: var(--color-grey-hoverover);
+    font-weight: normal;
+}
+
+.seconds-container {
+    min-width: 100px;
+    max-width: 300px;
+    width: 100%;
+    display: flex;
+    flex-direction: column; 
+    margin: 40px;
+    //border: 2px solid;
+    align-items: center;
+}
+
+.seconds-label-container {
+    display: flex;
+    justify-content: space-between;
+    width: 270px;
+    //border: 2px solid;
+}
+
+.seconds-value-label {
+    font-weight: 600;
+}
+
+.slider {
+    margin: 20px 10px 0;
+    //border: 2px solid;
+    width: 300px;
+}
+
+.slider input[type=range].styled-slider {
+    width: 98%;
+}

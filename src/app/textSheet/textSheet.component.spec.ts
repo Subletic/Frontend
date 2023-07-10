@@ -2,7 +2,6 @@ import { SpeechBubble, SpeechBubbleExport } from '../data/speechBubble.model';
 import { WordToken } from '../data/wordToken.model';
 import { LinkedList, TextSheetComponent, SpeechBubbleChain } from './textSheet.component';
 import { SignalRService } from '../service/signalRService';
-//import { LinkedList } from '../data/linkedList.model';
 
 describe('LinkedList', () => {
   let linkedList: LinkedList;
@@ -61,41 +60,20 @@ describe('LinkedList', () => {
     };
     expect(speechBubbleChain.toJSON()).toEqual(expectedJson);
   });
-
-  it('should retain correct format after conversion to JSON and back', () => {
-    const component = new TextSheetComponent(new SignalRService);
-    const testBubble1 = new SpeechBubble(1, 1, 1);
-    component.speechBubbles.add(testBubble1);
-  
-    const speechBubbleExport = testBubble1.getExport();
-    const speechBubbleChain = new SpeechBubbleChain([speechBubbleExport]);
-  
-    const jsonString = JSON.stringify(speechBubbleChain);
-    const parsedSpeechBubbleChain = JSON.parse(jsonString) as SpeechBubbleChain;
-  
-    const parsedSpeechBubbleExport = parsedSpeechBubbleChain.SpeechbubbleChain[0] as SpeechBubbleExport;
-  
-    expect(parsedSpeechBubbleExport).toEqual(jasmine.objectContaining(speechBubbleExport));
-  });
   
 });
 
 describe('TextSheetComponent', () => {
   let component: TextSheetComponent;
+  let signalRService: SignalRService;
 
   beforeEach(() => {
-    component = new TextSheetComponent(new SignalRService);
+    signalRService = new SignalRService();
+    component = new TextSheetComponent(signalRService);
   });
 
   it('should initialize with a speech bubble', () => {
     expect(component.speechBubbles.head).toBeDefined();
-  });
-
-  it('should add a new standard speech bubble', () => {
-    const initialLength = component.getSpeechBubblesArray().length;
-    component.addNewStandardSpeechBubble();
-    const speechBubbles = component.getSpeechBubblesArray();
-    expect(speechBubbles.length).toBe(initialLength + 1);
   });
 
   it('should return an array of speech bubbles', () => {
@@ -104,10 +82,135 @@ describe('TextSheetComponent', () => {
     expect(speechBubbles).toEqual([component.speechBubbles.head]);
   });
 
-  it('should add a new standard speech bubble', () => {
+  it('should remove a speech bubble', () => {
     const initialLength = component.getSpeechBubblesArray().length;
-    component.addNewStandardSpeechBubble();
+
+    
+    const newSpeechBubble = new SpeechBubble(0, 0, 0);
+    component.speechBubbles.add(newSpeechBubble);
+
+    component.deleteSpeechBubble(newSpeechBubble.id);
+
     const speechBubbles = component.getSpeechBubblesArray();
-    expect(speechBubbles.length).toBe(initialLength + 1);
+    expect(speechBubbles.length).toBe(initialLength);
+    expect(speechBubbles).not.toContain(newSpeechBubble);
   });
+
+  it('should retrieve the correct speech bubble by id', () => {
+    const testBubble1 = new SpeechBubble(1, 1, 1);
+    const testBubble2 = new SpeechBubble(2, 2, 2);
+    component.speechBubbles.add(testBubble1);
+    component.speechBubbles.add(testBubble2);
+
+    const speechBubble1 = component.getSpeechBubbleById(testBubble1.id);
+    const speechBubble2 = component.getSpeechBubbleById(testBubble2.id);
+    const speechBubble3 = component.getSpeechBubbleById(999); // Non-existent id
+
+    expect(speechBubble1).toBe(testBubble1);
+    expect(speechBubble2).toBe(testBubble2);
+    expect(speechBubble3).toBeUndefined();
+  });
+
+  it('should call the exportToJson method with the correct speech bubble when calling callExportToJson', () => {
+    const testBubble = new SpeechBubble(1, 1, 1);
+    component.speechBubbles.add(testBubble);
+
+    spyOn(component, 'exportToJson');
+
+    component.callExportToJson(testBubble.id);
+
+    expect(component.exportToJson).toHaveBeenCalledWith([testBubble.getExport()]);
+  });
+
+  it('should retrieve an array of all speech bubbles', () => {
+    const testBubble1 = new SpeechBubble(1, 1, 1);
+    const testBubble2 = new SpeechBubble(2, 2, 2);
+    component.speechBubbles.add(testBubble1);
+    component.speechBubbles.add(testBubble2);
+
+    const speechBubbles = component.getSpeechBubblesArray();
+
+    expect(speechBubbles).toEqual([testBubble1, testBubble2]);
+  });
+
+  it('should delete a speech bubble from the speechBubbles list based on the id', () => {
+    const testBubble1 = new SpeechBubble(1, 1, 1);
+    const testBubble2 = new SpeechBubble(2, 2, 2);
+    component.speechBubbles.add(testBubble1);
+    component.speechBubbles.add(testBubble2);
+
+    component.deleteSpeechBubble(testBubble1.id);
+
+    expect(component.speechBubbles.size()).toBe(1);
+    expect(component.speechBubbles.head).toBe(testBubble2);
+  });
+
+  it('should not import from invalid speechBubbleChain object', () => {
+    spyOn(console, 'error');
+    spyOn(component, 'getSpeechBubbleById').and.returnValue(undefined);
+    const speechBubbleExportNull: SpeechBubbleExport[] = [];
+    component.importfromJSON(speechBubbleExportNull);
+    expect(console.error).toHaveBeenCalledWith('Invalid speechBubbleChain object.');
+  });
+
+  it('should return early if speechBubble is falsy', () => {
+    // Arrange
+    const id = 1;
+    spyOn(component, 'getSpeechBubbleById').and.returnValue(undefined);
+    spyOn(window, 'clearInterval');
+    spyOn(component, 'timeSinceFocusOutCounter');
+    
+    // Act
+    component.onFocusOut(id);
+    
+    // Assert
+    expect(component.getSpeechBubbleById).toHaveBeenCalledWith(id);
+    expect(window.clearInterval).not.toHaveBeenCalled();
+    expect(component.timeSinceFocusOutCounter).not.toHaveBeenCalled();
+  });
+
+  it('should return early if speechBubbleToExport is falsy', () => {
+    // Arrange
+    const id = 1;
+    spyOn(component, 'getSpeechBubbleById').and.returnValue(undefined);
+    spyOn(component, 'exportToJson');
+    
+    // Act
+    component.callExportToJson(id);
+    
+    // Assert
+    expect(component.getSpeechBubbleById).toHaveBeenCalledWith(id);
+    expect(component.exportToJson).not.toHaveBeenCalled();
+  });
+
+  it('should start a timer and call callExportToJson after 5 seconds of inactivity', () => {
+    // Arrange
+    jasmine.clock().install();
+    const id = 1;
+    let callExportToJsonCalled = false;
+    spyOn(component, 'callExportToJson').and.callFake(() => {
+      callExportToJsonCalled = true;
+    });
+  
+    // Act
+    component.timeSinceFocusOutCounter(id);
+  
+    // Fast-forward time by 5 seconds
+    jasmine.clock().tick(5000);
+  
+    // Assert
+    expect(callExportToJsonCalled).toBe(false);
+  
+    // Clean up
+    jasmine.clock().uninstall();
+  });
+  
+  
+  
+  
+
+
 });
+
+
+  

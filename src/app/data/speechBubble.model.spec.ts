@@ -14,13 +14,13 @@ describe('SpeechBubbleExport', () => {
   });
 
   it('should correctly initialize SpeechBubbleExport instance', () => {
-    expect(speechBubbleExport.Id).toBe(1);
-    expect(speechBubbleExport.Speaker).toBe(1);
-    expect(speechBubbleExport.StartTime).toBe(0);
-    expect(speechBubbleExport.EndTime).toBe(3);
-    expect(speechBubbleExport.SpeechBubbleContent.length).toBe(2);
-    expect(speechBubbleExport.SpeechBubbleContent[0]).toEqual(wordExport1);
-    expect(speechBubbleExport.SpeechBubbleContent[1]).toEqual(wordExport2);
+    expect(speechBubbleExport.id).toBe(1);
+    expect(speechBubbleExport.speaker).toBe(1);
+    expect(speechBubbleExport.startTime).toBe(0);
+    expect(speechBubbleExport.endTime).toBe(3);
+    expect(speechBubbleExport.speechBubbleContent.length).toBe(2);
+    expect(speechBubbleExport.speechBubbleContent[0]).toEqual(wordExport1);
+    expect(speechBubbleExport.speechBubbleContent[1]).toEqual(wordExport2);
   });
 
   it('should convert SpeechBubbleExport instance to JSON', () => {
@@ -104,14 +104,31 @@ describe('SpeechBubble', () => {
 
     const speechBubbleExport = speechBubble.getExport();
 
-    expect(speechBubbleExport.Id).toBe(1);
-    expect(speechBubbleExport.Speaker).toBe(1);
-    expect(speechBubbleExport.StartTime).toBe(0);
-    expect(speechBubbleExport.EndTime).toBe(3);
-    expect(speechBubbleExport.SpeechBubbleContent.length).toBe(2);
-    expect(speechBubbleExport.SpeechBubbleContent[0]).toEqual(wordToken1.getExport());
-    expect(speechBubbleExport.SpeechBubbleContent[1]).toEqual(wordToken2.getExport());
+    expect(speechBubbleExport.id).toBe(1);
+    expect(speechBubbleExport.speaker).toBe(1);
+    expect(speechBubbleExport.startTime).toBe(0);
+    expect(speechBubbleExport.endTime).toBe(3);
+    expect(speechBubbleExport.speechBubbleContent.length).toBe(2);
+    expect(speechBubbleExport.speechBubbleContent[0]).toEqual(wordToken1.getExport());
+    expect(speechBubbleExport.speechBubbleContent[1]).toEqual(wordToken2.getExport());
   });
+
+  it('should not remove any words when the LinkedList is empty', () => {
+    // Arrange
+    const wordToken = new WordToken("", 1, 1, 1, 1);
+    const linkedList = new LinkedList();
+    linkedList.add(wordToken);
+
+    const speechBubble = new SpeechBubble(1, 0, 10, linkedList);
+  
+    // Act
+    speechBubble.removeEmptyWords();
+  
+    // Assert
+    expect(speechBubble.words.head).toBe(wordToken);
+    expect(speechBubble.words.tail).toBe(wordToken);
+  });
+  
 });
 
 describe('LinkedList', () => {

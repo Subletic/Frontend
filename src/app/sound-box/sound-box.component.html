@@ -1,39 +1,60 @@
+<app-audio-handler #audioHandler></app-audio-handler>
+
 <div class="sound-container fixed-bottom d-flex align-items-center justify-content-start">
   <div class="soundbar-button-container">
     <!-- Play Button  -->
-    <button class="play-button"id="mover" (click)="handleButtonClick()">
-      <img src="assets/PlayButton.svg" alt="Button Image" class="play-button-image">
+    <button class="play-button mover" (click)="playButton()">
+      <img [src]="isAudioPlaying ? 'assets/pause.svg' : 'assets/play.svg'" alt="Button Image" class="button-image-1" draggable="false"
+      (mousedown)="isAudioPlaying ? buttonImage.src='assets/pauseOnClick.svg' : buttonImage.src='assets/playOnClick.svg'" 
+      (mouseup)="buttonImage.src=isAudioPlaying ? 'assets/pause.svg' : 'assets/play.svg'" #buttonImage>
     </button>
-  
+
     <!-- Move back Button -->
-    <button class="sound-button-1" id="mover" (click)="handleButtonClick()">
-      <img src="assets/back-Button.png" alt="Button Image" class="button-image-1">
+    <button class="sound-button-1 mover" (click)="skipBackwardButton()">
+      <img src="assets/back.svg" alt="Button Image" class="button-image-2" draggable="false"
+      (mousedown)=" buttonImage2.src='assets/backOnClick.svg'"
+      (mouseup)=" buttonImage2.src='assets/back.svg'" #buttonImage2>
     </button>
-  
+
     <!-- Move forward Button -->
-    <button class="sound-button-1" id="mover" (click)="handleButtonClick()">
-      <img src="assets/forward-Button.png" alt="Button Image" class="button-image-1">
+    <button class="sound-button-1 mover" (click)="skipForwardButton()">
+      <img src="assets/forward.svg" alt="Button Image" class="button-image-2" draggable="false"
+      (mousedown)=" buttonImage3.src='assets/forwardOnClick.svg'" 
+      (mouseup)=" buttonImage3.src='assets/forward.svg'" #buttonImage3>
     </button>
-  
-    <!-- the sound-->
-    <div class="voice-bar" id="mover" (click)="handleButtonClick()">
-      
+
+    <!-- audiobar -->
+    <div class="audio-bar mover">
+      <img src="assets/audiobarBeispiel.svg" alt="Button Image">
     </div>
-  
-    <!-- speed Button-->
-    <button class="sound-button-1" id="mover" (click)="handleButtonClick()">
-      <img src="assets/speed.png" alt="Button Image" class="button-image-1">
+
+    <!-- speed Button -->
+    <button class="sound-button-1 mover" (click)="switchSpeedPopover()" #speedButton>
+      <img src="assets/speed.svg" alt="Button Image" class="button-image-4" draggable="false"
+      (mousedown)=" buttonImage4.src='assets/speed.svg'" 
+      (mouseup)=" buttonImage4.src='assets/speed.svg'" #buttonImage4>
+      <div *ngIf="isSpeedPopoverOpen" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()" tabindex="0">
+        <app-speed-popup [speedValue]="speedValue" (speedChange)="onSpeedChange($event)" #speedPopup></app-speed-popup>
+      </div>
     </button>
-  
-    <!-- Off and On the sound Button -->
-    <button class="sound-button-1" id="mover"(click)="handleButtonClick()">
-      <img src="assets/soundonoff.png" alt="Button Image" class="button-image-1">
+
+    <!-- sound button-->
+    <button class="sound-button-1 mover" (click)="switchPopoverAudio()" tabindex="0" #soundButton>
+      <img *ngIf="volume100>-100" src="assets/soundOnThree.svg" alt="Button Image" class="button-image-2" draggable="false">
+      <img *ngIf="volume100===-100" src="assets/soundOnZero.svg" alt="Button Image" class="button-image-2" draggable="false">
+      <div *ngIf="isAudioPopoverOpen" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()" tabindex="0">
+        <app-slider-popup  [(volume)]="volume100" (volumeChange)="onVolumeChange($event)" (volume100Change)="onVolume100Change($event)" #sliderPopup></app-slider-popup>
+      </div>
     </button>
-    
-    <!-- settings Button -->
-    <button class="sound-button-1" id="mover" (click)="handleButtonClick()">
-      <img src="assets/settings2.png" alt="Button Image" class="button-image-1">
-    </button>
+
+      <!-- settings Button -->
+      <button class="sound-button-1 mover" (click)="openModal('settings')">
+        <img src="assets/settings.svg" alt="Button Image" class="button-image-3"
+        (mousedown)=" buttonImage6.src='assets/settingsOnClick.svg'" 
+        (mouseup)=" buttonImage6.src='assets/settings.svg'" #buttonImage6>
+      </button>
+
   </div>
 </div>
-  
+
+<app-settings id="settings" (secondsChange)="onSecondsChange($event)"></app-settings>
