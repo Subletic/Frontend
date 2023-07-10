@@ -1,3 +1,8 @@
+/**
+ * WordExport represents an instance of WordToken but only with the necessary info needed to
+ * convert it to JSON Format. Some attributes from WordToken are irrelevant for backend, for 
+ * example 'id' because it is only needed for addressing the word-content together with the spans.
+ */
 export class WordExport {
   public word: string;
   public confidence: number;
@@ -13,6 +18,11 @@ export class WordExport {
     this.speaker = speaker;
   }
   
+  /**
+   * Returns the information about the attributes of this instance
+   * into the from the backend expected format. 
+   * 
+   */
   public toJSON() {
     return {
       Word: this.word,
@@ -23,11 +33,18 @@ export class WordExport {
     };
   }
 
-  public toWordToken() {
+  /**
+   * Returns a new WordToken similiar to this word export instance.
+   */
+  public toWordToken(): WordToken {
     return new WordToken(this.word, this.confidence, this.startTime, this.endTime, this.speaker);
   }
 }
 
+/**
+ * WordToken represents a single word from a textbox. It acts as a node within one of the two linkedList
+ * classes. 
+ */
 export class WordToken {
   public word: string;
   public confidence: number;

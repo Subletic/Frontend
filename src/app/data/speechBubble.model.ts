@@ -1,6 +1,11 @@
 import { LinkedList } from './linkedList.model';
 import { WordExport, WordToken } from './wordToken.model';
 
+/**
+ * SpeechBubbleExport represents the important information about
+ * an instance of speechbubble that can be transfered to JSON. This JSON
+ * Object can then be send to backend.
+ */
 export class SpeechBubbleExport {
   
   public id: number;
@@ -38,6 +43,11 @@ export class SpeechBubbleExport {
   }
 }
 
+/**
+ * Instance of SpeechBubble represents the content of one textbox within the 
+ * program. Holds a linkedList of words and has itsself a node-structure with previous and next
+ * to be integrated into a linkedList itself.
+ */
 export class SpeechBubble {
     public id: number;
     public speaker: number;
