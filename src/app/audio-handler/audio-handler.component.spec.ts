@@ -1,4 +1,4 @@
-import { TestBed, ComponentFixture, inject } from '@angular/core/testing';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { AudioHandlerComponent } from './audio-handler.component';
 import { SignalRService } from '../service/signalRService';
 
