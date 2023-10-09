@@ -69,7 +69,7 @@ describe('AudioHandlerComponent', () => {
     component['sourceNode'] = null;
     spyOn(component['audioContext'], 'resume');
 
-    component.resumePlayback();
+    component.togglePlayback();
 
     expect(component['audioContext'].resume).not.toHaveBeenCalled();
     expect(component['isAudioPlaying']).toBeFalse();
@@ -80,19 +80,19 @@ describe('AudioHandlerComponent', () => {
     component['sourceNode'].buffer = null;
     spyOn(component['audioContext'], 'resume');
 
-    component.resumePlayback();
+    component.togglePlayback();
 
     expect(component['audioContext'].resume).not.toHaveBeenCalled();
     expect(component['isAudioPlaying']).toBeFalse();
   });
-  
+
   it('should not resume playback if sourceNode is started', () => {
     spyOn(component['audioContext'], 'resume');
     component['isSourceNodeStarted'] = true;
     component['sourceNode'] = component['audioContext'].createBufferSource();
-  
-    component.resumePlayback();
-  
+
+    component.togglePlayback();
+
     expect(component['audioContext'].resume).not.toHaveBeenCalled();
     expect(component['isAudioPlaying']).toBeFalse();
   });
