@@ -1,18 +1,10 @@
 import { WordToken } from './wordToken.model';
 import { WordExport } from './wordToken.model';
 
-//Für die Zukunft: LinkedList mergen zu einer, dieses mal "LinkedList<T>", Problem: Attribute von T?
-
-/**
- * Data Structure similiar to the linkedList concept in datastructures.
- * Typescript is missing an implementation of a LinkedList
- * 
- * Instead of nodes, this data structure holds the specific objects and these have the next and previous attributes needed
- */
-export class LinkedList {
-  public head: WordToken | null;
-  public tail: WordToken | null;
-  public currentIndex: number;
+export class LinkedList<T> {
+  public head: Node<T> | null = null;
+  public tail: Node<T> | null = null;
+  public currentIndex: number = 0;
 
   constructor() {
     this.head = null;
@@ -20,79 +12,96 @@ export class LinkedList {
     this.currentIndex = 0;
   }
 
-  /**
-   * Returns a String in form of a json object containing data for this object.
-   */
   public toJSON(): string {
-    const wordExports: WordExport[] = [];
+    const elements: T[] = [];
     let current = this.head;
-  
+
     while (current) {
-      wordExports.push(current.getExport());
+      elements.push(current.data);
       current = current.next;
     }
-  
-    return JSON.stringify(wordExports);
-  }
-  
 
-  /**
-   * Adds a new WordToken to the linkedList
-   * 
-   * @param word - The new word to add
-   */
-  public add(word: WordToken) {
-    word.id = this.currentIndex;
+    return JSON.stringify(elements);
+  }
+
+  public add(data: T) {
+    const node = new Node(data);
+    node.id = this.currentIndex;
     this.currentIndex++;
 
     if (!this.head) {
-      this.head = word;
-      this.tail = word;
+      this.head = node;
+      this.tail = node;
     } else {
       if (this.tail) {
-        this.tail.next = word;
-        word.prev = this.tail;
-        this.tail = word;
+        this.tail.next = node;
+        node.prev = this.tail;
+        this.tail = node;
       }
     }
   }
 
-  /**
-   * Removes a certain word from the linkedList
-   * 
-   * @param - The word to remove
-   */
-  public remove(word: WordToken) {
-    if (word === this.head) {
-      this.head = word.next;
-    }
-    if (word === this.tail) {
-      this.tail = word.prev;
-    }
-    if (word.prev) {
-      word.prev.next = word.next;
-    }
-    if (word.next) {
-      word.next.prev = word.prev;
-    }
-  }
-
-  /** 
-   * Prints the words attribute of this instance.
-   */
-  public printWordList() {
+  public remove(data: T) {
     let current = this.head;
-    const words = [];
+  
     while (current) {
-      words.push(current.word);
+      if (current.data === data) {
+        if (current === this.head) {
+          this.head = current.next;
+        }
+        if (current === this.tail) {
+          this.tail = current.prev;
+        }
+        if (current.prev) {
+          current.prev.next = current.next;
+        }
+        if (current.next) {
+          current.next.prev = current.prev;
+        }
+        return;
+      }
       current = current.next;
     }
-    return words.join(" ");
   }
 
-  /**
-   * Returns the size of this instance, similiar to length() or size() of similiar data structures
-   */
+  public insertAfter(newData: T, prevData: T): void {
+    let current = this.head;
+  
+    while (current) {
+      if (current.data === prevData) {
+        const newNode = new Node(newData);
+        newNode.id = this.currentIndex;
+        this.currentIndex++;
+        newNode.prev = current;
+        newNode.next = current.next;
+  
+        if (current === this.tail) {
+          this.tail = newNode;
+        }
+  
+        current.next = newNode;
+  
+        if (newNode.next) {
+          newNode.next.prev = newNode;
+        }
+  
+        return;
+      }
+  
+      current = current.next;
+    }
+  }
+
+  public printDataList(): string {
+    let current = this.head;
+    const data = [];
+    while (current) {
+      data.push(current.data);
+      current = current.next;
+    }
+    return data.join(" ");
+  }
+
   public size(): number {
     let current = this.head;
     let count = 0;
@@ -103,16 +112,24 @@ export class LinkedList {
     return count;
   }
 
-  /**
-   * Returns a string version of the elements of this linkedList
-   */
-  public toString() {
+  public toString(): string {
     let current = this.head;
     const elements = [];
     while (current) {
-      elements.push(current.word);
+      elements.push(current.data);
       current = current.next;
     }
     return elements.join(" ");
+  }
+}
+
+export class Node<T> {
+  public data: T;
+  public id: number = 0;
+  public prev: Node<T> | null = null;
+  public next: Node<T> | null = null;
+
+  constructor(data: T) {
+    this.data = data;
   }
 }

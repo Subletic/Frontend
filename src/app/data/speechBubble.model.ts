@@ -33,7 +33,7 @@ export class SpeechBubbleExport {
   }
 
   public toSpeechBubble(){
-    const words = new LinkedList();
+    const words = new LinkedList<WordToken>();
 
     this.speechBubbleContent.forEach(element => {
       words.add(element.toWordToken());
@@ -51,7 +51,7 @@ export class SpeechBubbleExport {
 export class SpeechBubble {
     public id: number;
     public speaker: number;
-    public words: LinkedList;
+    public words: LinkedList<WordToken>;
     public begin: number;
     public end: number;
 
@@ -60,7 +60,7 @@ export class SpeechBubble {
 
     private static currentId = 0;
   
-    public constructor(speaker: number, begin: number, end: number, list?: LinkedList, id?: number) {
+    public constructor(speaker: number, begin: number, end: number, list?: LinkedList<WordToken>, id?: number) {
       if(id != null) {
         this.id = id;
       } else {
@@ -92,7 +92,7 @@ export class SpeechBubble {
       let current = this.words.head;
       const text = [];
       while (current) {
-        text.push(current.word);
+        text.push(current.data.word);
         current = current.next;
       }
       return '[' + text.join(', ') + ']';
@@ -112,7 +112,7 @@ export class SpeechBubble {
       let current = this.words.head;
       const wordExportList = [];
       while (current) {
-        wordExportList.push(current.getExport());
+        wordExportList.push(current.data.getExport());
         current = current.next;
       }
       return wordExportList;
@@ -131,12 +131,12 @@ export class SpeechBubble {
     public removeEmptyWords() {
       let current = this.words.head;
       while (current) {
-        if (current.word === '') {
+        if (current.data.word === '') {
           if(this.words.tail == current) {
             if(!current.prev) return;
             this.words.tail = current.prev;
           }
-          current.remove();
+          current.data.remove();
         } 
         current = current.next;
       }
@@ -150,7 +150,7 @@ export class SpeechBubble {
     
       while (current) {
         if (current.id === id) {
-          return current;
+          return current.data;
         }
         current = current.next;
       }

@@ -65,7 +65,7 @@ export class TextBoxComponent implements AfterViewInit {
     const wordElements: string[] = []
     let current = this.textbox.words.head;
     while (current) {
-      const wordWithId = `<span id="${current.id}" style="color: ${current.color}" contenteditable="true">${current.word}</span>`;
+      const wordWithId = `<span id="${current.id}" style="color: ${current.data.color}" contenteditable="true">${current.data.word}</span>`;
       wordElements.push(wordWithId);
       current = current.next;
     }
@@ -254,7 +254,7 @@ export class TextBoxComponent implements AfterViewInit {
       currentWord.updateWordColor();
 
       currentWord.confidence = 1;
-      this.insertAfter(newWord, currentWord);
+      this.textbox.words.insertAfter(newWord, currentWord);
       currentWord.word = wordBeforeCursor;
 
       const newSpan = document.createElement('span');
@@ -326,7 +326,7 @@ export class TextBoxComponent implements AfterViewInit {
    * @param {Word} newWord - The new word to insert.
    * @param {Word} prevWord - The word after which the new word should be inserted.
    */
-  public insertAfter(newWord: WordToken, prevWord: WordToken): void {
+  /*public insertAfter(newWord: WordToken, prevWord: WordToken): void {
     newWord.id = this.textbox.words.currentIndex;
     this.textbox.words.currentIndex++;
 
@@ -341,6 +341,7 @@ export class TextBoxComponent implements AfterViewInit {
       this.textbox.words.tail = newWord;
     }
   }
+  */
 
   /**
    * Finds a word in the text box by its ID.
@@ -351,7 +352,7 @@ export class TextBoxComponent implements AfterViewInit {
     let current = this.textbox.words.head;
     while (current) {
       if (current.id === id) {
-        return current;
+        return current.data;
       }
       current = current.next;
     }
@@ -366,8 +367,8 @@ export class TextBoxComponent implements AfterViewInit {
 
     while (current) {
       const next = current.next;
-      if (current.word === "") {
-        this.textbox.words.remove(current);
+      if (current.data.word === "") {
+        this.textbox.words.remove(current.data);
       }
       current = next;
     }

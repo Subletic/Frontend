@@ -57,7 +57,7 @@ describe('SpeechBubble', () => {
   let wordToken2: WordToken;
 
   beforeEach(() => {
-    speechBubble = new SpeechBubble(1, 0, 3, new LinkedList, 1);
+    speechBubble = new SpeechBubble(1, 0, 3, new LinkedList<WordToken>(), 1);
     wordToken1 = new WordToken('Hello', 0.9, 0, 1, 1);
     wordToken2 = new WordToken('World', 0.8, 2, 3, 1);
   });
@@ -75,8 +75,8 @@ describe('SpeechBubble', () => {
     speechBubble.words.add(wordToken2);
 
     expect(speechBubble.words.size()).toBe(2);
-    expect(speechBubble.words.head).toEqual(wordToken1);
-    expect(speechBubble.words.tail).toEqual(wordToken2);
+    expect(speechBubble.words.head?.data).toEqual(wordToken1);
+    expect(speechBubble.words.tail?.data).toEqual(wordToken2);
   });
 
   it('should remove WordToken from SpeechBubble', () => {
@@ -86,8 +86,8 @@ describe('SpeechBubble', () => {
     speechBubble.words.remove(wordToken1);
 
     expect(speechBubble.words.size()).toBe(1);
-    expect(speechBubble.words.head).toEqual(wordToken2);
-    expect(speechBubble.words.tail).toEqual(wordToken2);
+    expect(speechBubble.words.head?.data).toEqual(wordToken2);
+    expect(speechBubble.words.tail?.data).toEqual(wordToken2);
   });
 
   it('should print the text of SpeechBubble', () => {
@@ -115,30 +115,29 @@ describe('SpeechBubble', () => {
 
   it('should not remove any words when the LinkedList is empty', () => {
     // Arrange
-    const wordToken = new WordToken("", 1, 1, 1, 1);
-    const linkedList = new LinkedList();
+    const wordToken = new WordToken('', 1, 1, 1, 1);
+    const linkedList = new LinkedList<WordToken>();
     linkedList.add(wordToken);
-
-    const speechBubble = new SpeechBubble(1, 0, 10, linkedList);
+  
+    const emptySpeechBubble = new SpeechBubble(1, 0, 10, linkedList);
   
     // Act
-    speechBubble.removeEmptyWords();
+    emptySpeechBubble.removeEmptyWords();
   
     // Assert
-    expect(speechBubble.words.head).toBe(wordToken);
-    expect(speechBubble.words.tail).toBe(wordToken);
+    expect(emptySpeechBubble.words.head?.data).toBe(wordToken);
+    expect(emptySpeechBubble.words.tail?.data).toBe(wordToken);
   });
-  
 });
 
 describe('LinkedList', () => {
-  let linkedList: LinkedList;
+  let linkedList: LinkedList<WordToken>;
   let wordToken1: WordToken;
   let wordToken2: WordToken;
   let wordToken3: WordToken;
 
   beforeEach(() => {
-    linkedList = new LinkedList();
+    linkedList = new LinkedList<WordToken>();
     wordToken1 = new WordToken('Hello', 0.9, 0, 1, 1);
     wordToken2 = new WordToken('World', 0.8, 2, 3, 1);
     wordToken3 = new WordToken('!', 0.7, 4, 5, 1);
@@ -154,8 +153,8 @@ describe('LinkedList', () => {
     linkedList.add(wordToken1);
     linkedList.add(wordToken2);
 
-    expect(linkedList.head).toEqual(wordToken1);
-    expect(linkedList.tail).toEqual(wordToken2);
+    expect(linkedList.head?.data).toEqual(wordToken1);
+    expect(linkedList.tail?.data).toEqual(wordToken2);
     expect(linkedList.size()).toBe(2);
   });
 
@@ -166,9 +165,9 @@ describe('LinkedList', () => {
 
     linkedList.remove(wordToken2);
 
-    expect(linkedList.head).toEqual(wordToken1);
-    expect(linkedList.tail).toEqual(wordToken3);
     expect(linkedList.size()).toBe(2);
+    expect(linkedList.head?.data).toEqual(wordToken1);
+    expect(linkedList.tail?.data).toEqual(wordToken3);
   });
 
   it('should print the word list of LinkedList', () => {
@@ -177,7 +176,7 @@ describe('LinkedList', () => {
     linkedList.add(wordToken3);
 
     const expectedText = 'Hello World !';
-    expect(linkedList.printWordList()).toBe(expectedText);
+    expect(linkedList.printDataList()).toBe(expectedText);
   });
 
   it('should convert LinkedList instance to JSON', () => {
