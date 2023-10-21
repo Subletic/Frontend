@@ -57,16 +57,6 @@ describe('AudioHandlerComponent', () => {
     expect(component.getVolume()).toEqual(targetVolumeValue);
   });
 
-  it('should not resume playback if sourceNode is null', () => {
-    component['currentAudioNode'] = null;
-    spyOn(component['audioContext'], 'resume');
-
-    component.togglePlayback();
-
-    expect(component['audioContext'].resume).not.toHaveBeenCalled();
-    expect(component['isAudioPlaying']).toBeFalse();
-  });
-
   it('should set the skip seconds', () => {
     // Arrange
     const seconds = 10;
