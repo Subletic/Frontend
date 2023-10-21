@@ -16,23 +16,27 @@ export class AudioHandlerComponent implements OnInit {
   // Constants for audio buffering and sampling
   private bufferSizeInSeconds = 30;
   private sampleRate = 48000;
+
   // Audio buffers and context
   private audioBuffer = new CircularBuffer(this.sampleRate, this.bufferSizeInSeconds);
   private audioContext = new AudioContext();
 
+  // Reference to the currently playing AudioNode
   private currentAudioNode: AudioBufferSourceNode | null = null;
 
   private skipSeconds = 5;
   private playbackSpeed = 1;
-  private jumpCounter = 0;
 
   private gainNode: GainNode = this.audioContext.createGain();
   private volume = 1;
 
   private isAudioPlaying = false;
 
-  constructor(private signalRService: SignalRService) {
-  }
+  /**
+   * Gets the reference to the SignalRService.
+   * @param signalRService - The SignalRService to get the reference to.
+   */
+  constructor(private signalRService: SignalRService) {}
 
   /**
    * Initializes Services and audio nodes
@@ -55,9 +59,6 @@ export class AudioHandlerComponent implements OnInit {
    */
   public togglePlayback(): void {
     if (!this.isAudioPlaying) {
-      if (!this.currentAudioNode) {
-        return
-      }
       this.audioContext.resume().then(() => {
         this.isAudioPlaying = true;
       })
@@ -122,93 +123,14 @@ export class AudioHandlerComponent implements OnInit {
    * Skips forward in the audio playback by the specified number of seconds.
    */
   public skipForward() {
-    // if (this.audioContext.state !== 'running') {
-    //   return;
-    // }
-    //
-    // const currentTime = this.audioContext.currentTime + this.jumpCounter;
-    // const targetTime = Math.min(currentTime + this.skipSeconds, this.audioBuffer.length / this.sampleRate);
-    //
-    // this.pauseAudio();
-    //
-    // if (this.sourceNode) {
-    //   if (this.isSourceNodeStarted) {
-    //     this.sourceNode.stop();
-    //     this.isSourceNodeStarted = false;
-    //   }
-    //   this.sourceNode.disconnect();
-    //   this.sourceNode = null;
-    // }
-    //
-    // this.sourceNode = this.audioContext.createBufferSource();
-    // this.sourceNode.buffer = this.nodeAudioBuffer;
-    // this.sourceNode.connect(this.audioContext.destination);
-    //
-    // this.jumpCounter = this.jumpCounter + this.skipSeconds;
-    //
-    // this.audioContext.resume().then(() => {
-    //   if (!this.sourceNode) return;
-    //
-    //   this.updatePlayableBuffer();
-    //
-    //   this.createNodes();
-    //   this.reapplyVolume();
-    //
-    //   this.sourceNode.start(0, targetTime);
-    //   this.isSourceNodeStarted = true;
-    // });
-
-    //this.reapplyVolume();
+    this.audioBuffer.advanceReadPointer(this.skipSeconds);
   }
 
   /**
    * Skips backward in the audio playback by the specified number of seconds.
    */
   public skipBackward() {
-    // if (this.audioContext.state !== 'running') {
-    //   return;
-    // }
-    //
-    // const currentTime = this.audioContext.currentTime + this.jumpCounter;
-    // const targetTime = Math.max(currentTime - this.skipSeconds, 0);
-    //
-    // this.pauseAudio();
-    //
-    // if (this.sourceNode) {
-    //   if (this.isSourceNodeStarted) {
-    //     this.sourceNode.stop();
-    //     this.isSourceNodeStarted = false;
-    //   }
-    //   this.sourceNode.disconnect();
-    //   this.sourceNode = null;
-    // }
-    //
-    // this.sourceNode = this.audioContext.createBufferSource();
-    // this.sourceNode.buffer = this.nodeAudioBuffer;
-    // this.sourceNode.connect(this.audioContext.destination);
-    //
-    // this.jumpCounter = this.jumpCounter - this.skipSeconds;
-    //
-    //
-    // this.audioContext.resume().then(() => {
-    //   if (!this.sourceNode) return;
-    //   this.updatePlayableBuffer();
-    //
-    //   this.createNodes();
-    //   this.reapplyVolume();
-    //
-    //   this.sourceNode.start(0, targetTime);
-    //   this.isSourceNodeStarted = true;
-    // });
-  }
-
-
-  public getGainNode(): GainNode {
-    return this.gainNode;
-  }
-
-  public getSourceNode() {
-    return this.currentAudioNode;
+    this.audioBuffer.decreaseReadPointer(this.skipSeconds);
   }
 
   /**
