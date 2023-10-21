@@ -14,11 +14,10 @@ import {CircularBuffer} from "../data/circularBuffer.model";
 export class AudioHandlerComponent implements OnInit {
 
     // Constants for audio buffering and sampling
-    private bufferSizeInSeconds = 10;
+    private bufferSizeInSeconds = 30;
     private sampleRate = 48000;
-    private maxBufferLength = this.bufferSizeInSeconds * this.sampleRate;
     // Audio buffers and context
-    private audioBuffer = new CircularBuffer(this.maxBufferLength);
+    private audioBuffer = new CircularBuffer(this.sampleRate, this.bufferSizeInSeconds);
     private audioContext = new AudioContext();
 
     private currentAudioNode: AudioBufferSourceNode | null = null;
@@ -54,11 +53,11 @@ export class AudioHandlerComponent implements OnInit {
     public togglePlayback(): void {
         if (!this.isAudioPlaying) {
             this.audioContext.resume().then(() => {
-                this.isAudioPlaying = !this.isAudioPlaying;
+                this.isAudioPlaying = true;
             })
         } else {
             this.audioContext.suspend().then(() => {
-                this.isAudioPlaying = !this.isAudioPlaying;
+                this.isAudioPlaying = false;
             })
         }
     }
@@ -85,7 +84,7 @@ export class AudioHandlerComponent implements OnInit {
 
         const audioData = this.audioBuffer.readNextSecond();
 
-        if (!audioData) return;
+        if (!audioData || audioData.length === 0) return;
 
         console.log("Audio length:" + audioData.length);
 
