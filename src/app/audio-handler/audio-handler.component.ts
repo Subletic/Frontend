@@ -44,7 +44,7 @@ export class AudioHandlerComponent implements OnInit {
     });
 
     setInterval(() => {
-      this.updatePlayableBuffer();
+      this.updateAudioNode();
     }, 1000);
 
     this.gainNode.connect(this.audioContext.destination);
@@ -55,6 +55,9 @@ export class AudioHandlerComponent implements OnInit {
    */
   public togglePlayback(): void {
     if (!this.isAudioPlaying) {
+      if (!this.currentAudioNode) {
+        return
+      }
       this.audioContext.resume().then(() => {
         this.isAudioPlaying = true;
       })
@@ -80,9 +83,10 @@ export class AudioHandlerComponent implements OnInit {
   }
 
   /**
-   * Updates the node audio buffer with the current audio buffer content and connects the source node.
+   * Replaces current playing audio node with audio node containing new data
+   * Each audio node holds 1s of audio
    */
-  private updatePlayableBuffer(): void {
+  private updateAudioNode(): void {
     if (!this.isAudioPlaying) return;
 
     const audioData = this.audioBuffer.readNextSecond();

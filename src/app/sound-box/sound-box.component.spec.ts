@@ -34,7 +34,7 @@ describe('SoundBoxComponent', () => {
   });
 
   it('should toggle isAudioPlaying and call playOrStopAudio on playButton click', () => {
-    spyOn(component.audioHandler, 'playOrStopAudio');
+    spyOn(component.audioHandler, 'togglePlayback');
 
     const playButton = fixture.debugElement.query(By.css('.play-button'));
     playButton.triggerEventHandler('click', null);

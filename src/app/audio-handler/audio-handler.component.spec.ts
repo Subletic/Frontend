@@ -47,49 +47,19 @@ describe('AudioHandlerComponent', () => {
 
     component['handleAudioData'](int16Array);
 
-    expect(component['audioBuffer'].subarray(0, int16Array.length)).toEqual(expectedFloat32Array);
-  });
-
-  it('should create audio nodes in createNodes method', () => {
-    component.createNodes();
-    expect(component.getGainNode()).toBeTruthy();
-    expect(component.getSourceNode()).toBeTruthy();
-    if(component.getSourceNode()) return;
-    expect(component.getSourceNode()?.buffer).toEqual(component.getNodeAudioBuffer());
+    expect(component['audioBuffer'].getBufferData().subarray(0, int16Array.length)).toEqual(expectedFloat32Array);
   });
 
   it('should set the volume in setVolume method', () => {
-    const volume = 0.5;
-    component.createNodes();
-    component.setVolume(volume);
-    expect(component.getVolume()).toEqual(volume);
+    const sliderVolumeValue = 0.5;
+    const targetVolumeValue = 1.125
+    component.setVolume(sliderVolumeValue);
+    expect(component.getVolume()).toEqual(targetVolumeValue);
   });
 
   it('should not resume playback if sourceNode is null', () => {
-    component['sourceNode'] = null;
+    component['currentAudioNode'] = null;
     spyOn(component['audioContext'], 'resume');
-
-    component.togglePlayback();
-
-    expect(component['audioContext'].resume).not.toHaveBeenCalled();
-    expect(component['isAudioPlaying']).toBeFalse();
-  });
-
-  it('should not resume playback if sourceNode.buffer is null', () => {
-    component['sourceNode'] = component['audioContext'].createBufferSource();
-    component['sourceNode'].buffer = null;
-    spyOn(component['audioContext'], 'resume');
-
-    component.togglePlayback();
-
-    expect(component['audioContext'].resume).not.toHaveBeenCalled();
-    expect(component['isAudioPlaying']).toBeFalse();
-  });
-
-  it('should not resume playback if sourceNode is started', () => {
-    spyOn(component['audioContext'], 'resume');
-    component['isSourceNodeStarted'] = true;
-    component['sourceNode'] = component['audioContext'].createBufferSource();
 
     component.togglePlayback();
 
@@ -104,13 +74,5 @@ describe('AudioHandlerComponent', () => {
     component.setSkipSeconds(seconds);
     // Assert
     expect(component['skipSeconds']).toEqual(seconds);
-  });
-
-  it('should return the node audio buffer', () => {
-    // Arrange
-    // Act
-    const nodeAudioBuffer = component.getNodeAudioBuffer();
-    // Assert
-    expect(nodeAudioBuffer).toBeDefined();
   });
 });

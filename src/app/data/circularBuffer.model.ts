@@ -75,4 +75,8 @@ export class CircularBuffer {
     }
     return this.buffer.subarray(oldReadPointer, newReadPointer);
   }
+
+  public getBufferData() {
+    return this.buffer
+  }
 }
