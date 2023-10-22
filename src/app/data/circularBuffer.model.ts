@@ -1,3 +1,8 @@
+/**
+ * Circular buffer for audio data.
+ * Old data will be overwritten if buffer is full.
+ * Handles playback and recording of audio data independently of each other.
+ */
 export class CircularBuffer {
   private readonly buffer: Float32Array;
   private readonly totalBufferSize: number;
