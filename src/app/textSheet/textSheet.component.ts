@@ -20,6 +20,7 @@ export class TextSheetComponent implements OnInit {
 
   timeSinceFocusOutList: Map<number, number> = new Map<number, number>();
   intervalList: ReturnType<typeof setInterval>[] = [];
+ 
 
   constructor(private signalRService: SignalRService) {}
 
@@ -117,19 +118,22 @@ export class TextSheetComponent implements OnInit {
   * @param id - The id of the speechbubble to set a counter for
   */
   public timeSinceFocusOutCounter(id: number) {
+    const maxSecondsSinceFocusOut = 5;
+    const intervalInMilliseconds = 1000;
+
     this.timeSinceFocusOutList.set(id, 0);
   
     this.intervalList[id] = setInterval(() => {
       const currentValue = this.timeSinceFocusOutList.get(id) || 0;
       this.timeSinceFocusOutList.set(id, currentValue + 1);
   
-      if (currentValue >= 5) {
+      if (currentValue >= maxSecondsSinceFocusOut) {
         clearInterval(this.intervalList[id]);
         this.callExportToJson(id);
         this.timeSinceFocusOutList.set(id, 0);
         return;
       }
-    }, 1000);
+    }, intervalInMilliseconds);
   }
 
   /**
