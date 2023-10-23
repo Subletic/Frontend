@@ -17,9 +17,11 @@ export class SettingsComponent implements OnInit, OnDestroy, AfterViewInit {
     @Output() secondsChange = new EventEmitter<number>();   // Event emitter to notify parent components of changes
     
     @ViewChild('secondsSlider', { static: false }) secondsSlider!: ElementRef<HTMLInputElement>;
-    @Input() seconds = 5;
+    
+    initialAudioSkipSeconds = 5;
+    @Input() updatedAudioSkipSeconds = this.initialAudioSkipSeconds;
+   
     private element!: HTMLElement;
-    initialSeconds = 5;
 
     constructor(private settingsService: SettingsService, private el: ElementRef<HTMLElement>) {
         this.element = el.nativeElement;
@@ -49,7 +51,7 @@ export class SettingsComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     ngAfterViewInit() {
-      this.secondsSlider.nativeElement.value = this.seconds.toString();
+      this.secondsSlider.nativeElement.value = this.updatedAudioSkipSeconds.toString();
       this.setupSlider();
     }
 
@@ -63,7 +65,7 @@ export class SettingsComponent implements OnInit, OnDestroy, AfterViewInit {
     open(): void {
         this.element.style.display = 'block';
         document.body.classList.add('settings-open');
-        this.initialSeconds = this.seconds;
+        this.initialAudioSkipSeconds = this.updatedAudioSkipSeconds;
         this.setupSlider();
     }
 
@@ -75,13 +77,13 @@ export class SettingsComponent implements OnInit, OnDestroy, AfterViewInit {
 
     // Cancels changes, resets seconds value and closes modal
     cancel(): void {
-        this.seconds = this.initialSeconds;
+        this.updatedAudioSkipSeconds = this.initialAudioSkipSeconds;
         this.close();
     }
 
     // Apply the settings changes and emit the "secondsChange" event to notify the parent component
     apply() {
-        this.secondsChange.emit(this.seconds);
+        this.secondsChange.emit(this.updatedAudioSkipSeconds);
         this.close();
     }
 
@@ -89,10 +91,13 @@ export class SettingsComponent implements OnInit, OnDestroy, AfterViewInit {
      * Sets up the slider so it has a colored bar from left to the thumb 
      */
     setupSlider(): void {
+      const minSkipSecondsSliderValue = '1';
+      const maxSkipSecondsSlidervalue = '20';
+
       document.querySelectorAll<HTMLInputElement>('input[type="range"].slider-progress').forEach((e: HTMLInputElement) => {
         e.style.setProperty('--value', e.value);
-        e.style.setProperty('--min', e.min === '' ? '1' : e.min);
-        e.style.setProperty('--max', e.max === '' ? '20' : e.max);
+        e.style.setProperty('--min', e.min === '' ? minSkipSecondsSliderValue : e.min);
+        e.style.setProperty('--max', e.max === '' ? maxSkipSecondsSlidervalue : e.max); 
         e.addEventListener('input', () => e.style.setProperty('--value', e.value));
       });
     }
@@ -106,6 +111,8 @@ export class SettingsComponent implements OnInit, OnDestroy, AfterViewInit {
      * 
      */
     callBackendReload() {
+      const millisecondsBeforeReloadingPage= 2000;
+
       fetch(environment.apiURL + '/api/restart', {
         method: 'POST',
       })
@@ -114,7 +121,7 @@ export class SettingsComponent implements OnInit, OnDestroy, AfterViewInit {
             console.log('Called for restart');
             setTimeout(() => {
               window.location.reload();
-            }, 2000);
+            }, millisecondsBeforeReloadingPage);
           } else {
             console.error('Error with calling restart');
           }
