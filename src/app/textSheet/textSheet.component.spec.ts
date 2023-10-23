@@ -1,10 +1,11 @@
 import { SpeechBubble, SpeechBubbleExport } from '../data/speechBubble.model';
 import { WordToken } from '../data/wordToken.model';
-import { LinkedList, TextSheetComponent, SpeechBubbleChain } from './textSheet.component';
+import { TextSheetComponent, SpeechBubbleChain } from './textSheet.component';
 import { SignalRService } from '../service/signalRService';
+import { LinkedList } from '../data/linkedList.model';
 
 describe('LinkedList', () => {
-  let linkedList: LinkedList;
+  let linkedList: LinkedList<SpeechBubble>;
   let speechBubble1: SpeechBubble;
   let speechBubble2: SpeechBubble;
   let speechBubble3: SpeechBubble;
@@ -18,20 +19,20 @@ describe('LinkedList', () => {
 
   it('should add a speech bubble to the list', () => {
     linkedList.add(speechBubble1);
-    expect(linkedList.head).toBe(speechBubble1);
-    expect(linkedList.tail).toBe(speechBubble1);
+    expect(linkedList.head?.data).toBe(speechBubble1);
+    expect(linkedList.tail?.data).toBe(speechBubble1);
   });
 
   it('should add multiple speech bubbles to the list', () => {
     linkedList.add(speechBubble1);
     linkedList.add(speechBubble2);
     linkedList.add(speechBubble3);
-    expect(linkedList.head).toBe(speechBubble1);
+    expect(linkedList.head?.data).toBe(speechBubble1);
     if(linkedList.head && linkedList.head.next)
     {
-        expect(linkedList.head.next).toBe(speechBubble2);
-        expect(linkedList.head.next.next).toBe(speechBubble3);
-        expect(linkedList.tail).toBe(speechBubble3);
+        expect(linkedList.head?.next?.data).toBe(speechBubble2);
+        expect(linkedList.head?.next?.next?.data).toBe(speechBubble3);
+        expect(linkedList.tail?.data).toBe(speechBubble3);
     }
   });
 
@@ -40,11 +41,11 @@ describe('LinkedList', () => {
     linkedList.add(speechBubble2);
     linkedList.add(speechBubble3);
     linkedList.remove(speechBubble2);
-    expect(linkedList.head).toBe(speechBubble1);
+    expect(linkedList.head?.data).toBe(speechBubble1);
     if(linkedList.head) {
-        expect(linkedList.head.next).toBe(speechBubble3);
+        expect(linkedList.head.next?.data).toBe(speechBubble3);
     }
-    expect(linkedList.tail).toBe(speechBubble3);
+    expect(linkedList.tail?.data).toBe(speechBubble3);
   });
 
   it('should export speech bubbles to JSON', () => {
@@ -79,7 +80,7 @@ describe('TextSheetComponent', () => {
   it('should return an array of speech bubbles', () => {
     const speechBubbles = component.getSpeechBubblesArray();
     if(component.speechBubbles.head == null) return;
-    expect(speechBubbles).toEqual([component.speechBubbles.head]);
+    expect(speechBubbles).toEqual([component.speechBubbles.head.data]);
   });
 
   it('should remove a speech bubble', () => {
@@ -142,7 +143,7 @@ describe('TextSheetComponent', () => {
     component.deleteSpeechBubble(testBubble1.id);
 
     expect(component.speechBubbles.size()).toBe(1);
-    expect(component.speechBubbles.head).toBe(testBubble2);
+    expect(component.speechBubbles.head?.data).toBe(testBubble2);
   });
 
   it('should not import from invalid speechBubbleChain object', () => {

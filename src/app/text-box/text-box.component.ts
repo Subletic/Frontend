@@ -1,6 +1,8 @@
 import { Component, AfterViewInit, ViewChild, ElementRef, Input } from '@angular/core';
 import { WordToken } from '../data/wordToken.model';
 import { SpeechBubble } from '../data/speechBubble.model';
+import { error } from 'jquery';
+import { throwError } from 'rxjs';
 
 /**
  * The TextBoxComponent represents a component that handles the SpeechBubble data.
@@ -322,28 +324,6 @@ export class TextBoxComponent implements AfterViewInit {
   }
 
   /**
-   * Inserts a new word after a specified word in the linked list.
-   * @param {Word} newWord - The new word to insert.
-   * @param {Word} prevWord - The word after which the new word should be inserted.
-   */
-  /*public insertAfter(newWord: WordToken, prevWord: WordToken): void {
-    newWord.id = this.textbox.words.currentIndex;
-    this.textbox.words.currentIndex++;
-
-    newWord.prev = prevWord;
-    newWord.next = prevWord.next;
-
-    if (prevWord.next) {
-      prevWord.next.prev = newWord;
-    }
-    prevWord.next = newWord;
-    if (prevWord === this.textbox.words.tail) {
-      this.textbox.words.tail = newWord;
-    }
-  }
-  */
-
-  /**
    * Finds a word in the text box by its ID.
    * @param {string} id - The ID of the word to find.
    * @returns {Word|null} - The found word or null if not found.
@@ -351,11 +331,12 @@ export class TextBoxComponent implements AfterViewInit {
   public findWordById(id: number): WordToken | null {
     let current = this.textbox.words.head;
     while (current) {
-      if (current.id === id) {
+      if (current.data.id === id) {
         return current.data;
       }
       current = current.next;
     }
+    console.log("NULL bei id: " + id + " und current " + current);
     return null;
   }
 

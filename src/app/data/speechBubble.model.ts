@@ -55,9 +55,6 @@ export class SpeechBubble {
     public begin: number;
     public end: number;
 
-    public prev: SpeechBubble | null;
-    public next: SpeechBubble | null;
-
     private static currentId = 0;
   
     public constructor(speaker: number, begin: number, end: number, list?: LinkedList<WordToken>, id?: number) {
@@ -74,8 +71,6 @@ export class SpeechBubble {
       }
       this.begin = begin;
       this.end = end;
-      this.prev = null;
-      this.next = null;
     }
 
     /**
@@ -136,7 +131,7 @@ export class SpeechBubble {
             if(!current.prev) return;
             this.words.tail = current.prev;
           }
-          current.data.remove();
+          current.remove();
         } 
         current = current.next;
       }

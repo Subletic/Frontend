@@ -23,23 +23,6 @@ describe('WordToken', () => {
     expect(JSON.stringify(exported)).toEqual(JSON.stringify(expectedExport));
   });
 
-  it('should have correct initial values for prev and next properties', () => {
-    const token = new WordToken('apple', 0.8, 10, 20, 1);
-    expect(token.prev).toBeNull();
-    expect(token.next).toBeNull();
-  });
-
-  it('should correctly update prev and next properties', () => {
-    const token1 = new WordToken('apple', 0.8, 10, 20, 1);
-    const token2 = new WordToken('banana', 0.9, 30, 40, 1);
-
-    token1.next = token2;
-    token2.prev = token1;
-
-    expect(token1.next).toBe(token2);
-    expect(token2.prev).toBe(token1);
-  });
-
   it('should update word value correctly', () => {
     const token = new WordToken('apple', 0.8, 10, 20, 1);
     expect(token.word).toBe('apple');
@@ -130,20 +113,6 @@ describe('WordToken', () => {
       expect(wordExport.startTime).toBe(0);
       expect(wordExport.endTime).toBe(1);
       expect(wordExport.speaker).toBe(1);
-    });
-  });
-   describe('remove', () => {
-    it('should remove the node from the data structure', () => {
-      const wordToken1 = new WordToken('test1', 0.8, 0, 1, 1);
-      const wordToken2 = new WordToken('test2', 0.9, 1, 2, 1);
-      const wordToken3 = new WordToken('test3', 0.7, 2, 3, 1);
-      wordToken1.next = wordToken2;
-      wordToken2.prev = wordToken1;
-      wordToken2.next = wordToken3;
-      wordToken3.prev = wordToken2;
-      wordToken2.remove();
-      expect(wordToken1.next).toBe(wordToken3);
-      expect(wordToken3.prev).toBe(wordToken1);
     });
   });
    describe('updateWordColor', () => {

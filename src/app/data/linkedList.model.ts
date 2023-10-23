@@ -1,5 +1,6 @@
 import { WordToken } from './wordToken.model';
 import { WordExport } from './wordToken.model';
+import { SpeechBubble } from './speechBubble.model';
 
 export class LinkedList<T> {
   public head: Node<T> | null = null;
@@ -12,18 +13,22 @@ export class LinkedList<T> {
     this.currentIndex = 0;
   }
 
-  public toJSON(): string {
-    const elements: T[] = [];
-    let current = this.head;
+public toJSON(getDataFunction: (data: WordToken) => any): string;
+public toJSON(getDataFunction: (data: SpeechBubble) => any): string;
+public toJSON(getDataFunction: any): string {
+  const elements: any[] = [];
+  let current = this.head;
 
-    while (current) {
-      elements.push(current.data);
-      current = current.next;
-    }
-
-    return JSON.stringify(elements);
+  while (current) {
+    const data = getDataFunction(current.data);
+    elements.push(data);
+    current = current.next;
   }
 
+  return JSON.stringify(elements);
+}
+
+  
   public add(data: T) {
     const node = new Node(data);
     node.id = this.currentIndex;
@@ -92,11 +97,11 @@ export class LinkedList<T> {
     }
   }
 
-  public printDataList(): string {
+  public printDataList<U>(getDataFunction: (data: T) => U): string {
     let current = this.head;
     const data = [];
     while (current) {
-      data.push(current.data);
+      data.push(getDataFunction(current.data));
       current = current.next;
     }
     return data.join(" ");
@@ -131,5 +136,17 @@ export class Node<T> {
 
   constructor(data: T) {
     this.data = data;
+  }
+
+  /**
+   * Removes this node from the data structure
+   */
+  public remove() {
+    if (this.prev) {
+      this.prev.next = this.next;
+    }
+    if (this.next) {
+      this.next.prev = this.prev;
+    }
   }
 }

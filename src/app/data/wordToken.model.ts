@@ -53,10 +53,6 @@ export class WordToken {
   public speaker: number;
   public id: number;
 
-  //relevant for linkedList, objekt is in itself a node instead of having a node-class holding an wordToken object in between
-  public prev: WordToken | null;
-  public next: WordToken | null;
-
   public color: string;
 
   private static currentId = 0;
@@ -68,8 +64,6 @@ export class WordToken {
     this.endTime = endTime;
     this.speaker = speaker;
     this.id = WordToken.getNextId();
-    this.prev = null;
-    this.next = null;
 
     this.color = '';
     this.getColor();
@@ -115,18 +109,6 @@ export class WordToken {
    */
   public getExport() {
     return new WordExport(this.word, this.confidence, this.startTime, this.endTime, this.speaker);
-  }
-
-  /**
-   * Removes this node from the data structure
-   */
-  public remove() {
-    if (this.prev) {
-      this.prev.next = this.next;
-    }
-    if (this.next) {
-      this.next.prev = this.prev;
-    }
   }
 
   /**

@@ -174,9 +174,10 @@ describe('LinkedList', () => {
     linkedList.add(wordToken1);
     linkedList.add(wordToken2);
     linkedList.add(wordToken3);
-
+  
     const expectedText = 'Hello World !';
-    expect(linkedList.printDataList()).toBe(expectedText);
+    const result = linkedList.printDataList((data) => data.word);
+    expect(result).toBe(expectedText);
   });
 
   it('should convert LinkedList instance to JSON', () => {
@@ -208,6 +209,8 @@ describe('LinkedList', () => {
       }
     ];
 
-    expect(linkedList.toJSON()).toEqual(JSON.stringify(expectedJson));
+    const json = linkedList.toJSON((data: SpeechBubble) => data.getExport());
+
+    expect(json).toEqual(JSON.stringify(expectedJson));
   });
 });
