@@ -14,11 +14,11 @@ import {CircularBuffer} from "../data/circularBuffer.model";
 export class AudioHandlerComponent implements OnInit {
 
   // Constants for audio buffering and sampling
-  private bufferSizeInSeconds = 30;
-  private sampleRate = 48000;
+  private readonly BUFFER_SIZE_IN_SECONDS = 30;
+  private readonly SAMPLE_RATE = 48000;
 
   // Audio buffers and context
-  private audioBuffer = new CircularBuffer(this.sampleRate, this.bufferSizeInSeconds);
+  private audioBuffer: CircularBuffer = new CircularBuffer(this.SAMPLE_RATE, this.BUFFER_SIZE_IN_SECONDS);
   private audioContext = new AudioContext();
 
   // Reference to the currently playing AudioNode
@@ -30,7 +30,7 @@ export class AudioHandlerComponent implements OnInit {
   private gainNode: GainNode = this.audioContext.createGain();
   private volume = 1;
 
-  private isAudioPlaying = false;
+  private audioPlaying = false;
 
   /**
    * Gets the reference to the SignalRService.
@@ -48,11 +48,11 @@ export class AudioHandlerComponent implements OnInit {
       this.handleAudioData(newChunk)
     });
 
-    const audioUpdateIntervalInMs = 1000;
+    const AUDIO_UPDATE_INTERVAL_IN_MS = 1000;
 
     setInterval(() => {
       this.updateAudioNode();
-    }, audioUpdateIntervalInMs);
+    }, AUDIO_UPDATE_INTERVAL_IN_MS);
 
     this.gainNode.connect(this.audioContext.destination);
   }
@@ -61,13 +61,13 @@ export class AudioHandlerComponent implements OnInit {
    * Resumes audio playback and starts the source node if not started.
    */
   public togglePlayback(): void {
-    if (!this.isAudioPlaying) {
+    if (!this.audioPlaying) {
       this.audioContext.resume().then(() => {
-        this.isAudioPlaying = true;
+        this.audioPlaying = true;
       })
     } else {
       this.audioContext.suspend().then(() => {
-        this.isAudioPlaying = false;
+        this.audioPlaying = false;
       })
     }
   }
@@ -78,11 +78,11 @@ export class AudioHandlerComponent implements OnInit {
    */
   private handleAudioData(newChunk: Int16Array): void {
     // Convert the received Int16Array chunk to Float32Array
-    const convertedAudioData = new Float32Array(newChunk.length);
-    const scalingFactor = 32767;
+    const convertedAudioData: Float32Array = new Float32Array(newChunk.length);
+    const INT16_TO_FLOAT32_SCALING_FACTOR = 32767;
 
     for (let i = 0; i < newChunk.length; i++) {
-      convertedAudioData[i] = newChunk[i] / scalingFactor;  // Skalierung auf den Bereich von -1 bis 1
+      convertedAudioData[i] = newChunk[i] / INT16_TO_FLOAT32_SCALING_FACTOR;  // Skalierung auf den Bereich von -1 bis 1
     }
 
     this.audioBuffer.writeNewChunk(convertedAudioData)
@@ -93,21 +93,22 @@ export class AudioHandlerComponent implements OnInit {
    * Each audio node holds 1s of audio
    */
   private updateAudioNode(): void {
-    if (!this.isAudioPlaying) return;
+    if (!this.audioPlaying) return;
 
-    const audioData = this.audioBuffer.readNextSecond();
-    const numberOfChannels = 1;
+    const audioData: Float32Array | null = this.audioBuffer.readNextSecond();
+    const NUMBER_OF_CHANNELS = 1;
 
     if (!audioData || audioData.length === 0) return;
 
     console.log("Audio length:" + audioData.length);
 
-    const audioBuffer = this.audioContext.createBuffer(numberOfChannels, audioData.length, this.sampleRate);
-    const selectedChannel = 0;
-    const bufferOffset = 0;
-    audioBuffer.copyToChannel(audioData, selectedChannel, bufferOffset)
+    const audioBuffer: AudioBuffer = this.audioContext.createBuffer(NUMBER_OF_CHANNELS, audioData.length, this.SAMPLE_RATE);
+    const SELECTED_CHANNEL = 0;
+    const BUFFER_OFFSET = 0;
 
-    const audioNode = new AudioBufferSourceNode(this.audioContext, {buffer: audioBuffer});
+    audioBuffer.copyToChannel(audioData, SELECTED_CHANNEL, BUFFER_OFFSET)
+
+    const audioNode: AudioBufferSourceNode = new AudioBufferSourceNode(this.audioContext, {buffer: audioBuffer});
 
     // Connect the source node to the audio context destination
     audioNode.playbackRate.value = this.playbackSpeed;
@@ -146,13 +147,13 @@ export class AudioHandlerComponent implements OnInit {
    * @param volume - The volume level to set.
    */
   public setVolume(volume: number): void {
-    const lowestInputVolLevel = -1;
-    const highestInputVolLevel = 1;
+    const LOWEST_INPUT_VOL_LEVEL = -1;
+    const HIGHEST_INPUT_VOL_LEVEL = 1;
 
-    const maxVolume = 1.5;
-    const minVolume = 0;
+    const MAX_VOLUME = 1.5;
+    const MIN_VOLUME = 0;
 
-    this.volume = this.mapVolumeToNewScale(volume, lowestInputVolLevel, highestInputVolLevel, minVolume, maxVolume);
+    this.volume = this.mapVolumeToNewScale(volume, LOWEST_INPUT_VOL_LEVEL, HIGHEST_INPUT_VOL_LEVEL, MIN_VOLUME, MAX_VOLUME);
 
     if (!this.gainNode) return;
     this.gainNode.gain.setValueAtTime(this.volume, this.audioContext.currentTime);
@@ -187,6 +188,6 @@ export class AudioHandlerComponent implements OnInit {
    * @returns {boolean} True if audio is currently playing, false otherwise.
    */
   public getIsAudioPlaying(): boolean {
-    return this.isAudioPlaying;
+    return this.audioPlaying;
   }
 }
