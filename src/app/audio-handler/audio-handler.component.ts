@@ -36,20 +36,23 @@ export class AudioHandlerComponent implements OnInit {
    * Gets the reference to the SignalRService.
    * @param signalRService - The SignalRService to get the reference to.
    */
-  constructor(private signalRService: SignalRService) {}
+  constructor(private signalRService: SignalRService) {
+  }
 
   /**
    * Initializes Services and audio nodes
    */
-  ngOnInit() {
+  ngOnInit(): void {
     // Subscribe to the received audio stream event from SignalRService
     this.signalRService.receivedAudioStream.subscribe((newChunk) => {
       this.handleAudioData(newChunk)
     });
 
+    const audioUpdateIntervalInMs = 1000;
+
     setInterval(() => {
       this.updateAudioNode();
-    }, 1000);
+    }, audioUpdateIntervalInMs);
 
     this.gainNode.connect(this.audioContext.destination);
   }
@@ -76,8 +79,10 @@ export class AudioHandlerComponent implements OnInit {
   private handleAudioData(newChunk: Int16Array): void {
     // Convert the received Int16Array chunk to Float32Array
     const convertedAudioData = new Float32Array(newChunk.length);
+    const scalingFactor = 32767;
+
     for (let i = 0; i < newChunk.length; i++) {
-      convertedAudioData[i] = newChunk[i] / 32767;  // Skalierung auf den Bereich von -1 bis 1
+      convertedAudioData[i] = newChunk[i] / scalingFactor;  // Skalierung auf den Bereich von -1 bis 1
     }
 
     this.audioBuffer.writeNewChunk(convertedAudioData)
@@ -91,13 +96,16 @@ export class AudioHandlerComponent implements OnInit {
     if (!this.isAudioPlaying) return;
 
     const audioData = this.audioBuffer.readNextSecond();
+    const numberOfChannels = 1;
 
     if (!audioData || audioData.length === 0) return;
 
     console.log("Audio length:" + audioData.length);
 
-    const audioBuffer = this.audioContext.createBuffer(1, audioData.length, this.sampleRate);
-    audioBuffer.copyToChannel(audioData, 0, 0)
+    const audioBuffer = this.audioContext.createBuffer(numberOfChannels, audioData.length, this.sampleRate);
+    const selectedChannel = 0;
+    const bufferOffset = 0;
+    audioBuffer.copyToChannel(audioData, selectedChannel, bufferOffset)
 
     const audioNode = new AudioBufferSourceNode(this.audioContext, {buffer: audioBuffer});
 
@@ -122,14 +130,14 @@ export class AudioHandlerComponent implements OnInit {
   /**
    * Skips forward in the audio playback by the specified number of seconds.
    */
-  public skipForward() {
+  public skipForward(): void {
     this.audioBuffer.advanceReadPointer(this.skipSeconds);
   }
 
   /**
    * Skips backward in the audio playback by the specified number of seconds.
    */
-  public skipBackward() {
+  public skipBackward(): void {
     this.audioBuffer.decreaseReadPointer(this.skipSeconds);
   }
 
@@ -137,7 +145,7 @@ export class AudioHandlerComponent implements OnInit {
    * Sets the volume of the audio.
    * @param volume - The volume level to set.
    */
-  public setVolume(volume: number) {
+  public setVolume(volume: number): void {
     const lowestInputVolLevel = -1;
     const highestInputVolLevel = 1;
 
@@ -158,11 +166,11 @@ export class AudioHandlerComponent implements OnInit {
    * @param newMin Lowest value of new range
    * @param newMax Highest value of new range
    */
-  private mapVolumeToNewScale(value: number, origMin: number, origMax: number, newMin: number, newMax: number) {
+  private mapVolumeToNewScale(value: number, origMin: number, origMax: number, newMin: number, newMax: number): number {
     return (value - origMin) * (newMax - newMin) / (origMax - origMin) + newMin;
   }
 
-  public getVolume() {
+  public getVolume(): number {
     return this.volume;
   }
 
@@ -170,7 +178,7 @@ export class AudioHandlerComponent implements OnInit {
    * Sets amount of seconds to be skipped
    * @param seconds
    */
-  public setSkipSeconds(seconds: number) {
+  public setSkipSeconds(seconds: number): void {
     this.skipSeconds = seconds;
   }
 

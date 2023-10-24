@@ -43,7 +43,7 @@ export class CircularBuffer {
    * If the buffer is full, the oldest data will be overwritten.
    * @param chunk - The new chunk of audio data to write. Usually 1 second of audio data.
    */
-  writeNewChunk(chunk: Float32Array) {
+  writeNewChunk(chunk: Float32Array): void {
     for (let i = 0; i < chunk.length; i++) {
       this.buffer[this.writePointer] = chunk[i];
       this.writePointer = this.writePointer + 1;
@@ -60,7 +60,7 @@ export class CircularBuffer {
    * @returns The next second of audio data or null if no data is available.
    *
    */
-  readNextSecond() {
+  readNextSecond(): Float32Array | null {
     const readWriteTimeDifference = this.absoluteWriteTimeInSeconds - this.absoluteReadTimeInSeconds;
     let oldReadPointer = this.readPointer;
 
@@ -104,7 +104,7 @@ export class CircularBuffer {
    * Used for skipping forward in the audio playback.
    * @param secondsToAdvance - The amount of seconds to advance the read pointer by.
    */
-  public advanceReadPointer(secondsToAdvance: number) {
+  public advanceReadPointer(secondsToAdvance: number): void {
     const samplesToAdvance = secondsToAdvance * this.samplingRate;
     this.readPointer = (this.readPointer + samplesToAdvance) % this.totalBufferSize;
     this.absoluteReadTimeInSeconds += secondsToAdvance;
@@ -121,7 +121,7 @@ export class CircularBuffer {
    * Used for skipping backward in the audio playback.
    * @param secondsToDecrease - The amount of seconds to decrease the read pointer by.
    */
-  public decreaseReadPointer(secondsToDecrease: number) {
+  public decreaseReadPointer(secondsToDecrease: number): void {
     const samplesToAdvance = secondsToDecrease * this.samplingRate;
     this.readPointer = (this.readPointer - samplesToAdvance) % this.totalBufferSize;
     this.absoluteReadTimeInSeconds -= secondsToDecrease;
@@ -137,7 +137,7 @@ export class CircularBuffer {
   /**
    * Gets current content of the circular buffer.
    */
-  public getBufferData() {
+  public getBufferData(): Float32Array {
     return this.buffer
   }
 }
