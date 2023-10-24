@@ -19,17 +19,19 @@ export class CircularBuffer {
   private absoluteWriteTimeInSeconds: number;
 
   // Amount of seconds that Read Pointer should be away from buffer ends
-  private safetyMarginInSeconds = 2
+  private readonly safetyMarginInSeconds : number
 
 
   /**
    * Creates a new circular buffer with the given sampling rate and length in seconds.
    * @param samplingRate - The sampling rate of the audio data.
    * @param lengthInSeconds - The length of the buffer in seconds.
+   * @param safetyMarginInSeconds - The amount of seconds that the read pointer should be away from the buffer ends. Defaults to 2 seconds.
    */
-  constructor(samplingRate: number, lengthInSeconds: number) {
+  constructor(samplingRate: number, lengthInSeconds: number, safetyMarginInSeconds = 2) {
     this.samplingRate = samplingRate;
     this.bufferLengthInSeconds = lengthInSeconds;
+    this.safetyMarginInSeconds = safetyMarginInSeconds;
     this.writePointer = 0;
     this.readPointer = 0;
     this.absoluteReadTimeInSeconds = 0;
