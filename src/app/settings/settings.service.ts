@@ -10,17 +10,17 @@ export class SettingsService {
     private modals: Modal[] = [];
 
     // Add a new settings modal to the service
-    add(modal: Modal) {
+    add(modal: Modal): void {
         this.modals.push(modal);
     }
 
     // Remove a settings modal from the service based on its ID
-    remove(id: string) {
+    remove(id: string): void {
         this.modals = this.modals.filter(x => x.id !== id);
     }
 
     // Open a specific settings modal based on its ID
-    open(id: string) {
+    open(id: string): void {
         const modal = this.modals.find(x => x.id === id);
         if (modal) {
             modal.open();
@@ -28,12 +28,12 @@ export class SettingsService {
     }
 
     // Close a specific settings modal based on its ID
-    close(id: string) {
+    close(id: string): void {
         const modal = this.modals.find(x => x.id === id);
         if (modal) {
             modal.close();
         }
-    }   
+    }
 }
 
 interface Modal {
