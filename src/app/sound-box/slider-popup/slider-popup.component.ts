@@ -8,7 +8,7 @@ import { Component, Input, Output, EventEmitter, ElementRef, OnInit, ViewChild, 
   templateUrl: './slider-popup.component.html',
   styleUrls: ['./slider-popup.component.scss']
 })
-export class SliderPopupComponent implements OnInit, AfterViewInit  {
+export class SliderPopupComponent implements OnInit, AfterViewInit {
 
   //Volume is value between -1 and 1, volume100 between -100 and 100 for slider capability
   @Input() volume = 0;
@@ -25,7 +25,7 @@ export class SliderPopupComponent implements OnInit, AfterViewInit  {
     this.setupSlider();
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     this.volumeSlider.nativeElement.value = this.volume.toString();
     this.setupSlider();
   }
@@ -49,7 +49,7 @@ export class SliderPopupComponent implements OnInit, AfterViewInit  {
    * Emits info about the changed values in the slider so they can then be send elsewhere.
    * @param event - Input value from slider
    */
-  onVolumeChange(event: Event) {
+  onVolumeChange(event: Event): void {
     const target = event.target as HTMLInputElement;
     const conversionBase = 10;
     const volumeRange = 100;
@@ -70,7 +70,7 @@ export class SliderPopupComponent implements OnInit, AfterViewInit  {
    * Sets new value for volume100 attribute.
    * @param {number} volume100 - New value for volume100 attribute.
    */
-  setVolume100(volume100: number) {
+  setVolume100(volume100: number): void {
     this.volume100 = volume100;
   }
 
