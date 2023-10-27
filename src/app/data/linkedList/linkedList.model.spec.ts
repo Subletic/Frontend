@@ -1,5 +1,5 @@
 import { LinkedList } from './linkedList.model';
-import { WordToken } from './wordToken.model';
+import { WordToken } from '../wordToken/wordToken.model';
 
 describe('LinkedList', () => {
   let linkedList: LinkedList<WordToken>;
@@ -51,7 +51,7 @@ describe('LinkedList', () => {
     expect(result).toBe(expectedText);
   });
 
-  it('should convert LinkedList instance to JSON', () => {
+  it('should convert LinkedList instance to JSON 1111111111', () => {
     linkedList.add(wordToken1);
     linkedList.add(wordToken2);
     linkedList.add(wordToken3);

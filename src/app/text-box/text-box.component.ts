@@ -1,8 +1,6 @@
 import { Component, AfterViewInit, ViewChild, ElementRef, Input } from '@angular/core';
-import { WordToken } from '../data/wordToken.model';
-import { SpeechBubble } from '../data/speechBubble.model';
-import { error } from 'jquery';
-import { throwError } from 'rxjs';
+import { WordToken } from '../data/wordToken/wordToken.model';
+import { SpeechBubble } from '../data/speechBubble/speechBubble.model';
 
 /**
  * The TextBoxComponent represents a component that handles the SpeechBubble data.
@@ -84,7 +82,7 @@ export class TextBoxComponent implements AfterViewInit {
     if (!(target.tagName === 'SPAN')) return;
       const hoveredWord = target.textContent;
       const wordID = target.id;
-      const currentWord = this.findWordById(Number(wordID));
+      const currentWord = this.textbox.words.getDataById(Number(wordID));
 
       console.log('Word: ' + hoveredWord + ', ID: ' + wordID);
       console.log('Current Word: ', currentWord);
@@ -162,7 +160,7 @@ export class TextBoxComponent implements AfterViewInit {
    * @param event - The keyboard event triggered by user.
    */
   public isInFullSelectionDeletion(selectedSpan: HTMLElement, spanId: string, event: KeyboardEvent) {
-    const currentWord = this.findWordById(Number(spanId));
+    const currentWord = this.textbox.words.getDataById(Number(spanId));
     if(!currentWord) return;
     currentWord.word = '';
     this.textbox.words.remove(currentWord);
@@ -183,11 +181,11 @@ export class TextBoxComponent implements AfterViewInit {
    * @pre There needs to be a previous word
    */
   public mergeWithPreviousWord(selectedSpan: HTMLElement, currentText: string | null, prevSpan: HTMLSpanElement, event: KeyboardEvent) {
-    const prevWord = this.findWordById(Number(prevSpan.getAttribute('id')));
+    const prevWord = this.textbox.words.getDataById(Number(prevSpan.getAttribute('id')));
     if (!prevWord) return;
     prevWord.word += currentText;
     if (!prevSpan.getAttribute('id')) return;
-    const currentWord = this.findWordById(Number(selectedSpan.getAttribute('id')));
+    const currentWord = this.textbox.words.getDataById(Number(selectedSpan.getAttribute('id')));
     if (!currentWord) return;
     this.textbox.words.remove(currentWord);
     prevSpan.insertAdjacentElement('afterend', selectedSpan);
@@ -213,12 +211,12 @@ export class TextBoxComponent implements AfterViewInit {
   public mergeWithFollowingWord(selectedSpan: HTMLElement, currentText: string | null, nextSpan: HTMLSpanElement, event: KeyboardEvent) {
     if (!nextSpan) return;
     if(!nextSpan.getAttribute('id')) return;
-    const nextWord = this.findWordById(Number(nextSpan.getAttribute('id')));
+    const nextWord = this.textbox.words.getDataById(Number(nextSpan.getAttribute('id')));
 
     if (!nextWord) return;
     nextWord.word = currentText + nextWord.word;
     if(!selectedSpan.getAttribute('id')) return;
-    const currentWord = this.findWordById(Number(selectedSpan.getAttribute('id')));
+    const currentWord = this.textbox.words.getDataById(Number(selectedSpan.getAttribute('id')));
     if (!currentWord) return;
     this.textbox.words.remove(currentWord);
     selectedSpan.remove();
@@ -250,7 +248,7 @@ export class TextBoxComponent implements AfterViewInit {
     this.adjustColor(selectedSpan.getAttribute('id'));
 
     if (wordBeforeCursor.trim() !== '') {
-      const currentWord = this.findWordById(Number(spanId));
+      const currentWord = this.textbox.words.getDataById(Number(spanId));
       if (!currentWord) return;
       const newWord = new WordToken(wordAfterCursor, 1 ,currentWord.startTime, currentWord.endTime, currentWord.speaker);
       currentWord.updateWordColor();
@@ -265,9 +263,6 @@ export class TextBoxComponent implements AfterViewInit {
       if (!newWordNodeId) return;
       newSpan.id = newWordNodeId.toString();
 
-      //newSpan.id = newWord.id.toString();
-
-      
       newSpan.contentEditable = 'true';
       newSpan.textContent = wordAfterCursor;
 
@@ -287,7 +282,7 @@ export class TextBoxComponent implements AfterViewInit {
       */
       
     } else if (wordBeforeCursor.trim() == '') {
-      const currentWord = this.findWordById(Number(spanId));
+      const currentWord = this.textbox.words.getDataById(Number(spanId));
       if (!currentWord) return;
       currentWord.setWord(wordAfterCursor);
       selectedSpan.textContent = wordAfterCursor;
@@ -307,7 +302,7 @@ export class TextBoxComponent implements AfterViewInit {
    * @param spanId - The id of the span of this word
    */
   public adjustColor(spanId: string | null) {
-    const changedWord = this.findWordById(Number(spanId));
+    const changedWord = this.textbox.words.getDataById(Number(spanId));
     if(!changedWord) return;
     if(!spanId) return;
     const span =  document.getElementById(spanId);
@@ -323,28 +318,11 @@ export class TextBoxComponent implements AfterViewInit {
   public updateWord(event: KeyboardEvent) {
     const selectedSpan = event.target as HTMLElement;
     const currentText = selectedSpan.textContent;
-    const word = this.findWordById(Number(selectedSpan.id));
+    const word = this.textbox.words.getDataById(Number(selectedSpan.id));
     if(!word) return;
     if(!currentText) return;
     word.setWord(currentText);
     selectedSpan.textContent = currentText;
-  }
-
-  /**
-   * Finds a word in the text box by its ID.
-   * @param {string} id - The ID of the word to find.
-   * @returns {Word|null} - The found word or null if not found.
-   */
-  public findWordById(id: number): WordToken | null {
-    let current = this.textbox.words.head;
-    while (current) {
-      if (current.id === id) {
-        return current.data;
-      }
-      current = current.next;
-    }
-    console.log("NULL bei id: " + id + " und current " + current);
-    return null;
   }
 
   /**

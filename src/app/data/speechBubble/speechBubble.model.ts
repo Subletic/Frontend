@@ -1,47 +1,6 @@
-import { LinkedList } from './linkedList.model';
-import { WordExport, WordToken } from './wordToken.model';
-
-/**
- * SpeechBubbleExport represents the important information about
- * an instance of speechbubble that can be transfered to JSON. This JSON
- * Object can then be send to backend.
- */
-export class SpeechBubbleExport {
-  
-  public id: number;
-  public speaker: number;
-  public startTime: number;
-  public endTime: number;
-  public speechBubbleContent: WordExport[];
-
-  constructor(id: number, speaker: number, begin: number, end: number, speechBubbleContent: WordExport[]) {
-    this.id = id;
-    this.speaker = speaker;
-    this.startTime = begin;
-    this.endTime = end;
-    this.speechBubbleContent = speechBubbleContent;
-  }
-
-  public toJSON() {
-    return {
-      Id: this.id,
-      Speaker: this.speaker,
-      StartTime: this.startTime,
-      EndTime: this.endTime,
-      SpeechBubbleContent: this.speechBubbleContent.map(wordExport => wordExport.toJSON())
-    };
-  }
-
-  public toSpeechBubble(){
-    const words = new LinkedList<WordToken>();
-
-    this.speechBubbleContent.forEach(element => {
-      words.add(element.toWordToken());
-    });
-
-    return new SpeechBubble(this.speaker, this.startTime, this.endTime, words, this.id);
-  }
-}
+import { LinkedList } from '../linkedList/linkedList.model';
+import { WordToken } from '../wordToken/wordToken.model';
+import { SpeechBubbleExport } from './speechBubbleExport.model';
 
 /**
  * Instance of SpeechBubble represents the content of one textbox within the 
@@ -131,7 +90,7 @@ export class SpeechBubble {
             if(!current.prev) return;
             this.words.tail = current.prev;
           }
-          current.remove();
+          this.words.remove(current.data);
         } 
         current = current.next;
       }

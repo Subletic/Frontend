@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TextBoxComponent } from './text-box.component';
-import { SpeechBubble } from '../data/speechBubble.model';
-import { WordToken } from '../data/wordToken.model';
-import { LinkedList } from '../data/linkedList.model';
+import { SpeechBubble } from '../data/speechBubble/speechBubble.model';
+import { WordToken } from '../data/wordToken/wordToken.model';
+import { LinkedList } from '../data/linkedList/linkedList.model';
 
 describe('TextBoxComponent', () => {
   let component: TextBoxComponent;
@@ -50,10 +50,10 @@ describe('TextBoxComponent', () => {
     speechBubble.words.add(word2);
     component.textbox = speechBubble;
 
-    const foundWord = component.findWordById(0);
+    const foundWord = component.textbox.words.getDataById(0);
     expect(foundWord).toEqual(word1);
 
-    const notFoundWord = component.findWordById(2);
+    const notFoundWord = component.textbox.words.getDataById(2);
     expect(notFoundWord).toBeNull();
   });
 
@@ -114,7 +114,7 @@ describe('TextBoxComponent', () => {
 
   describe('findWordById', () => {
      it('should return null if word is not found', () => {
-      expect(component.findWordById(9999)).toBeNull();
+      expect(component.textbox.words.getDataById(9999)).toBeNull();
     });
   });
   
@@ -199,11 +199,11 @@ describe('TextBoxComponent', () => {
     const nextSpan = document.createElement('span');
     nextSpan.id = '';
     const event = new KeyboardEvent('keydown', { code: 'Space' });
-    spyOn(component, 'findWordById');
+    spyOn(component.textbox.words, 'getDataById');
 
     component.mergeWithFollowingWord(selectedSpan, currentText, nextSpan, event);
 
-    expect(component.findWordById).not.toHaveBeenCalled();
+    expect(component.textbox.words.getDataById).not.toHaveBeenCalled();
   });  
 
   it('should not handle space press if currentText or cursorPosition is null', () => {
@@ -212,11 +212,11 @@ describe('TextBoxComponent', () => {
     const cursorPosition = 5;
     const spanId = '123';
     const event = new KeyboardEvent('keydown', { code: 'Space' });
-    spyOn(component, 'findWordById');
+    spyOn(component.textbox.words, 'getDataById');
 
     component.handleSpacePress(selectedSpan, currentText, cursorPosition, spanId, event);
 
-    expect(component.findWordById).not.toHaveBeenCalled();
+    expect(component.textbox.words.getDataById).not.toHaveBeenCalled();
   });  
   
 });
@@ -239,7 +239,6 @@ describe('TextBoxComponent', () => {
   });
 
   it('should merge with previous word when word is in full selection', () => {
-    // Arrange
     selectedSpan.textContent = currentText;
     selectedSpan.id = '1';
     const currentWord = new WordToken(currentText, 1, 1, 1, 1);
@@ -247,12 +246,9 @@ describe('TextBoxComponent', () => {
     component.textbox.words.add(prevWord);
     component.textbox.words.add(currentWord);
 
-    // Act
     component.isInFullSelectionDeletion(selectedSpan, '1', event);
 
-    // Assert
     expect(component.textbox.words.size()).toBe(1);
-    
     expect(component.textbox.words.head?.data).toBe(prevWord);
     expect(component.textbox.words.tail?.data).toBe(prevWord);
     expect(prevSpan.getAttribute('id')).toBeNull();
@@ -260,19 +256,16 @@ describe('TextBoxComponent', () => {
   });
 
   it('should merge with previous word when previous word exists', () => {
-    // Arrange
     selectedSpan.textContent = currentText;
     selectedSpan.id = '2';
     const currentWord = new WordToken(currentText, 1, 1, 1, 1);
     const prevWord = new WordToken('Previous', 1, 1, 1, 1);
     component.textbox.words.add(prevWord);
     component.textbox.words.add(currentWord);
-    spyOn(component, 'findWordById').and.returnValues(prevWord, currentWord);
+    spyOn(component.textbox.words, 'getDataById').and.returnValues(prevWord, currentWord);
   
-    // Act
     component.mergeWithPreviousWord(selectedSpan, currentText, prevSpan, event);
   
-    // Assert
     expect(component.textbox.words.size()).toBe(2);
     expect(component.textbox.words.head?.data).toBe(prevWord);
     expect(component.textbox.words.tail?.data).toBe(currentWord);
@@ -280,10 +273,7 @@ describe('TextBoxComponent', () => {
     expect(event.defaultPrevented).toBeFalse();
   
   });
-
-  
 });
-
 
 describe('TextBoxComponent', () => {
   let component: TextBoxComponent;

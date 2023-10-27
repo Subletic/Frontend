@@ -1,45 +1,4 @@
-/**
- * WordExport represents an instance of WordToken but only with the necessary info needed to
- * convert it to JSON Format. Some attributes from WordToken are irrelevant for backend, for 
- * example 'id' because it is only needed for addressing the word-content together with the spans.
- */
-export class WordExport {
-  public word: string;
-  public confidence: number;
-  public startTime: number;
-  public endTime: number;
-  public speaker: number;
-
-  constructor (word: string, confidence: number, startTime: number, endTime: number, speaker: number){
-    this.word = word;
-    this.confidence = confidence;
-    this.startTime = startTime;
-    this.endTime = endTime;
-    this.speaker = speaker;
-  }
-  
-  /**
-   * Returns the information about the attributes of this instance
-   * into the from the backend expected format. 
-   * 
-   */
-  public toJSON() {
-    return {
-      Word: this.word,
-      Confidence: this.confidence,
-      StartTime: this.startTime,
-      EndTime: this.endTime,
-      Speaker: this.speaker
-    };
-  }
-
-  /**
-   * Returns a new WordToken similiar to this word export instance.
-   */
-  public toWordToken(): WordToken {
-    return new WordToken(this.word, this.confidence, this.startTime, this.endTime, this.speaker);
-  }
-}
+import { WordExport } from './wordExport.model';
 
 /**
  * WordToken represents a single word from a textbox. It acts as a node within one of the two linkedList
@@ -51,11 +10,8 @@ export class WordToken {
   public startTime: number;
   public endTime: number;
   public speaker: number;
-  //public id: number;
 
   public color: string;
-
-  private static currentId = 0;
 
   constructor(word: string, confidence: number, startTime: number, endTime: number, speaker: number) {
     this.word = word;
@@ -63,7 +19,6 @@ export class WordToken {
     this.startTime = startTime;
     this.endTime = endTime;
     this.speaker = speaker;
-    //this.id = WordToken.getNextId();
 
     this.color = '';
     this.getColor();
@@ -83,16 +38,6 @@ export class WordToken {
     } else {
       this.color = '#BE0101'; // Rot (Hexadezimalwert: BE0101)
     }
-  }
-
-  /*ID should be irrelevant, because a new object is only instanziated by: 
-  * 1. an import from backend
-  * 2. an insertAfter() call in text-box.component.
-  * Maybe this should be addressed in refactoring by outsourcing it to this data-directory
-  * On the other hand, frontend-autonomy should be held as low as possible 
-  */
-  private static getNextId(): number {
-    return WordToken.currentId++;
   }
 
   /**

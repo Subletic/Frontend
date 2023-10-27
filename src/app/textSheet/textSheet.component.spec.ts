@@ -1,8 +1,9 @@
-import { SpeechBubble, SpeechBubbleExport } from '../data/speechBubble.model';
-import { WordToken } from '../data/wordToken.model';
+import { SpeechBubble } from '../data/speechBubble/speechBubble.model';
+import { SpeechBubbleExport } from '../data/speechBubble/speechBubbleExport.model';
+import { WordToken } from '../data/wordToken/wordToken.model';
 import { TextSheetComponent, SpeechBubbleChain } from './textSheet.component';
 import { SignalRService } from '../service/signalRService';
-import { LinkedList } from '../data/linkedList.model';
+import { LinkedList } from '../data/linkedList/linkedList.model';
 
 describe('LinkedList', () => {
   let linkedList: LinkedList<SpeechBubble>;

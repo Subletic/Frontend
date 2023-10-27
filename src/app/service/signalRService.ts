@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import * as signalR from '@microsoft/signalr';
 import {Subject} from 'rxjs';
 import {environment} from "../../environments/environment";
-import { SpeechBubbleExport } from '../data/speechBubble.model';
+import { SpeechBubbleExport } from '../data/speechBubble/speechBubbleExport.model';
 
 @Injectable({
   providedIn: 'root'

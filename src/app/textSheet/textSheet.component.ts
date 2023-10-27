@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { SpeechBubble, SpeechBubbleExport } from '../data/speechBubble.model';
-import { LinkedList } from '../data/linkedList.model';
-import { WordExport } from '../data/wordToken.model';
+import { SpeechBubble } from '../data/speechBubble/speechBubble.model';
+import { SpeechBubbleExport } from '../data/speechBubble/speechBubbleExport.model';
+import { LinkedList } from '../data/linkedList/linkedList.model';
+import { WordExport } from '../data/wordToken/wordExport.model';
 import { SignalRService } from '../service/signalRService';
 import {environment} from "../../environments/environment";
 
