@@ -22,6 +22,7 @@ export class TextSheetComponent implements OnInit {
   intervalList: ReturnType<typeof setInterval>[] = [];
 
 
+
   constructor(private signalRService: SignalRService) { }
 
   ngOnInit() {
