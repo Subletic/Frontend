@@ -22,7 +22,7 @@ export class WordExport {
     
     /**
      * Returns the information about the attributes of this instance
-     * into the from the backend expected format. 
+     * into the by the backend expected format. 
      * 
      */
     public toJSON() {

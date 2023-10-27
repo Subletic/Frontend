@@ -24,6 +24,11 @@ export class SpeechBubbleExport {
     this.speechBubbleContent = speechBubbleContent;
   }
 
+  /**
+     * Returns the information about the attributes of this instance
+     * into the by the backend expected format. 
+     * 
+     */
   public toJSON() {
     return {
       Id: this.id,
@@ -34,7 +39,11 @@ export class SpeechBubbleExport {
     };
   }
 
-  public toSpeechBubble(){
+  /**
+     * Transforms an instance of SpeechBubbleExport into a SpeechBubble.
+     * 
+     */
+  public toSpeechBubble(): SpeechBubble{
     const words = new LinkedList<WordToken>();
 
     this.speechBubbleContent.forEach(element => {

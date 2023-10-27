@@ -5,6 +5,7 @@ import { LinkedList } from '../data/linkedList/linkedList.model';
 import { WordExport } from '../data/wordToken/wordExport.model';
 import { SignalRService } from '../service/signalRService';
 import { environment } from "../../environments/environment";
+import { SpeechBubbleChain } from '../data/speechBubbleChain.module';
 
 /**
  * The TextSheetComponent represents a component that handles the speech bubbles in a text sheet.
@@ -157,7 +158,7 @@ export class TextSheetComponent implements OnInit {
   * Exports a speech bubble list to a JSON file and sends it to a specified API endpoint.
   * @param speechBubbleExportList - An array of SpeechBubbleExport objects representing the speech bubbles to be exported.
   */
-  public exportToJson(speechBubbleExportList: SpeechBubbleExport[]) {
+  public exportToJson(speechBubbleExportList: SpeechBubbleExport[]): void {
 
     const speechBubbleChain = new SpeechBubbleChain(speechBubbleExportList);
     const jsonData = speechBubbleChain.toJSON();
@@ -214,31 +215,5 @@ export class TextSheetComponent implements OnInit {
       }
       current = current.next;
     }
-  }
-}
-
-/**
-* The SpeechBubbleChain class represents a chain of speech bubbles.
-* It is used for exporting and importing speech bubbles in JSON format.
-*/
-export class SpeechBubbleChain {
-  public SpeechbubbleChain: SpeechBubbleExport[];
-
-  /**
-   * Creates an instance of the SpeechBubbleChain class.
-   * @param SpeechbubbleChain The array of speech bubbles in the chain.
-   */
-  constructor(SpeechbubbleChain: SpeechBubbleExport[]) {
-    this.SpeechbubbleChain = SpeechbubbleChain;
-  }
-
-  /**
-   * Converts the SpeechBubbleChain object to a JSON object.
-   * @returns The JSON representation of the SpeechBubbleChain object.
-   */
-  toJSON() {
-    return {
-      SpeechbubbleChain: this.SpeechbubbleChain.map(speechBubble => speechBubble.toJSON())
-    };
   }
 }

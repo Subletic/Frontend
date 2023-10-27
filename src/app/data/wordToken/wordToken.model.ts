@@ -21,22 +21,30 @@ export class WordToken {
     this.speaker = speaker;
 
     this.color = '';
-    this.getColor();
+    this.setColor();
   }
 
   /**
-  * Returns the color based on the confidence value.
-  * @returns {string} - The color in hexadecimal format.
+  * Sets the color based on the confidence value.
   */
-  public getColor() {
-    if (this.confidence >= 0.9) {
-      this.color = '#000000'; // Schwarz (Hexadezimalwert: 000000)
-    } else if (this.confidence >= 0.7) {
-      this.color = '#D09114'; // Gelb (Hexadezimalwert: D09114)
-    } else if (this.confidence >= 0.5) {
-      this.color = '#CC6600'; // Orange (Hexadezimalwert: CC6600)
+  public setColor() {
+    const HIGH_CONFIDENCE = 0.9;
+    const MID_CONFIDENCE = 0.7;
+    const LOW_CONFIDENCE = 0.5;
+
+    const COLOR_BLACK = '#000000';
+    const COLOR_YELLOW = '#D09114';
+    const COLOR_ORANGE = '#CC6600';
+    const COLOR_RED = '#BE0101';
+
+    if (this.confidence >= HIGH_CONFIDENCE) {
+      this.color = COLOR_BLACK;
+    } else if (this.confidence >= MID_CONFIDENCE) {
+      this.color = COLOR_YELLOW;
+    } else if (this.confidence >= LOW_CONFIDENCE) {
+      this.color = COLOR_ORANGE;
     } else {
-      this.color = '#BE0101'; // Rot (Hexadezimalwert: BE0101)
+      this.color = COLOR_RED;
     }
   }
 
@@ -62,9 +70,11 @@ export class WordToken {
   * @pre Should only be called if the confidence actually changed.
   */
   public updateWordColor() {
+    const HIGHEST_CONFIDENCE = 1;
+    const COLOR_BLACK = '#000000';
 
-    this.confidence = 1;
-    this.color = '#000000';
+    this.confidence = HIGHEST_CONFIDENCE;
+    this.color = COLOR_BLACK;
     return;
   }
 }

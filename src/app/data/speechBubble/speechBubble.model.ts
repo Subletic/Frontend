@@ -84,14 +84,19 @@ export class SpeechBubble {
      */
     public removeEmptyWords() {
       let current = this.words.head;
+    
       while (current) {
-        if (current.data.word === '') {
-          if(this.words.tail == current) {
-            if(!current.prev) return;
-            this.words.tail = current.prev;
-          }
-          this.words.remove(current.data);
-        } 
+        if (current.data.word !== '') {
+          current = current.next;
+          continue;
+        }
+    
+        if (this.words.tail === current) {
+          if (!current.prev) return;
+          this.words.tail = current.prev;
+        }
+    
+        this.words.remove(current.data);
         current = current.next;
       }
     }

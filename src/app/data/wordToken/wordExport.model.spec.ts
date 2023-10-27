@@ -28,25 +28,25 @@ describe('WordExport', () => {
     });
   });
    describe('WordToken', () => {
-    describe('getColor', () => {
+    describe('setColor', () => {
       it('should set the color to black for confidence >= 0.9', () => {
         const wordToken = new WordToken('test', 0.9, 0, 1, 1);
-        wordToken.getColor();
+        wordToken.setColor();
          expect(wordToken.color).toBe('#000000');
       });
        it('should set the color to yellow for 0.7 <= confidence < 0.9', () => {
         const wordToken = new WordToken('test', 0.8, 0, 1, 1);
-        wordToken.getColor();
+        wordToken.setColor();
          expect(wordToken.color).toBe('#D09114');
       });
        it('should set the color to orange for 0.5 <= confidence < 0.7', () => {
         const wordToken = new WordToken('test', 0.6, 0, 1, 1);
-        wordToken.getColor();
+        wordToken.setColor();
          expect(wordToken.color).toBe('#CC6600');
       });
        it('should set the color to red for confidence < 0.5', () => {
         const wordToken = new WordToken('test', 0.4, 0, 1, 1);
-        wordToken.getColor();
+        wordToken.setColor();
          expect(wordToken.color).toBe('#BE0101');
       });
     });

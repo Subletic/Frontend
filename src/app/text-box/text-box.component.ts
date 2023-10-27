@@ -27,32 +27,11 @@ export class TextBoxComponent implements AfterViewInit {
   ngAfterViewInit() {
     const textbox = this.textboxRef.nativeElement;
 
-    if(this.textbox.words.head == null) {
+    if (this.textbox.words.head == null) {
       this.textbox.words.add( new WordToken('', 1, 1, 1, 1));
     }
-
     textbox.innerHTML = this.generateHTML();
-
-    textbox.addEventListener('mouseover', (event: MouseEvent) => {
-      this.logInfoAboutTextbox(event);
-    })
-    
-    textbox.addEventListener('keydown', (event: KeyboardEvent) => {
-      console.log(event);
-      this.handleKeyboardEventTextbox(event);
-    })
-
-    /**
-     * The keydown function doesn't cover the latest change of the .textContent 
-     * Attribute of a span, because typescript prioritises the keydown EventListener instead of 
-     * updating the .textContent of the span first.
-     * Therefore, there needs to be a keyup listener that updates
-     * the data structure so the words are always correct when send 
-     * to backend. (keydown > update .textContent > keyup)
-     */
-    textbox.addEventListener('keyup', (event: KeyboardEvent) => {
-      this.updateWord(event);
-    })
+    this.setEventListeners(textbox);
   }
 
   /**
@@ -137,11 +116,9 @@ export class TextBoxComponent implements AfterViewInit {
       return;
     }
 
-    if(prevSpan) {
-      if (!prevSpan.getAttribute('id') != null) {
-        this.mergeWithPreviousWord(selectedSpan, currentText, prevSpan, event);
-        return;
-      }
+    if (prevSpan && !prevSpan.getAttribute('id') != null) {
+      this.mergeWithPreviousWord(selectedSpan, currentText, prevSpan, event);
+      return;
     }
 
     const nextSpan = selectedSpan.nextElementSibling as HTMLSpanElement;
@@ -270,16 +247,6 @@ export class TextBoxComponent implements AfterViewInit {
       selectedSpan.insertAdjacentText('afterend', ' ');
 
       newSpan.focus();
-      // Event handling for the new span
-      /*
-      newSpan.addEventListener('input', () => {
-        const newText = newSpan.textContent;
-        const word = this.findWordById(Number(newSpan.id));
-        if (!word || !newText) return;
-        word.setWord(newText);
-        
-      });
-      */
       
     } else if (wordBeforeCursor.trim() == '') {
       const currentWord = this.textbox.words.getDataById(Number(spanId));
@@ -307,7 +274,8 @@ export class TextBoxComponent implements AfterViewInit {
     if(!spanId) return;
     const span =  document.getElementById(spanId);
     if(!span) return;
-    span.style.color = '#000000';
+    const COLOR_BLACK = '#000000';
+    span.style.color = COLOR_BLACK;
   }
 
   /**
@@ -338,6 +306,35 @@ export class TextBoxComponent implements AfterViewInit {
       }
       current = next;
     }
+  }
+
+  /**
+   * Sets event listeners for the textbox to enable methods that use input data.
+   * 
+   * @param textbox - The HTML element representing the textbox.
+   */
+  private setEventListeners(textbox: HTMLElement): void {
+
+    textbox.addEventListener('mouseover', (event: MouseEvent) => {
+      this.logInfoAboutTextbox(event);
+    })
+    
+    textbox.addEventListener('keydown', (event: KeyboardEvent) => {
+      console.log(event);
+      this.handleKeyboardEventTextbox(event);
+    })
+
+    /**
+     * The keydown function doesn't cover the latest change of the .textContent 
+     * Attribute of a span, because typescript prioritises the keydown EventListener instead of 
+     * updating the .textContent of the span first.
+     * Therefore, there needs to be a keyup listener that updates
+     * the data structure so the words are always correct when send 
+     * to backend. (keydown > update .textContent > keyup)
+     */
+    textbox.addEventListener('keyup', (event: KeyboardEvent) => {
+      this.updateWord(event);
+    })
   }
 
 }

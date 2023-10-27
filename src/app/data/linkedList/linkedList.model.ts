@@ -47,12 +47,12 @@ export class LinkedList<T> {
     if (!this.head) {
       this.head = node;
       this.tail = node;
-    } else {
-      if (this.tail) {
-        this.tail.next = node;
-        node.prev = this.tail;
-        this.tail = node;
-      }
+      return;
+    } 
+    if (this.tail) {
+      this.tail.next = node;
+      node.prev = this.tail;
+      this.tail = node;
     }
   }
 
@@ -93,29 +93,29 @@ export class LinkedList<T> {
     let current = this.head;
   
     while (current) {
-      if (current.data === prevData) {
-        const newNode = new Node(newData);
-        newNode.id = this.currentIndex;
-        this.currentIndex++;
-        newNode.prev = current;
-        newNode.next = current.next;
-  
-        if (current === this.tail) {
-          this.tail = newNode;
-        }
-  
-        current.next = newNode;
-  
-        if (newNode.next) {
-          newNode.next.prev = newNode;
-        }
-
-        return;
+      if (current.data !== prevData) {
+        current = current.next;
+        continue;
       }
-  
-      current = current.next;
+      
+      const newNode = new Node(newData);
+      newNode.id = this.currentIndex;
+      this.currentIndex++;
+      newNode.prev = current;
+      newNode.next = current.next;
+
+      if (current === this.tail) {
+        this.tail = newNode;
+      }
+      current.next = newNode;
+
+      if (newNode.next) {
+        newNode.next.prev = newNode;
+      }
+
+      return;
+      }
     }
-  }
 
   /**
    * Generates a formatted string by iterating through the linked list and using the provided
@@ -173,20 +173,17 @@ export class LinkedList<T> {
    * @param data - The data element for which the identifier is requested.
    * @returns The identifier (id) of the specified data element, or null if not found.
    */
-  public getNodeId(data: T): number | null  {
-    
+  public getNodeId(data: T): number | null  {  
     let current = this.head;
-  
     while (current) {
-      if (current.data === data) {
-        
+      if (current.data === data) {       
         return current.id;
       }
       current = current.next;
     }
-
     return null;
   }
+
 
   /**
    * Finds data in the linkedList by the ID of its Node.

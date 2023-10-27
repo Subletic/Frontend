@@ -1,9 +1,10 @@
 import { SpeechBubble } from '../data/speechBubble/speechBubble.model';
 import { SpeechBubbleExport } from '../data/speechBubble/speechBubbleExport.model';
 import { WordToken } from '../data/wordToken/wordToken.model';
-import { TextSheetComponent, SpeechBubbleChain } from './textSheet.component';
+import { TextSheetComponent } from './textSheet.component';
 import { SignalRService } from '../service/signalRService';
 import { LinkedList } from '../data/linkedList/linkedList.model';
+import { SpeechBubbleChain } from '../data/speechBubbleChain.module';
 
 describe('LinkedList', () => {
   let linkedList: LinkedList<SpeechBubble>;
