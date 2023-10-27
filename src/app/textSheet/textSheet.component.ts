@@ -4,7 +4,7 @@ import { SpeechBubbleExport } from '../data/speechBubble/speechBubbleExport.mode
 import { LinkedList } from '../data/linkedList/linkedList.model';
 import { WordExport } from '../data/wordToken/wordExport.model';
 import { SignalRService } from '../service/signalRService';
-import {environment} from "../../environments/environment";
+import { environment } from "../../environments/environment";
 
 /**
  * The TextSheetComponent represents a component that handles the speech bubbles in a text sheet.
@@ -23,7 +23,9 @@ export class TextSheetComponent implements OnInit {
   timeSinceFocusOutList: Map<number, number> = new Map<number, number>();
   intervalList: ReturnType<typeof setInterval>[] = [];
 
-  constructor(private signalRService: SignalRService) {}
+
+
+  constructor(private signalRService: SignalRService) { }
 
   ngOnInit() {
 
@@ -47,12 +49,12 @@ export class TextSheetComponent implements OnInit {
       console.error('Invalid speechBubbleChain object.');
       return;
     }
-  
+
     const speechBubbleExportArray: SpeechBubbleExport[] = [];
-    
+
     speechBubbleChain.forEach((speechBubbleExport: SpeechBubbleExport) => {
       const speechBubbleContent: WordExport[] = [];
-  
+
       speechBubbleExport.speechBubbleContent.forEach((word: WordExport) => {
         const wordExport = new WordExport(
           word.word,
@@ -61,10 +63,10 @@ export class TextSheetComponent implements OnInit {
           word.endTime,
           word.speaker
         );
-  
+
         speechBubbleContent.push(wordExport);
       });
-  
+
       const speechBubbleExport2 = new SpeechBubbleExport(
         speechBubbleExport.id,
         speechBubbleExport.speaker,
@@ -72,10 +74,10 @@ export class TextSheetComponent implements OnInit {
         speechBubbleExport.endTime,
         speechBubbleContent
       );
-  
+
       speechBubbleExportArray.push(speechBubbleExport2);
     });
-  
+
     speechBubbleExportArray.forEach((element: SpeechBubbleExport) => {
       const speechBubble = element.toSpeechBubble();
       if (speechBubble) {
@@ -95,7 +97,7 @@ export class TextSheetComponent implements OnInit {
 
     const speechBubble = this.getSpeechBubbleById(id);
     if (!speechBubble) return;
-  
+
     clearInterval(this.intervalList[id]);
     this.timeSinceFocusOutCounter(id);
   }
@@ -103,7 +105,7 @@ export class TextSheetComponent implements OnInit {
   public getSpeechBubbleById(id: number): SpeechBubble | undefined {
     
     let current = this.speechBubbles.head;
-  
+
     while (current) {
       if (current.data.id === id) {
         return current.data;
@@ -120,19 +122,22 @@ export class TextSheetComponent implements OnInit {
   * @param id - The id of the speechbubble to set a counter for
   */
   public timeSinceFocusOutCounter(id: number) {
+    const maxSecondsSinceFocusOut = 5;
+    const intervalInMilliseconds = 1000;
+
     this.timeSinceFocusOutList.set(id, 0);
-  
+
     this.intervalList[id] = setInterval(() => {
-      const currentValue = this.timeSinceFocusOutList.get(id) || 0;
-      this.timeSinceFocusOutList.set(id, currentValue + 1);
-  
-      if (currentValue >= 5) {
+      const secondsSinceFocusOut = this.timeSinceFocusOutList.get(id) || 0;
+      this.timeSinceFocusOutList.set(id, secondsSinceFocusOut + 1);
+
+      if (secondsSinceFocusOut >= maxSecondsSinceFocusOut) {
         clearInterval(this.intervalList[id]);
         this.callExportToJson(id);
         this.timeSinceFocusOutList.set(id, 0);
         return;
       }
-    }, 1000);
+    }, intervalInMilliseconds);
   }
 
   /**
@@ -141,10 +146,10 @@ export class TextSheetComponent implements OnInit {
   */
   public callExportToJson(id: number) {
     const speechBubbleToExport = this.getSpeechBubbleById(id);
-    if(!speechBubbleToExport) return;
-    speechBubbleToExport.removeEmptyWords(); 
+    if (!speechBubbleToExport) return;
+    speechBubbleToExport.removeEmptyWords();
     const currentExport = speechBubbleToExport.getExport();
-    if(currentExport == undefined) return;
+    if (currentExport == undefined) return;
     this.exportToJson([currentExport]);
   }
 
@@ -208,7 +213,7 @@ export class TextSheetComponent implements OnInit {
           return;
       }
       current = current.next;
-    }  
+    }
   }
 }
 

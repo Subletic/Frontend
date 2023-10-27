@@ -11,10 +11,10 @@
         <div class="seconds-container">
             <div class="seconds-label-container">
                 <div id="seconds-name-label" class="seconds-name-label">Sprungweite</div>
-                <div class="seconds-value-label">{{seconds}} Sekunden</div>
+                <div class="seconds-value-label">{{updatedAudioSkipSeconds}} Sekunden</div>
             </div>
             <div class="slider">
-                <input type="range" id="seconds-slider" min="1" max="20" class="styled-slider slider-progress" [(ngModel)]="seconds" #secondsInput="ngModel" #secondsSlider>
+                <input type="range" id="seconds-slider" min="1" max="20" class="styled-slider slider-progress" [(ngModel)]="updatedAudioSkipSeconds" #secondsInput="ngModel" #secondsSlider>
             </div>
         </div>  
 

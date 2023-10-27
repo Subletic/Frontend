@@ -30,13 +30,13 @@ describe('SettingsComponent', () => {
 
   it('should initialize with default values', () => {
     expect(component.id).toBeUndefined();
-    expect(component.seconds).toBe(5);
-    expect(component.initialSeconds).toBe(5);
+    expect(component.updatedAudioSkipSeconds).toBe(5);
+    expect(component.initialAudioSkipSeconds).toBe(5);
   });
 
   it('should set the slider value when ngAfterViewInit is called', () => {
     const sliderElement = fixture.nativeElement.querySelector('#seconds-slider');
-    component.seconds = 10;
+    component.updatedAudioSkipSeconds = 10;
     fixture.detectChanges();
 
     component.ngAfterViewInit();
@@ -59,13 +59,13 @@ describe('SettingsComponent', () => {
   });
 
   it('should cancel changes and reset seconds value', () => {
-    component.seconds = 10;
-    component.initialSeconds = 5;
+    component.updatedAudioSkipSeconds = 10;
+    component.initialAudioSkipSeconds = 5;
 
     spyOn(component, 'close');
 
     component.cancel();
-    expect(component.seconds).toBe(5);
+    expect(component.updatedAudioSkipSeconds).toBe(5);
     expect(component.close).toHaveBeenCalled();
   });
 
@@ -73,7 +73,7 @@ describe('SettingsComponent', () => {
     spyOn(component.secondsChange, 'emit');
     spyOn(component, 'close');
   
-    component.seconds = 10;
+    component.updatedAudioSkipSeconds = 10;
   
     component.apply();
   

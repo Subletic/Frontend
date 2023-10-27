@@ -38,7 +38,7 @@ export class SoundBoxComponent {
 
   /**
    * Closes Popups if click outside of popup occurs.
-   * 
+   *
    * @param event - Any click event triggered by user.
    */
   @HostListener('document:click', ['$event'])
@@ -48,7 +48,7 @@ export class SoundBoxComponent {
     const isInsideSpeedButton = this.speedButton.nativeElement.contains(clickedElement);
     if (!isInsideSoundButton) {
       this.closePopoverAudio();
-    } 
+    }
     if (!isInsideSpeedButton) {
       this.closePopoverSpeed();
     }
@@ -56,14 +56,14 @@ export class SoundBoxComponent {
 
   /**
    * Shortcuts for play/pause, skipBack and skipForwards.
-   * 
+   *
    * @param event - Any key event triggered by user.
    */
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
     if (event.ctrlKey && event.altKey) {
       if (event.key === 'd') {
-        this.audioHandler.playOrStopAudio();
+        this.audioHandler.togglePlayback();
         this.isAudioPlaying = this.audioHandler.getIsAudioPlaying();
         event.preventDefault();
       } else if (event.key === 'y') {
@@ -81,10 +81,10 @@ export class SoundBoxComponent {
    * switches isAudioPlaying for Icon-Change
    */
   playButton() {
-    this.audioHandler.playOrStopAudio();
+    this.audioHandler.togglePlayback();
     this.isAudioPlaying = this.audioHandler.getIsAudioPlaying();
   }
-  
+
   /**
    * Calls skipBackward() function in audioHandler.
    */
@@ -143,23 +143,23 @@ export class SoundBoxComponent {
     this.isSpeedPopoverOpen = false;
   }
 
-  /** Calls setVolume Function in audioHandler with volume number between -1 and 1. 
-   * @param {number} volume - The new volume value. 
+  /** Calls setVolume Function in audioHandler with volume number between -1 and 1.
+   * @param {number} volume - The new volume value.
    */
   onVolumeChange(volume: number) {
     this.audioHandler.setVolume(volume);
   }
 
-  /** 
-   * Sets the number of seconds to skip in the audio handler. 
-   * @param {number} seconds - The number of seconds to skip. 
+  /**
+   * Sets the number of seconds to skip in the audio handler.
+   * @param {number} seconds - The number of seconds to skip.
    */
   onSecondsChange(seconds: number){
     this.audioHandler.setSkipSeconds(seconds);
   }
 
   /**
-   * Safes the inital volume number between -100 and 100, 
+   * Safes the inital volume number between -100 and 100,
    * so the next slider can be instantiated with the last-current-value of the old one.
    */
   onVolume100Change(volume100: number) {

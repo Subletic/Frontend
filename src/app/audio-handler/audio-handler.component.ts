@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {SignalRService} from "../service/signalRService";
+import {CircularBuffer} from "../data/circularBuffer.model";
 
 
 /**
@@ -13,84 +14,62 @@ import {SignalRService} from "../service/signalRService";
 export class AudioHandlerComponent implements OnInit {
 
   // Constants for audio buffering and sampling
-  private bufferSizeInSeconds = 60 * 5;
-  private sampleRate = 48000;
-  private maxBufferLength = this.bufferSizeInSeconds * this.sampleRate;
+  private readonly BUFFER_SIZE_IN_SECONDS = 30;
+  private readonly SAMPLE_RATE = 48000;
+
   // Audio buffers and context
-  private audioBuffer: Float32Array = new Float32Array(this.maxBufferLength);
+  private audioBuffer: CircularBuffer = new CircularBuffer(this.SAMPLE_RATE, this.BUFFER_SIZE_IN_SECONDS);
   private audioContext = new AudioContext();
-  private sourceNode: AudioBufferSourceNode | null = null;
-  private elementsInBuffer = 0;
-  private nodeAudioBuffer = this.audioContext.createBuffer(1, this.maxBufferLength, this.sampleRate);
-  private isSourceNodeStarted = false;
-  // Variable for the number of seconds to skip
+
+  // Reference to the currently playing AudioNode
+  private currentAudioNode: AudioBufferSourceNode | null = null;
+
   private skipSeconds = 5;
-  //Variable for the speed to play audio in
   private playbackSpeed = 1;
-  private jumpCounter = 0;
 
   private gainNode: GainNode = this.audioContext.createGain();
-  private volume = 0;
+  private volume = 1;
 
-  private isAudioPlaying = false;
+  private audioPlaying = false;
 
+  /**
+   * Gets the reference to the SignalRService.
+   * @param signalRService - The SignalRService to get the reference to.
+   */
   constructor(private signalRService: SignalRService) {
-    // Create the source node and assign the node audio buffer
-    this.sourceNode = this.audioContext.createBufferSource();
-    this.sourceNode.buffer = this.nodeAudioBuffer;
   }
 
-  ngOnInit() {
+  /**
+   * Initializes Services and audio nodes
+   */
+  ngOnInit(): void {
     // Subscribe to the received audio stream event from SignalRService
     this.signalRService.receivedAudioStream.subscribe((newChunk) => {
       this.handleAudioData(newChunk)
     });
 
-    this.createNodes();
-  }
+    const AUDIO_UPDATE_INTERVAL_IN_MS = 1000;
 
-  /**
-   * Creates audio nodes and connects them.
-   */
-  public createNodes() {
-    this.gainNode = this.audioContext.createGain();
-    this.gainNode.gain.value = 0;
-    if(!this.sourceNode) return;
-    this.sourceNode.connect(this.gainNode);
+    setInterval(() => {
+      this.updateAudioNode();
+    }, AUDIO_UPDATE_INTERVAL_IN_MS);
+
     this.gainNode.connect(this.audioContext.destination);
   }
 
   /**
    * Resumes audio playback and starts the source node if not started.
    */
-  public resumePlayback(): void {
-
-    console.log(this.sourceNode)
-    if (this.sourceNode) {
-      if (!this.sourceNode.buffer) return;
-      this.sourceNode.playbackRate.value = this.playbackSpeed;
-      console.log(this.sourceNode.buffer.getChannelData(0));
-      if(!this.isSourceNodeStarted){
-        this.sourceNode.start();
-        this.isSourceNodeStarted = true;
-      }
-      // Resume the audio context to resume playback
-      this.audioContext.resume().then(() => console.log('Playback resumed successfully.'));
-      this.isAudioPlaying = true;
+  public togglePlayback(): void {
+    if (!this.audioPlaying) {
+      this.audioContext.resume().then(() => {
+        this.audioPlaying = true;
+      })
+    } else {
+      this.audioContext.suspend().then(() => {
+        this.audioPlaying = false;
+      })
     }
-  }
-
-  /**
-   * Concatenates two Float32Array buffers.
-   * @param a - First buffer to concatenate.
-   * @param b - Second buffer to concatenate.
-   * @returns The concatenated Float32Array buffer.
-   */
-  private concatenateFloat32Arrays(a: Float32Array, b: Float32Array): Float32Array {
-    const c = new Float32Array(a.length + b.length);
-    c.set(a);
-    c.set(b, a.length);
-    return c;
   }
 
   /**
@@ -99,50 +78,45 @@ export class AudioHandlerComponent implements OnInit {
    */
   private handleAudioData(newChunk: Int16Array): void {
     // Convert the received Int16Array chunk to Float32Array
-    const float32Chunk = new Float32Array(newChunk.length);
+    const convertedAudioData: Float32Array = new Float32Array(newChunk.length);
+    const INT16_TO_FLOAT32_SCALING_FACTOR = 32767;
+
     for (let i = 0; i < newChunk.length; i++) {
-      float32Chunk[i] = newChunk[i] / 32767;  // Skalierung auf den Bereich von -1 bis 1
+      convertedAudioData[i] = newChunk[i] / INT16_TO_FLOAT32_SCALING_FACTOR;  // Skalierung auf den Bereich von -1 bis 1
     }
 
-    // Check if the buffer is full and discard the oldest part
-    if (this.elementsInBuffer + 48000 > this.maxBufferLength) {
-      console.log(this.elementsInBuffer);
-      const clonedArray = this.audioBuffer.slice(48000, 5760000);
-
-      this.audioBuffer = this.concatenateFloat32Arrays(clonedArray, float32Chunk);
-
-      this.elementsInBuffer -= 48000;
-      console.log(this.elementsInBuffer);
-    }
-
-    // Add the new chunk to the buffer
-    const offset = this.elementsInBuffer;
-    this.audioBuffer.set(float32Chunk, offset);
-    this.elementsInBuffer += float32Chunk.length;
-
-
-    // Update the node audio buffer and connect the source node
-    this.updatePlayableBuffer();
+    this.audioBuffer.writeNewChunk(convertedAudioData)
   }
 
   /**
-   * Updates the node audio buffer with the current audio buffer content and connects the source node.
+   * Replaces current playing audio node with audio node containing new data
+   * Each audio node holds 1s of audio
    */
-  private updatePlayableBuffer(): void {
-    // Create single channel audio buffer with sampling rate of 48kHz
-    this.nodeAudioBuffer.getChannelData(0).set(this.audioBuffer.subarray(0, this.elementsInBuffer));
-    this.sourceNode?.buffer?.getChannelData(0).set(this.nodeAudioBuffer.getChannelData(0));
+  private updateAudioNode(): void {
+    if (!this.audioPlaying) return;
 
-    console.log("Channel data updated successfully.");
+    const audioData: Float32Array | null = this.audioBuffer.readNextSecond();
+    const NUMBER_OF_CHANNELS = 1;
 
-    if (!this.sourceNode) {
-      return;
-    }
+    if (!audioData || audioData.length === 0) return;
 
-    this.sourceNode.playbackRate.value = this.playbackSpeed;
+    console.log("Audio length:" + audioData.length);
+
+    const audioBuffer: AudioBuffer = this.audioContext.createBuffer(NUMBER_OF_CHANNELS, audioData.length, this.SAMPLE_RATE);
+    const SELECTED_CHANNEL = 0;
+    const BUFFER_OFFSET = 0;
+
+    audioBuffer.copyToChannel(audioData, SELECTED_CHANNEL, BUFFER_OFFSET)
+
+    const audioNode: AudioBufferSourceNode = new AudioBufferSourceNode(this.audioContext, {buffer: audioBuffer});
 
     // Connect the source node to the audio context destination
-    this.sourceNode.connect(this.audioContext.destination);
+    audioNode.playbackRate.value = this.playbackSpeed;
+    audioNode.connect(this.gainNode)
+
+    this.currentAudioNode?.disconnect();
+    audioNode.start(0);
+    this.currentAudioNode = audioNode;
   }
 
   /**
@@ -151,162 +125,69 @@ export class AudioHandlerComponent implements OnInit {
    */
   public setPlaybackSpeed(speed: number): void {
     this.playbackSpeed = speed;
-
-    if (this.sourceNode) {
-      this.sourceNode.playbackRate.value = this.playbackSpeed;
-    }
   }
 
-  /**
-   * Pauses audio playback by suspending the audio context.
-   */
-  public pauseAudio() {
-    if (this.audioContext.state === 'running') {
-      this.audioContext.suspend().then(() => {
-        console.log('Audio paused successfully.');
-      });
-    }
-
-    this.isAudioPlaying = false;
-  }
-
-  /**
-   * Toggles between playing and stopping audio.
-   */
-  public playOrStopAudio() {
-
-    if (this.audioContext.state !== 'running') {
-      this.resumePlayback();
-    } else {
-      this.pauseAudio();
-    }
-
-  }
 
   /**
    * Skips forward in the audio playback by the specified number of seconds.
    */
-  public skipForward() {
-    if (this.audioContext.state !== 'running') {
-      return;
-    }
-
-    const currentTime = this.audioContext.currentTime + this.jumpCounter;
-    const targetTime = Math.min(currentTime + this.skipSeconds, this.audioBuffer.length / this.sampleRate);
-
-    this.pauseAudio();
-
-    if (this.sourceNode) {
-      if (this.isSourceNodeStarted) {
-        this.sourceNode.stop();
-        this.isSourceNodeStarted = false;
-      }
-      this.sourceNode.disconnect();
-      this.sourceNode = null;
-    }
-
-    this.sourceNode = this.audioContext.createBufferSource();
-    this.sourceNode.buffer = this.nodeAudioBuffer;
-    this.sourceNode.connect(this.audioContext.destination);
-
-    this.jumpCounter = this.jumpCounter + this.skipSeconds;
-
-    this.audioContext.resume().then(() => {
-      if (!this.sourceNode) return;
-
-      this.updatePlayableBuffer();
-
-      this.createNodes();
-      this.reapplyVolume();
-
-      this.sourceNode.start(0, targetTime);
-      this.isSourceNodeStarted = true;
-    });
-
-    //this.reapplyVolume();
+  public skipForward(): void {
+    this.audioBuffer.advanceReadPointer(this.skipSeconds);
   }
 
   /**
    * Skips backward in the audio playback by the specified number of seconds.
    */
-  public skipBackward() {
-    if (this.audioContext.state !== 'running') {
-      return;
-    }
-
-    const currentTime = this.audioContext.currentTime + this.jumpCounter;
-    const targetTime = Math.max(currentTime - this.skipSeconds, 0);
-
-    this.pauseAudio();
-
-    if (this.sourceNode) {
-      if (this.isSourceNodeStarted) {
-        this.sourceNode.stop();
-        this.isSourceNodeStarted = false;
-      }
-      this.sourceNode.disconnect();
-      this.sourceNode = null;
-    }
-
-    this.sourceNode = this.audioContext.createBufferSource();
-    this.sourceNode.buffer = this.nodeAudioBuffer;
-    this.sourceNode.connect(this.audioContext.destination);
-
-    this.jumpCounter = this.jumpCounter - this.skipSeconds;
-
-
-    this.audioContext.resume().then(() => {
-      if (!this.sourceNode) return;
-      this.updatePlayableBuffer();
-
-      this.createNodes();
-      this.reapplyVolume();
-
-      this.sourceNode.start(0, targetTime);
-      this.isSourceNodeStarted = true;
-    });
-  }
-
-  public reapplyVolume() {
-    this.gainNode.gain.setValueAtTime(this.volume, this.audioContext.currentTime);
-  }
-
-  public getGainNode(): GainNode {
-    return this.gainNode;
-  }
-
-  public getSourceNode() {
-    return this.sourceNode;
-  }
-
-  public getNodeAudioBuffer() {
-    return this.nodeAudioBuffer;
+  public skipBackward(): void {
+    this.audioBuffer.decreaseReadPointer(this.skipSeconds);
   }
 
   /**
- * Sets the volume of the audio.
- * @param volume - The volume level to set.
- */
-  public setVolume(volume: number) {
-    this.volume = volume;
+   * Sets the volume of the audio.
+   * @param volume - The volume level to set.
+   */
+  public setVolume(volume: number): void {
+    const LOWEST_INPUT_VOL_LEVEL = -1;
+    const HIGHEST_INPUT_VOL_LEVEL = 1;
+
+    const MAX_VOLUME = 1.5;
+    const MIN_VOLUME = 0;
+
+    this.volume = this.mapVolumeToNewScale(volume, LOWEST_INPUT_VOL_LEVEL, HIGHEST_INPUT_VOL_LEVEL, MIN_VOLUME, MAX_VOLUME);
+
     if (!this.gainNode) return;
     this.gainNode.gain.setValueAtTime(this.volume, this.audioContext.currentTime);
   }
 
-  public getVolume() {
+  /**
+   * Maps number to new range according to original range given
+   * @param value Number that's to be mapped
+   * @param origMin Lowest value of original range
+   * @param origMax Highest value of original range
+   * @param newMin Lowest value of new range
+   * @param newMax Highest value of new range
+   */
+  private mapVolumeToNewScale(value: number, origMin: number, origMax: number, newMin: number, newMax: number): number {
+    return (value - origMin) * (newMax - newMin) / (origMax - origMin) + newMin;
+  }
+
+  public getVolume(): number {
     return this.volume;
   }
-   
-  public setSkipSeconds(seconds: number) {
+
+  /**
+   * Sets amount of seconds to be skipped
+   * @param seconds
+   */
+  public setSkipSeconds(seconds: number): void {
     this.skipSeconds = seconds;
   }
 
-  /** 
-   * Returns the current status of the audio playback. 
-   * @returns {boolean} True if audio is currently playing, false otherwise. 
+  /**
+   * Returns the current status of the audio playback.
+   * @returns {boolean} True if audio is currently playing, false otherwise.
    */
   public getIsAudioPlaying(): boolean {
-    return this.isAudioPlaying;
+    return this.audioPlaying;
   }
-
 }
