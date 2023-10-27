@@ -18,7 +18,7 @@ export class SettingsComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @ViewChild('secondsSlider', { static: false }) secondsSlider!: ElementRef<HTMLInputElement>;
 
-  private initialAudioSkipSeconds = 5;
+  public initialAudioSkipSeconds = 5;
   @Input() updatedAudioSkipSeconds = this.initialAudioSkipSeconds;
 
   private element!: HTMLElement;
