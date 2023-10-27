@@ -18,7 +18,7 @@ export class SettingsComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @ViewChild('secondsSlider', { static: false }) secondsSlider!: ElementRef<HTMLInputElement>;
 
-  initialAudioSkipSeconds = 5;
+  private initialAudioSkipSeconds = 5;
   @Input() updatedAudioSkipSeconds = this.initialAudioSkipSeconds;
 
   private element!: HTMLElement;
@@ -91,13 +91,13 @@ export class SettingsComponent implements OnInit, OnDestroy, AfterViewInit {
    * Sets up the slider so it has a colored bar from left to the thumb 
    */
   setupSlider(): void {
-    const minSkipSecondsSliderValue = '1';
-    const maxSkipSecondsSlidervalue = '20';
+    const MIN_SKIP_SECONDS = '1';
+    const MAX_SKIP_SECONDS = '20';
 
     document.querySelectorAll<HTMLInputElement>('input[type="range"].slider-progress').forEach((e: HTMLInputElement) => {
       e.style.setProperty('--value', e.value);
-      e.style.setProperty('--min', e.min === '' ? minSkipSecondsSliderValue : e.min);
-      e.style.setProperty('--max', e.max === '' ? maxSkipSecondsSlidervalue : e.max);
+      e.style.setProperty('--min', e.min === '' ? MIN_SKIP_SECONDS : e.min);
+      e.style.setProperty('--max', e.max === '' ? MAX_SKIP_SECONDS : e.max);
       e.addEventListener('input', () => e.style.setProperty('--value', e.value));
     });
   }
@@ -111,7 +111,7 @@ export class SettingsComponent implements OnInit, OnDestroy, AfterViewInit {
    * 
    */
   callBackendReload(): void {
-    const millisecondsBeforeReloadingPage = 2000;
+    const MILLISECONDS_BEFORE_RELOADING_PAGE = 2000;
 
     fetch(environment.apiURL + '/api/restart', {
       method: 'POST',
@@ -121,7 +121,7 @@ export class SettingsComponent implements OnInit, OnDestroy, AfterViewInit {
           console.log('Called for restart');
           setTimeout(() => {
             window.location.reload();
-          }, millisecondsBeforeReloadingPage);
+          }, MILLISECONDS_BEFORE_RELOADING_PAGE);
         } else {
           console.error('Error with calling restart');
         }
