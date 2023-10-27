@@ -51,7 +51,7 @@ export class WordToken {
   public startTime: number;
   public endTime: number;
   public speaker: number;
-  public id: number;
+  //public id: number;
 
   public color: string;
 
@@ -63,7 +63,7 @@ export class WordToken {
     this.startTime = startTime;
     this.endTime = endTime;
     this.speaker = speaker;
-    this.id = WordToken.getNextId();
+    //this.id = WordToken.getNextId();
 
     this.color = '';
     this.getColor();

@@ -48,7 +48,7 @@ describe('TextBoxComponent', () => {
     const word2 = new WordToken('World', 2, 1, 1, 1);
     speechBubble.words.add(word1);
     speechBubble.words.add(word2);
-    //component.textbox = speechBubble;
+    component.textbox = speechBubble;
 
     const foundWord = component.findWordById(0);
     expect(foundWord).toEqual(word1);
@@ -80,9 +80,6 @@ describe('TextBoxComponent', () => {
     expect(mockTextbox.addEventListener).toHaveBeenCalledWith('mouseover', jasmine.any(Function));
   });
 
-  /*
-  Bevor dieser Test reaktiviert wird, muss ich mir die ursprüngliche Funktionsweise vor dem Fail nochmal anschauen ~Finn
-
   it('should log the information about the hovered word in logInfoAboutTextbox', () => {
     const component = new TextBoxComponent();
     component.textbox = new SpeechBubble(1, 1, 1);
@@ -103,7 +100,7 @@ describe('TextBoxComponent', () => {
     expect(console.log).toHaveBeenCalledWith('Current Word: ', jasmine.any(WordToken));
     expect(console.log).toHaveBeenCalledWith('Print Text:', jasmine.any(String));
   });
-  */
+
 
   it('should remove empty objects from the word list', () => {
     const emptyWord = new WordToken('', 1, 1, 1, 1);
@@ -116,11 +113,6 @@ describe('TextBoxComponent', () => {
   });
 
   describe('findWordById', () => {
-    it('should return the correct word', () => {
-      const word = new WordToken('test', 1, 1, 1, 1);
-      component.textbox.words.add(word);
-      expect(component.findWordById(word.id)).toEqual(word);
-    });
      it('should return null if word is not found', () => {
       expect(component.findWordById(9999)).toBeNull();
     });

@@ -260,7 +260,14 @@ export class TextBoxComponent implements AfterViewInit {
       currentWord.word = wordBeforeCursor;
 
       const newSpan = document.createElement('span');
-      newSpan.id = newWord.id.toString();
+
+      const newWordNodeId = this.textbox.words.getNodeId(newWord);
+      if (!newWordNodeId) return;
+      newSpan.id = newWordNodeId.toString();
+
+      //newSpan.id = newWord.id.toString();
+
+      
       newSpan.contentEditable = 'true';
       newSpan.textContent = wordAfterCursor;
 
@@ -331,7 +338,7 @@ export class TextBoxComponent implements AfterViewInit {
   public findWordById(id: number): WordToken | null {
     let current = this.textbox.words.head;
     while (current) {
-      if (current.data.id === id) {
+      if (current.id === id) {
         return current.data;
       }
       current = current.next;

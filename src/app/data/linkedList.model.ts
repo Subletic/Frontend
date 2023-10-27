@@ -89,7 +89,7 @@ public toJSON(getDataFunction: any): string {
         if (newNode.next) {
           newNode.next.prev = newNode;
         }
-  
+
         return;
       }
   
@@ -125,6 +125,21 @@ public toJSON(getDataFunction: any): string {
       current = current.next;
     }
     return elements.join(" ");
+  }
+
+  public getNodeId(data: T): number | null  {
+    
+    let current = this.head;
+  
+    while (current) {
+      if (current.data === data) {
+        
+        return current.id;
+      }
+      current = current.next;
+    }
+
+    return null;
   }
 }
 

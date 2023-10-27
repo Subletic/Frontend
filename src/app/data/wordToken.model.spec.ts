@@ -36,16 +36,6 @@ describe('WordToken', () => {
     token.setWord('grape');
     expect(token.word).toBe('grape');
   });
-
-  it('should have unique IDs for each instance', () => {
-    const token1 = new WordToken('apple', 0.8, 10, 20, 1);
-    const token2 = new WordToken('banana', 0.9, 30, 40, 1);
-    const token3 = new WordToken('orange', 0.7, 50, 60, 2);
-
-    expect(token1.id).not.toBe(token2.id);
-    expect(token1.id).not.toBe(token3.id);
-    expect(token2.id).not.toBe(token3.id);
-  });
 });
 
  describe('WordExport', () => {
