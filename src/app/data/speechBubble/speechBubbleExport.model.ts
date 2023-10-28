@@ -9,7 +9,7 @@ import { SpeechBubble } from './speechBubble.model';
  * Object can then be send to backend.
  */
 export class SpeechBubbleExport {
-  
+
   public id: number;
   public speaker: number;
   public startTime: number;
@@ -43,7 +43,7 @@ export class SpeechBubbleExport {
      * Transforms an instance of SpeechBubbleExport into a SpeechBubble.
      * 
      */
-  public toSpeechBubble(): SpeechBubble{
+  public toSpeechBubble(): SpeechBubble {
     const words = new LinkedList<WordToken>();
 
     this.speechBubbleContent.forEach(element => {

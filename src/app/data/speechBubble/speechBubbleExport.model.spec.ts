@@ -23,7 +23,7 @@ describe('SpeechBubbleExport', () => {
   });
 
   it('should convert SpeechBubbleExport instance to JSON', () => {
-    const expectedJson = {
+    const EXPECTED_JSON = {
       Id: 1,
       Speaker: 1,
       StartTime: 0,
@@ -46,6 +46,6 @@ describe('SpeechBubbleExport', () => {
       ]
     };
 
-    expect(speechBubbleExport.toJSON()).toEqual(expectedJson);
+    expect(speechBubbleExport.toJSON()).toEqual(EXPECTED_JSON);
   });
 });

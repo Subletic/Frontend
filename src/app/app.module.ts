@@ -19,8 +19,6 @@ import { MatSliderModule } from '@angular/material/slider';
 import { SliderPopupComponent } from './sound-box/slider-popup/slider-popup.component';
 import { SpeedPopupComponent } from './sound-box/speed-popup/speed-popup.component';
 
-
-
 @NgModule({
   declarations: [
     AppComponent,

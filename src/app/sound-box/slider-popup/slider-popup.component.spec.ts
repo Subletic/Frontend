@@ -25,20 +25,20 @@ describe('SliderPopupComponent', () => {
 
   it('should emit the correct volume value when the slider value changes', () => {
     spyOn(component.volumeChange, 'emit');
-    const volume = 0.5;
+    const VOLUME = 0.5;
     slider.value = '50';
     slider.dispatchEvent(new Event('input'));
-    expect(component.volumeChange.emit).toHaveBeenCalledWith(volume);
-    expect(component.volume).toBe(volume);
+    expect(component.volumeChange.emit).toHaveBeenCalledWith(VOLUME);
+    expect(component.volume).toBe(VOLUME);
   });
 
   it('should emit the correct volume100 value when the slider value changes', () => {
     spyOn(component.volume100Change, 'emit');
-    const volume100 = 50;
+    const VOLUME100 = 50;
     slider.value = '50';
     slider.dispatchEvent(new Event('input'));
-    expect(component.volume100Change.emit).toHaveBeenCalledWith(volume100);
-    expect(component.getVolume100()).toBe(volume100);
+    expect(component.volume100Change.emit).toHaveBeenCalledWith(VOLUME100);
+    expect(component.getVolume100()).toBe(VOLUME100);
   });
 
   it('should set the default volume value to 0 if not provided', () => {

@@ -34,7 +34,7 @@ export class SoundBoxComponent {
   public isSpeedPopoverOpen = false;
   public speedValue = 1;
 
-  constructor (private settingsService: SettingsService) {}
+  constructor(private settingsService: SettingsService) { }
 
   /**
    * Closes Popups if click outside of popup occurs.
@@ -43,13 +43,13 @@ export class SoundBoxComponent {
    */
   @HostListener('document:click', ['$event'])
   onDocumentMouseDown(event: MouseEvent) {
-    const clickedElement = event.target as HTMLElement;
-    const isInsideSoundButton = this.soundButton.nativeElement.contains(clickedElement);
-    const isInsideSpeedButton = this.speedButton.nativeElement.contains(clickedElement);
-    if (!isInsideSoundButton) {
+    const CLICKED_ELEMENT = event.target as HTMLElement;
+    const IS_INSIDE_SOUNDBUTTON = this.soundButton.nativeElement.contains(CLICKED_ELEMENT);
+    const IS_INSIDE_SPEEDBUTTON = this.speedButton.nativeElement.contains(CLICKED_ELEMENT);
+    if (!IS_INSIDE_SOUNDBUTTON) {
       this.closePopoverAudio();
     }
-    if (!isInsideSpeedButton) {
+    if (!IS_INSIDE_SPEEDBUTTON) {
       this.closePopoverSpeed();
     }
   }
@@ -154,7 +154,7 @@ export class SoundBoxComponent {
    * Sets the number of seconds to skip in the audio handler.
    * @param {number} seconds - The number of seconds to skip.
    */
-  onSecondsChange(seconds: number){
+  onSecondsChange(seconds: number) {
     this.audioHandler.setSkipSeconds(seconds);
   }
 
@@ -189,5 +189,3 @@ export class SoundBoxComponent {
   }
 
 }
-
-

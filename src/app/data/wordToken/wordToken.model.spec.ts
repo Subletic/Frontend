@@ -10,8 +10,8 @@ describe('WordToken', () => {
   });
 
   it('should return the correct export object', () => {
-    const token = new WordToken('apple', 0.8, 10, 20, 1);
-    const expectedExport = {
+    const TOKEN = new WordToken('apple', 0.8, 10, 20, 1);
+    const EXPECTED_EXPORT = {
       Word: 'apple',
       Confidence: 0.8,
       StartTime: 10,
@@ -19,8 +19,8 @@ describe('WordToken', () => {
       Speaker: 1
     };
 
-    const exported = token.getExport();
-    expect(JSON.stringify(exported)).toEqual(JSON.stringify(expectedExport));
+    const EXPORTED = TOKEN.getExport();
+    expect(JSON.stringify(EXPORTED)).toEqual(JSON.stringify(EXPECTED_EXPORT));
   });
 
   it('should update word value correctly', () => {

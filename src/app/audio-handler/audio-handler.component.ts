@@ -1,7 +1,6 @@
-import {Component, OnInit} from '@angular/core';
-import {SignalRService} from "../service/signalRService";
-import {CircularBuffer} from "../data/circularBuffer.model";
-
+import { Component, OnInit } from '@angular/core';
+import { SignalRService } from "../service/signalRService";
+import { CircularBuffer } from "../data/circularBuffer.model";
 
 /**
  * The AudioHandlerComponent represents a component that handles audio playback and buffering.
@@ -108,7 +107,7 @@ export class AudioHandlerComponent implements OnInit {
 
     audioBuffer.copyToChannel(audioData, SELECTED_CHANNEL, BUFFER_OFFSET)
 
-    const audioNode: AudioBufferSourceNode = new AudioBufferSourceNode(this.audioContext, {buffer: audioBuffer});
+    const audioNode: AudioBufferSourceNode = new AudioBufferSourceNode(this.audioContext, { buffer: audioBuffer });
 
     // Connect the source node to the audio context destination
     audioNode.playbackRate.value = this.playbackSpeed;
