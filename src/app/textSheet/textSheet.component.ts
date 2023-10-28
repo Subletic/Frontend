@@ -96,8 +96,8 @@ export class TextSheetComponent implements OnInit {
   */
   public onFocusOut(id: number) {
 
-    const speechBubble = this.getSpeechBubbleById(id);
-    if (!speechBubble) return;
+    const SPEECHBUBBLE = this.getSpeechBubbleById(id);
+    if (!SPEECHBUBBLE) return;
 
     clearInterval(this.intervalList[id]);
     this.timeSinceFocusOutCounter(id);
@@ -123,22 +123,22 @@ export class TextSheetComponent implements OnInit {
   * @param id - The id of the speechbubble to set a counter for
   */
   public timeSinceFocusOutCounter(id: number) {
-    const maxSecondsSinceFocusOut = 5;
-    const intervalInMilliseconds = 1000;
+    const MAX_SECONDS_SINCE_FOCUS_OUT = 5;
+    const INTERVAL_IN_MILLISECONDS = 1000;
 
     this.timeSinceFocusOutList.set(id, 0);
 
     this.intervalList[id] = setInterval(() => {
-      const secondsSinceFocusOut = this.timeSinceFocusOutList.get(id) || 0;
-      this.timeSinceFocusOutList.set(id, secondsSinceFocusOut + 1);
+      const SECONDS_SINCE_FOCUS_OUT = this.timeSinceFocusOutList.get(id) || 0;
+      this.timeSinceFocusOutList.set(id, SECONDS_SINCE_FOCUS_OUT + 1);
 
-      if (secondsSinceFocusOut >= maxSecondsSinceFocusOut) {
+      if (SECONDS_SINCE_FOCUS_OUT >= MAX_SECONDS_SINCE_FOCUS_OUT) {
         clearInterval(this.intervalList[id]);
         this.callExportToJson(id);
         this.timeSinceFocusOutList.set(id, 0);
         return;
       }
-    }, intervalInMilliseconds);
+    }, INTERVAL_IN_MILLISECONDS);
   }
 
   /**
@@ -149,9 +149,9 @@ export class TextSheetComponent implements OnInit {
     const speechBubbleToExport = this.getSpeechBubbleById(id);
     if (!speechBubbleToExport) return;
     speechBubbleToExport.removeEmptyWords();
-    const currentExport = speechBubbleToExport.getExport();
-    if (currentExport == undefined) return;
-    this.exportToJson([currentExport]);
+    const CURRENT_EXPORT = speechBubbleToExport.getExport();
+    if (CURRENT_EXPORT == undefined) return;
+    this.exportToJson([CURRENT_EXPORT]);
   }
 
   /**
@@ -160,12 +160,12 @@ export class TextSheetComponent implements OnInit {
   */
   public exportToJson(speechBubbleExportList: SpeechBubbleExport[]): void {
 
-    const speechBubbleChain = new SpeechBubbleChain(speechBubbleExportList);
-    const jsonData = speechBubbleChain.toJSON();
+    const SPEECHBUBBLE_CHAIN = new SpeechBubbleChain(speechBubbleExportList);
+    const JSON_DATA = SPEECHBUBBLE_CHAIN.toJSON();
 
     fetch(environment.apiURL + '/api/speechbubble/update', {
       method: 'POST',
-      body: JSON.stringify(jsonData),
+      body: JSON.stringify(JSON_DATA),
       headers: {
         'Content-Type': 'application/json'
       }
