@@ -1,6 +1,6 @@
 import { WordToken } from './wordToken.model';
 import { WordExport } from './wordExport.model';
-//
+
 describe('WordExport', () => {
   describe('toJSON', () => {
     it('should return the word export object in JSON format', () => {

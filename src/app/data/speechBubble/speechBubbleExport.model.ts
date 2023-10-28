@@ -2,7 +2,7 @@ import { LinkedList } from '../linkedList/linkedList.model';
 import { WordToken } from '../wordToken/wordToken.model';
 import { WordExport } from '../wordToken/wordExport.model';
 import { SpeechBubble } from './speechBubble.model';
-//
+
 /**
  * SpeechBubbleExport represents the important information about
  * an instance of speechbubble that can be transfered to JSON. This JSON

@@ -6,7 +6,7 @@ import { WordExport } from '../data/wordToken/wordExport.model';
 import { SignalRService } from '../service/signalRService';
 import { environment } from "../../environments/environment";
 import { SpeechBubbleChain } from '../data/speechBubbleChain.module';
-//
+
 /**
  * The TextSheetComponent represents a component that handles the speech bubbles in a text sheet.
  * It provides methods to add, delete and manipulate speech bubbles, as well as retrieve information about the speech bubbles.

@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SliderPopupComponent } from './slider-popup.component';
-//
+
 describe('SliderPopupComponent', () => {
   let component: SliderPopupComponent;
   let fixture: ComponentFixture<SliderPopupComponent>;

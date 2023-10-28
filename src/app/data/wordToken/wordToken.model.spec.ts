@@ -1,5 +1,5 @@
 import { WordToken } from './wordToken.model';
-//
+
 describe('WordToken', () => {
   it('should set the word correctly', () => {
     const token = new WordToken('apple', 0.8, 10, 20, 1);

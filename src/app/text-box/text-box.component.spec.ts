@@ -3,7 +3,7 @@ import { TextBoxComponent } from './text-box.component';
 import { SpeechBubble } from '../data/speechBubble/speechBubble.model';
 import { WordToken } from '../data/wordToken/wordToken.model';
 import { LinkedList } from '../data/linkedList/linkedList.model';
-//
+
 describe('TextBoxComponent', () => {
   let component: TextBoxComponent;
   let fixture: ComponentFixture<TextBoxComponent>;

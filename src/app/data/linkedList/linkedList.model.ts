@@ -1,5 +1,5 @@
 import { Node } from './node.model';
-//
+
 /**
  * Data Structure representing the linkedList concept in datastructures.
  */

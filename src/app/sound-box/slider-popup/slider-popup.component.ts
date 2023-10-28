@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter, ElementRef, OnInit, ViewChild, AfterViewInit } from '@angular/core';
-//
+
 /**
  * Represents a popup that includes a slider for controlling the audio volume.
  */

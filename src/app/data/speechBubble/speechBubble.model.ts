@@ -1,7 +1,7 @@
 import { LinkedList } from '../linkedList/linkedList.model';
 import { WordToken } from '../wordToken/wordToken.model';
 import { SpeechBubbleExport } from './speechBubbleExport.model';
-//
+
 /**
  * Instance of SpeechBubble represents the content of one textbox within the 
  * program. Holds a linkedList of words and has itsself a node-structure with previous and next

@@ -3,7 +3,7 @@
  *
  * @template T - The data type stored in the node.
  */
-//
+
 export class Node<T> {
   public data: T;
   public id: number;

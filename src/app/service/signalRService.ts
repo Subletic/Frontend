@@ -3,7 +3,7 @@ import * as signalR from '@microsoft/signalr';
 import { Subject } from 'rxjs';
 import { environment } from "../../environments/environment";
 import { SpeechBubbleExport } from '../data/speechBubble/speechBubbleExport.model';
-//
+
 @Injectable({
   providedIn: 'root'
 })

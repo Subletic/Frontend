@@ -1,6 +1,6 @@
 import { WordExport } from '../wordToken/wordExport.model';
 import { SpeechBubbleExport } from './speechBubbleExport.model';
-//
+
 describe('SpeechBubbleExport', () => {
   let wordExport1: WordExport;
   let wordExport2: WordExport;

@@ -5,7 +5,7 @@ import { TextSheetComponent } from './textSheet.component';
 import { SignalRService } from '../service/signalRService';
 import { LinkedList } from '../data/linkedList/linkedList.model';
 import { SpeechBubbleChain } from '../data/speechBubbleChain.module';
-//
+
 describe('LinkedList', () => {
   let linkedList: LinkedList<SpeechBubble>;
   let speechBubble1: SpeechBubble;

@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { SignalRService } from "../service/signalRService";
 import { CircularBuffer } from "../data/circularBuffer.model";
-//
 
 /**
  * The AudioHandlerComponent represents a component that handles audio playback and buffering.

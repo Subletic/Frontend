@@ -4,7 +4,7 @@ import { SettingsService } from '../settings/settings.service';
 import { SettingsComponent } from '../settings/settings.component';
 import { SliderPopupComponent } from './slider-popup/slider-popup.component';
 import { SpeedPopupComponent } from './speed-popup/speed-popup.component';
-//
+
 /**
  * The SoundBoxComponent represents a component that displays the bottom bar of the application.
  * It contains buttons for user interaction with sound and program settings.

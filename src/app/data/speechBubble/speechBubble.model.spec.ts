@@ -1,7 +1,7 @@
 import { WordToken } from '../wordToken/wordToken.model';
 import { SpeechBubble } from './speechBubble.model';
 import { LinkedList } from '../linkedList/linkedList.model';
-//
+
 describe('SpeechBubble', () => {
   let speechBubble: SpeechBubble;
   let wordToken1: WordToken;

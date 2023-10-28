@@ -1,5 +1,5 @@
 import { WordToken } from './wordToken.model';
-//
+
 /**
  * WordExport represents an instance of WordToken but only with the necessary info needed to
  * convert it to JSON Format. Some attributes from WordToken are irrelevant for backend, for 

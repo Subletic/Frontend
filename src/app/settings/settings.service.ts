@@ -3,7 +3,7 @@
  * It is based on Jason Watmore's custom modal implementation (https://github.com/cornflourblue/angular-9-custom-modal).
 */
 import { Injectable } from '@angular/core';
-//
+
 @Injectable({ providedIn: 'root' })
 export class SettingsService {
     // Array to store references to active settings modals

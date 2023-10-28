@@ -1,5 +1,5 @@
 import { CircularBuffer } from "./circularBuffer.model";
-//
+
 describe('CircularBuffer', () => {
   let circularBuffer: CircularBuffer;
   const sampleRate = 128;

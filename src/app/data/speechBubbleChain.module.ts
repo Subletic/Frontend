@@ -1,5 +1,5 @@
 import { SpeechBubbleExport } from "./speechBubble/speechBubbleExport.model";
-//
+
 /**
 * The SpeechBubbleChain class represents a chain of speech bubbles.
 * It is used for exporting and importing speech bubbles in JSON format.

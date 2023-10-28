@@ -1,7 +1,7 @@
 import { Component, AfterViewInit, ViewChild, ElementRef, Input } from '@angular/core';
 import { WordToken } from '../data/wordToken/wordToken.model';
 import { SpeechBubble } from '../data/speechBubble/speechBubble.model';
-//
+
 /**
  * The TextBoxComponent represents a component that handles the SpeechBubble data.
  * It provides methods to generate and manipulate the content of a text box.
