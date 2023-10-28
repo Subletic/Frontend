@@ -1,6 +1,6 @@
 import { Component, AfterViewInit, ViewChild, ElementRef, Input } from '@angular/core';
-import { WordToken } from '../data/wordToken.model';
-import { SpeechBubble } from '../data/speechBubble.model';
+import { WordToken } from '../data/wordToken/wordToken.model';
+import { SpeechBubble } from '../data/speechBubble/speechBubble.model';
 
 /**
  * The TextBoxComponent represents a component that handles the SpeechBubble data.
@@ -27,32 +27,11 @@ export class TextBoxComponent implements AfterViewInit {
   ngAfterViewInit() {
     const textbox = this.textboxRef.nativeElement;
 
-    if(this.textbox.words.head == null) {
+    if (this.textbox.words.head == null) {
       this.textbox.words.add( new WordToken('', 1, 1, 1, 1));
     }
-
     textbox.innerHTML = this.generateHTML();
-
-    textbox.addEventListener('mouseover', (event: MouseEvent) => {
-      this.logInfoAboutTextbox(event);
-    })
-    
-    textbox.addEventListener('keydown', (event: KeyboardEvent) => {
-      console.log(event);
-      this.handleKeyboardEventTextbox(event);
-    })
-
-    /**
-     * The keydown function doesn't cover the latest change of the .textContent 
-     * Attribute of a span, because typescript prioritises the keydown EventListener instead of 
-     * updating the .textContent of the span first.
-     * Therefore, there needs to be a keyup listener that updates
-     * the data structure so the words are always correct when send 
-     * to backend. (keydown > update .textContent > keyup)
-     */
-    textbox.addEventListener('keyup', (event: KeyboardEvent) => {
-      this.updateWord(event);
-    })
+    this.setEventListeners(textbox);
   }
 
   /**
@@ -65,7 +44,7 @@ export class TextBoxComponent implements AfterViewInit {
     const wordElements: string[] = []
     let current = this.textbox.words.head;
     while (current) {
-      const wordWithId = `<span id="${current.id}" style="color: ${current.color}" contenteditable="true">${current.word}</span>`;
+      const wordWithId = `<span id="${current.id}" style="color: ${current.data.color}" contenteditable="true">${current.data.word}</span>`;
       wordElements.push(wordWithId);
       current = current.next;
     }
@@ -82,7 +61,7 @@ export class TextBoxComponent implements AfterViewInit {
     if (!(target.tagName === 'SPAN')) return;
       const hoveredWord = target.textContent;
       const wordID = target.id;
-      const currentWord = this.findWordById(Number(wordID));
+      const currentWord = this.textbox.words.getDataById(Number(wordID));
 
       console.log('Word: ' + hoveredWord + ', ID: ' + wordID);
       console.log('Current Word: ', currentWord);
@@ -137,11 +116,9 @@ export class TextBoxComponent implements AfterViewInit {
       return;
     }
 
-    if(prevSpan) {
-      if (!prevSpan.getAttribute('id') != null) {
-        this.mergeWithPreviousWord(selectedSpan, currentText, prevSpan, event);
-        return;
-      }
+    if (prevSpan && !prevSpan.getAttribute('id') != null) {
+      this.mergeWithPreviousWord(selectedSpan, currentText, prevSpan, event);
+      return;
     }
 
     const nextSpan = selectedSpan.nextElementSibling as HTMLSpanElement;
@@ -160,7 +137,7 @@ export class TextBoxComponent implements AfterViewInit {
    * @param event - The keyboard event triggered by user.
    */
   public isInFullSelectionDeletion(selectedSpan: HTMLElement, spanId: string, event: KeyboardEvent) {
-    const currentWord = this.findWordById(Number(spanId));
+    const currentWord = this.textbox.words.getDataById(Number(spanId));
     if(!currentWord) return;
     currentWord.word = '';
     this.textbox.words.remove(currentWord);
@@ -181,11 +158,11 @@ export class TextBoxComponent implements AfterViewInit {
    * @pre There needs to be a previous word
    */
   public mergeWithPreviousWord(selectedSpan: HTMLElement, currentText: string | null, prevSpan: HTMLSpanElement, event: KeyboardEvent) {
-    const prevWord = this.findWordById(Number(prevSpan.getAttribute('id')));
+    const prevWord = this.textbox.words.getDataById(Number(prevSpan.getAttribute('id')));
     if (!prevWord) return;
     prevWord.word += currentText;
     if (!prevSpan.getAttribute('id')) return;
-    const currentWord = this.findWordById(Number(selectedSpan.getAttribute('id')));
+    const currentWord = this.textbox.words.getDataById(Number(selectedSpan.getAttribute('id')));
     if (!currentWord) return;
     this.textbox.words.remove(currentWord);
     prevSpan.insertAdjacentElement('afterend', selectedSpan);
@@ -211,12 +188,12 @@ export class TextBoxComponent implements AfterViewInit {
   public mergeWithFollowingWord(selectedSpan: HTMLElement, currentText: string | null, nextSpan: HTMLSpanElement, event: KeyboardEvent) {
     if (!nextSpan) return;
     if(!nextSpan.getAttribute('id')) return;
-    const nextWord = this.findWordById(Number(nextSpan.getAttribute('id')));
+    const nextWord = this.textbox.words.getDataById(Number(nextSpan.getAttribute('id')));
 
     if (!nextWord) return;
     nextWord.word = currentText + nextWord.word;
     if(!selectedSpan.getAttribute('id')) return;
-    const currentWord = this.findWordById(Number(selectedSpan.getAttribute('id')));
+    const currentWord = this.textbox.words.getDataById(Number(selectedSpan.getAttribute('id')));
     if (!currentWord) return;
     this.textbox.words.remove(currentWord);
     selectedSpan.remove();
@@ -248,17 +225,21 @@ export class TextBoxComponent implements AfterViewInit {
     this.adjustColor(selectedSpan.getAttribute('id'));
 
     if (wordBeforeCursor.trim() !== '') {
-      const currentWord = this.findWordById(Number(spanId));
+      const currentWord = this.textbox.words.getDataById(Number(spanId));
       if (!currentWord) return;
       const newWord = new WordToken(wordAfterCursor, 1 ,currentWord.startTime, currentWord.endTime, currentWord.speaker);
       currentWord.updateWordColor();
 
       currentWord.confidence = 1;
-      this.insertAfter(newWord, currentWord);
+      this.textbox.words.insertAfter(newWord, currentWord);
       currentWord.word = wordBeforeCursor;
 
       const newSpan = document.createElement('span');
-      newSpan.id = newWord.id.toString();
+
+      const newWordNodeId = this.textbox.words.getNodeId(newWord);
+      if (!newWordNodeId) return;
+      newSpan.id = newWordNodeId.toString();
+
       newSpan.contentEditable = 'true';
       newSpan.textContent = wordAfterCursor;
 
@@ -266,19 +247,9 @@ export class TextBoxComponent implements AfterViewInit {
       selectedSpan.insertAdjacentText('afterend', ' ');
 
       newSpan.focus();
-      // Event handling for the new span
-      /*
-      newSpan.addEventListener('input', () => {
-        const newText = newSpan.textContent;
-        const word = this.findWordById(Number(newSpan.id));
-        if (!word || !newText) return;
-        word.setWord(newText);
-        
-      });
-      */
       
     } else if (wordBeforeCursor.trim() == '') {
-      const currentWord = this.findWordById(Number(spanId));
+      const currentWord = this.textbox.words.getDataById(Number(spanId));
       if (!currentWord) return;
       currentWord.setWord(wordAfterCursor);
       selectedSpan.textContent = wordAfterCursor;
@@ -298,12 +269,13 @@ export class TextBoxComponent implements AfterViewInit {
    * @param spanId - The id of the span of this word
    */
   public adjustColor(spanId: string | null) {
-    const changedWord = this.findWordById(Number(spanId));
+    const changedWord = this.textbox.words.getDataById(Number(spanId));
     if(!changedWord) return;
     if(!spanId) return;
     const span =  document.getElementById(spanId);
     if(!span) return;
-    span.style.color = '#000000';
+    const COLOR_BLACK = '#000000';
+    span.style.color = COLOR_BLACK;
   }
 
   /**
@@ -314,48 +286,11 @@ export class TextBoxComponent implements AfterViewInit {
   public updateWord(event: KeyboardEvent) {
     const selectedSpan = event.target as HTMLElement;
     const currentText = selectedSpan.textContent;
-    const word = this.findWordById(Number(selectedSpan.id));
+    const word = this.textbox.words.getDataById(Number(selectedSpan.id));
     if(!word) return;
     if(!currentText) return;
     word.setWord(currentText);
     selectedSpan.textContent = currentText;
-  }
-
-  /**
-   * Inserts a new word after a specified word in the linked list.
-   * @param {Word} newWord - The new word to insert.
-   * @param {Word} prevWord - The word after which the new word should be inserted.
-   */
-  public insertAfter(newWord: WordToken, prevWord: WordToken): void {
-    newWord.id = this.textbox.words.currentIndex;
-    this.textbox.words.currentIndex++;
-
-    newWord.prev = prevWord;
-    newWord.next = prevWord.next;
-
-    if (prevWord.next) {
-      prevWord.next.prev = newWord;
-    }
-    prevWord.next = newWord;
-    if (prevWord === this.textbox.words.tail) {
-      this.textbox.words.tail = newWord;
-    }
-  }
-
-  /**
-   * Finds a word in the text box by its ID.
-   * @param {string} id - The ID of the word to find.
-   * @returns {Word|null} - The found word or null if not found.
-   */
-  public findWordById(id: number): WordToken | null {
-    let current = this.textbox.words.head;
-    while (current) {
-      if (current.id === id) {
-        return current;
-      }
-      current = current.next;
-    }
-    return null;
   }
 
   /**
@@ -366,11 +301,40 @@ export class TextBoxComponent implements AfterViewInit {
 
     while (current) {
       const next = current.next;
-      if (current.word === "") {
-        this.textbox.words.remove(current);
+      if (current.data.word === "") {
+        this.textbox.words.remove(current.data);
       }
       current = next;
     }
+  }
+
+  /**
+   * Sets event listeners for the textbox to enable methods that use input data.
+   * 
+   * @param textbox - The HTML element representing the textbox.
+   */
+  private setEventListeners(textbox: HTMLElement): void {
+
+    textbox.addEventListener('mouseover', (event: MouseEvent) => {
+      this.logInfoAboutTextbox(event);
+    })
+    
+    textbox.addEventListener('keydown', (event: KeyboardEvent) => {
+      console.log(event);
+      this.handleKeyboardEventTextbox(event);
+    })
+
+    /**
+     * The keydown function doesn't cover the latest change of the .textContent 
+     * Attribute of a span, because typescript prioritises the keydown EventListener instead of 
+     * updating the .textContent of the span first.
+     * Therefore, there needs to be a keyup listener that updates
+     * the data structure so the words are always correct when send 
+     * to backend. (keydown > update .textContent > keyup)
+     */
+    textbox.addEventListener('keyup', (event: KeyboardEvent) => {
+      this.updateWord(event);
+    })
   }
 
 }

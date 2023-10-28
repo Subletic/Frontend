@@ -1,47 +1,6 @@
-import { LinkedList } from './linkedList.model';
-import { WordExport, WordToken } from './wordToken.model';
-
-/**
- * SpeechBubbleExport represents the important information about
- * an instance of speechbubble that can be transfered to JSON. This JSON
- * Object can then be send to backend.
- */
-export class SpeechBubbleExport {
-  
-  public id: number;
-  public speaker: number;
-  public startTime: number;
-  public endTime: number;
-  public speechBubbleContent: WordExport[];
-
-  constructor(id: number, speaker: number, begin: number, end: number, speechBubbleContent: WordExport[]) {
-    this.id = id;
-    this.speaker = speaker;
-    this.startTime = begin;
-    this.endTime = end;
-    this.speechBubbleContent = speechBubbleContent;
-  }
-
-  public toJSON() {
-    return {
-      Id: this.id,
-      Speaker: this.speaker,
-      StartTime: this.startTime,
-      EndTime: this.endTime,
-      SpeechBubbleContent: this.speechBubbleContent.map(wordExport => wordExport.toJSON())
-    };
-  }
-
-  public toSpeechBubble(){
-    const words = new LinkedList();
-
-    this.speechBubbleContent.forEach(element => {
-      words.add(element.toWordToken());
-    });
-
-    return new SpeechBubble(this.speaker, this.startTime, this.endTime, words, this.id);
-  }
-}
+import { LinkedList } from '../linkedList/linkedList.model';
+import { WordToken } from '../wordToken/wordToken.model';
+import { SpeechBubbleExport } from './speechBubbleExport.model';
 
 /**
  * Instance of SpeechBubble represents the content of one textbox within the 
@@ -51,16 +10,13 @@ export class SpeechBubbleExport {
 export class SpeechBubble {
     public id: number;
     public speaker: number;
-    public words: LinkedList;
+    public words: LinkedList<WordToken>;
     public begin: number;
     public end: number;
 
-    public prev: SpeechBubble | null;
-    public next: SpeechBubble | null;
-
     private static currentId = 0;
   
-    public constructor(speaker: number, begin: number, end: number, list?: LinkedList, id?: number) {
+    public constructor(speaker: number, begin: number, end: number, list?: LinkedList<WordToken>, id?: number) {
       if(id != null) {
         this.id = id;
       } else {
@@ -74,8 +30,6 @@ export class SpeechBubble {
       }
       this.begin = begin;
       this.end = end;
-      this.prev = null;
-      this.next = null;
     }
 
     /**
@@ -92,7 +46,7 @@ export class SpeechBubble {
       let current = this.words.head;
       const text = [];
       while (current) {
-        text.push(current.word);
+        text.push(current.data.word);
         current = current.next;
       }
       return '[' + text.join(', ') + ']';
@@ -112,7 +66,7 @@ export class SpeechBubble {
       let current = this.words.head;
       const wordExportList = [];
       while (current) {
-        wordExportList.push(current.getExport());
+        wordExportList.push(current.data.getExport());
         current = current.next;
       }
       return wordExportList;
@@ -130,14 +84,19 @@ export class SpeechBubble {
      */
     public removeEmptyWords() {
       let current = this.words.head;
+    
       while (current) {
-        if (current.word === '') {
-          if(this.words.tail == current) {
-            if(!current.prev) return;
-            this.words.tail = current.prev;
-          }
-          current.remove();
-        } 
+        if (current.data.word !== '') {
+          current = current.next;
+          continue;
+        }
+    
+        if (this.words.tail === current) {
+          if (!current.prev) return;
+          this.words.tail = current.prev;
+        }
+    
+        this.words.remove(current.data);
         current = current.next;
       }
     }
@@ -150,7 +109,7 @@ export class SpeechBubble {
     
       while (current) {
         if (current.id === id) {
-          return current;
+          return current.data;
         }
         current = current.next;
       }

@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TextBoxComponent } from './text-box.component';
-import { SpeechBubble } from '../data/speechBubble.model';
-import { WordToken } from '../data/wordToken.model';
-import { LinkedList } from '../data/linkedList.model';
+import { SpeechBubble } from '../data/speechBubble/speechBubble.model';
+import { WordToken } from '../data/wordToken/wordToken.model';
+import { LinkedList } from '../data/linkedList/linkedList.model';
 
 describe('TextBoxComponent', () => {
   let component: TextBoxComponent;
@@ -27,7 +27,7 @@ describe('TextBoxComponent', () => {
 
   it('should generate the HTML representation of the textbox content', () => {
     const speechBubble = new SpeechBubble(0, 0, 0);
-    speechBubble.words = new LinkedList(); // Initialisiere die words-Eigenschaft mit einer neuen LinkedList-Instanz
+    speechBubble.words = new LinkedList();
     const wordTexts = ['Hello,', 'World!', 'How', 'are', 'you?'];
     wordTexts.forEach((wordText) => {
       speechBubble.words.add(new WordToken(wordText, 1, 1, 1, 1));
@@ -42,18 +42,18 @@ describe('TextBoxComponent', () => {
   });
 
   it('should find a word by its ID', () => {
-    const speechBubble = new SpeechBubble(0, 0, 0, new LinkedList, 0);
-    speechBubble.words = new LinkedList(); // Initialisiere die words-Eigenschaft mit einer neuen LinkedList-Instanz
+    const speechBubble = new SpeechBubble(0, 0, 0, new LinkedList<WordToken>, 0);
+    speechBubble.words = new LinkedList<WordToken>();
     const word1 = new WordToken('Hello', 1, 1, 1, 1);
     const word2 = new WordToken('World', 2, 1, 1, 1);
     speechBubble.words.add(word1);
     speechBubble.words.add(word2);
     component.textbox = speechBubble;
 
-    const foundWord = component.findWordById(0);
+    const foundWord = component.textbox.words.getDataById(0);
     expect(foundWord).toEqual(word1);
 
-    const notFoundWord = component.findWordById(2);
+    const notFoundWord = component.textbox.words.getDataById(2);
     expect(notFoundWord).toBeNull();
   });
 
@@ -101,6 +101,7 @@ describe('TextBoxComponent', () => {
     expect(console.log).toHaveBeenCalledWith('Print Text:', jasmine.any(String));
   });
 
+
   it('should remove empty objects from the word list', () => {
     const emptyWord = new WordToken('', 1, 1, 1, 1);
     component.textbox.words.add(emptyWord);
@@ -112,23 +113,8 @@ describe('TextBoxComponent', () => {
   });
 
   describe('findWordById', () => {
-    it('should return the correct word', () => {
-      const word = new WordToken('test', 1, 1, 1, 1);
-      component.textbox.words.add(word);
-      expect(component.findWordById(word.id)).toEqual(word);
-    });
      it('should return null if word is not found', () => {
-      expect(component.findWordById(9999)).toBeNull();
-    });
-  });
-   describe('insertAfter', () => {
-    it('should insert a new word after a specified word', () => {
-      const word1 = new WordToken('test1', 1, 1, 1, 1);
-      const word2 = new WordToken('test2', 1, 1, 1, 1);
-      component.textbox.words.add(word1);
-      component.insertAfter(word2, word1);
-      expect(word1.next).toEqual(word2);
-      expect(word2.prev).toEqual(word1);
+      expect(component.textbox.words.getDataById(9999)).toBeNull();
     });
   });
   
@@ -150,7 +136,7 @@ describe('TextBoxComponent', () => {
       const event = new KeyboardEvent('keydown', { key: 'Backspace' });
       component.handleBackspacePressAtStart(selectedSpan, 'test', false, '1', event);
       if(component.textbox.words.head && component.textbox.words.head.next) {
-        expect(component.textbox.words.head.word).toEqual('prevtest');
+        expect(component.textbox.words.head.data.word).toEqual('prevtest');
       }
     });
      it('should merge with following word if no previous word exists', () => {
@@ -162,7 +148,7 @@ describe('TextBoxComponent', () => {
       const event = new KeyboardEvent('keydown', { key: 'Backspace' });
       component.handleBackspacePressAtStart(selectedSpan, 'test', false, '1', event);
       if(component.textbox.words.head && component.textbox.words.head.next) {
-        expect(component.textbox.words.head.word).toEqual('testnext');
+        expect(component.textbox.words.head.data.word).toEqual('testnext');
       }
     });
   });
@@ -173,8 +159,8 @@ describe('TextBoxComponent', () => {
       const event = new KeyboardEvent('keydown', { code: 'Space' });
       component.handleSpacePress(selectedSpan, 'test', 2, '1', event);
       if(component.textbox.words.head && component.textbox.words.head.next) {
-        expect(component.textbox.words.head.word).toEqual('te');
-        expect(component.textbox.words.head.next.word).toEqual('st');
+        expect(component.textbox.words.head.data.word).toEqual('te');
+        expect(component.textbox.words.head.next.data.word).toEqual('st');
       }
     });
      it('should not split word if cursor is at start', () => {
@@ -183,8 +169,8 @@ describe('TextBoxComponent', () => {
       const event = new KeyboardEvent('keydown', { code: 'Space' });
       component.handleSpacePress(selectedSpan, 'test', 0, '1', event);
       if(component.textbox.words.head && component.textbox.words.head.next) {
-        expect(component.textbox.words.head.word).toEqual('');
-        expect(component.textbox.words.head.next.word).toEqual('test');
+        expect(component.textbox.words.head.data.word).toEqual('');
+        expect(component.textbox.words.head.next.data.word).toEqual('test');
       }
     });
   });
@@ -213,11 +199,11 @@ describe('TextBoxComponent', () => {
     const nextSpan = document.createElement('span');
     nextSpan.id = '';
     const event = new KeyboardEvent('keydown', { code: 'Space' });
-    spyOn(component, 'findWordById');
+    spyOn(component.textbox.words, 'getDataById');
 
     component.mergeWithFollowingWord(selectedSpan, currentText, nextSpan, event);
 
-    expect(component.findWordById).not.toHaveBeenCalled();
+    expect(component.textbox.words.getDataById).not.toHaveBeenCalled();
   });  
 
   it('should not handle space press if currentText or cursorPosition is null', () => {
@@ -226,11 +212,11 @@ describe('TextBoxComponent', () => {
     const cursorPosition = 5;
     const spanId = '123';
     const event = new KeyboardEvent('keydown', { code: 'Space' });
-    spyOn(component, 'findWordById');
+    spyOn(component.textbox.words, 'getDataById');
 
     component.handleSpacePress(selectedSpan, currentText, cursorPosition, spanId, event);
 
-    expect(component.findWordById).not.toHaveBeenCalled();
+    expect(component.textbox.words.getDataById).not.toHaveBeenCalled();
   });  
   
 });
@@ -253,7 +239,6 @@ describe('TextBoxComponent', () => {
   });
 
   it('should merge with previous word when word is in full selection', () => {
-    // Arrange
     selectedSpan.textContent = currentText;
     selectedSpan.id = '1';
     const currentWord = new WordToken(currentText, 1, 1, 1, 1);
@@ -261,42 +246,34 @@ describe('TextBoxComponent', () => {
     component.textbox.words.add(prevWord);
     component.textbox.words.add(currentWord);
 
-    // Act
     component.isInFullSelectionDeletion(selectedSpan, '1', event);
 
-    // Assert
     expect(component.textbox.words.size()).toBe(1);
-    expect(component.textbox.words.head).toBe(prevWord);
-    expect(component.textbox.words.tail).toBe(prevWord);
+    expect(component.textbox.words.head?.data).toBe(prevWord);
+    expect(component.textbox.words.tail?.data).toBe(prevWord);
     expect(prevSpan.getAttribute('id')).toBeNull();
     expect(selectedSpan.parentNode).toBeNull();
   });
 
   it('should merge with previous word when previous word exists', () => {
-    // Arrange
     selectedSpan.textContent = currentText;
     selectedSpan.id = '2';
     const currentWord = new WordToken(currentText, 1, 1, 1, 1);
     const prevWord = new WordToken('Previous', 1, 1, 1, 1);
     component.textbox.words.add(prevWord);
     component.textbox.words.add(currentWord);
-    spyOn(component, 'findWordById').and.returnValues(prevWord, currentWord);
+    spyOn(component.textbox.words, 'getDataById').and.returnValues(prevWord, currentWord);
   
-    // Act
     component.mergeWithPreviousWord(selectedSpan, currentText, prevSpan, event);
   
-    // Assert
     expect(component.textbox.words.size()).toBe(2);
-    expect(component.textbox.words.head).toBe(prevWord);
-    expect(component.textbox.words.tail).toBe(currentWord);
+    expect(component.textbox.words.head?.data).toBe(prevWord);
+    expect(component.textbox.words.tail?.data).toBe(currentWord);
     expect(prevSpan.getAttribute('id')).toBeNull();
     expect(event.defaultPrevented).toBeFalse();
   
   });
-
-  
 });
-
 
 describe('TextBoxComponent', () => {
   let component: TextBoxComponent;
@@ -317,7 +294,7 @@ describe('TextBoxComponent', () => {
 
   it('should handle Space press', () => {
 
-    const words = new LinkedList();
+    const words = new LinkedList<WordToken>();
     words.add(new WordToken('Hello', 0.9, 1, 2, 1));
     words.add(new WordToken('world,', 0.8, 2, 4, 1));
     words.add(new WordToken('how', 0.7, 4, 6, 1));
@@ -345,7 +322,7 @@ describe('TextBoxComponent', () => {
 
   it('should handle Space press with "" before', () => {
 
-    const words = new LinkedList();
+    const words = new LinkedList<WordToken>();
     words.add(new WordToken('Hello', 0.9, 1, 2, 1));
     words.add(new WordToken('world,', 0.8, 2, 4, 1));
     words.add(new WordToken('how', 0.7, 4, 6, 1));
@@ -373,7 +350,7 @@ describe('TextBoxComponent', () => {
 
   it('should handle full selection', () => {
 
-    const words = new LinkedList();
+    const words = new LinkedList<WordToken>();
     words.add(new WordToken('Hello', 0.9, 1, 2, 1));
     words.add(new WordToken('world,', 0.8, 2, 4, 1));
     words.add(new WordToken('how', 0.7, 4, 6, 1));
@@ -395,13 +372,13 @@ describe('TextBoxComponent', () => {
 
     component.handleBackspacePressAtStart(selectedSpan, currentText, true, spanId, event);
     if(component.textbox.words.head) {
-      expect(component.textbox.words.head.word).toBe('world,');
+      expect(component.textbox.words.head.data.word).toBe('world,');
     }
   });
 
   it('should handle merge with following from handleBackspace', () => {
 
-    const words = new LinkedList();
+    const words = new LinkedList<WordToken>();
     words.add(new WordToken('Hello', 0.9, 1, 2, 1));
     words.add(new WordToken('world,', 0.8, 2, 4, 1));
     words.add(new WordToken('how', 0.7, 4, 6, 1));
@@ -424,7 +401,7 @@ describe('TextBoxComponent', () => {
     if(selectedSpan) {
       component.handleBackspacePressAtStart(selectedSpan, currentText, false, spanId, event);
     if(component.textbox.words.head) {
-      expect(component.textbox.words.head.word).toBe('Helloworld,');
+      expect(component.textbox.words.head.data.word).toBe('Helloworld,');
     }
     }
   });
@@ -432,7 +409,7 @@ describe('TextBoxComponent', () => {
 
   it('should handle merge with previous from handleBackspace', () => {
 
-    const words = new LinkedList();
+    const words = new LinkedList<WordToken>();
     words.add(new WordToken('Hello', 0.9, 1, 2, 1));
     words.add(new WordToken('world,', 0.8, 2, 4, 1));
     words.add(new WordToken('how', 0.7, 4, 6, 1));
@@ -456,7 +433,7 @@ describe('TextBoxComponent', () => {
       component.handleBackspacePressAtStart(selectedSpan, currentText, false, spanId, event);
     }
     if(component.textbox.words.head) {
-      expect(component.textbox.words.head.word).toBe('Helloworld,');
+      expect(component.textbox.words.head.data.word).toBe('Helloworld,');
     }
   });
 
