@@ -6,7 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
+//
 describe('SettingsComponent', () => {
   let component: SettingsComponent;
   let fixture: ComponentFixture<SettingsComponent>;
@@ -72,11 +72,11 @@ describe('SettingsComponent', () => {
   it('should apply changes and emit secondsChange event', () => {
     spyOn(component.secondsChange, 'emit');
     spyOn(component, 'close');
-  
+
     component.updatedAudioSkipSeconds = 10;
-  
+
     component.apply();
-  
+
     expect(component.secondsChange.emit).toHaveBeenCalledWith(10);
     expect(component.close).toHaveBeenCalled();
   });

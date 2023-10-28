@@ -1,7 +1,7 @@
 import { WordToken } from '../wordToken/wordToken.model';
 import { SpeechBubble } from './speechBubble.model';
 import { LinkedList } from '../linkedList/linkedList.model';
-
+//
 describe('SpeechBubble', () => {
   let speechBubble: SpeechBubble;
   let wordToken1: WordToken;
@@ -69,12 +69,12 @@ describe('SpeechBubble', () => {
     const wordToken = new WordToken('', 1, 1, 1, 1);
     const linkedList = new LinkedList<WordToken>();
     linkedList.add(wordToken);
-  
+
     const emptySpeechBubble = new SpeechBubble(1, 0, 10, linkedList);
-  
+
     // Act
     emptySpeechBubble.removeEmptyWords();
-  
+
     // Assert
     expect(emptySpeechBubble.words.head?.data).toBe(wordToken);
     expect(emptySpeechBubble.words.tail?.data).toBe(wordToken);
@@ -125,7 +125,7 @@ describe('LinkedList', () => {
     linkedList.add(wordToken1);
     linkedList.add(wordToken2);
     linkedList.add(wordToken3);
-  
+
     const expectedText = 'Hello World !';
     const result = linkedList.printDataList((data) => data.word);
     expect(result).toBe(expectedText);
@@ -160,7 +160,7 @@ describe('LinkedList', () => {
       }
     ];
     const json = linkedList.toJSON((data: WordToken) => data.getExport());
-  
+
     expect(json).toEqual(JSON.stringify(expectedJson));
   });
 });

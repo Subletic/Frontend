@@ -4,7 +4,7 @@ import { SettingsService } from '../settings/settings.service';
 import { SettingsComponent } from '../settings/settings.component';
 import { SliderPopupComponent } from './slider-popup/slider-popup.component';
 import { SpeedPopupComponent } from './speed-popup/speed-popup.component';
-
+//
 /**
  * The SoundBoxComponent represents a component that displays the bottom bar of the application.
  * It contains buttons for user interaction with sound and program settings.
@@ -34,7 +34,7 @@ export class SoundBoxComponent {
   public isSpeedPopoverOpen = false;
   public speedValue = 1;
 
-  constructor (private settingsService: SettingsService) {}
+  constructor(private settingsService: SettingsService) { }
 
   /**
    * Closes Popups if click outside of popup occurs.
@@ -154,7 +154,7 @@ export class SoundBoxComponent {
    * Sets the number of seconds to skip in the audio handler.
    * @param {number} seconds - The number of seconds to skip.
    */
-  onSecondsChange(seconds: number){
+  onSecondsChange(seconds: number) {
     this.audioHandler.setSkipSeconds(seconds);
   }
 

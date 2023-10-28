@@ -1,7 +1,7 @@
 import { Component, AfterViewInit, ViewChild, ElementRef, Input } from '@angular/core';
 import { WordToken } from '../data/wordToken/wordToken.model';
 import { SpeechBubble } from '../data/speechBubble/speechBubble.model';
-
+//
 /**
  * The TextBoxComponent represents a component that handles the SpeechBubble data.
  * It provides methods to generate and manipulate the content of a text box.
@@ -28,7 +28,7 @@ export class TextBoxComponent implements AfterViewInit {
     const textbox = this.textboxRef.nativeElement;
 
     if (this.textbox.words.head == null) {
-      this.textbox.words.add( new WordToken('', 1, 1, 1, 1));
+      this.textbox.words.add(new WordToken('', 1, 1, 1, 1));
     }
     textbox.innerHTML = this.generateHTML();
     this.setEventListeners(textbox);
@@ -59,13 +59,13 @@ export class TextBoxComponent implements AfterViewInit {
   public logInfoAboutTextbox(event: MouseEvent) {
     const target = event.target as HTMLElement;
     if (!(target.tagName === 'SPAN')) return;
-      const hoveredWord = target.textContent;
-      const wordID = target.id;
-      const currentWord = this.textbox.words.getDataById(Number(wordID));
+    const hoveredWord = target.textContent;
+    const wordID = target.id;
+    const currentWord = this.textbox.words.getDataById(Number(wordID));
 
-      console.log('Word: ' + hoveredWord + ', ID: ' + wordID);
-      console.log('Current Word: ', currentWord);
-      console.log('Print Text:', this.textbox.printText());
+    console.log('Word: ' + hoveredWord + ', ID: ' + wordID);
+    console.log('Current Word: ', currentWord);
+    console.log('Print Text:', this.textbox.printText());
   }
 
   /**
@@ -138,7 +138,7 @@ export class TextBoxComponent implements AfterViewInit {
    */
   public isInFullSelectionDeletion(selectedSpan: HTMLElement, spanId: string, event: KeyboardEvent) {
     const currentWord = this.textbox.words.getDataById(Number(spanId));
-    if(!currentWord) return;
+    if (!currentWord) return;
     currentWord.word = '';
     this.textbox.words.remove(currentWord);
     selectedSpan.remove();
@@ -187,12 +187,12 @@ export class TextBoxComponent implements AfterViewInit {
    */
   public mergeWithFollowingWord(selectedSpan: HTMLElement, currentText: string | null, nextSpan: HTMLSpanElement, event: KeyboardEvent) {
     if (!nextSpan) return;
-    if(!nextSpan.getAttribute('id')) return;
+    if (!nextSpan.getAttribute('id')) return;
     const nextWord = this.textbox.words.getDataById(Number(nextSpan.getAttribute('id')));
 
     if (!nextWord) return;
     nextWord.word = currentText + nextWord.word;
-    if(!selectedSpan.getAttribute('id')) return;
+    if (!selectedSpan.getAttribute('id')) return;
     const currentWord = this.textbox.words.getDataById(Number(selectedSpan.getAttribute('id')));
     if (!currentWord) return;
     this.textbox.words.remove(currentWord);
@@ -200,7 +200,7 @@ export class TextBoxComponent implements AfterViewInit {
     nextSpan.focus();
     this.adjustColor(nextSpan.getAttribute('id'));
     event.preventDefault();
-    return; 
+    return;
   }
 
   /**
@@ -218,7 +218,7 @@ export class TextBoxComponent implements AfterViewInit {
     * @param event - The keyboard event triggered by user.
     */
   public handleSpacePress(selectedSpan: HTMLElement, currentText: string | null, cursorPosition: number | undefined, spanId: string, event: KeyboardEvent) {
-    if(!(currentText && typeof cursorPosition === 'number')) return;
+    if (!(currentText && typeof cursorPosition === 'number')) return;
     const wordBeforeCursor = currentText.substring(0, cursorPosition);
     const wordAfterCursor = currentText.substring(cursorPosition);
     selectedSpan.textContent = wordBeforeCursor;
@@ -227,7 +227,7 @@ export class TextBoxComponent implements AfterViewInit {
     if (wordBeforeCursor.trim() !== '') {
       const currentWord = this.textbox.words.getDataById(Number(spanId));
       if (!currentWord) return;
-      const newWord = new WordToken(wordAfterCursor, 1 ,currentWord.startTime, currentWord.endTime, currentWord.speaker);
+      const newWord = new WordToken(wordAfterCursor, 1, currentWord.startTime, currentWord.endTime, currentWord.speaker);
       currentWord.updateWordColor();
 
       currentWord.confidence = 1;
@@ -247,7 +247,7 @@ export class TextBoxComponent implements AfterViewInit {
       selectedSpan.insertAdjacentText('afterend', ' ');
 
       newSpan.focus();
-      
+
     } else if (wordBeforeCursor.trim() == '') {
       const currentWord = this.textbox.words.getDataById(Number(spanId));
       if (!currentWord) return;
@@ -255,7 +255,7 @@ export class TextBoxComponent implements AfterViewInit {
       selectedSpan.textContent = wordAfterCursor;
       selectedSpan.insertAdjacentText('beforebegin', ' ');
       selectedSpan.focus();
-      
+
     }
 
     event.preventDefault();
@@ -270,10 +270,10 @@ export class TextBoxComponent implements AfterViewInit {
    */
   public adjustColor(spanId: string | null) {
     const changedWord = this.textbox.words.getDataById(Number(spanId));
-    if(!changedWord) return;
-    if(!spanId) return;
-    const span =  document.getElementById(spanId);
-    if(!span) return;
+    if (!changedWord) return;
+    if (!spanId) return;
+    const span = document.getElementById(spanId);
+    if (!span) return;
     const COLOR_BLACK = '#000000';
     span.style.color = COLOR_BLACK;
   }
@@ -287,8 +287,8 @@ export class TextBoxComponent implements AfterViewInit {
     const selectedSpan = event.target as HTMLElement;
     const currentText = selectedSpan.textContent;
     const word = this.textbox.words.getDataById(Number(selectedSpan.id));
-    if(!word) return;
-    if(!currentText) return;
+    if (!word) return;
+    if (!currentText) return;
     word.setWord(currentText);
     selectedSpan.textContent = currentText;
   }
@@ -318,7 +318,7 @@ export class TextBoxComponent implements AfterViewInit {
     textbox.addEventListener('mouseover', (event: MouseEvent) => {
       this.logInfoAboutTextbox(event);
     })
-    
+
     textbox.addEventListener('keydown', (event: KeyboardEvent) => {
       console.log(event);
       this.handleKeyboardEventTextbox(event);

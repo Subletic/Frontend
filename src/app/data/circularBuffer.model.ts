@@ -2,7 +2,7 @@
  * Circular buffer for audio data.
  * Old data will be overwritten if buffer is full.
  * Handles playback and recording of audio data independently of each other.
- */
+ *///
 export class CircularBuffer {
   private readonly buffer: Float32Array;
   private readonly totalBufferSize: number;
@@ -19,7 +19,7 @@ export class CircularBuffer {
   private absoluteWriteTimeInSeconds: number;
 
   // Amount of seconds that Read Pointer should be away from buffer ends
-  private readonly safetyMarginInSeconds : number
+  private readonly safetyMarginInSeconds: number
 
 
   /**

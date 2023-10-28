@@ -1,5 +1,5 @@
 import { WordExport } from './wordExport.model';
-
+//
 /**
  * WordToken represents a single word from a textbox. It acts as a node within one of the two linkedList
  * classes. 

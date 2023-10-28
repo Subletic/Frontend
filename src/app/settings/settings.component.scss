@@ -1,7 +1,7 @@
 ﻿/*
 from Jason Watmore (@cornflourblue) https://github.com/cornflourblue/angular-9-custom-modal
 */
-
+//
 app-settings {
     /* modals are hidden by default */
     display: none;
@@ -9,22 +9,22 @@ app-settings {
     .settings {
         /* modal container fixed across whole screen */
         position: fixed;
-        width:500px;
-        height:600px;
-        top:50%;
-        left:50%;
+        width: 500px;
+        height: 600px;
+        top: 50%;
+        left: 50%;
         transform: translate(-50%, -50%);
 
         /* z-index must be higher than .settings-background */
         z-index: 1000;
-        
-        /* enables scrolling for tall modals*/ 
+
+        /* enables scrolling for tall modals*/
         overflow: auto;
 
         .settings-body {
             padding: 20px;
             background: var(--textsheet-background-color);
-            
+
             border-radius: 12px;
             /* margin exposes part of the modal background */
             margin: 40px;
@@ -42,7 +42,7 @@ app-settings {
         /* semi-transparent black  */
         background-color: var(--color-black);
         opacity: 0.75;
-        
+
         /* z-index must be below .settings and above everything else  */
         z-index: 900;
     }
@@ -69,6 +69,7 @@ app-settings {
         border: none;
         background: var(--container-background-color);
     }
+
     //End SCSS for reload --------------------
 
 }
@@ -98,7 +99,7 @@ h1 {
     max-width: 300px;
     width: 100%;
     display: flex;
-    flex-direction: column; 
+    flex-direction: column;
     margin: 40px;
     //border: 2px solid;
     align-items: center;

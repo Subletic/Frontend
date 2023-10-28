@@ -1,9 +1,9 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
-import {Subject} from 'rxjs';
-import {environment} from "../../environments/environment";
+import { Subject } from 'rxjs';
+import { environment } from "../../environments/environment";
 import { SpeechBubbleExport } from '../data/speechBubble/speechBubbleExport.model';
-
+//
 @Injectable({
   providedIn: 'root'
 })
@@ -11,7 +11,7 @@ export class SignalRService {
   private hubConnection: signalR.HubConnection;
   public newBubbleReceived: Subject<SpeechBubbleExport[]> = new Subject<SpeechBubbleExport[]>();
   public oldBubbledeleted: Subject<number> = new Subject<number>();
-  
+
   public receivedAudioStream: Subject<Int16Array> = new Subject<Int16Array>();
 
   constructor() {

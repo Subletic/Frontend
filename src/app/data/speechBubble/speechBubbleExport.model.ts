@@ -2,14 +2,14 @@ import { LinkedList } from '../linkedList/linkedList.model';
 import { WordToken } from '../wordToken/wordToken.model';
 import { WordExport } from '../wordToken/wordExport.model';
 import { SpeechBubble } from './speechBubble.model';
-
+//
 /**
  * SpeechBubbleExport represents the important information about
  * an instance of speechbubble that can be transfered to JSON. This JSON
  * Object can then be send to backend.
  */
 export class SpeechBubbleExport {
-  
+
   public id: number;
   public speaker: number;
   public startTime: number;
@@ -43,7 +43,7 @@ export class SpeechBubbleExport {
      * Transforms an instance of SpeechBubbleExport into a SpeechBubble.
      * 
      */
-  public toSpeechBubble(): SpeechBubble{
+  public toSpeechBubble(): SpeechBubble {
     const words = new LinkedList<WordToken>();
 
     this.speechBubbleContent.forEach(element => {

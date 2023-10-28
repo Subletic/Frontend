@@ -1,6 +1,6 @@
 import { LinkedList } from './linkedList.model';
 import { WordToken } from '../wordToken/wordToken.model';
-
+//
 describe('LinkedList', () => {
   let linkedList: LinkedList<WordToken>;
   let wordToken1: WordToken;

@@ -1,5 +1,5 @@
 import { Node } from './node.model';
-
+//
 /**
  * Data Structure representing the linkedList concept in datastructures.
  */
@@ -48,7 +48,7 @@ export class LinkedList<T> {
       this.head = node;
       this.tail = node;
       return;
-    } 
+    }
     if (this.tail) {
       this.tail.next = node;
       node.prev = this.tail;
@@ -63,7 +63,7 @@ export class LinkedList<T> {
    */
   public remove(data: T) {
     let current = this.head;
-  
+
     while (current) {
       if (current.data === data) {
         if (current === this.head) {
@@ -91,13 +91,13 @@ export class LinkedList<T> {
    */
   public insertAfter(newData: T, prevData: T): void {
     let current = this.head;
-  
+
     while (current) {
       if (current.data !== prevData) {
         current = current.next;
         continue;
       }
-      
+
       const newNode = new Node(newData);
       newNode.id = this.currentIndex;
       this.currentIndex++;
@@ -114,8 +114,8 @@ export class LinkedList<T> {
       }
 
       return;
-      }
     }
+  }
 
   /**
    * Generates a formatted string by iterating through the linked list and using the provided
@@ -173,10 +173,10 @@ export class LinkedList<T> {
    * @param data - The data element for which the identifier is requested.
    * @returns The identifier (id) of the specified data element, or null if not found.
    */
-  public getNodeId(data: T): number | null  {  
+  public getNodeId(data: T): number | null {
     let current = this.head;
     while (current) {
-      if (current.data === data) {       
+      if (current.data === data) {
         return current.id;
       }
       current = current.next;

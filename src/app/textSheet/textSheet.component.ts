@@ -6,7 +6,7 @@ import { WordExport } from '../data/wordToken/wordExport.model';
 import { SignalRService } from '../service/signalRService';
 import { environment } from "../../environments/environment";
 import { SpeechBubbleChain } from '../data/speechBubbleChain.module';
-
+//
 /**
  * The TextSheetComponent represents a component that handles the speech bubbles in a text sheet.
  * It provides methods to add, delete and manipulate speech bubbles, as well as retrieve information about the speech bubbles.
@@ -104,7 +104,7 @@ export class TextSheetComponent implements OnInit {
   }
 
   public getSpeechBubbleById(id: number): SpeechBubble | undefined {
-    
+
     let current = this.speechBubbles.head;
 
     while (current) {
@@ -187,14 +187,14 @@ export class TextSheetComponent implements OnInit {
   * @returns An array of speech bubbles.
   */
   public getSpeechBubblesArray(): SpeechBubble[] {
-      let current = this.speechBubbles.head;
-      const speechBubbles: SpeechBubble[] = [];
-      while (current) {
-        speechBubbles.push(current.data);
-        current = current.next;
-      }
-      return speechBubbles;
+    let current = this.speechBubbles.head;
+    const speechBubbles: SpeechBubble[] = [];
+    while (current) {
+      speechBubbles.push(current.data);
+      current = current.next;
     }
+    return speechBubbles;
+  }
 
   /**
   * Deletes a speech bubble from the speechBubbles list based on the id.
@@ -209,9 +209,9 @@ export class TextSheetComponent implements OnInit {
 
     while (current) {
 
-      if(current.data.id == id) {
-          this.speechBubbles.remove(current.data);
-          return;
+      if (current.data.id == id) {
+        this.speechBubbles.remove(current.data);
+        return;
       }
       current = current.next;
     }

@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter, ElementRef } from '@angular/core';
-
+//
 /**
  * Represents a popup that includes button for controlling the audio speed.
  */

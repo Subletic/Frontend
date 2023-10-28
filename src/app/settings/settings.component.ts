@@ -1,7 +1,7 @@
 ﻿import { Component, ViewEncapsulation, ElementRef, Input, Output, OnInit, OnDestroy, EventEmitter, ViewChild, AfterViewInit } from '@angular/core';
 import { SettingsService } from './settings.service';
 import { environment } from "../../environments/environment";
-
+//
 /**
  * The SettingsComponent represents a settings modal that allows users to configure certain options.
  * It is based on Jason Watmore's custom modal implementation (https://github.com/cornflourblue/angular-9-custom-modal).
