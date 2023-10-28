@@ -31,7 +31,7 @@ export class TextSheetComponent implements OnInit {
   ngOnInit(): void {
 
     this.signalRService.newBubbleReceived.subscribe(SpeechBubbleExportList => {
-      this.importfromJSON(SpeechBubbleExportList);
+      this.importfromJson(SpeechBubbleExportList);
     });
 
     this.signalRService.oldBubbledeleted.subscribe(id => {
@@ -45,7 +45,7 @@ export class TextSheetComponent implements OnInit {
   * @param jsonString The JSON string to import.
   * @returns An array of SpeechBubbleExport objects.
   */
-  public importfromJSON(speechBubbleChain: SpeechBubbleExport[]): void {
+  public importfromJson(speechBubbleChain: SpeechBubbleExport[]): void {
     if (!speechBubbleChain || speechBubbleChain.length === 0) {
       console.error('Invalid speechBubbleChain object.');
       return;
