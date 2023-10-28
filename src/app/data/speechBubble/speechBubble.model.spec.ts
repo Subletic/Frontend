@@ -45,8 +45,8 @@ describe('SpeechBubble', () => {
     speechBubble.words.add(wordToken1);
     speechBubble.words.add(wordToken2);
 
-    const expectedText = '[Hello, World]';
-    expect(speechBubble.printText()).toBe(expectedText);
+    const EXPECTED_TEXT = '[Hello, World]';
+    expect(speechBubble.printText()).toBe(EXPECTED_TEXT);
   });
 
   it('should convert SpeechBubble instance to SpeechBubbleExport', () => {
@@ -66,9 +66,9 @@ describe('SpeechBubble', () => {
 
   it('should not remove any words when the LinkedList is empty', () => {
     // Arrange
-    const wordToken = new WordToken('', 1, 1, 1, 1);
+    const WORDTOKEN = new WordToken('', 1, 1, 1, 1);
     const linkedList = new LinkedList<WordToken>();
-    linkedList.add(wordToken);
+    linkedList.add(WORDTOKEN);
 
     const emptySpeechBubble = new SpeechBubble(1, 0, 10, linkedList);
 
@@ -76,8 +76,8 @@ describe('SpeechBubble', () => {
     emptySpeechBubble.removeEmptyWords();
 
     // Assert
-    expect(emptySpeechBubble.words.head?.data).toBe(wordToken);
-    expect(emptySpeechBubble.words.tail?.data).toBe(wordToken);
+    expect(emptySpeechBubble.words.head?.data).toBe(WORDTOKEN);
+    expect(emptySpeechBubble.words.tail?.data).toBe(WORDTOKEN);
   });
 });
 
@@ -126,9 +126,9 @@ describe('LinkedList', () => {
     linkedList.add(wordToken2);
     linkedList.add(wordToken3);
 
-    const expectedText = 'Hello World !';
+    const EXPECTED_TEXT = 'Hello World !';
     const result = linkedList.printDataList((data) => data.word);
-    expect(result).toBe(expectedText);
+    expect(result).toBe(EXPECTED_TEXT);
   });
 
   it('should convert LinkedList instance to JSON', () => {
@@ -136,7 +136,7 @@ describe('LinkedList', () => {
     linkedList.add(wordToken2);
     linkedList.add(wordToken3);
 
-    const expectedJson = [
+    const EXPECTED_JSON = [
       {
         Word: 'Hello',
         Confidence: 0.9,
@@ -161,6 +161,6 @@ describe('LinkedList', () => {
     ];
     const json = linkedList.toJSON((data: WordToken) => data.getExport());
 
-    expect(json).toEqual(JSON.stringify(expectedJson));
+    expect(json).toEqual(JSON.stringify(EXPECTED_JSON));
   });
 });

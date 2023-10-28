@@ -34,13 +34,13 @@ export class SliderPopupComponent implements OnInit, AfterViewInit {
    * Sets up the slider so it has a colored bar from bottom to the thumb 
    */
   setupSlider(): void {
-    const minVolumeSliderValue = '0';
-    const maxVolumeSliderValue = '100';
+    const MIN_SLIDER_VOLUME = '0';
+    const MAX_SLIDER_VOLUME = '100';
 
     document.querySelectorAll<HTMLInputElement>('input[type="range"].slider-progress').forEach((e: HTMLInputElement) => {
       e.style.setProperty('--value', e.value);
-      e.style.setProperty('--min', e.min === '' ? minVolumeSliderValue : e.min);
-      e.style.setProperty('--max', e.max === '' ? maxVolumeSliderValue : e.max);
+      e.style.setProperty('--min', e.min === '' ? MIN_SLIDER_VOLUME : e.min);
+      e.style.setProperty('--max', e.max === '' ? MAX_SLIDER_VOLUME : e.max);
       e.addEventListener('input', () => e.style.setProperty('--value', e.value));
     });
   }
@@ -51,10 +51,10 @@ export class SliderPopupComponent implements OnInit, AfterViewInit {
    */
   onVolumeChange(event: Event): void {
     const target = event.target as HTMLInputElement;
-    const conversionBase = 10;
-    const volumeRange = 100;
-    this.volume100 = parseInt(target.value, conversionBase);
-    this.volume = parseInt(target.value, conversionBase) / volumeRange;
+    const CONVERSION_BASE = 10;
+    const VOLUME_RANGE = 100;
+    this.volume100 = parseInt(target.value, CONVERSION_BASE);
+    this.volume = parseInt(target.value, CONVERSION_BASE) / VOLUME_RANGE;
     this.volumeChange.emit(this.volume);
     this.volume100Change.emit(this.volume100);
   }

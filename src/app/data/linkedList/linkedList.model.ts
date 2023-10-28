@@ -26,8 +26,8 @@ export class LinkedList<T> {
     let current = this.head;
 
     while (current) {
-      const data = getDataFunction(current.data);
-      elements.push(data);
+      const DATA = getDataFunction(current.data);
+      elements.push(DATA);
       current = current.next;
     }
 

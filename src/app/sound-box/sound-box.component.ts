@@ -43,13 +43,13 @@ export class SoundBoxComponent {
    */
   @HostListener('document:click', ['$event'])
   onDocumentMouseDown(event: MouseEvent) {
-    const clickedElement = event.target as HTMLElement;
-    const isInsideSoundButton = this.soundButton.nativeElement.contains(clickedElement);
-    const isInsideSpeedButton = this.speedButton.nativeElement.contains(clickedElement);
-    if (!isInsideSoundButton) {
+    const CLICKED_ELEMENT = event.target as HTMLElement;
+    const IS_INSIDE_SOUNDBUTTON = this.soundButton.nativeElement.contains(CLICKED_ELEMENT);
+    const IS_INSIDE_SPEEDBUTTON = this.speedButton.nativeElement.contains(CLICKED_ELEMENT);
+    if (!IS_INSIDE_SOUNDBUTTON) {
       this.closePopoverAudio();
     }
-    if (!isInsideSpeedButton) {
+    if (!IS_INSIDE_SPEEDBUTTON) {
       this.closePopoverSpeed();
     }
   }
@@ -189,5 +189,3 @@ export class SoundBoxComponent {
   }
 
 }
-
-

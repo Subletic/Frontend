@@ -35,12 +35,12 @@ describe('SettingsComponent', () => {
   });
 
   it('should set the slider value when ngAfterViewInit is called', () => {
-    const sliderElement = fixture.nativeElement.querySelector('#seconds-slider');
+    const SLIDER_ELEMENT = fixture.nativeElement.querySelector('#seconds-slider');
     component.updatedAudioSkipSeconds = 10;
     fixture.detectChanges();
 
     component.ngAfterViewInit();
-    expect(sliderElement.value).toBe('10');
+    expect(SLIDER_ELEMENT.value).toBe('10');
   });
 
   it('should open and close the modal', () => {

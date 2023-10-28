@@ -26,22 +26,22 @@ describe('SpeedPopupComponent', () => {
 
   it('should emit the selected speed when a button is clicked', () => {
     spyOn(component.speedChange, 'emit');
-    const speed = 0.5;
+    const SPEED = 0.5;
     buttons[0].click();
-    expect(component.speedChange.emit).toHaveBeenCalledWith(speed);
-    expect(component.speedValue).toBe(speed);
+    expect(component.speedChange.emit).toHaveBeenCalledWith(SPEED);
+    expect(component.speedValue).toBe(SPEED);
   });
 
   it('should apply "currentValue" class to the button when speedValue matches the button value', () => {
-    const speed = 0.9;
-    component.speedValue = speed;
+    const SPEED = 0.9;
+    component.speedValue = SPEED;
     fixture.detectChanges();
     expect(buttons[2].classList.contains('currentValue')).toBeTruthy();
   });
 
   it('should not apply "currentValue" class to the button when speedValue does not match the button value', () => {
-    const speed = 0.9;
-    component.speedValue = speed;
+    const SPEED = 0.9;
+    component.speedValue = SPEED;
     fixture.detectChanges();
     expect(buttons[1].classList.contains('currentValue')).toBeFalsy();
   });

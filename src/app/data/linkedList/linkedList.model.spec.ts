@@ -46,9 +46,9 @@ describe('LinkedList', () => {
     linkedList.add(wordToken2);
     linkedList.add(wordToken3);
 
-    const expectedText = 'Hello World !';
-    const result = linkedList.printDataList((data: WordToken) => data.word);
-    expect(result).toBe(expectedText);
+    const EXPECTED_TEXT = 'Hello World !';
+    const RESULT = linkedList.printDataList((data: WordToken) => data.word);
+    expect(RESULT).toBe(EXPECTED_TEXT);
   });
 
   it('should convert LinkedList instance to JSON 1111111111', () => {
@@ -56,7 +56,7 @@ describe('LinkedList', () => {
     linkedList.add(wordToken2);
     linkedList.add(wordToken3);
 
-    const expectedJson = [
+    const EXPECTED_JSON = [
       {
         Word: 'Hello',
         Confidence: 0.9,
@@ -80,8 +80,8 @@ describe('LinkedList', () => {
       }
     ];
 
-    const json = linkedList.toJSON((data: WordToken) => data.getExport());
+    const LIST_TO_JSON = linkedList.toJSON((data: WordToken) => data.getExport());
 
-    expect(json).toEqual(JSON.stringify(expectedJson));
+    expect(LIST_TO_JSON).toEqual(JSON.stringify(EXPECTED_JSON));
   });
 });

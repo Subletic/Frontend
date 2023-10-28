@@ -63,17 +63,17 @@ export class CircularBuffer {
    *
    */
   readNextSecond(): Float32Array | null {
-    const readWriteTimeDifference = this.absoluteWriteTimeInSeconds - this.absoluteReadTimeInSeconds;
+    const READ_WRITE_TIME_DIFFERENCE = this.absoluteWriteTimeInSeconds - this.absoluteReadTimeInSeconds;
     let oldReadPointer = this.readPointer;
 
     let newReadPointer;
 
     console.log("read pointer: " + this.absoluteReadTimeInSeconds)
     console.log("write pointer: " + this.absoluteWriteTimeInSeconds);
-    console.log("Read write diff: " + readWriteTimeDifference)
+    console.log("Read write diff: " + READ_WRITE_TIME_DIFFERENCE)
 
     // Check if read pointer is already overwritten with new data
-    if (readWriteTimeDifference >= this.bufferLengthInSeconds) {
+    if (READ_WRITE_TIME_DIFFERENCE >= this.bufferLengthInSeconds) {
       // Read pointer too old
       newReadPointer = (this.writePointer - this.totalBufferSize) + (this.safetyMarginInSeconds * this.samplingRate);
       oldReadPointer = (newReadPointer - this.samplingRate) % this.totalBufferSize;
@@ -93,9 +93,9 @@ export class CircularBuffer {
 
     // Check if Target Array overflows buffer end
     if (oldReadPointer > newReadPointer) {
-      const firstHalf = this.buffer.subarray(oldReadPointer, this.totalBufferSize);
-      const secondHalf = this.buffer.subarray(0, newReadPointer);
-      return Float32Array.of(...firstHalf, ...secondHalf)
+      const FIRST_HALF = this.buffer.subarray(oldReadPointer, this.totalBufferSize);
+      const SECOND_HALF = this.buffer.subarray(0, newReadPointer);
+      return Float32Array.of(...FIRST_HALF, ...SECOND_HALF)
     }
     return this.buffer.subarray(oldReadPointer, newReadPointer);
   }
@@ -107,8 +107,8 @@ export class CircularBuffer {
    * @param secondsToAdvance - The amount of seconds to advance the read pointer by.
    */
   public advanceReadPointer(secondsToAdvance: number): void {
-    const samplesToAdvance = secondsToAdvance * this.samplingRate;
-    this.readPointer = (this.readPointer + samplesToAdvance) % this.totalBufferSize;
+    const SAMPLES_TO_ADVANCE = secondsToAdvance * this.samplingRate;
+    this.readPointer = (this.readPointer + SAMPLES_TO_ADVANCE) % this.totalBufferSize;
     this.absoluteReadTimeInSeconds += secondsToAdvance;
 
     // Keep Read Pointer away from Write Pointer
@@ -124,14 +124,14 @@ export class CircularBuffer {
    * @param secondsToDecrease - The amount of seconds to decrease the read pointer by.
    */
   public decreaseReadPointer(secondsToDecrease: number): void {
-    const samplesToAdvance = secondsToDecrease * this.samplingRate;
-    this.readPointer = (this.readPointer - samplesToAdvance) % this.totalBufferSize;
+    const SAMPLES_TO_ADVANCE = secondsToDecrease * this.samplingRate;
+    this.readPointer = (this.readPointer - SAMPLES_TO_ADVANCE) % this.totalBufferSize;
     this.absoluteReadTimeInSeconds -= secondsToDecrease;
 
     // Keep Read Pointer away from End of Buffer
-    const endOfBufferTimeTimestamp = this.absoluteWriteTimeInSeconds - this.bufferLengthInSeconds;
-    if (this.absoluteReadTimeInSeconds <= endOfBufferTimeTimestamp) {
-      this.absoluteReadTimeInSeconds = endOfBufferTimeTimestamp + this.safetyMarginInSeconds;
+    const END_OF_BUFFERTIME_TIMESTAMP = this.absoluteWriteTimeInSeconds - this.bufferLengthInSeconds;
+    if (this.absoluteReadTimeInSeconds <= END_OF_BUFFERTIME_TIMESTAMP) {
+      this.absoluteReadTimeInSeconds = END_OF_BUFFERTIME_TIMESTAMP + this.safetyMarginInSeconds;
       this.readPointer = this.writePointer - this.totalBufferSize + (this.safetyMarginInSeconds * this.samplingRate);
     }
   }

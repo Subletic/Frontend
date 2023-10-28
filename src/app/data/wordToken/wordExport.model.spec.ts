@@ -4,26 +4,26 @@ import { WordExport } from './wordExport.model';
 describe('WordExport', () => {
   describe('toJSON', () => {
     it('should return the word export object in JSON format', () => {
-      const wordExport = new WordExport('test', 0.8, 0, 1, 1);
-      const expectedJSON = {
+      const WORD_EXPORT = new WordExport('test', 0.8, 0, 1, 1);
+      const EXPECTED_JSON = {
         Word: 'test',
         Confidence: 0.8,
         StartTime: 0,
         EndTime: 1,
         Speaker: 1
       };
-      expect(wordExport.toJSON()).toEqual(expectedJSON);
+      expect(WORD_EXPORT.toJSON()).toEqual(EXPECTED_JSON);
     });
   });
   describe('toWordToken', () => {
     it('should return a new WordToken object with the same properties', () => {
-      const wordExport = new WordExport('test', 0.8, 0, 1, 1);
-      const wordToken = wordExport.toWordToken();
-      expect(wordToken.word).toBe('test');
-      expect(wordToken.confidence).toBe(0.8);
-      expect(wordToken.startTime).toBe(0);
-      expect(wordToken.endTime).toBe(1);
-      expect(wordToken.speaker).toBe(1);
+      const WORD_EXPORT = new WordExport('test', 0.8, 0, 1, 1);
+      const WORDTOKEN = WORD_EXPORT.toWordToken();
+      expect(WORDTOKEN.word).toBe('test');
+      expect(WORDTOKEN.confidence).toBe(0.8);
+      expect(WORDTOKEN.startTime).toBe(0);
+      expect(WORDTOKEN.endTime).toBe(1);
+      expect(WORDTOKEN.speaker).toBe(1);
     });
   });
 });
@@ -59,13 +59,13 @@ describe('WordToken', () => {
   });
   describe('getExport', () => {
     it('should return a new WordExport object with the same properties', () => {
-      const wordToken = new WordToken('test', 0.8, 0, 1, 1);
-      const wordExport = wordToken.getExport();
-      expect(wordExport.word).toBe('test');
-      expect(wordExport.confidence).toBe(0.8);
-      expect(wordExport.startTime).toBe(0);
-      expect(wordExport.endTime).toBe(1);
-      expect(wordExport.speaker).toBe(1);
+      const WORDTOKEN = new WordToken('test', 0.8, 0, 1, 1);
+      const WORD_EXPORT = WORDTOKEN.getExport();
+      expect(WORD_EXPORT.word).toBe('test');
+      expect(WORD_EXPORT.confidence).toBe(0.8);
+      expect(WORD_EXPORT.startTime).toBe(0);
+      expect(WORD_EXPORT.endTime).toBe(1);
+      expect(WORD_EXPORT.speaker).toBe(1);
     });
   });
   describe('updateWordColor', () => {

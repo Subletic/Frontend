@@ -82,36 +82,36 @@ describe('SoundBoxComponent', () => {
   it('should call setVolume on onVolumeChange', () => {
     spyOn(component.audioHandler, 'setVolume');
 
-    const volume = 0.5;
-    component.onVolumeChange(volume);
+    const VOLUME = 0.5;
+    component.onVolumeChange(VOLUME);
 
-    expect(component.audioHandler.setVolume).toHaveBeenCalledWith(volume);
+    expect(component.audioHandler.setVolume).toHaveBeenCalledWith(VOLUME);
   });
 
   it('should set volume100 on onVolume100Change', () => {
-    const volume100 = 50;
-    component.onVolume100Change(volume100);
+    const VOLUME100 = 50;
+    component.onVolume100Change(VOLUME100);
 
-    expect(component.volume100).toEqual(volume100);
+    expect(component.volume100).toEqual(VOLUME100);
   });
 
 
   it('should close popups when clicking outside', () => {
     // Arrange
     const mockClickedElement = document.createElement('div');
-    const mockSoundButtonElement = document.createElement('div');
-    const mockSpeedButtonElement = document.createElement('div');
-    const mockEvent = new MouseEvent('click');
-    mockClickedElement.appendChild(mockSoundButtonElement);
-    mockClickedElement.appendChild(mockSpeedButtonElement);
-    spyOnProperty(mockEvent, 'target').and.returnValue(mockClickedElement);
+    const MOCK_SOUNDBUTTON_ELEMENT = document.createElement('div');
+    const MOCK_SPEEDBUTTON_ELEMENT = document.createElement('div');
+    const MOCK_EVENT = new MouseEvent('click');
+    mockClickedElement.appendChild(MOCK_SOUNDBUTTON_ELEMENT);
+    mockClickedElement.appendChild(MOCK_SPEEDBUTTON_ELEMENT);
+    spyOnProperty(MOCK_EVENT, 'target').and.returnValue(mockClickedElement);
     spyOn(component.soundButton.nativeElement, 'contains').and.returnValue(false);
     spyOn(component.speedButton.nativeElement, 'contains').and.returnValue(false);
     spyOn(component, 'closePopoverAudio');
     spyOn(component, 'closePopoverSpeed');
 
     // Act
-    component.onDocumentMouseDown(mockEvent);
+    component.onDocumentMouseDown(MOCK_EVENT);
 
     // Assert
     expect(component.closePopoverAudio).toHaveBeenCalled();
@@ -119,8 +119,8 @@ describe('SoundBoxComponent', () => {
   });
 
   it('should close the speed popover', () => {
-    const settingsService = new SettingsService();
-    const component = new SoundBoxComponent(settingsService);
+    const SETTINGS_SERVICE = new SettingsService();
+    const component = new SoundBoxComponent(SETTINGS_SERVICE);
     component.isSpeedPopoverOpen = true;
 
     component.closePopoverSpeed();
@@ -129,8 +129,8 @@ describe('SoundBoxComponent', () => {
   });
 
   it('should toggle the speed popover', () => {
-    const settingsService = new SettingsService();
-    const component = new SoundBoxComponent(settingsService);
+    const SETTINGS_SERVICE = new SettingsService();
+    const component = new SoundBoxComponent(SETTINGS_SERVICE);
     component.isSpeedPopoverOpen = false;
 
     component.switchSpeedPopover();
@@ -147,10 +147,10 @@ describe('SoundBoxComponent', () => {
     const settingsService = jasmine.createSpyObj('SettingsService', ['open']);
     component.setSettingsService(settingsService);
 
-    const modalId = 'modal1';
-    component.openModal(modalId);
+    const MODAL_ID = 'modal1';
+    component.openModal(MODAL_ID);
 
-    expect(settingsService.open).toHaveBeenCalledWith(modalId);
+    expect(settingsService.open).toHaveBeenCalledWith(MODAL_ID);
   });
 
   it('should close the specified modal', () => {
@@ -158,10 +158,10 @@ describe('SoundBoxComponent', () => {
     const settingsService = jasmine.createSpyObj('SettingsService', ['close']);
     component.setSettingsService(settingsService);
 
-    const modalId = 'modal1';
-    component.closeModal(modalId); // Die Funktion aufrufen
+    const MODAL_ID = 'modal1';
+    component.closeModal(MODAL_ID); // Die Funktion aufrufen
 
-    expect(settingsService.close).toHaveBeenCalledWith(modalId);
+    expect(settingsService.close).toHaveBeenCalledWith(MODAL_ID);
   });
 
   it('should set the skip seconds in the audio handler', () => {
@@ -169,10 +169,10 @@ describe('SoundBoxComponent', () => {
     const audioHandler = jasmine.createSpyObj('AudioHandlerComponent', ['setSkipSeconds']);
     component.audioHandler = audioHandler;
 
-    const seconds = 10;
-    component.onSecondsChange(seconds);
+    const SECONDS = 10;
+    component.onSecondsChange(SECONDS);
 
-    expect(audioHandler.setSkipSeconds).toHaveBeenCalledWith(seconds);
+    expect(audioHandler.setSkipSeconds).toHaveBeenCalledWith(SECONDS);
   });
 
   it('should set the playback speed in the audio handler', () => {
@@ -180,19 +180,19 @@ describe('SoundBoxComponent', () => {
     const audioHandler = jasmine.createSpyObj('AudioHandlerComponent', ['setPlaybackSpeed']);
     component.audioHandler = audioHandler;
 
-    const speed = 1.5;
-    component.onSpeedChange(speed);
+    const SPEED = 1.5;
+    component.onSpeedChange(SPEED);
 
-    expect(audioHandler.setPlaybackSpeed).toHaveBeenCalledWith(speed);
+    expect(audioHandler.setPlaybackSpeed).toHaveBeenCalledWith(SPEED);
   });
 
   it('should return the SettingsService element', () => {
-    const settingsService = new SettingsService();
-    const component = new SoundBoxComponent(settingsService);
+    const SETTINGS_SERVICE = new SettingsService();
+    const component = new SoundBoxComponent(SETTINGS_SERVICE);
 
-    const result = component.getSettingsService();
+    const RESULT = component.getSettingsService();
 
-    expect(result).toBe(settingsService);
+    expect(RESULT).toBe(SETTINGS_SERVICE);
   });
 
   //Sollte Eigentlich keinen Fehler werfen und hat es ursprünglich auch nicht? Die anderen 2 funktionieren ja auch
@@ -214,8 +214,8 @@ describe('SoundBoxComponent', () => {
     const audioHandler = jasmine.createSpyObj('AudioHandlerComponent', ['playOrStopAudio', 'skipBackward', 'skipForward']);
     component.audioHandler = audioHandler;
 
-    const skipBackwardEvent = new KeyboardEvent('keydown', { key: 'y', ctrlKey: true, altKey: true });
-    component.handleKeyboardEvent(skipBackwardEvent);
+    const SKIP_BACKWARD_EVENT = new KeyboardEvent('keydown', { key: 'y', ctrlKey: true, altKey: true });
+    component.handleKeyboardEvent(SKIP_BACKWARD_EVENT);
 
     expect(audioHandler.skipBackward).toHaveBeenCalled();
   });
@@ -225,8 +225,8 @@ describe('SoundBoxComponent', () => {
     const audioHandler = jasmine.createSpyObj('AudioHandlerComponent', ['playOrStopAudio', 'skipBackward', 'skipForward']);
     component.audioHandler = audioHandler;
 
-    const skipForwardEvent = new KeyboardEvent('keydown', { key: 'w', ctrlKey: true, altKey: true });
-    component.handleKeyboardEvent(skipForwardEvent);
+    const SKIP_FORWARD_EVENT = new KeyboardEvent('keydown', { key: 'w', ctrlKey: true, altKey: true });
+    component.handleKeyboardEvent(SKIP_FORWARD_EVENT);
 
     expect(audioHandler.skipForward).toHaveBeenCalled();
   });

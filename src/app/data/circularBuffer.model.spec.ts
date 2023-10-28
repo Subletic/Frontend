@@ -2,52 +2,52 @@ import { CircularBuffer } from "./circularBuffer.model";
 
 describe('CircularBuffer', () => {
   let circularBuffer: CircularBuffer;
-  const sampleRate = 128;
-  const bufferSizeInSeconds = 10;
-  const elementsInBuffer = sampleRate * bufferSizeInSeconds;
+  const SAMPLE_RATE = 128;
+  const BUFFERSIZE_IN_SECONDS = 10;
+  const ELEMENTS_IN_BUFFER = SAMPLE_RATE * BUFFERSIZE_IN_SECONDS;
 
   beforeEach(() => {
-    circularBuffer = new CircularBuffer(sampleRate, bufferSizeInSeconds);
+    circularBuffer = new CircularBuffer(SAMPLE_RATE, BUFFERSIZE_IN_SECONDS);
   });
 
   it('should initialize with empty values', () => {
-    expect(circularBuffer.getBufferData()).toEqual(new Float32Array(elementsInBuffer));
+    expect(circularBuffer.getBufferData()).toEqual(new Float32Array(ELEMENTS_IN_BUFFER));
   });
 
   it('should add new Audio Chunk to buffer', () => {
-    const audioChunk = new Float32Array(elementsInBuffer);
-    for (let i = 0; i < sampleRate; i++) {
+    const audioChunk = new Float32Array(ELEMENTS_IN_BUFFER);
+    for (let i = 0; i < SAMPLE_RATE; i++) {
       audioChunk[i] = i;
     }
 
     circularBuffer.writeNewChunk(audioChunk);
-    expect(circularBuffer.readNextSecond()).not.toEqual(new Float32Array(sampleRate));
+    expect(circularBuffer.readNextSecond()).not.toEqual(new Float32Array(SAMPLE_RATE));
   });
 
   it('should overwrite old data if full', () => {
-    const audioChunkAscending = new Float32Array(sampleRate);
-    for (let i = 0; i < sampleRate; i++) {
+    const audioChunkAscending = new Float32Array(SAMPLE_RATE);
+    for (let i = 0; i < SAMPLE_RATE; i++) {
       audioChunkAscending[i] = i;
     }
-    const audioChunkOnes = new Float32Array(sampleRate);
-    for (let i = 0; i < sampleRate; i++) {
+    const audioChunkOnes = new Float32Array(SAMPLE_RATE);
+    for (let i = 0; i < SAMPLE_RATE; i++) {
       audioChunkOnes[i] = 1;
     }
 
-    const expectedArray = Float32Array.from([...audioChunkOnes, ...audioChunkAscending]);
+    const EXPECTED_ARRAY = Float32Array.from([...audioChunkOnes, ...audioChunkAscending]);
 
-    for (let i = 0; i < bufferSizeInSeconds; i++) {
+    for (let i = 0; i < BUFFERSIZE_IN_SECONDS; i++) {
       circularBuffer.writeNewChunk(audioChunkAscending);
     }
 
     circularBuffer.writeNewChunk(audioChunkOnes);
 
-    expect(circularBuffer.getBufferData().subarray(0, 256)).toEqual(expectedArray);
+    expect(circularBuffer.getBufferData().subarray(0, 256)).toEqual(EXPECTED_ARRAY);
   });
 
   it('should read next second of audio data', () => {
-    const audioChunk = new Float32Array(sampleRate);
-    for (let i = 0; i < sampleRate; i++) {
+    const audioChunk = new Float32Array(SAMPLE_RATE);
+    for (let i = 0; i < SAMPLE_RATE; i++) {
       audioChunk[i] = i;
     }
 
@@ -60,16 +60,16 @@ describe('CircularBuffer', () => {
   });
 
   it('should correctly skip forward', () => {
-    const audioChunk = new Float32Array(sampleRate);
+    const audioChunk = new Float32Array(SAMPLE_RATE);
     for (let iteration = 0; iteration < 10; iteration++) {
-      for (let i = 0; i < sampleRate; i++) {
+      for (let i = 0; i < SAMPLE_RATE; i++) {
         audioChunk[i] = iteration;
       }
       circularBuffer.writeNewChunk(audioChunk);
     }
 
-    const expectedArray = new Float32Array(sampleRate);
-    for (let i = 0; i < sampleRate; i++) {
+    const expectedArray = new Float32Array(SAMPLE_RATE);
+    for (let i = 0; i < SAMPLE_RATE; i++) {
       expectedArray[i] = 4;
     }
 
@@ -78,16 +78,16 @@ describe('CircularBuffer', () => {
   });
 
   it('should correctly skip backward', () => {
-    const audioChunk = new Float32Array(sampleRate);
+    const audioChunk = new Float32Array(SAMPLE_RATE);
     for (let iteration = 0; iteration < 10; iteration++) {
-      for (let i = 0; i < sampleRate; i++) {
+      for (let i = 0; i < SAMPLE_RATE; i++) {
         audioChunk[i] = iteration;
       }
       circularBuffer.writeNewChunk(audioChunk);
     }
 
-    const expectedArray = new Float32Array(sampleRate);
-    for (let i = 0; i < sampleRate; i++) {
+    const expectedArray = new Float32Array(SAMPLE_RATE);
+    for (let i = 0; i < SAMPLE_RATE; i++) {
       expectedArray[i] = 3;
     }
 
@@ -101,16 +101,16 @@ describe('CircularBuffer', () => {
   });
 
   it('should not skip outside of boundaries going backwards', () => {
-    const audioChunk = new Float32Array(sampleRate);
+    const audioChunk = new Float32Array(SAMPLE_RATE);
     for (let iteration = 0; iteration < 10; iteration++) {
-      for (let i = 0; i < sampleRate; i++) {
+      for (let i = 0; i < SAMPLE_RATE; i++) {
         audioChunk[i] = iteration;
       }
       circularBuffer.writeNewChunk(audioChunk);
     }
 
-    const expectedArray = new Float32Array(sampleRate);
-    for (let i = 0; i < sampleRate; i++) {
+    const expectedArray = new Float32Array(SAMPLE_RATE);
+    for (let i = 0; i < SAMPLE_RATE; i++) {
       expectedArray[i] = circularBuffer['safetyMarginInSeconds'];
     }
 
@@ -122,17 +122,17 @@ describe('CircularBuffer', () => {
   });
 
   it('should not skip outside of boundaries going forwards', () => {
-    const audioChunk = new Float32Array(sampleRate);
+    const audioChunk = new Float32Array(SAMPLE_RATE);
     for (let iteration = 0; iteration < 10; iteration++) {
-      for (let i = 0; i < sampleRate; i++) {
+      for (let i = 0; i < SAMPLE_RATE; i++) {
         audioChunk[i] = iteration;
       }
       circularBuffer.writeNewChunk(audioChunk);
     }
 
-    const expectedArray = new Float32Array(sampleRate);
-    for (let i = 0; i < sampleRate; i++) {
-      expectedArray[i] = bufferSizeInSeconds - circularBuffer['safetyMarginInSeconds'];
+    const expectedArray = new Float32Array(SAMPLE_RATE);
+    for (let i = 0; i < SAMPLE_RATE; i++) {
+      expectedArray[i] = BUFFERSIZE_IN_SECONDS - circularBuffer['safetyMarginInSeconds'];
     }
 
     circularBuffer.readNextSecond();
@@ -143,9 +143,9 @@ describe('CircularBuffer', () => {
   });
 
   it('should not retain playback position if data is too old', () => {
-    const audioChunk = new Float32Array(sampleRate);
+    const audioChunk = new Float32Array(SAMPLE_RATE);
     for (let iteration = 0; iteration < 10; iteration++) {
-      for (let i = 0; i < sampleRate; i++) {
+      for (let i = 0; i < SAMPLE_RATE; i++) {
         audioChunk[i] = iteration;
       }
       circularBuffer.writeNewChunk(audioChunk);
@@ -154,14 +154,14 @@ describe('CircularBuffer', () => {
     circularBuffer.readNextSecond();
 
     for (let iteration = 0; iteration < 5; iteration++) {
-      for (let i = 0; i < sampleRate; i++) {
+      for (let i = 0; i < SAMPLE_RATE; i++) {
         audioChunk[i] = iteration;
       }
       circularBuffer.writeNewChunk(audioChunk);
     }
 
-    const expectedArray = new Float32Array(sampleRate);
-    for (let i = 0; i < sampleRate; i++) {
+    const expectedArray = new Float32Array(SAMPLE_RATE);
+    for (let i = 0; i < SAMPLE_RATE; i++) {
       expectedArray[i] = 6;
     }
 
