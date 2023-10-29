@@ -68,10 +68,6 @@ export class CircularBuffer {
 
     let newReadPointer;
 
-    console.log("read pointer: " + this.absoluteReadTimeInSeconds)
-    console.log("write pointer: " + this.absoluteWriteTimeInSeconds);
-    console.log("Read write diff: " + READ_WRITE_TIME_DIFFERENCE)
-
     // Check if read pointer is already overwritten with new data
     if (READ_WRITE_TIME_DIFFERENCE >= this.bufferLengthInSeconds) {
       // Read pointer too old
@@ -129,9 +125,9 @@ export class CircularBuffer {
     this.absoluteReadTimeInSeconds -= secondsToDecrease;
 
     // Keep Read Pointer away from End of Buffer
-    const END_OF_BUFFERTIME_TIMESTAMP = this.absoluteWriteTimeInSeconds - this.bufferLengthInSeconds;
-    if (this.absoluteReadTimeInSeconds <= END_OF_BUFFERTIME_TIMESTAMP) {
-      this.absoluteReadTimeInSeconds = END_OF_BUFFERTIME_TIMESTAMP + this.safetyMarginInSeconds;
+    const END_OF_BUFFER_TIME_TIMESTAMP = this.absoluteWriteTimeInSeconds - this.bufferLengthInSeconds;
+    if (this.absoluteReadTimeInSeconds <= END_OF_BUFFER_TIME_TIMESTAMP) {
+      this.absoluteReadTimeInSeconds = END_OF_BUFFER_TIME_TIMESTAMP + this.safetyMarginInSeconds;
       this.readPointer = this.writePointer - this.totalBufferSize + (this.safetyMarginInSeconds * this.samplingRate);
     }
   }

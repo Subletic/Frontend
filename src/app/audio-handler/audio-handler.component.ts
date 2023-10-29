@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { SignalRService } from "../service/signalRService";
-import { CircularBuffer } from "../data/circularBuffer.model";
+import {Component, OnInit} from '@angular/core';
+import {SignalRService} from "../service/signalRService";
+import {CircularBuffer} from "../data/circularBuffer.model";
+import {SoundTouch} from "soundtouch-ts";
 
 /**
  * The AudioHandlerComponent represents a component that handles audio playback and buffering.
@@ -15,6 +16,7 @@ export class AudioHandlerComponent implements OnInit {
   // Constants for audio buffering and sampling
   private readonly BUFFER_SIZE_IN_SECONDS = 30;
   private readonly SAMPLE_RATE = 48000;
+  private readonly NUM_CHANNELS = 1;
 
   // Audio buffers and context
   private audioBuffer: CircularBuffer = new CircularBuffer(this.SAMPLE_RATE, this.BUFFER_SIZE_IN_SECONDS);
@@ -26,10 +28,14 @@ export class AudioHandlerComponent implements OnInit {
   private skipSeconds = 5;
   private playbackSpeed = 1;
 
+  private soundTouch = new SoundTouch(this.SAMPLE_RATE);
+
   private gainNode: GainNode = this.audioContext.createGain();
   private volume = 1;
 
   private audioPlaying = false;
+
+  private previousTimeStamp = performance.now();
 
   /**
    * Gets the reference to the SignalRService.
@@ -47,11 +53,7 @@ export class AudioHandlerComponent implements OnInit {
       this.handleAudioData(newChunk)
     });
 
-    const AUDIO_UPDATE_INTERVAL_IN_MS = 1000;
-
-    setInterval(() => {
-      this.updateAudioNode();
-    }, AUDIO_UPDATE_INTERVAL_IN_MS);
+    this.audioUpdateScheduler();
 
     this.gainNode.connect(this.audioContext.destination);
   }
@@ -69,6 +71,22 @@ export class AudioHandlerComponent implements OnInit {
         this.audioPlaying = false;
       })
     }
+  }
+
+
+  private audioUpdateScheduler() {
+    const AUDIO_UPDATE_INTERVAL_IN_MS = 1000;
+
+    const internalCallback = () => {
+      const timeStamp = performance.now()
+      console.log("Time since last update: " + (timeStamp - this.previousTimeStamp))
+      console.log("Variation from ideal value: " + ((timeStamp - this.previousTimeStamp) - (AUDIO_UPDATE_INTERVAL_IN_MS / this.playbackSpeed)))
+      this.previousTimeStamp = timeStamp;
+      this.updateAudioNode();
+      window.setTimeout(internalCallback, AUDIO_UPDATE_INTERVAL_IN_MS / this.playbackSpeed)
+    }
+
+    window.setTimeout(internalCallback, AUDIO_UPDATE_INTERVAL_IN_MS / this.playbackSpeed);
   }
 
   /**
@@ -95,27 +113,37 @@ export class AudioHandlerComponent implements OnInit {
     if (!this.audioPlaying) return;
 
     const audioData: Float32Array | null = this.audioBuffer.readNextSecond();
-    const NUMBER_OF_CHANNELS = 1;
 
     if (!audioData || audioData.length === 0) return;
 
-    console.log("Audio length:" + audioData.length);
+    const audioDataWithPlaybackSpeed: Float32Array = this.adjustAudioDataForPlaybackSpeed(audioData);
 
-    const audioBuffer: AudioBuffer = this.audioContext.createBuffer(NUMBER_OF_CHANNELS, audioData.length, this.SAMPLE_RATE);
+    const audioBuffer: AudioBuffer = this.audioContext.createBuffer(this.NUM_CHANNELS, audioDataWithPlaybackSpeed.length, this.SAMPLE_RATE);
     const SELECTED_CHANNEL = 0;
     const BUFFER_OFFSET = 0;
 
-    audioBuffer.copyToChannel(audioData, SELECTED_CHANNEL, BUFFER_OFFSET)
+    audioBuffer.copyToChannel(audioDataWithPlaybackSpeed, SELECTED_CHANNEL, BUFFER_OFFSET)
 
-    const audioNode: AudioBufferSourceNode = new AudioBufferSourceNode(this.audioContext, { buffer: audioBuffer });
+    const audioNode: AudioBufferSourceNode = new AudioBufferSourceNode(this.audioContext, {buffer: audioBuffer});
 
     // Connect the source node to the audio context destination
-    audioNode.playbackRate.value = this.playbackSpeed;
     audioNode.connect(this.gainNode)
 
     this.currentAudioNode?.disconnect();
     audioNode.start(0);
     this.currentAudioNode = audioNode;
+  }
+  private adjustAudioDataForPlaybackSpeed(audioData: Float32Array): Float32Array {
+    this.soundTouch.tempo = this.playbackSpeed;
+    this.soundTouch.inputBuffer.putSamples(audioData);
+    this.soundTouch.process();
+
+    const timeShiftedAudioData = new Float32Array(this.SAMPLE_RATE);
+
+    this.soundTouch.outputBuffer.receiveSamples(timeShiftedAudioData, this.soundTouch.outputBuffer.frameCount);
+    this.soundTouch.clear();
+
+    return timeShiftedAudioData;
   }
 
   /**
