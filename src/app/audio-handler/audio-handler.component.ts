@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {SignalRService} from "../service/signalRService";
-import {CircularBuffer} from "../data/circularBuffer.model";
 import {SoundTouch} from "soundtouch-ts";
 
 /**
@@ -19,11 +18,8 @@ export class AudioHandlerComponent implements OnInit {
   private readonly NUM_CHANNELS = 1;
 
   // Audio buffers and context
-  private audioBuffer: CircularBuffer = new CircularBuffer(this.SAMPLE_RATE, this.BUFFER_SIZE_IN_SECONDS);
   private audioContext = new AudioContext();
-
-  // Reference to the currently playing AudioNode
-  private currentAudioNode: AudioBufferSourceNode | null = null;
+  private audioBufferNode: AudioWorkletNode | undefined;
 
   private skipSeconds = 5;
   private playbackSpeed = 1;
@@ -35,13 +31,21 @@ export class AudioHandlerComponent implements OnInit {
 
   private audioPlaying = false;
 
-  private previousTimeStamp = performance.now();
-
   /**
    * Gets the reference to the SignalRService.
    * @param signalRService - The SignalRService to get the reference to.
    */
   constructor(private signalRService: SignalRService) {
+    this.audioContext.audioWorklet
+      .addModule('/assets/worklets/circular-buffer-worklet.js')
+      .catch((err) => {
+        console.error("Error loading worklet: " + err)
+      })
+      .then(() => {
+        this.audioBufferNode = new AudioWorkletNode(this.audioContext, 'circular-buffer-worklet')
+        this.audioBufferNode.connect(this.gainNode);
+        this.gainNode.connect(this.audioContext.destination);
+      })
   }
 
   /**
@@ -52,10 +56,6 @@ export class AudioHandlerComponent implements OnInit {
     this.signalRService.receivedAudioStream.subscribe((newChunk) => {
       this.handleAudioData(newChunk)
     });
-
-    this.audioUpdateScheduler();
-
-    this.gainNode.connect(this.audioContext.destination);
   }
 
   /**
@@ -74,21 +74,6 @@ export class AudioHandlerComponent implements OnInit {
   }
 
 
-  private audioUpdateScheduler() {
-    const AUDIO_UPDATE_INTERVAL_IN_MS = 1000;
-
-    const internalCallback = () => {
-      const timeStamp = performance.now()
-      console.log("Time since last update: " + (timeStamp - this.previousTimeStamp))
-      console.log("Variation from ideal value: " + ((timeStamp - this.previousTimeStamp) - (AUDIO_UPDATE_INTERVAL_IN_MS / this.playbackSpeed)))
-      this.previousTimeStamp = timeStamp;
-      this.updateAudioNode();
-      window.setTimeout(internalCallback, AUDIO_UPDATE_INTERVAL_IN_MS / this.playbackSpeed)
-    }
-
-    window.setTimeout(internalCallback, AUDIO_UPDATE_INTERVAL_IN_MS / this.playbackSpeed);
-  }
-
   /**
    * Handles the received audio data chunk.
    * @param newChunk - The new audio chunk received.
@@ -102,43 +87,48 @@ export class AudioHandlerComponent implements OnInit {
       convertedAudioData[i] = newChunk[i] / INT16_TO_FLOAT32_SCALING_FACTOR;  // Skalierung auf den Bereich von -1 bis 1
     }
 
-    this.audioBuffer.writeNewChunk(convertedAudioData)
+    const WORKLET_FRAME_SIZE = 128;
+    const ITERATIONS_NEEDED_FOR_FULL_SECOND = this.SAMPLE_RATE / WORKLET_FRAME_SIZE;
+
+    for (let i = 0; i < ITERATIONS_NEEDED_FOR_FULL_SECOND; i++) {
+      this.audioBufferNode?.port.postMessage(convertedAudioData.subarray(i * WORKLET_FRAME_SIZE, (i + 1) * WORKLET_FRAME_SIZE));
+    }
   }
 
-  /**
-   * Replaces current playing audio node with audio node containing new data
-   * Each audio node holds 1s of audio
-   */
-  private updateAudioNode(): void {
-    if (!this.audioPlaying) return;
+  // /**
+  //  * Replaces current playing audio node with audio node containing new data
+  //  * Each audio node holds 1s of audio
+  //  */
+  // private updateAudioNode(): void {
+  //   if (!this.audioPlaying) return;
+  //
+  //   const audioData: Float32Array | null = this.audioBuffer.readNextSecond();
+  //
+  //   if (!audioData || audioData.length === 0) return;
+  //
+  //   const audioDataWithPlaybackSpeed: Float32Array = this.adjustAudioDataForPlaybackSpeed(audioData);
+  //
+  //   const audioBuffer: AudioBuffer = this.audioContext.createBuffer(this.NUM_CHANNELS, audioDataWithPlaybackSpeed.length, this.SAMPLE_RATE);
+  //   const SELECTED_CHANNEL = 0;
+  //   const BUFFER_OFFSET = 0;
+  //
+  //   audioBuffer.copyToChannel(audioDataWithPlaybackSpeed, SELECTED_CHANNEL, BUFFER_OFFSET)
+  //
+  //   const audioNode: AudioBufferSourceNode = new AudioBufferSourceNode(this.audioContext, {buffer: audioBuffer});
+  //
+  //   // Connect the source node to the audio context destination
+  //   audioNode.connect(this.gainNode)
+  //   audioNode.start(0);
+  //   this.currentAudioNode?.disconnect();
+  //   this.currentAudioNode = audioNode;
+  // }
 
-    const audioData: Float32Array | null = this.audioBuffer.readNextSecond();
-
-    if (!audioData || audioData.length === 0) return;
-
-    const audioDataWithPlaybackSpeed: Float32Array = this.adjustAudioDataForPlaybackSpeed(audioData);
-
-    const audioBuffer: AudioBuffer = this.audioContext.createBuffer(this.NUM_CHANNELS, audioDataWithPlaybackSpeed.length, this.SAMPLE_RATE);
-    const SELECTED_CHANNEL = 0;
-    const BUFFER_OFFSET = 0;
-
-    audioBuffer.copyToChannel(audioDataWithPlaybackSpeed, SELECTED_CHANNEL, BUFFER_OFFSET)
-
-    const audioNode: AudioBufferSourceNode = new AudioBufferSourceNode(this.audioContext, {buffer: audioBuffer});
-
-    // Connect the source node to the audio context destination
-    audioNode.connect(this.gainNode)
-
-    this.currentAudioNode?.disconnect();
-    audioNode.start(0);
-    this.currentAudioNode = audioNode;
-  }
   private adjustAudioDataForPlaybackSpeed(audioData: Float32Array): Float32Array {
     this.soundTouch.tempo = this.playbackSpeed;
     this.soundTouch.inputBuffer.putSamples(audioData);
     this.soundTouch.process();
 
-    const timeShiftedAudioData = new Float32Array(this.SAMPLE_RATE);
+    const timeShiftedAudioData = new Float32Array(this.SAMPLE_RATE / this.playbackSpeed);
 
     this.soundTouch.outputBuffer.receiveSamples(timeShiftedAudioData, this.soundTouch.outputBuffer.frameCount);
     this.soundTouch.clear();
@@ -159,14 +149,14 @@ export class AudioHandlerComponent implements OnInit {
    * Skips forward in the audio playback by the specified number of seconds.
    */
   public skipForward(): void {
-    this.audioBuffer.advanceReadPointer(this.skipSeconds);
+    // this.audioBuffer.advanceReadPointer(this.skipSeconds);
   }
 
   /**
    * Skips backward in the audio playback by the specified number of seconds.
    */
   public skipBackward(): void {
-    this.audioBuffer.decreaseReadPointer(this.skipSeconds);
+    // this.audioBuffer.decreaseReadPointer(this.skipSeconds);
   }
 
   /**

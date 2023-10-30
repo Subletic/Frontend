@@ -29,12 +29,10 @@ export class SignalRService {
 
     this.hubConnection.on("newBubble", (speechBubble) => {
       this.newBubbleReceived.next(speechBubble);
-      console.log("Neue SpeechBubble erhalten:", speechBubble);
     });
 
     this.hubConnection.on("deleteBubble", (id) => {
       this.oldBubbledeleted.next(id);
-      console.log("Alte SpeechBubble gelöscht:", id);
     });
   }
 
