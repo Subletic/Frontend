@@ -1,3 +1,7 @@
+/**
+ * This worklet is responsible for managing the circular buffer.
+ * It receives audio data from the main thread and writes it to the buffer.
+ */
 class CircularBufferWorklet extends AudioWorkletProcessor {
   // Audio Buffer related fields
   buffer;
@@ -23,6 +27,9 @@ class CircularBufferWorklet extends AudioWorkletProcessor {
   // Amount of seconds that Read Pointer should be away from buffer ends
   safetyMarginInSeconds;
 
+  /**
+   * Initializes configuration values for the circular buffer.
+   */
   constructor() {
     // Worklet initialization
     super();
@@ -49,6 +56,10 @@ class CircularBufferWorklet extends AudioWorkletProcessor {
     this.buffer = new Float32Array(this.totalBufferSize);
   }
 
+  /**
+   * Handles messages received over the worklet port and calls the appropriate functions.
+   * @param message - The message received over the worklet port.
+   */
   handlePortMessage(message) {
     switch (message.type) {
       case 'audioData':
@@ -71,6 +82,10 @@ class CircularBufferWorklet extends AudioWorkletProcessor {
     }
   }
 
+  /**
+   * Writes new audio chunks received over the massaging port to the circular buffer.
+   * @param audioChunk - The audio chunk to be written to the circular buffer.
+   */
   handleNewAudioData(audioChunk) {
     // Audio chunks should usually be 128 samples long
     for (let i = 0; i < audioChunk.length; i++) {
@@ -90,6 +105,14 @@ class CircularBufferWorklet extends AudioWorkletProcessor {
     }
   }
 
+  /**
+   * Moves audio data from the circular buffer to the output buffer of the worklet.
+   * Handles playback position and collision detection.
+   * @param inputs - The input audio data, in this case unused as data is received over the worklet port.
+   * @param outputs - The outputs of the worklet, in this case only one output and one channel are used.
+   * @param parameters - The parameters of the worklet, in this case unused.
+   * @returns {boolean} - True if the worklet should continue processing audio data, false otherwise.
+   */
   process(inputs, outputs, parameters) {
     if (!this.audioPlaying) {
       return true;
@@ -140,6 +163,12 @@ class CircularBufferWorklet extends AudioWorkletProcessor {
     return true;
   }
 
+  /**
+   * Forms the output data array, that is to be written to the output using the read pointers.
+   * @param oldReadPointer - The old read pointer
+   * @param newReadPointer - The new read pointer.
+   * @returns {Float32Array} - The output data array.
+   */
   formOutputDataArray(oldReadPointer, newReadPointer) {
     // Check if Target Array overflows buffer end
     if (oldReadPointer > newReadPointer) {
