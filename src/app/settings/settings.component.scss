@@ -125,3 +125,38 @@ h1 {
 .slider input[type=range].styled-slider {
     width: 98%;
 }
+
+.keybinding-container {
+    display: flex;
+    flex-direction: column;
+    margin: 5px;
+
+    p {
+        font-size: 18px;
+    }
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.action {
+    flex: 1;
+    margin: 5px;
+    margin-left: 20px;
+    text-align: left;
+}
+
+.key {
+    height: max-content;
+    text-align: center;
+    font-size: 14px;
+    color: var(--keybindings-font-color);
+
+    margin: 5px;
+    border-radius: 15%;
+    background-color: var(--keybindings-background-color);
+    padding: 10px;
+}
