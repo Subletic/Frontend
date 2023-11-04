@@ -41,14 +41,6 @@ describe('AudioHandlerComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should convert Int16Array to Float32Array successfully', () => {
-    const int16Array = new Int16Array([32767, 0, -32767]);
-    const expectedFloat32Array = new Float32Array([1.0, 0.0, -1.0]);
-
-    component['handleAudioData'](int16Array);
-
-    expect(component['audioBuffer'].getBufferData().subarray(0, int16Array.length)).toEqual(expectedFloat32Array);
-  });
 
   it('should set the volume in setVolume method', () => {
     const sliderVolumeValue = 0.5;
