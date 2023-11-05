@@ -35,14 +35,15 @@ export class AudioHandlerComponent implements OnInit {
   private audioContexts: AudioContext[] = [];
   private audioBuffers: AudioWorkletNode[] = [];
 
-  private audioContext: AudioContext;
+  private audioContext: AudioContext = new AudioContext();
   private audioBufferNode: AudioWorkletNode | undefined;
+  private gainNode: GainNode = new GainNode(this.audioContext);
 
-  private pitchShift: Tone.PitchShift;
+
+  private pitchModifier = 0;
 
   private skipSeconds = 5;
 
-  private gainNode: GainNode;
   private volume = 1;
 
   private audioPlaying = false;
@@ -70,28 +71,27 @@ export class AudioHandlerComponent implements OnInit {
             this.replaceAudioContext(event.data)
           }
           this.audioBuffers.push(newAudioBufferNode)
+
+          // Set default audio context for initial playback
+          if (multiplier === 1) {
+            this.audioBufferNode = newAudioBufferNode;
+            this.audioContext = audioContext;
+
+            Tone.setContext(this.audioContext);
+
+            this.gainNode = this.audioContext.createGain();
+            this.audioBufferNode.connect(this.gainNode);
+
+            const pitchShiftNode = new Tone.PitchShift();
+            pitchShiftNode.channelCount = 1;
+            pitchShiftNode.pitch = 0;
+
+            Tone.connect(this.gainNode, pitchShiftNode);
+            Tone.connect(pitchShiftNode, this.audioContext.destination)
+          }
         });
       this.audioContexts.push(audioContext)
     }
-
-    const DEFAULT_AUDIO_CONTEXT_INDEX = 3;
-    this.audioContext = this.audioContexts[DEFAULT_AUDIO_CONTEXT_INDEX];
-    this.audioBufferNode = this.audioBuffers[DEFAULT_AUDIO_CONTEXT_INDEX];
-
-
-    console.log(this.audioBuffers)
-    console.log(this.audioBufferNode)
-
-    Tone.setContext(this.audioContext);
-
-    this.gainNode = this.audioContext.createGain();
-
-    this.pitchShift = new Tone.PitchShift();
-    this.pitchShift.channelCount = 1;
-    this.pitchShift.pitch = 0;
-
-    Tone.connect(this.gainNode, this.pitchShift);
-    Tone.connect(this.pitchShift, this.audioContext.destination)
   }
 
 
@@ -111,6 +111,7 @@ export class AudioHandlerComponent implements OnInit {
   public togglePlayback(): void {
     if (!this.audioPlaying) {
       this.audioContext.resume().then(() => {
+        console.log(this.audioContext)
         this.audioPlaying = true;
         this.audioBufferNode?.port.postMessage({type: "play"});
       })
@@ -154,7 +155,8 @@ export class AudioHandlerComponent implements OnInit {
    */
   public setPlaybackSpeed(speed: number): void {
     const BASE_SAMPLE_RATE = 48000;
-    this.sampleRate = BASE_SAMPLE_RATE * speed;
+    this.setPitchModifier(speed);
+    this.sampleRate = Math.round(BASE_SAMPLE_RATE * speed);
     this.audioBufferNode?.port.postMessage({type: "getWorkletState"});
   }
 
@@ -226,40 +228,42 @@ export class AudioHandlerComponent implements OnInit {
     return this.audioPlaying;
   }
 
-  private replaceAudioContext(workletState: WorkletState) {
+  private replaceAudioContext(workletState: WorkletState): void {
     console.log("replace called!")
+    this.audioBufferNode?.port.postMessage({type: "pause"});
     this.audioBufferNode?.disconnect();
     this.gainNode.disconnect();
-    this.pitchShift.disconnect();
-    this.audioContext.close().then(() => {
-      this.audioContext = this.audioContexts.find(
-        (audioContext) => audioContext.sampleRate === this.sampleRate) ?? this.audioContexts[3];
 
-      this.audioBufferNode = this.audioBuffers.find(
-        (audioBuffer) => audioBuffer.context.sampleRate === this.sampleRate) ?? this.audioBuffers[3];
+    this.audioContext = this.audioContexts.find(
+      (audioContext) => audioContext.sampleRate === this.sampleRate) ?? this.audioContexts[3];
 
-      console.log(this.audioContext)
-      console.log(this.audioBufferNode)
+    this.audioBufferNode = this.audioBuffers.find(
+      (audioBuffer) => audioBuffer.context.sampleRate === this.sampleRate) ?? this.audioBuffers[3];
 
-      this.audioBufferNode?.port.postMessage({
-        type: "setWorkletState",
-        workletState: workletState,
-        sampleRate: this.sampleRate
-      });
+    this.audioBufferNode?.port.postMessage({
+      type: "setWorkletState",
+      workletState: workletState,
+    });
+    this.audioBufferNode?.port.postMessage({type: "play"});
 
-      Tone.setContext(this.audioContext);
+    Tone.setContext(this.audioContext)
 
-      this.pitchShift = new Tone.PitchShift();
-      this.pitchShift.channelCount = 1;
-      this.pitchShift.pitch = 0;
+    const pitchShiftNode = new Tone.PitchShift();
+    pitchShiftNode.channelCount = 1;
+    pitchShiftNode.pitch = this.pitchModifier;
 
-      // this.gainNode = this.audioContext.createGain();
-      // this.audioBufferNode?.connect(this.gainNode);
+    this.gainNode = this.audioContext.createGain();
+    this.audioBufferNode?.connect(this.gainNode);
 
-      if (this.audioBufferNode == undefined) return;
+    if (this.audioBufferNode == undefined) return;
 
-      Tone.connect(this.audioBufferNode, this.pitchShift);
-      Tone.connect(this.pitchShift, this.audioContext.destination)
-    })
+    Tone.connect(this.gainNode, pitchShiftNode);
+    Tone.connect(pitchShiftNode, this.audioContext.destination)
+  }
+
+  private setPitchModifier(playbackRate: number): void {
+    // Formula to convert playback rate to pitch modifier
+    this.pitchModifier = (-12 * Math.log2(playbackRate));
+    console.log("Pitch modifier: " + this.pitchModifier);
   }
 }
