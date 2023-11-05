@@ -24,8 +24,6 @@ export class TextSheetComponent implements OnInit {
   timeSinceFocusOutList: Map<number, number> = new Map<number, number>();
   intervalList: ReturnType<typeof setInterval>[] = [];
 
-
-
   constructor(private signalRService: SignalRService) { }
 
   ngOnInit() {
@@ -37,6 +35,12 @@ export class TextSheetComponent implements OnInit {
     this.signalRService.oldBubbledeleted.subscribe(id => {
       this.deleteSpeechBubble(id);
     });
+
+
+    //For test-purposes only. Should NOT be merged!
+    document.getElementById('startSimulation')?.addEventListener('mousedown', () => {
+      this.simulateAudioTime();
+    })
 
   }
 
@@ -204,7 +208,6 @@ export class TextSheetComponent implements OnInit {
   */
   public deleteSpeechBubble(id: number) {
 
-    //if (!this.speechBubbles.head) return;
     let current = this.speechBubbles.head;
 
     while (current) {
@@ -216,4 +219,46 @@ export class TextSheetComponent implements OnInit {
       current = current.next;
     }
   }
+
+  /**
+   * Simulates the Audio Time (until it is imported from circular Buffer)
+   */
+  public simulateAudioTime(): void {
+    let audioTime = 0;
+    const isPlaying = true;
+
+    const interval = 100;
+
+    setInterval(() => {
+      if (isPlaying) {
+        audioTime += 0.1;
+
+        this.fontWeightForSpeechBubblesAt(audioTime);
+      }
+
+    }, interval);
+  }
+
+  /**
+   * Finds SpeechBubbles that match the given audioTime and call adjustWordsFontWeight for their word list.
+   * 
+   * @param audioTime - the current Audio Time
+   */
+  public fontWeightForSpeechBubblesAt(audioTime: number): void {
+
+    let current = this.speechBubbles.head;
+
+    while (current) {
+
+      if (current.data.begin <= audioTime && current.data.end >= audioTime) {
+
+        current.data.adjustWordsFontWeight(audioTime);
+        current.prev?.data.adjustWordsFontWeight(audioTime);
+
+      }
+
+      current = current.next;
+    }
+  }
+
 }

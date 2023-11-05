@@ -1,7 +1,10 @@
 <div class="middle-container">
 
     <div *ngFor="let speechBubble of getSpeechBubblesArray()" class="innerBoxes">
-        <app-text-box [textbox]="speechBubble" (focusout)="onFocusOut(speechBubble.id)"></app-text-box>
+        <app-text-box [textbox]="speechBubble" (focusout)="onFocusOut(speechBubble.id)" #textBoxRefs></app-text-box>
     </div>
+
+    <!--For test-purposes only. Should NOT be merged!-->
+    <button id="startSimulation">Start Audio Simulation (time 0 + isPlaying true) </button>
 
 </div>

@@ -115,4 +115,23 @@ export class SpeechBubble {
     }
     return undefined;
   }
+
+  /**
+   * Adjusts the fontWeight of all words based on a time stamp.
+   * 
+   * @param audioTime - TimeStamp to give to called function with.
+   */
+  public adjustWordsFontWeight(audioTime: number) {
+
+    let current = this.words.head;
+
+    while (current) {
+
+      current.data.adjustFontWeight(audioTime);
+
+      current = current.next;
+    }
+
+  }
+
 }

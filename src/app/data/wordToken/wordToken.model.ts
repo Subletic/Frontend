@@ -12,6 +12,7 @@ export class WordToken {
   public speaker: number;
 
   public color: string;
+  public fontWeight: string;
 
   constructor(word: string, confidence: number, startTime: number, endTime: number, speaker: number) {
     this.word = word;
@@ -21,6 +22,7 @@ export class WordToken {
     this.speaker = speaker;
 
     this.color = '';
+    this.fontWeight = 'normal';
     this.setColor();
   }
 
@@ -76,5 +78,19 @@ export class WordToken {
     this.confidence = HIGHEST_CONFIDENCE;
     this.color = COLOR_BLACK;
     return;
+  }
+
+  /**
+   * Adjusts FontWeight based on a given time.
+   * 
+   * @param audioTime - Time stamp to compare own time slot with.
+   */
+  public adjustFontWeight(audioTime: number) {
+    if (this.startTime <= audioTime && this.endTime >= audioTime) {
+      this.fontWeight = 'bold';
+      console.log("BOLD BEI " + audioTime + " FÜR " + this.word);
+    } else {
+      this.fontWeight = 'normal';
+    }
   }
 }
