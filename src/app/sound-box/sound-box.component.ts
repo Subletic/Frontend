@@ -42,7 +42,7 @@ export class SoundBoxComponent {
    * @param event - Any click event triggered by user.
    */
   @HostListener('document:click', ['$event'])
-  onDocumentMouseDown(event: MouseEvent) {
+  onDocumentMouseDown(event: MouseEvent): void {
     const CLICKED_ELEMENT = event.target as HTMLElement;
     const IS_INSIDE_SOUNDBUTTON = this.soundButton.nativeElement.contains(CLICKED_ELEMENT);
     const IS_INSIDE_SPEEDBUTTON = this.speedButton.nativeElement.contains(CLICKED_ELEMENT);
@@ -60,7 +60,7 @@ export class SoundBoxComponent {
    * @param event - Any key event triggered by user.
    */
   @HostListener('document:keydown', ['$event'])
-  handleKeyboardEvent(event: KeyboardEvent) {
+  handleKeyboardEvent(event: KeyboardEvent): void {
     if (event.ctrlKey && event.altKey) {
       if (event.key === 'd') {
         this.audioHandler.togglePlayback();
@@ -80,7 +80,7 @@ export class SoundBoxComponent {
    * Handles playButton press. Calls playOrStopAudio() in audiohandler and
    * switches isAudioPlaying for Icon-Change
    */
-  playButton() {
+  playButton(): void {
     this.audioHandler.togglePlayback();
     this.isAudioPlaying = this.audioHandler.getIsAudioPlaying();
   }
@@ -88,14 +88,14 @@ export class SoundBoxComponent {
   /**
    * Calls skipBackward() function in audioHandler.
    */
-  skipBackwardButton() {
+  skipBackwardButton(): void {
     this.audioHandler.skipBackward();
   }
 
   /**
    * Calls skipForward() function in audioHandler.
    */
-  skipForwardButton() {
+  skipForwardButton(): void {
     this.audioHandler.skipForward();
   }
 
@@ -103,7 +103,7 @@ export class SoundBoxComponent {
    * Opens Settings-Window
    * @param {string} id - Id of the Window to open.
    */
-  openModal(id: string) {
+  openModal(id: string): void {
     this.settingsService.open(id);
   }
 
@@ -111,42 +111,42 @@ export class SoundBoxComponent {
    * Closes Settings-Window
    * @param {string} id - Id of the Window to close.
    */
-  closeModal(id: string) {
+  closeModal(id: string): void {
     this.settingsService.close(id);
   }
 
   /**
    * Switches isAudioPopoverOpen Boolean to the negated value.
    */
-  switchPopoverAudio() {
+  switchPopoverAudio(): void {
     this.isAudioPopoverOpen = !this.isAudioPopoverOpen;
   }
 
   /**
    * Sets isSpeedPopoverOpen to false, causing the Speed Popover to close.
    */
-  closePopoverAudio() {
+  closePopoverAudio(): void {
     this.isAudioPopoverOpen = false;
   }
 
   /**
    * Switches isSpeedPopoverOpen Boolean to the negated value.
    */
-  switchSpeedPopover() {
+  switchSpeedPopover(): void {
     this.isSpeedPopoverOpen = !this.isSpeedPopoverOpen;
   }
 
   /**
    * Sets isSpeedPopoverOpen to false, causing the Speed Popover to close.
    */
-  closePopoverSpeed() {
+  closePopoverSpeed(): void {
     this.isSpeedPopoverOpen = false;
   }
 
   /** Calls setVolume Function in audioHandler with volume number between -1 and 1.
    * @param {number} volume - The new volume value.
    */
-  onVolumeChange(volume: number) {
+  onVolumeChange(volume: number): void {
     this.audioHandler.setVolume(volume);
   }
 
@@ -154,7 +154,7 @@ export class SoundBoxComponent {
    * Sets the number of seconds to skip in the audio handler.
    * @param {number} seconds - The number of seconds to skip.
    */
-  onSecondsChange(seconds: number) {
+  onSecondsChange(seconds: number): void {
     this.audioHandler.setSkipSeconds(seconds);
   }
 
@@ -162,14 +162,14 @@ export class SoundBoxComponent {
    * Safes the inital volume number between -100 and 100,
    * so the next slider can be instantiated with the last-current-value of the old one.
    */
-  onVolume100Change(volume100: number) {
+  onVolume100Change(volume100: number): void {
     this.volume100 = volume100;
   }
 
   /**
    * Calls setPlaybackSpeed Function in AudioHandler with emitted speedValue from speed-popup.
    */
-  onSpeedChange(speed: number) {
+  onSpeedChange(speed: number): void {
     this.speedValue = speed;
     this.audioHandler.setPlaybackSpeed(this.speedValue);
   }
@@ -184,7 +184,7 @@ export class SoundBoxComponent {
   /**
    * Sets the settingService of this instance
    */
-  setSettingsService(settingsService: SettingsService) {
+  setSettingsService(settingsService: SettingsService): void {
     this.settingsService = settingsService;
   }
 

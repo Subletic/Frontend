@@ -28,7 +28,7 @@ export class TextBoxComponent implements AfterViewInit {
    * inside the textbox. Adds event listeners to the textbox and generates
    * an empty words in case that the list of words is empty.
    */
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     const textbox = this.textboxRef.nativeElement;
 
     if (this.textbox.words.head == null) {
@@ -64,7 +64,7 @@ export class TextBoxComponent implements AfterViewInit {
    * 
    * @param event - Any MouseEvent on the Textbox
    */
-  public logInfoAboutTextbox(event: MouseEvent) {
+  public logInfoAboutTextbox(event: MouseEvent): void {
     const TARGET = event.target as HTMLElement;
     if (!(TARGET.tagName === 'SPAN')) return;
     const HOVERED_WORD = TARGET.textContent;
@@ -87,7 +87,7 @@ export class TextBoxComponent implements AfterViewInit {
    * @pre should be added as event listener to a textbox Element 
    * 
    */
-  public handleKeyboardEventTextbox(event: KeyboardEvent) {
+  public handleKeyboardEventTextbox(event: KeyboardEvent): void {
     const SELECTED_SPAN = event.target as HTMLElement;
     const CURRENT_TEXT = SELECTED_SPAN.textContent;
     const CURSOR_POSITION = window.getSelection()?.getRangeAt(0)?.startOffset;
@@ -117,7 +117,7 @@ export class TextBoxComponent implements AfterViewInit {
    * 
    * @pre Function should be called when backspace is pressed at start of a word
    */
-  public handleBackspacePressAtStart(selectedSpan: HTMLElement, currentText: string | null, isInFullSelection: boolean, spanId: string, event: KeyboardEvent) {
+  public handleBackspacePressAtStart(selectedSpan: HTMLElement, currentText: string | null, isInFullSelection: boolean, spanId: string, event: KeyboardEvent): void {
     const PREV_SPAN = selectedSpan.previousElementSibling as HTMLSpanElement;
     if (isInFullSelection) {
       this.isInFullSelectionDeletion(selectedSpan, spanId, event);
@@ -144,7 +144,7 @@ export class TextBoxComponent implements AfterViewInit {
    * @param spanId - Id of the selectedSpan
    * @param event - The keyboard event triggered by user.
    */
-  public isInFullSelectionDeletion(selectedSpan: HTMLElement, spanId: string, event: KeyboardEvent) {
+  public isInFullSelectionDeletion(selectedSpan: HTMLElement, spanId: string, event: KeyboardEvent): void {
     const ID_PART = spanId.split('_');
     const ID = Number(ID_PART[1]);
     const currentWord = this.textbox.words.getDataById(ID);
@@ -167,7 +167,7 @@ export class TextBoxComponent implements AfterViewInit {
    * 
    * @pre There needs to be a previous word
    */
-  public mergeWithPreviousWord(selectedSpan: HTMLElement, currentText: string | null, prevSpan: HTMLSpanElement, event: KeyboardEvent) {
+  public mergeWithPreviousWord(selectedSpan: HTMLElement, currentText: string | null, prevSpan: HTMLSpanElement, event: KeyboardEvent): void {
     const ID_PART_PREV_WORD = prevSpan.id.split('_');
     const ID_PREV_WORD = Number(ID_PART_PREV_WORD[1]);
     const prevWord = this.textbox.words.getDataById(ID_PREV_WORD);
@@ -199,7 +199,7 @@ export class TextBoxComponent implements AfterViewInit {
    * 
    * @pre There needs to be a following word
    */
-  public mergeWithFollowingWord(selectedSpan: HTMLElement, currentText: string | null, nextSpan: HTMLSpanElement, event: KeyboardEvent) {
+  public mergeWithFollowingWord(selectedSpan: HTMLElement, currentText: string | null, nextSpan: HTMLSpanElement, event: KeyboardEvent): void {
     if (!nextSpan) return;
     const ID_PART_NEXT_SPAN = nextSpan.id.split('_');
     const ID_NEXT_SPAN = Number(ID_PART_NEXT_SPAN[1]);
@@ -235,7 +235,7 @@ export class TextBoxComponent implements AfterViewInit {
     * @param spanId - Id of the selectedSpan
     * @param event - The keyboard event triggered by user.
     */
-  public handleSpacePress(selectedSpan: HTMLElement, currentText: string | null, cursorPosition: number | undefined, spanId: string, event: KeyboardEvent) {
+  public handleSpacePress(selectedSpan: HTMLElement, currentText: string | null, cursorPosition: number | undefined, spanId: string, event: KeyboardEvent): void {
     if (!(currentText && typeof cursorPosition === 'number')) return;
     const WORD_BEFORE_CURSOR = currentText.substring(0, cursorPosition);
     const WORD_AFTER_CURSOR = currentText.substring(cursorPosition);
@@ -289,7 +289,7 @@ export class TextBoxComponent implements AfterViewInit {
    * @param newText - The possibly adjusted text
    * @param spanId - The id of the span of this word
    */
-  public adjustColor(spanId: string | null) {
+  public adjustColor(spanId: string | null): void {
 
     if (!spanId) return;
     const ID_PART = spanId.split('_');
@@ -308,7 +308,7 @@ export class TextBoxComponent implements AfterViewInit {
    * 
    * @param event - Any KeyboardEvent
    */
-  public updateWord(event: KeyboardEvent) {
+  public updateWord(event: KeyboardEvent): void {
     const selectedSpan = event.target as HTMLElement;
     const CURRENT_TEXT = selectedSpan.textContent;
 

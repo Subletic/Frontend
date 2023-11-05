@@ -29,7 +29,7 @@ export class WordToken {
   /**
   * Sets the color based on the confidence value.
   */
-  public setColor() {
+  public setColor(): void {
     const HIGH_CONFIDENCE = 0.9;
     const MID_CONFIDENCE = 0.7;
     const LOW_CONFIDENCE = 0.5;
@@ -55,14 +55,14 @@ export class WordToken {
    * 
    * @param newWord - the new text to set to
    */
-  public setWord(newWord: string) {
+  public setWord(newWord: string): void {
     this.word = newWord;
   }
 
   /**
    * Returns an WordExport Objekt similiar to this Instance of WordToken
    */
-  public getExport() {
+  public getExport(): WordExport {
     return new WordExport(this.word, this.confidence, this.startTime, this.endTime, this.speaker);
   }
 
@@ -71,7 +71,7 @@ export class WordToken {
   * 
   * @pre Should only be called if the confidence actually changed.
   */
-  public updateWordColor() {
+  public updateWordColor(): void {
     const HIGHEST_CONFIDENCE = 1;
     const COLOR_BLACK = '#000000';
 

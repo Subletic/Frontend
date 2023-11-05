@@ -26,10 +26,10 @@ export class TextSheetComponent implements OnInit {
 
   constructor(private signalRService: SignalRService) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
 
     this.signalRService.newBubbleReceived.subscribe(SpeechBubbleExportList => {
-      this.importfromJSON(SpeechBubbleExportList);
+      this.importfromJson(SpeechBubbleExportList);
     });
 
     this.signalRService.oldBubbledeleted.subscribe(id => {
@@ -49,7 +49,7 @@ export class TextSheetComponent implements OnInit {
   * @param jsonString The JSON string to import.
   * @returns An array of SpeechBubbleExport objects.
   */
-  public importfromJSON(speechBubbleChain: SpeechBubbleExport[]) {
+  public importfromJson(speechBubbleChain: SpeechBubbleExport[]): void {
     if (!speechBubbleChain || speechBubbleChain.length === 0) {
       console.error('Invalid speechBubbleChain object.');
       return;
@@ -126,7 +126,7 @@ export class TextSheetComponent implements OnInit {
   * if the inactivity exceeds 5 seconds.
   * @param id - The id of the speechbubble to set a counter for
   */
-  public timeSinceFocusOutCounter(id: number) {
+  public timeSinceFocusOutCounter(id: number): void {
     const MAX_SECONDS_SINCE_FOCUS_OUT = 5;
     const INTERVAL_IN_MILLISECONDS = 1000;
 
@@ -149,7 +149,7 @@ export class TextSheetComponent implements OnInit {
   * Calls the exportToJson method to export a speech bubble with the specified id.
   * @param id - The id of the speech bubble to export.
   */
-  public callExportToJson(id: number) {
+  public callExportToJson(id: number): void {
     const speechBubbleToExport = this.getSpeechBubbleById(id);
     if (!speechBubbleToExport) return;
     speechBubbleToExport.removeEmptyWords();
@@ -206,7 +206,7 @@ export class TextSheetComponent implements OnInit {
   * 
   * @param id - The id of the speechbubble to be removed.
   */
-  public deleteSpeechBubble(id: number) {
+  public deleteSpeechBubble(id: number): void {
 
     let current = this.speechBubbles.head;
 

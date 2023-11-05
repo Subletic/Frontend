@@ -39,7 +39,7 @@ export class LinkedList<T> {
    * 
    * @param data - The data attribute given to the new node
    */
-  public add(data: T) {
+  public add(data: T): void {
     const node = new Node(data);
     node.id = this.currentIndex;
     this.currentIndex++;
@@ -61,7 +61,7 @@ export class LinkedList<T> {
    * 
    * @param data - The data attribute which should be searched for for deletion
    */
-  public remove(data: T) {
+  public remove(data: T): void {
     let current = this.head;
 
     while (current) {

@@ -151,7 +151,7 @@ describe('TextSheetComponent', () => {
     spyOn(console, 'error');
     spyOn(component, 'getSpeechBubbleById').and.returnValue(undefined);
     const SPEECHBUBBLE_DTO_NULL: SpeechBubbleExport[] = [];
-    component.importfromJSON(SPEECHBUBBLE_DTO_NULL);
+    component.importfromJson(SPEECHBUBBLE_DTO_NULL);
     expect(console.error).toHaveBeenCalledWith('Invalid speechBubbleChain object.');
   });
 
