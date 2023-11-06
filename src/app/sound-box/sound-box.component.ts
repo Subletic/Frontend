@@ -31,6 +31,10 @@ export class SoundBoxComponent {
   public isAudioPlaying = false;
   public bodyText = '';
 
+  public isKeyDown: boolean = false;
+  public buttonImage2Src: string = 'assets/back.svg';
+  public buttonImage3Src: string = 'assets/forward.svg'
+
   public isSpeedPopoverOpen = false;
   public speedValue = 1;
 
@@ -69,10 +73,28 @@ export class SoundBoxComponent {
       } else if (event.key === 'y') {
         this.audioHandler.skipBackward();
         event.preventDefault();
+        this.isKeyDown = true;
+        this.buttonImage2Src = 'assets/backOnClick.svg';
       } else if (event.key === 'w') {
         this.audioHandler.skipForward();
         event.preventDefault();
+        this.isKeyDown = true;
+        this.buttonImage3Src = 'assets/forwardOnClick.svg';
       }
+    }
+  }
+  
+  /**
+   * Resets for the shortcuts.
+   * 
+   * @param event - Key event reset by user.
+   */
+  @HostListener('document:keyup', ['$event'])
+  handleKeyUp(event: KeyboardEvent): void {
+    if (event.ctrlKey && event.altKey) {
+      this.isKeyDown = false;
+      this.buttonImage2Src = 'assets/back.svg';
+      this.buttonImage3Src = 'assets/forward.svg'
     }
   }
 
