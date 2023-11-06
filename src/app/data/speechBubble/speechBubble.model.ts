@@ -123,16 +123,11 @@ export class SpeechBubble {
    * @param audioTime - TimeStamp to give to called function with.
    */
   public adjustWordsFontWeight(audioTime: number) {
-
     let current = this.words.head;
-
     while (current) {
-
       current.data.adjustFontWeight(audioTime);
-
       current = current.next;
     }
-
   }
 
 }

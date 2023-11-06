@@ -246,28 +246,8 @@ export class TextBoxComponent implements AfterViewInit {
     const ID = Number(ID_PART[1]);
 
     if (WORD_BEFORE_CURSOR.trim() !== '') {
-      const currentWord = this.textbox.words.getDataById(ID);
-      if (!currentWord) return;
-      const newWord = new WordToken(WORD_AFTER_CURSOR, 1, currentWord.startTime, currentWord.endTime, currentWord.speaker);
-      currentWord.updateWordColor();
 
-      currentWord.confidence = 1;
-      this.textbox.words.insertAfter(newWord, currentWord);
-      currentWord.word = WORD_BEFORE_CURSOR;
-
-      const newSpan = document.createElement('span');
-
-      const newWordNodeId = this.textbox.words.getNodeId(newWord);
-      if (!newWordNodeId) return;
-      newSpan.id = this.textbox.id + "_" + newWordNodeId.toString();
-
-      newSpan.contentEditable = 'true';
-      newSpan.textContent = WORD_AFTER_CURSOR;
-
-      selectedSpan.insertAdjacentElement('afterend', newSpan);
-      selectedSpan.insertAdjacentText('afterend', ' ');
-
-      newSpan.focus();
+      this.handleSpacePressInsideWord(selectedSpan, ID, WORD_BEFORE_CURSOR, WORD_AFTER_CURSOR);
 
     } else if (WORD_BEFORE_CURSOR.trim() == '') {
       const currentWord = this.textbox.words.getDataById(ID);
@@ -280,6 +260,44 @@ export class TextBoxComponent implements AfterViewInit {
     }
 
     event.preventDefault();
+  }
+
+  /**
+   * Handles visual and logical insertion of new word with given word-String to set to.
+   * 
+   * A new Word is inserted after current word. This new word gets the part of the old word which
+   * was right from the cursor. 
+   * 
+   * @param selectedSpan - 
+   * @param ID - ID of original word 
+   * @param WORD_BEFORE_CURSOR - Part of the word which was left to the cursor
+   * @param WORD_AFTER_CURSOR - Part of the word which was right to the cursor
+   */
+  handleSpacePressInsideWord(selectedSpan: HTMLElement, ID: number, WORD_BEFORE_CURSOR: string, WORD_AFTER_CURSOR: string): void {
+
+    const currentWord = this.textbox.words.getDataById(ID);
+    if (!currentWord) return;
+    const newWord = new WordToken(WORD_AFTER_CURSOR, 1, currentWord.startTime, currentWord.endTime, currentWord.speaker);
+    currentWord.updateWordColor();
+
+    currentWord.confidence = 1;
+    this.textbox.words.insertAfter(newWord, currentWord);
+    currentWord.word = WORD_BEFORE_CURSOR;
+
+    const newSpan = document.createElement('span');
+
+    const newWordNodeId = this.textbox.words.getNodeId(newWord);
+    if (!newWordNodeId) return;
+    newSpan.id = this.textbox.id + "_" + newWordNodeId.toString();
+
+    newSpan.contentEditable = 'true';
+    newSpan.textContent = WORD_AFTER_CURSOR;
+
+    selectedSpan.insertAdjacentElement('afterend', newSpan);
+    selectedSpan.insertAdjacentText('afterend', ' ');
+
+    newSpan.focus();
+
   }
 
   /**
@@ -387,24 +405,10 @@ export class TextBoxComponent implements AfterViewInit {
     let current = this.textbox.words.head;
 
     while (current) {
-
-      if (current.data.fontWeight === 'bold') {
-
-        const EXPECTED_SPAN = this.textbox.id + "_" + current.id.toString();
-
-        const wordSpan = document.getElementById(EXPECTED_SPAN);
-        if (!wordSpan) return;
-
-        wordSpan.style.fontWeight = 'bold';
-
-      } else {
-
-        const EXPECTED_SPAN = this.textbox.id + "_" + current.id.toString();
-
-        const wordSpan = document.getElementById(EXPECTED_SPAN);
-        if (!wordSpan) return;
-        wordSpan.style.fontWeight = 'normal';
-      }
+      const EXPECTED_SPAN = this.textbox.id + "_" + current.id.toString();
+      const wordSpan = document.getElementById(EXPECTED_SPAN);
+      if (!wordSpan) return;
+      wordSpan.style.fontWeight = (current.data.fontWeight === 'bold') ? 'bold' : 'normal';
 
       current = current.next;
     }

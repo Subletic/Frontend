@@ -227,7 +227,7 @@ export class TextSheetComponent implements OnInit {
     let audioTime = 0;
     const isPlaying = true;
 
-    const interval = 100;
+    const INTERVAL_IN_MILLISECONDS = 100;
 
     setInterval(() => {
       if (isPlaying) {
@@ -236,7 +236,7 @@ export class TextSheetComponent implements OnInit {
         this.fontWeightForSpeechBubblesAt(audioTime);
       }
 
-    }, interval);
+    }, INTERVAL_IN_MILLISECONDS);
   }
 
   /**
@@ -250,15 +250,22 @@ export class TextSheetComponent implements OnInit {
 
     while (current) {
 
-      if (current.data.begin <= audioTime && current.data.end >= audioTime) {
+      if (this.currentAudioTimeInSpeechbubbleTime(current.data, audioTime)) {
 
         current.data.adjustWordsFontWeight(audioTime);
         current.prev?.data.adjustWordsFontWeight(audioTime);
-
       }
-
       current = current.next;
     }
+  }
+
+  /**
+   * Checks if given audioTime and SpeechBubble time slot match.
+   * 
+   * @param audioTime - Time stamp to compare own time slot with.
+   */
+  private currentAudioTimeInSpeechbubbleTime(SpeechBubble: SpeechBubble, audioTime: number): boolean {
+    return (SpeechBubble.begin <= audioTime && SpeechBubble.end >= audioTime);
   }
 
 }
