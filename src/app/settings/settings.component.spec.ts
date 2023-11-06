@@ -6,6 +6,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatDividerModule } from '@angular/material/divider';
+
 
 describe('SettingsComponent', () => {
   let component: SettingsComponent;
@@ -14,7 +17,7 @@ describe('SettingsComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [SettingsComponent],
-      imports: [MatIconModule, MatFormFieldModule, FormsModule, MatInputModule, BrowserAnimationsModule],
+      imports: [MatIconModule, MatFormFieldModule, FormsModule, MatInputModule, BrowserAnimationsModule, MatTabsModule, MatDividerModule],
     }).compileComponents();
   });
 
