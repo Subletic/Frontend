@@ -121,9 +121,6 @@ export class AudioHandlerComponent implements OnInit {
     });
 
     this.audioService.updateVariable(this.readTimeInMilliseconds);
-
-    this.readTimeInMilliseconds = 2;
-    this.audioService.updateVariable(this.readTimeInMilliseconds);
   }
 
   /**

@@ -29,7 +29,7 @@ export class TextSheetComponent implements OnInit {
 
   constructor(private signalRService: SignalRService, private audioService: AudioService) {
     this.audioService.variable$.subscribe((value) => {
-      this.readTimeInSeconds = value;
+      this.readTimeInSeconds = value / 1000;
     });
   }
 
