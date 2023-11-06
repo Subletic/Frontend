@@ -427,4 +427,42 @@ describe('TextBoxComponent', () => {
     }
   });
 
+  it('should update word highlight styles based on FontWeight', () => {
+    // Create a mock data structure with sample fontWeight values
+    const words = new LinkedList<WordToken>();
+    words.add(new WordToken('Hello', 0.9, 1, 2, 1));
+    words.add(new WordToken('world,', 0.8, 2, 4, 1));
+    words.add(new WordToken('how', 0.7, 4, 6, 1));
+    words.add(new WordToken('are', 0.6, 6, 8, 1));
+    words.add(new WordToken('you?', 0.5, 8, 10, 1));
+
+    const SPEECHBUBBLE = new SpeechBubble(1, 0, 10, words, 0);
+
+    component.textbox = SPEECHBUBBLE;
+    fixture.detectChanges();
+
+    if (component.textbox.words.head?.next) {
+      component.textbox.words.head.next.data.fontWeight = 'bold';
+    }
+
+    const mockSpan1 = document.createElement('span');
+    mockSpan1.id = '0_0';
+    mockSpan1.style.fontWeight = 'normal';
+
+    const mockSpan2 = document.createElement('span');
+    mockSpan2.id = '0_1';
+    mockSpan2.style.fontWeight = 'normal';
+
+    component.textboxRef.nativeElement.appendChild(mockSpan1);
+    component.textboxRef.nativeElement.appendChild(mockSpan2);
+
+    component.updateWordHighlight();
+
+    expect(mockSpan1.style.fontWeight).toBe('normal');
+
+    expect(mockSpan2.style.fontWeight).toBe('bold');
+  });
+
+
+
 });
