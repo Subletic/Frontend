@@ -18,6 +18,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSliderModule } from '@angular/material/slider';
 import { SliderPopupComponent } from './sound-box/slider-popup/slider-popup.component';
 import { SpeedPopupComponent } from './sound-box/speed-popup/speed-popup.component';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatDividerModule } from '@angular/material/divider';
+
 
 @NgModule({
   declarations: [
@@ -38,7 +41,9 @@ import { SpeedPopupComponent } from './sound-box/speed-popup/speed-popup.compone
     MatInputModule,
     MatIconModule,
     MatSliderModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    MatTabsModule,
+    MatDividerModule
   ],
   providers: [],
   bootstrap: [AppComponent]

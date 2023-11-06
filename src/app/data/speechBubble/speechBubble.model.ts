@@ -1,4 +1,5 @@
 import { LinkedList } from '../linkedList/linkedList.model';
+import { WordExport } from '../wordToken/wordExport.model';
 import { WordToken } from '../wordToken/wordToken.model';
 import { SpeechBubbleExport } from './speechBubbleExport.model';
 
@@ -42,7 +43,7 @@ export class SpeechBubble {
   /**
    * Prints the word-list of this speechbubble.
    */
-  public printText() {
+  public printText(): string {
     let current = this.words.head;
     const text = [];
     while (current) {
@@ -55,14 +56,14 @@ export class SpeechBubble {
   /** 
    * Returns a String with basic information about this speechbubble.
    */
-  public toString() {
+  public toString(): string {
     return `[${this.id}, ${this.words.size()}, ${this.begin}]`;
   }
 
   /** 
    * Returns a wordExportList representing the current word-list of this instance of a speechbubble.
    */
-  public toList() {
+  public toList(): WordExport[] {
     let current = this.words.head;
     const wordExportList = [];
     while (current) {
@@ -75,14 +76,14 @@ export class SpeechBubble {
   /**
    * Returns an SpeechBubblExport Object for this instance of a speechbubble.
    */
-  public getExport() {
+  public getExport(): SpeechBubbleExport {
     return new SpeechBubbleExport(this.id, this.speaker, this.begin, this.end, this.toList());
   }
 
   /**
    * Removes empty Words from the words LinkedList
    */
-  public removeEmptyWords() {
+  public removeEmptyWords(): void {
     let current = this.words.head;
 
     while (current) {
