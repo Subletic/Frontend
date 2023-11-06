@@ -31,9 +31,9 @@ export class SoundBoxComponent {
   public isAudioPlaying = false;
   public bodyText = '';
 
-  public isKeyDown: boolean = false;
-  public buttonImage2Src: string = 'assets/back.svg';
-  public buttonImage3Src: string = 'assets/forward.svg'
+  public isKeyDown = false;
+  public buttonImage2Src = 'assets/back.svg';
+  public buttonImage3Src = 'assets/forward.svg'
 
   public isSpeedPopoverOpen = false;
   public speedValue = 1;
@@ -83,7 +83,7 @@ export class SoundBoxComponent {
       }
     }
   }
-  
+
   /**
    * Resets for the shortcuts.
    * 

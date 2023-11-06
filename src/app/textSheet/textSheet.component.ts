@@ -6,6 +6,7 @@ import { WordExport } from '../data/wordToken/wordExport.model';
 import { SignalRService } from '../service/signalRService';
 import { environment } from "../../environments/environment";
 import { SpeechBubbleChain } from '../data/speechBubbleChain.module';
+import { AudioService } from '../service/audioService';
 
 /**
  * The TextSheetComponent represents a component that handles the speech bubbles in a text sheet.
@@ -24,9 +25,13 @@ export class TextSheetComponent implements OnInit {
   timeSinceFocusOutList: Map<number, number> = new Map<number, number>();
   intervalList: ReturnType<typeof setInterval>[] = [];
 
+  private readTimeInSeconds = 0;
 
-
-  constructor(private signalRService: SignalRService) { }
+  constructor(private signalRService: SignalRService, private audioService: AudioService) {
+    this.audioService.variable$.subscribe((value) => {
+      this.readTimeInSeconds = value / 1000;
+    });
+  }
 
   ngOnInit(): void {
 
@@ -38,6 +43,7 @@ export class TextSheetComponent implements OnInit {
       this.deleteSpeechBubble(id);
     });
 
+    this.simulateAudioTime();
   }
 
   /**
@@ -204,7 +210,6 @@ export class TextSheetComponent implements OnInit {
   */
   public deleteSpeechBubble(id: number): void {
 
-    //if (!this.speechBubbles.head) return;
     let current = this.speechBubbles.head;
 
     while (current) {
@@ -216,4 +221,48 @@ export class TextSheetComponent implements OnInit {
       current = current.next;
     }
   }
+
+  /**
+   * Simulates the Audio Time (until it is imported from circular Buffer)
+   */
+  public simulateAudioTime(): void {
+
+    const INTERVAL_IN_MILLISECONDS = 100;
+
+    setInterval(() => {
+
+      this.fontWeightForSpeechBubblesAt(this.readTimeInSeconds);
+
+    }, INTERVAL_IN_MILLISECONDS);
+  }
+
+  /**
+   * Finds SpeechBubbles that match the given audioTime and call adjustWordsFontWeight for their word list.
+   * 
+   * @param audioTime - the current Audio Time
+   */
+  public fontWeightForSpeechBubblesAt(audioTime: number): void {
+
+    let current = this.speechBubbles.head;
+
+    while (current) {
+
+      if (this.currentAudioTimeInSpeechbubbleTime(current.data, audioTime)) {
+
+        current.data.adjustWordsFontWeight(audioTime);
+        current.prev?.data.adjustWordsFontWeight(audioTime);
+      }
+      current = current.next;
+    }
+  }
+
+  /**
+   * Checks if given audioTime and SpeechBubble time slot match.
+   * 
+   * @param audioTime - Time stamp to compare own time slot with.
+   */
+  private currentAudioTimeInSpeechbubbleTime(SpeechBubble: SpeechBubble, audioTime: number): boolean {
+    return (SpeechBubble.begin <= audioTime && SpeechBubble.end >= audioTime);
+  }
+
 }

@@ -5,6 +5,7 @@ import { TextSheetComponent } from './textSheet.component';
 import { SignalRService } from '../service/signalRService';
 import { LinkedList } from '../data/linkedList/linkedList.model';
 import { SpeechBubbleChain } from '../data/speechBubbleChain.module';
+import { AudioService } from '../service/audioService';
 
 describe('LinkedList', () => {
   let linkedList: LinkedList<SpeechBubble>;
@@ -68,10 +69,13 @@ describe('LinkedList', () => {
 describe('TextSheetComponent', () => {
   let component: TextSheetComponent;
   let signalRService: SignalRService;
+  let audioService: AudioService;
 
   beforeEach(() => {
     signalRService = new SignalRService();
-    component = new TextSheetComponent(signalRService);
+    audioService = new AudioService();
+    component = new TextSheetComponent(signalRService, audioService);
+    component.speechBubbles = new LinkedList<SpeechBubble>;
   });
 
   it('should initialize with a speech bubble', () => {
@@ -206,6 +210,51 @@ describe('TextSheetComponent', () => {
     // Clean up
     jasmine.clock().uninstall();
   });
+
+
+  it('should adjust word font weight for speech bubbles at the given audio time', () => {
+
+    const speechBubble1 = new SpeechBubble(1, 0, 6, new LinkedList<WordToken>, 0);
+    const speechBubble2 = new SpeechBubble(2, 6.01, 12, new LinkedList<WordToken>, 1);
+    const WORD_1 = new WordToken("Hallo", 1, 0, 2, 1);
+    const WORD_2 = new WordToken("an", 1, 2.01, 4, 1);
+    const WORD_3 = new WordToken("Welt", 1, 4.01, 6, 1);
+
+    const WORD_4 = new WordToken("Hallo", 1, 6.01, 9, 1);
+    const WORD_5 = new WordToken("Zurück!", 1, 6.01, 12, 1);
+
+    WORD_1.fontWeight = 'normal';
+    WORD_2.fontWeight = 'normal';
+    WORD_3.fontWeight = 'normal';
+    WORD_4.fontWeight = 'normal';
+    WORD_5.fontWeight = 'normal';
+
+    speechBubble1.words.add(WORD_1);
+    speechBubble1.words.add(WORD_2);
+    speechBubble1.words.add(WORD_3);
+    speechBubble2.words.add(WORD_4);
+    speechBubble2.words.add(WORD_5);
+
+    component.speechBubbles.add(speechBubble1);
+    component.speechBubbles.add(speechBubble2);
+
+    const AUDIOTIME = 1.5;
+
+    const adjustWordsFontWeightSpy1 = spyOn(speechBubble1, 'adjustWordsFontWeight');
+    const adjustWordsFontWeightSpy2 = spyOn(speechBubble2, 'adjustWordsFontWeight');
+
+    component.fontWeightForSpeechBubblesAt(AUDIOTIME);
+
+    expect(adjustWordsFontWeightSpy1).toHaveBeenCalledWith(AUDIOTIME);
+    expect(adjustWordsFontWeightSpy2).not.toHaveBeenCalled();
+
+    //expect(speechBubble1.words.head?.data.fontWeight).toBe('bold');
+    expect(speechBubble1.words.head?.next?.data.fontWeight).toBe('normal');
+    expect(speechBubble1.words.head?.next?.next?.data.fontWeight).toBe('normal');
+    expect(speechBubble2.words.head?.data.fontWeight).toBe('normal');
+    expect(speechBubble2.words.head?.next?.data.fontWeight).toBe('normal');
+  });
+
 
 });
 
