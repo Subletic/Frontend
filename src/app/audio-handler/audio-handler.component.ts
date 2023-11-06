@@ -46,11 +46,12 @@ export class AudioHandlerComponent implements OnInit {
   private skipSeconds = 5;
   private volume = 1;
   private audioPlaying = false;
-  private readTimeInSeconds = 0;
+  private readTimeInMilliseconds = 0;
 
   /**
    * Gets the reference to the SignalRService and sets up all audioContexts.
    * @param signalRService - The SignalRService to get the reference to.
+   * @param audioService - The AudioService to get the reference to.
    */
   constructor(private signalRService: SignalRService, private audioService: AudioService) {
     const BASE_SAMPLE_RATE = 48000;
@@ -80,8 +81,8 @@ export class AudioHandlerComponent implements OnInit {
           if (event.data.type === "workletState") {
             this.replaceAudioContext(event.data.workletState);
           } else if (event.data.type === "newReadTime") {
-            this.readTimeInSeconds = event.data.newReadTimeInSeconds;
-            this.audioService.updateVariable(this.readTimeInSeconds);
+            this.readTimeInMilliseconds = event.data.readTime;
+            this.audioService.updateVariable(this.readTimeInMilliseconds);
           } else {
             console.error("Unknown message type: " + event.data.type)
           }
@@ -119,10 +120,10 @@ export class AudioHandlerComponent implements OnInit {
       this.handleAudioData(newChunk)
     });
 
-    this.audioService.updateVariable(this.readTimeInSeconds);
+    this.audioService.updateVariable(this.readTimeInMilliseconds);
 
-    this.readTimeInSeconds = 2;
-    this.audioService.updateVariable(this.readTimeInSeconds);
+    this.readTimeInMilliseconds = 2;
+    this.audioService.updateVariable(this.readTimeInMilliseconds);
   }
 
   /**
