@@ -31,67 +31,80 @@ export class AudioHandlerComponent implements OnInit {
   // Constants for audio buffering and sampling
   private sampleRate = 48000;
 
-  // Audio buffers and context
+  // Audio contexts/source nodes for different playback speeds
   private audioContexts: AudioContext[] = [];
   private audioBuffers: AudioWorkletNode[] = [];
 
+  // Audio nodes
   private audioContext: AudioContext = new AudioContext();
   private audioBufferNode: AudioWorkletNode | undefined;
   private gainNode: GainNode = new GainNode(this.audioContext);
 
-
+  // Playback state
   private pitchModifier = 0;
-
   private skipSeconds = 5;
-
   private volume = 1;
-
   private audioPlaying = false;
+  private readTimeInSeconds = 0;
 
   /**
-   * Gets the reference to the SignalRService and Initializes the AudioWorklet.
+   * Gets the reference to the SignalRService and sets up all audioContexts.
    * @param signalRService - The SignalRService to get the reference to.
    */
   constructor(private signalRService: SignalRService) {
     const BASE_SAMPLE_RATE = 48000;
     const SPEED_MULTIPLIERS = [0.5, 0.7, 0.9, 1, 1.1, 1.3, 1.5]
 
-
     // Setup all audio contexts
     for (const multiplier of SPEED_MULTIPLIERS) {
-      const audioContext = new AudioContext({sampleRate: BASE_SAMPLE_RATE * multiplier})
-      audioContext.audioWorklet
-        .addModule('/assets/worklets/circular-buffer-worklet.js')
-        .catch((err) => {
-          console.error("Error loading worklet: " + err)
-        })
-        .then(() => {
-          const newAudioBufferNode = new AudioWorkletNode(audioContext, 'circular-buffer-worklet')
-          newAudioBufferNode.port.onmessage = (event) => {
-            this.replaceAudioContext(event.data)
-          }
-          this.audioBuffers.push(newAudioBufferNode)
-
-          // Set default audio context for initial playback
-          if (multiplier === 1) {
-            this.audioBufferNode = newAudioBufferNode;
-            this.audioContext = audioContext;
-
-            Tone.setContext(this.audioContext);
-
-            this.gainNode = this.audioContext.createGain();
-            this.audioBufferNode.connect(this.gainNode);
-
-            const pitchShiftNode = new Tone.PitchShift();
-            pitchShiftNode.channelCount = 1;
-            pitchShiftNode.pitch = 0;
-
-            Tone.connect(this.gainNode, pitchShiftNode);
-            Tone.connect(pitchShiftNode, this.audioContext.destination)
-          }
-        });
-      this.audioContexts.push(audioContext)
+      this.initNewAudioContext(BASE_SAMPLE_RATE, multiplier)
     }
+  }
+
+  /**
+   * Creates new AudioContext for a given playback rate multiplier.
+   * @param BASE_SAMPLE_RATE Base sample rate of the raw audio.
+   * @param multiplier Playback rate multiplier.
+   */
+  initNewAudioContext(BASE_SAMPLE_RATE: number, multiplier: number): void {
+    const audioContext = new AudioContext({sampleRate: BASE_SAMPLE_RATE * multiplier})
+    audioContext.audioWorklet
+      .addModule('/assets/worklets/circular-buffer-worklet.js')
+      .catch((err) => {
+        console.error("Error loading worklet: " + err)
+      })
+      .then(() => {
+        const newAudioBufferNode = new AudioWorkletNode(audioContext, 'circular-buffer-worklet')
+        newAudioBufferNode.port.onmessage = (event) => {
+          if (event.data.type === "workletState") {
+            this.replaceAudioContext(event.data.workletState);
+          } else if (event.data.type === "newReadTime") {
+            this.readTimeInSeconds = event.data.newReadTimeInSeconds;
+          } else {
+            console.error("Unknown message type: " + event.data.type)
+          }
+        }
+        this.audioBuffers.push(newAudioBufferNode)
+
+        // Set default audio context for initial playback
+        if (multiplier === 1) {
+          this.audioBufferNode = newAudioBufferNode;
+          this.audioContext = audioContext;
+
+          Tone.setContext(this.audioContext);
+
+          this.gainNode = this.audioContext.createGain();
+          this.audioBufferNode.connect(this.gainNode);
+
+          const pitchShiftNode = new Tone.PitchShift();
+          pitchShiftNode.channelCount = 1;
+          pitchShiftNode.pitch = 0;
+
+          Tone.connect(this.gainNode, pitchShiftNode);
+          Tone.connect(pitchShiftNode, this.audioContext.destination)
+        }
+      });
+    this.audioContexts.push(audioContext)
   }
 
 
@@ -111,7 +124,6 @@ export class AudioHandlerComponent implements OnInit {
   public togglePlayback(): void {
     if (!this.audioPlaying) {
       this.audioContext.resume().then(() => {
-        console.log(this.audioContext)
         this.audioPlaying = true;
         this.audioBufferNode?.port.postMessage({type: "play"});
       })
@@ -138,7 +150,7 @@ export class AudioHandlerComponent implements OnInit {
     }
 
     const WORKLET_FRAME_SIZE = 128;
-    const ITERATIONS_NEEDED_FOR_FULL_SECOND = this.sampleRate / WORKLET_FRAME_SIZE;
+    const ITERATIONS_NEEDED_FOR_FULL_SECOND = convertedAudioData.length / WORKLET_FRAME_SIZE;
 
     for (let i = 0; i < ITERATIONS_NEEDED_FOR_FULL_SECOND; i++) {
       this.audioBufferNode?.port.postMessage({
@@ -158,6 +170,16 @@ export class AudioHandlerComponent implements OnInit {
     this.setPitchModifier(speed);
     this.sampleRate = Math.round(BASE_SAMPLE_RATE * speed);
     this.audioBufferNode?.port.postMessage({type: "getWorkletState"});
+  }
+
+  /**
+   * Sets the pitch modifier of the audio based on the change of playback speed.
+   * @param playbackRate - The new playback speed
+   */
+  private setPitchModifier(playbackRate: number): void {
+    // Formula to convert playback rate to pitch modifier
+    this.pitchModifier = Math.round((-12 * Math.log2(playbackRate)));
+    console.log("Pitch modifier: " + this.pitchModifier);
   }
 
 
@@ -228,29 +250,37 @@ export class AudioHandlerComponent implements OnInit {
     return this.audioPlaying;
   }
 
+  /**
+   * Replaces the currently running AudioContext with a new one.
+   * Workaround for changing the playback speed of the audio worklet by changing the sample rate of the audio context.
+   * @param workletState - The state of the AudioWorklet to be replaced.
+   */
   private replaceAudioContext(workletState: WorkletState): void {
-    console.log("replace called!")
+    // Pause and disconnect nodes
     this.audioBufferNode?.port.postMessage({type: "pause"});
     this.audioBufferNode?.disconnect();
     this.gainNode.disconnect();
 
+    // Find correct context/node
     this.audioContext = this.audioContexts.find(
       (audioContext) => audioContext.sampleRate === this.sampleRate) ?? this.audioContexts[3];
 
     this.audioBufferNode = this.audioBuffers.find(
       (audioBuffer) => audioBuffer.context.sampleRate === this.sampleRate) ?? this.audioBuffers[3];
 
+    // Restore old worklet state
     this.audioBufferNode?.port.postMessage({
       type: "setWorkletState",
       workletState: workletState,
     });
     this.audioBufferNode?.port.postMessage({type: "play"});
 
+    // Connect nodes
     Tone.setContext(this.audioContext)
 
     const pitchShiftNode = new Tone.PitchShift();
     pitchShiftNode.channelCount = 1;
-    pitchShiftNode.pitch = this.pitchModifier;
+    pitchShiftNode.pitch = 0;
 
     this.gainNode = this.audioContext.createGain();
     this.audioBufferNode?.connect(this.gainNode);
@@ -259,11 +289,5 @@ export class AudioHandlerComponent implements OnInit {
 
     Tone.connect(this.gainNode, pitchShiftNode);
     Tone.connect(pitchShiftNode, this.audioContext.destination)
-  }
-
-  private setPitchModifier(playbackRate: number): void {
-    // Formula to convert playback rate to pitch modifier
-    this.pitchModifier = (-12 * Math.log2(playbackRate));
-    console.log("Pitch modifier: " + this.pitchModifier);
   }
 }
