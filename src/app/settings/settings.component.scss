@@ -11,6 +11,7 @@ app-settings {
         position: fixed;
         width: 500px;
         height: 600px;
+        max-height: 700px;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
@@ -18,16 +19,16 @@ app-settings {
         /* z-index must be higher than .settings-background */
         z-index: 1000;
 
-        /* enables scrolling for tall modals*/
-        overflow: auto;
 
         .settings-body {
+            max-height: 700px;
             padding: 20px;
             background: var(--textsheet-background-color);
 
             border-radius: 12px;
             /* margin exposes part of the modal background */
             margin: 40px;
+            overflow: hidden;
         }
     }
 
@@ -74,8 +75,9 @@ app-settings {
 
 }
 
+
 body.settings-open {
-    /* body overflow is hidden to hide main scrollbar when modal window is open */
+    /* body overflow is hidden to hide main scrollbar when modal window is open*/
     overflow: hidden;
 }
 
@@ -124,4 +126,42 @@ h1 {
 
 .slider input[type=range].styled-slider {
     width: 98%;
+}
+
+.keybinding-container {
+    display: flex;
+    flex-direction: column;
+    margin: 5px;
+    max-height: 400px;
+    padding-right: 20px;
+    overflow: auto;
+
+    p {
+        font-size: 18px;
+    }
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.action {
+    flex: 1;
+    display: flex;
+    margin: 5px;
+    margin-left: 20px;
+    align-items: center;
+}
+
+.key {
+    text-align: center;
+    font-size: 14px;
+    color: var(--keybindings-font-color);
+
+    margin: 5px;
+    padding: 10px;
+    border-radius: 15%;
+    background-color: var(--keybindings-background-color);
 }
