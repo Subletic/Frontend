@@ -42,7 +42,7 @@ export class SettingsComponent implements OnInit, OnDestroy, AfterViewInit {
     // Close the modal when clicking on the background
     this.element.addEventListener('click', (el: MouseEvent) => {
       if (el.target instanceof HTMLElement && el.target.className === 'settings') {
-        this.close();
+        this.cancel();
       }
     });
 
@@ -73,6 +73,7 @@ export class SettingsComponent implements OnInit, OnDestroy, AfterViewInit {
   close(): void {
     this.element.style.display = 'none';
     document.body.classList.remove('settings-open');
+    this.setupSlider();
   }
 
   // Cancels changes, resets seconds value and closes modal
