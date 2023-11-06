@@ -7,20 +7,23 @@
       <img [src]="isAudioPlaying ? 'assets/pause.svg' : 'assets/play.svg'" alt="Button Image" class="button-image-1"
         draggable="false"
         (mousedown)="isAudioPlaying ? buttonImage.src='assets/pauseOnClick.svg' : buttonImage.src='assets/playOnClick.svg'"
-        (mouseup)="buttonImage.src=isAudioPlaying ? 'assets/pause.svg' : 'assets/play.svg'" #buttonImage>
+        (mouseup)="buttonImage.src=isAudioPlaying ? 'assets/pause.svg' : 'assets/play.svg'" 
+        #buttonImage>
     </button>
 
     <!-- Move back Button -->
     <button class="sound-button-1 mover" (click)="skipBackwardButton()">
-      <img src="assets/back.svg" alt="Button Image" class="button-image-2" draggable="false"
-        (mousedown)=" buttonImage2.src='assets/backOnClick.svg'" (mouseup)=" buttonImage2.src='assets/back.svg'"
+      <img [src]="buttonImage2Src" alt="Button Image" class="button-image-2" draggable="false"
+        (mousedown)=" buttonImage2Src='assets/backOnClick.svg'" (mouseup)=" buttonImage2Src='assets/back.svg'"
+        (keydown)="handleKeyboardEvent($event)" [class.key-down]="isKeyDown" tabindex="0"
         #buttonImage2>
     </button>
 
     <!-- Move forward Button -->
     <button class="sound-button-1 mover" (click)="skipForwardButton()">
-      <img src="assets/forward.svg" alt="Button Image" class="button-image-2" draggable="false"
-        (mousedown)=" buttonImage3.src='assets/forwardOnClick.svg'" (mouseup)=" buttonImage3.src='assets/forward.svg'"
+      <img [src]="buttonImage3Src" alt="Button Image" class="button-image-2" draggable="false"
+        (mousedown)=" buttonImage3Src='assets/forwardOnClick.svg'" (mouseup)=" buttonImage3Src='assets/forward.svg'"
+        (keydown)="handleKeyboardEvent($event)" [class.key-down]="isKeyDown" tabindex="0"
         #buttonImage3>
     </button>
 
