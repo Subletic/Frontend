@@ -1,6 +1,7 @@
-import {Component, OnInit} from '@angular/core';
-import {SignalRService} from "../service/signalRService";
-import * as Tone from 'tone'
+import { Component, OnInit } from '@angular/core';
+import { SignalRService } from "../service/signalRService";
+import { AudioService } from "../service/audioService";
+import * as Tone from 'tone';
 
 /**
  * The WorkletState interface represents the state of the AudioWorklet.
@@ -51,7 +52,7 @@ export class AudioHandlerComponent implements OnInit {
    * Gets the reference to the SignalRService and sets up all audioContexts.
    * @param signalRService - The SignalRService to get the reference to.
    */
-  constructor(private signalRService: SignalRService) {
+  constructor(private signalRService: SignalRService, private audioService: AudioService) {
     const BASE_SAMPLE_RATE = 48000;
     const SPEED_MULTIPLIERS = [0.5, 0.7, 0.9, 1, 1.1, 1.3, 1.5]
 
@@ -67,7 +68,7 @@ export class AudioHandlerComponent implements OnInit {
    * @param multiplier Playback rate multiplier.
    */
   initNewAudioContext(BASE_SAMPLE_RATE: number, multiplier: number): void {
-    const audioContext = new AudioContext({sampleRate: BASE_SAMPLE_RATE * multiplier})
+    const audioContext = new AudioContext({ sampleRate: BASE_SAMPLE_RATE * multiplier })
     audioContext.audioWorklet
       .addModule('/assets/worklets/circular-buffer-worklet.js')
       .catch((err) => {
@@ -80,6 +81,7 @@ export class AudioHandlerComponent implements OnInit {
             this.replaceAudioContext(event.data.workletState);
           } else if (event.data.type === "newReadTime") {
             this.readTimeInSeconds = event.data.newReadTimeInSeconds;
+            this.audioService.updateVariable(this.readTimeInSeconds);
           } else {
             console.error("Unknown message type: " + event.data.type)
           }
@@ -116,6 +118,11 @@ export class AudioHandlerComponent implements OnInit {
     this.signalRService.receivedAudioStream.subscribe((newChunk) => {
       this.handleAudioData(newChunk)
     });
+
+    this.audioService.updateVariable(this.readTimeInSeconds);
+
+    this.readTimeInSeconds = 2;
+    this.audioService.updateVariable(this.readTimeInSeconds);
   }
 
   /**
@@ -125,12 +132,12 @@ export class AudioHandlerComponent implements OnInit {
     if (!this.audioPlaying) {
       this.audioContext.resume().then(() => {
         this.audioPlaying = true;
-        this.audioBufferNode?.port.postMessage({type: "play"});
+        this.audioBufferNode?.port.postMessage({ type: "play" });
       })
     } else {
       this.audioContext.suspend().then(() => {
         this.audioPlaying = false;
-        this.audioBufferNode?.port.postMessage({type: "pause"});
+        this.audioBufferNode?.port.postMessage({ type: "pause" });
       })
     }
   }
@@ -169,7 +176,7 @@ export class AudioHandlerComponent implements OnInit {
     const BASE_SAMPLE_RATE = 48000;
     this.setPitchModifier(speed);
     this.sampleRate = Math.round(BASE_SAMPLE_RATE * speed);
-    this.audioBufferNode?.port.postMessage({type: "getWorkletState"});
+    this.audioBufferNode?.port.postMessage({ type: "getWorkletState" });
   }
 
   /**
@@ -187,14 +194,14 @@ export class AudioHandlerComponent implements OnInit {
    * Skips forward in the audio playback by the specified number of seconds.
    */
   public skipForward(): void {
-    this.audioBufferNode?.port.postMessage({type: "skipForward", seconds: this.skipSeconds});
+    this.audioBufferNode?.port.postMessage({ type: "skipForward", seconds: this.skipSeconds });
   }
 
   /**
    * Skips backward in the audio playback by the specified number of seconds.
    */
   public skipBackward(): void {
-    this.audioBufferNode?.port.postMessage({type: "skipBackward", seconds: this.skipSeconds})
+    this.audioBufferNode?.port.postMessage({ type: "skipBackward", seconds: this.skipSeconds })
   }
 
   /**
@@ -257,7 +264,7 @@ export class AudioHandlerComponent implements OnInit {
    */
   private replaceAudioContext(workletState: WorkletState): void {
     // Pause and disconnect nodes
-    this.audioBufferNode?.port.postMessage({type: "pause"});
+    this.audioBufferNode?.port.postMessage({ type: "pause" });
     this.audioBufferNode?.disconnect();
     this.gainNode.disconnect();
 
@@ -273,7 +280,7 @@ export class AudioHandlerComponent implements OnInit {
       type: "setWorkletState",
       workletState: workletState,
     });
-    this.audioBufferNode?.port.postMessage({type: "play"});
+    this.audioBufferNode?.port.postMessage({ type: "play" });
 
     // Connect nodes
     Tone.setContext(this.audioContext)

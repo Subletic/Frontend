@@ -39,13 +39,13 @@ describe('WordToken', () => {
 
 
   it('should set font weight to bold when audio time is within the word', () => {
-    let wordToken = new WordToken('test', 0.8, 0, 1, 1);
+    const wordToken = new WordToken('test', 0.8, 0, 1, 1);
     wordToken.adjustFontWeight(0.5);
     expect(wordToken.fontWeight).toBe('bold');
   });
 
   it('should set font weight to normal when audio time is outside the word', () => {
-    let wordToken = new WordToken('test', 0.8, 0, 1, 1);
+    const wordToken = new WordToken('test', 0.8, 0, 1, 1);
     wordToken.adjustFontWeight(1.5);
     expect(wordToken.fontWeight).toBe('normal');
   });

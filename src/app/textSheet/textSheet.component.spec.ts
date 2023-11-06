@@ -5,6 +5,7 @@ import { TextSheetComponent } from './textSheet.component';
 import { SignalRService } from '../service/signalRService';
 import { LinkedList } from '../data/linkedList/linkedList.model';
 import { SpeechBubbleChain } from '../data/speechBubbleChain.module';
+import { AudioService } from '../service/audioService';
 
 describe('LinkedList', () => {
   let linkedList: LinkedList<SpeechBubble>;
@@ -68,10 +69,12 @@ describe('LinkedList', () => {
 describe('TextSheetComponent', () => {
   let component: TextSheetComponent;
   let signalRService: SignalRService;
+  let audioService: AudioService;
 
   beforeEach(() => {
     signalRService = new SignalRService();
-    component = new TextSheetComponent(signalRService);
+    audioService = new AudioService();
+    component = new TextSheetComponent(signalRService, audioService);
     component.speechBubbles = new LinkedList<SpeechBubble>;
   });
 

@@ -6,6 +6,7 @@ import { WordExport } from '../data/wordToken/wordExport.model';
 import { SignalRService } from '../service/signalRService';
 import { environment } from "../../environments/environment";
 import { SpeechBubbleChain } from '../data/speechBubbleChain.module';
+import { AudioService } from '../service/audioService';
 
 /**
  * The TextSheetComponent represents a component that handles the speech bubbles in a text sheet.
@@ -24,7 +25,13 @@ export class TextSheetComponent implements OnInit {
   timeSinceFocusOutList: Map<number, number> = new Map<number, number>();
   intervalList: ReturnType<typeof setInterval>[] = [];
 
-  constructor(private signalRService: SignalRService) { }
+  private readTimeInSeconds = 0;
+
+  constructor(private signalRService: SignalRService, private audioService: AudioService) {
+    this.audioService.variable$.subscribe((value) => {
+      this.readTimeInSeconds = value;
+    });
+  }
 
   ngOnInit(): void {
 
@@ -36,12 +43,7 @@ export class TextSheetComponent implements OnInit {
       this.deleteSpeechBubble(id);
     });
 
-
-    //For test-purposes only. Should NOT be merged!
-    document.getElementById('startSimulation')?.addEventListener('mousedown', () => {
-      this.simulateAudioTime();
-    })
-
+    this.simulateAudioTime();
   }
 
   /**
@@ -224,17 +226,12 @@ export class TextSheetComponent implements OnInit {
    * Simulates the Audio Time (until it is imported from circular Buffer)
    */
   public simulateAudioTime(): void {
-    let audioTime = 0;
-    const isPlaying = true;
 
     const INTERVAL_IN_MILLISECONDS = 100;
 
     setInterval(() => {
-      if (isPlaying) {
-        audioTime += 0.1;
 
-        this.fontWeightForSpeechBubblesAt(audioTime);
-      }
+      this.fontWeightForSpeechBubblesAt(this.readTimeInSeconds);
 
     }, INTERVAL_IN_MILLISECONDS);
   }
