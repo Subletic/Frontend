@@ -86,11 +86,16 @@ export class WordToken {
    * @param audioTime - Time stamp to compare own time slot with.
    */
   public adjustFontWeight(audioTime: number) {
-    if (this.startTime <= audioTime && this.endTime >= audioTime) {
-      this.fontWeight = 'bold';
-      console.log("BOLD BEI " + audioTime + " FÜR " + this.word);
-    } else {
-      this.fontWeight = 'normal';
-    }
+    this.fontWeight = this.currentAudioTimeOnWord(audioTime) ? 'bold' : 'normal';
   }
+
+  /**
+   * Compares given audioTime to time stamp of this word.
+   * 
+   * @param audioTime - Time stamp to compare own time slot with.
+   */
+  private currentAudioTimeOnWord(audioTime: number): boolean {
+    return (this.startTime <= audioTime && this.endTime >= audioTime);
+  }
+
 }

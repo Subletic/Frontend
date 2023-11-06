@@ -375,7 +375,7 @@ describe('TextBoxComponent', () => {
     words.add(new WordToken('are', 0.6, 6, 8, 1));
     words.add(new WordToken('you?', 0.5, 8, 10, 1));
 
-    const SPEECHBUBBLE = new SpeechBubble(1, 0, 10, words);
+    const SPEECHBUBBLE = new SpeechBubble(1, 0, 10, words, 0);
 
     component.textbox = SPEECHBUBBLE;
     fixture.detectChanges();
@@ -384,9 +384,9 @@ describe('TextBoxComponent', () => {
 
     const EVENT = new KeyboardEvent('keydown', { key: ' ' });
 
-    const SELECTED_SPAN = document.getElementById('0');
+    const SELECTED_SPAN = document.getElementById('0_0');
     const CURRENT_TEXT = 'Hello';
-    const SPAN_ID = '0';
+    const SPAN_ID = '0_0';
 
     if (SELECTED_SPAN) {
       component.handleBackspacePressAtStart(SELECTED_SPAN, CURRENT_TEXT, false, SPAN_ID, EVENT);
