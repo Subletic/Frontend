@@ -12,7 +12,7 @@
     </button>
 
     <!-- Move back Button -->
-    <button class="sound-button-1 mover" (click)="skipBackwardButton()">
+    <button class="sound-button-1 mover" (click)="skipBackwardButton()" title="Zurückspulen (Ctrl+R)">
       <img [src]="buttonImage2Src" alt="Button Image" class="button-image-2" draggable="false"
         (mousedown)=" buttonImage2Src='assets/backOnClick.svg'" (mouseup)=" buttonImage2Src='assets/back.svg'"
         (keydown)="handleKeyboardEvent($event)" [class.key-down]="isKeyDown" tabindex="0"
@@ -20,7 +20,7 @@
     </button>
 
     <!-- Move forward Button -->
-    <button class="sound-button-1 mover" (click)="skipForwardButton()">
+    <button class="sound-button-1 mover" (click)="skipForwardButton()" title="Vorspulen (Ctrl+Return)">
       <img [src]="buttonImage3Src" alt="Button Image" class="button-image-2" draggable="false"
         (mousedown)=" buttonImage3Src='assets/forwardOnClick.svg'" (mouseup)=" buttonImage3Src='assets/forward.svg'"
         (keydown)="handleKeyboardEvent($event)" [class.key-down]="isKeyDown" tabindex="0"
