@@ -6,31 +6,88 @@
             <button mat-icon-button style="float: right;" (click)="close();">
                 <mat-icon>close</mat-icon>
             </button>
-        </div>  
-        
-        <div class="seconds-container">
-            <div class="seconds-label-container">
-                <div id="seconds-name-label" class="seconds-name-label">Sprungweite</div>
-                <div class="seconds-value-label">{{seconds}} Sekunden</div>
-            </div>
-            <div class="slider">
-                <input type="range" id="seconds-slider" min="1" max="20" class="styled-slider slider-progress" [(ngModel)]="seconds" #secondsInput="ngModel" #secondsSlider>
-            </div>
-        </div>  
-
-        <div class="reload-button">
-            <p>Reload Backend</p>
-            <button (click)="callBackendReload()" class="reload-button">
-                <img src="assets/reload.svg" alt="Button Image" class="button-image"
-                (mousedown)=" buttonImage7.src='assets/reloadOnClick.svg'" 
-                (mouseup)=" buttonImage7.src='assets/reload.svg'" #buttonImage7>
-            </button>
         </div>
 
-        <div class="buttons-container">
-            <button mat-stroked-button class="settings-button" [style.color]="getBackgroundColor()" (click)="apply();">Ok</button>
-            <button mat-stroked-button class="settings-button" [style.color]="getBackgroundColor()" (click)="cancel();">Abbrechen</button>
-        </div>
+        <mat-tab-group>
+            <mat-tab label="Allgemein">
+                <div class="seconds-container">
+                    <div class="seconds-label-container">
+                        <div id="seconds-name-label" class="seconds-name-label">Sprungweite</div>
+                        <div class="seconds-value-label">{{updatedAudioSkipSeconds}} Sekunden</div>
+                    </div>
+                    <div class="slider">
+                        <input type="range" id="seconds-slider" min="1" max="20" class="styled-slider slider-progress"
+                            [(ngModel)]="updatedAudioSkipSeconds" #secondsInput="ngModel" #secondsSlider>
+                    </div>
+                </div>
+
+                <div class="reload-button">
+                    <p>Reload Backend</p>
+                    <button (click)="callBackendReload()" class="reload-button">
+                        <img src="assets/reload.svg" alt="Button Image" class="button-image"
+                            (mousedown)=" buttonImage7.src='assets/reloadOnClick.svg'"
+                            (mouseup)=" buttonImage7.src='assets/reload.svg'" #buttonImage7>
+                    </button>
+                </div>
+
+                <div class="buttons-container">
+                    <button mat-stroked-button class="settings-button" [style.color]="getBackgroundColor()"
+                        (click)="apply();">Anwenden</button>
+                    <button mat-stroked-button class="settings-button" [style.color]="getBackgroundColor()"
+                        (click)="cancel();">Abbrechen</button>
+                </div>
+            </mat-tab>
+
+            <mat-tab label="Tastenkombinationen">
+                <div class="keybinding-container">
+                    <p>Audio-Wiedergabe</p>
+                    <div class="row">
+                        <div class="action">Abspielen/Pausieren</div>
+                        <div class="key">Ctrl</div>
+                        <div class="key">Space</div>
+                    </div>
+                    <div class="row">
+                        <div class="action">Zurückspulen</div>
+                        <div class="key">Ctrl</div>
+                        <div class="key">R</div>
+                    </div>
+                    <div class="row">
+                        <div class="action">Vorspulen</div>
+                        <div class="key">Ctrl</div>
+                        <div class="key">Return</div>
+                    </div>
+                    <div class="row">
+                        <div class="action">Abspielgeschwindigkeit</div>
+                        <div class="key">Ctrl</div>
+                        <div class="key">Oben/Unten</div>
+                    </div>
+                    <div class="row">
+                        <div class="action">Lautstärke senken</div>
+                        <div class="key">Ctrl</div>
+                        <div class="key">[</div>
+                    </div>
+                    <div class="row">
+                        <div class="action">Lautstärke erhöhen</div>
+                        <div class="key">Ctrl</div>
+                        <div class="key">]</div>
+                    </div>
+
+                    <mat-divider></mat-divider>
+
+                    <p>Textbearbeitung</p>
+                    <div class="row">
+                        <div class="action">Markieren</div>
+                        <div class="key">Ctrl</div>
+                        <div class="key">Links/Rechts</div>
+                    </div>
+                    <div class="row">
+                        <div class="action">Löschen</div>
+                        <div class="key">Del</div>
+                    </div>
+                </div>
+            </mat-tab>
+        </mat-tab-group>
+
     </div>
 </div>
 <div class="settings-background"></div>

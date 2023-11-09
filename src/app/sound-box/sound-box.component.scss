@@ -1,7 +1,8 @@
 .middle-container {
   width: 100%;
   height: 100vh;
-  background-color: var(--container-background-color);;
+  background-color: var(--container-background-color);
+  ;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -12,7 +13,7 @@
 
 /* is for the alignment of the elements*/
 .mover {
-  float:left;
+  float: left;
   margin-right: 15px;
   margin-left: 15px;
 }
@@ -113,7 +114,7 @@
 }
 
 /* contains all elements of the bottom soundbar*/
-.soundbar-button-container{
+.soundbar-button-container {
   margin-left: auto;
   margin-right: auto;
 }
@@ -129,22 +130,22 @@
 
 @media (max-width: 800px) {
   .middle-container {
-      padding: 20px;
+    padding: 20px;
   }
 
   .middle-container h1 {
-      font-size: 18px;
+    font-size: 18px;
   }
 
   .sound-container {
-      height: auto;
-      padding: 10px;
-      justify-content: center;
+    height: auto;
+    padding: 10px;
+    justify-content: center;
   }
 
   .sound-button-image {
-      width: 70%;
-      max-width: 200px;
-      height: auto;
+    width: 70%;
+    max-width: 200px;
+    height: auto;
   }
 }

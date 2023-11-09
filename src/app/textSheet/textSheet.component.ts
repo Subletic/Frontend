@@ -1,8 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { SpeechBubble, SpeechBubbleExport } from '../data/speechBubble.model';
-import { WordExport } from '../data/wordToken.model';
+import { SpeechBubble } from '../data/speechBubble/speechBubble.model';
+import { SpeechBubbleExport } from '../data/speechBubble/speechBubbleExport.model';
+import { LinkedList } from '../data/linkedList/linkedList.model';
+import { WordExport } from '../data/wordToken/wordExport.model';
 import { SignalRService } from '../service/signalRService';
-import {environment} from "../../environments/environment";
+import { environment } from "../../environments/environment";
+import { SpeechBubbleChain } from '../data/speechBubbleChain.module';
+import { AudioService } from '../service/audioService';
 
 /**
  * The TextSheetComponent represents a component that handles the speech bubbles in a text sheet.
@@ -16,23 +20,30 @@ import {environment} from "../../environments/environment";
 export class TextSheetComponent implements OnInit {
 
   //Attribute holding all showcased linkedList of Instance SpeechBubble
-  speechBubbles: LinkedList = new LinkedList;
+  speechBubbles: LinkedList<SpeechBubble> = new LinkedList<SpeechBubble>;
 
   timeSinceFocusOutList: Map<number, number> = new Map<number, number>();
   intervalList: ReturnType<typeof setInterval>[] = [];
 
-  constructor(private signalRService: SignalRService) {}
+  private readTimeInSeconds = 0;
 
-  ngOnInit() {
+  constructor(private signalRService: SignalRService, private audioService: AudioService) {
+    this.audioService.variable$.subscribe((value) => {
+      this.readTimeInSeconds = value / 1000;
+    });
+  }
+
+  ngOnInit(): void {
 
     this.signalRService.newBubbleReceived.subscribe(SpeechBubbleExportList => {
-      this.importfromJSON(SpeechBubbleExportList);
+      this.importfromJson(SpeechBubbleExportList);
     });
 
     this.signalRService.oldBubbledeleted.subscribe(id => {
       this.deleteSpeechBubble(id);
     });
 
+    this.simulateAudioTime();
   }
 
   /**
@@ -40,17 +51,17 @@ export class TextSheetComponent implements OnInit {
   * @param jsonString The JSON string to import.
   * @returns An array of SpeechBubbleExport objects.
   */
-  public importfromJSON(speechBubbleChain: SpeechBubbleExport[]) {
+  public importfromJson(speechBubbleChain: SpeechBubbleExport[]): void {
     if (!speechBubbleChain || speechBubbleChain.length === 0) {
       console.error('Invalid speechBubbleChain object.');
       return;
     }
-  
+
     const speechBubbleExportArray: SpeechBubbleExport[] = [];
-    
+
     speechBubbleChain.forEach((speechBubbleExport: SpeechBubbleExport) => {
       const speechBubbleContent: WordExport[] = [];
-  
+
       speechBubbleExport.speechBubbleContent.forEach((word: WordExport) => {
         const wordExport = new WordExport(
           word.word,
@@ -59,10 +70,10 @@ export class TextSheetComponent implements OnInit {
           word.endTime,
           word.speaker
         );
-  
+
         speechBubbleContent.push(wordExport);
       });
-  
+
       const speechBubbleExport2 = new SpeechBubbleExport(
         speechBubbleExport.id,
         speechBubbleExport.speaker,
@@ -70,10 +81,10 @@ export class TextSheetComponent implements OnInit {
         speechBubbleExport.endTime,
         speechBubbleContent
       );
-  
+
       speechBubbleExportArray.push(speechBubbleExport2);
     });
-  
+
     speechBubbleExportArray.forEach((element: SpeechBubbleExport) => {
       const speechBubble = element.toSpeechBubble();
       if (speechBubble) {
@@ -91,19 +102,20 @@ export class TextSheetComponent implements OnInit {
   */
   public onFocusOut(id: number) {
 
-    const speechBubble = this.getSpeechBubbleById(id);
-    if (!speechBubble) return;
-  
+    const SPEECHBUBBLE = this.getSpeechBubbleById(id);
+    if (!SPEECHBUBBLE) return;
+
     clearInterval(this.intervalList[id]);
     this.timeSinceFocusOutCounter(id);
   }
 
   public getSpeechBubbleById(id: number): SpeechBubble | undefined {
+
     let current = this.speechBubbles.head;
-  
+
     while (current) {
-      if (current.id === id) {
-        return current;
+      if (current.data.id === id) {
+        return current.data;
       }
       current = current.next;
     }
@@ -116,47 +128,50 @@ export class TextSheetComponent implements OnInit {
   * if the inactivity exceeds 5 seconds.
   * @param id - The id of the speechbubble to set a counter for
   */
-  public timeSinceFocusOutCounter(id: number) {
+  public timeSinceFocusOutCounter(id: number): void {
+    const MAX_SECONDS_SINCE_FOCUS_OUT = 5;
+    const INTERVAL_IN_MILLISECONDS = 1000;
+
     this.timeSinceFocusOutList.set(id, 0);
-  
+
     this.intervalList[id] = setInterval(() => {
-      const currentValue = this.timeSinceFocusOutList.get(id) || 0;
-      this.timeSinceFocusOutList.set(id, currentValue + 1);
-  
-      if (currentValue >= 5) {
+      const SECONDS_SINCE_FOCUS_OUT = this.timeSinceFocusOutList.get(id) || 0;
+      this.timeSinceFocusOutList.set(id, SECONDS_SINCE_FOCUS_OUT + 1);
+
+      if (SECONDS_SINCE_FOCUS_OUT >= MAX_SECONDS_SINCE_FOCUS_OUT) {
         clearInterval(this.intervalList[id]);
         this.callExportToJson(id);
         this.timeSinceFocusOutList.set(id, 0);
         return;
       }
-    }, 1000);
+    }, INTERVAL_IN_MILLISECONDS);
   }
 
   /**
   * Calls the exportToJson method to export a speech bubble with the specified id.
   * @param id - The id of the speech bubble to export.
   */
-  public callExportToJson(id: number) {
+  public callExportToJson(id: number): void {
     const speechBubbleToExport = this.getSpeechBubbleById(id);
-    if(!speechBubbleToExport) return;
-    speechBubbleToExport.removeEmptyWords(); 
-    const currentExport = speechBubbleToExport.getExport();
-    if(currentExport == undefined) return;
-    this.exportToJson([currentExport]);
+    if (!speechBubbleToExport) return;
+    speechBubbleToExport.removeEmptyWords();
+    const CURRENT_EXPORT = speechBubbleToExport.getExport();
+    if (CURRENT_EXPORT == undefined) return;
+    this.exportToJson([CURRENT_EXPORT]);
   }
 
   /**
   * Exports a speech bubble list to a JSON file and sends it to a specified API endpoint.
   * @param speechBubbleExportList - An array of SpeechBubbleExport objects representing the speech bubbles to be exported.
   */
-  public exportToJson(speechBubbleExportList: SpeechBubbleExport[]) {
+  public exportToJson(speechBubbleExportList: SpeechBubbleExport[]): void {
 
-    const speechBubbleChain = new SpeechBubbleChain(speechBubbleExportList);
-    const jsonData = speechBubbleChain.toJSON();
+    const SPEECHBUBBLE_CHAIN = new SpeechBubbleChain(speechBubbleExportList);
+    const JSON_DATA = SPEECHBUBBLE_CHAIN.toJSON();
 
     fetch(environment.apiURL + '/api/speechbubble/update', {
       method: 'POST',
-      body: JSON.stringify(jsonData),
+      body: JSON.stringify(JSON_DATA),
       headers: {
         'Content-Type': 'application/json'
       }
@@ -178,14 +193,14 @@ export class TextSheetComponent implements OnInit {
   * @returns An array of speech bubbles.
   */
   public getSpeechBubblesArray(): SpeechBubble[] {
-      let current = this.speechBubbles.head;
-      const speechBubbles: SpeechBubble[] = [];
-      while (current) {
-        speechBubbles.push(current);
-        current = current.next;
-      }
-      return speechBubbles;
+    let current = this.speechBubbles.head;
+    const speechBubbles: SpeechBubble[] = [];
+    while (current) {
+      speechBubbles.push(current.data);
+      current = current.next;
     }
+    return speechBubbles;
+  }
 
   /**
   * Deletes a speech bubble from the speechBubbles list based on the id.
@@ -193,143 +208,61 @@ export class TextSheetComponent implements OnInit {
   * 
   * @param id - The id of the speechbubble to be removed.
   */
-  public deleteSpeechBubble(id: number) {
+  public deleteSpeechBubble(id: number): void {
 
     let current = this.speechBubbles.head;
 
     while (current) {
 
-      if(current.id == id) {
-          this.speechBubbles.remove(current);
-          return;
+      if (current.data.id == id) {
+        this.speechBubbles.remove(current.data);
+        return;
       }
       current = current.next;
-    }  
-  }
-}
-
-/**
-* The SpeechBubbleChain class represents a chain of speech bubbles.
-* It is used for exporting and importing speech bubbles in JSON format.
-*/
-export class SpeechBubbleChain {
-  public SpeechbubbleChain: SpeechBubbleExport[];
-
-  /**
-   * Creates an instance of the SpeechBubbleChain class.
-   * @param SpeechbubbleChain The array of speech bubbles in the chain.
-   */
-  constructor(SpeechbubbleChain: SpeechBubbleExport[]) {
-    this.SpeechbubbleChain = SpeechbubbleChain;
+    }
   }
 
   /**
-   * Converts the SpeechBubbleChain object to a JSON object.
-   * @returns The JSON representation of the SpeechBubbleChain object.
+   * Simulates the Audio Time (until it is imported from circular Buffer)
    */
-  toJSON() {
-    return {
-      SpeechbubbleChain: this.SpeechbubbleChain.map(speechBubble => speechBubble.toJSON())
-    };
+  public simulateAudioTime(): void {
+
+    const INTERVAL_IN_MILLISECONDS = 100;
+
+    setInterval(() => {
+
+      this.fontWeightForSpeechBubblesAt(this.readTimeInSeconds);
+
+    }, INTERVAL_IN_MILLISECONDS);
   }
-}
 
-/**
- * The LinkedList class represents a linked list data structure.
- * It provides methods to add and remove speech bubbles, as well as
- * retrieve information about the list.
- */
-export class LinkedList {
-    public head: SpeechBubble | null;
-    public tail: SpeechBubble | null;
-    public currentIndex: number;
+  /**
+   * Finds SpeechBubbles that match the given audioTime and call adjustWordsFontWeight for their word list.
+   * 
+   * @param audioTime - the current Audio Time
+   */
+  public fontWeightForSpeechBubblesAt(audioTime: number): void {
 
-    constructor() {
-      this.head = null;
-      this.tail = null;
-      this.currentIndex = 0;
+    let current = this.speechBubbles.head;
+
+    while (current) {
+
+      if (this.currentAudioTimeInSpeechbubbleTime(current.data, audioTime)) {
+
+        current.data.adjustWordsFontWeight(audioTime);
+        current.prev?.data.adjustWordsFontWeight(audioTime);
+      }
+      current = current.next;
     }
+  }
 
-    /**
-    * Adds a speech bubble to the linked list.
-    * Assigns a unique ID to the speech bubble and updates the head and tail pointers.
-    * @param speechBubble - The speech bubble to be added.
-    */
-    add(speechBubble: SpeechBubble) {
-      if (!this.head) {
-        this.head = speechBubble;
-        this.tail = speechBubble;
-      } else {
-        if (this.tail) {
-          this.tail.next = speechBubble;
-          speechBubble.prev = this.tail;
-          this.tail = speechBubble;
-        }
-      }
-    }
+  /**
+   * Checks if given audioTime and SpeechBubble time slot match.
+   * 
+   * @param audioTime - Time stamp to compare own time slot with.
+   */
+  private currentAudioTimeInSpeechbubbleTime(SpeechBubble: SpeechBubble, audioTime: number): boolean {
+    return (SpeechBubble.begin <= audioTime && SpeechBubble.end >= audioTime);
+  }
 
-    /**
-    * Removes a speech bubble from the linked list.
-    * Updates the head and tail pointers and adjusts the next and previous references.
-    * @param speechBubble - The speech bubble to be removed.
-    */
-    remove(speechBubble: SpeechBubble) {
-      if (speechBubble === this.head) {
-        this.head = speechBubble.next;
-      }
-      if (speechBubble === this.tail) {
-        this.tail = speechBubble.prev;
-      }
-      if (speechBubble.prev) {
-        speechBubble.prev.next = speechBubble.next;
-      }
-      if (speechBubble.next) {
-        speechBubble.next.prev = speechBubble.prev;
-      }
-    }
-
-    /**
-    * Prints the word lists of all speech bubbles in the linked list.
-    * Returns a string representation of the word lists.
-    * @returns A string representing the word lists of the speech bubbles.
-    */
-    printWordLists() {
-        let current = this.head;
-        const speechBubbles = [];
-        while (current) {
-            speechBubbles.push(current.words);
-            current = current.next;
-        }
-        return speechBubbles.join(" ");
-    }
-
-    /**
-    * Returns a string representation of the linked list.
-    * The string includes information about each speech bubble in the list.
-    * @returns A string representing the linked list.
-    */
-    toString() {
-      let current = this.head;
-      const speechBubbles = [];
-      while (current) {
-        speechBubbles.push(current.toString());
-        current = current.next;
-      }
-      return speechBubbles.join(" ");
-    }
-
-    /**
-    * Returns the size of the linked list.
-    * Counts the number of speech bubbles in the list and returns the count.
-    * @returns The number of speech bubbles in the linked list.
-    */
-    size() {
-      let current = this.head;
-      let count = 0;
-      while (current) {
-        count++;
-        current = current.next;
-      }
-      return count;
-    }
 }

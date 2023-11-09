@@ -6,6 +6,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatDividerModule } from '@angular/material/divider';
+
 
 describe('SettingsComponent', () => {
   let component: SettingsComponent;
@@ -14,7 +17,7 @@ describe('SettingsComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [SettingsComponent],
-      imports: [MatIconModule, MatFormFieldModule, FormsModule, MatInputModule, BrowserAnimationsModule],
+      imports: [MatIconModule, MatFormFieldModule, FormsModule, MatInputModule, BrowserAnimationsModule, MatTabsModule, MatDividerModule],
     }).compileComponents();
   });
 
@@ -30,17 +33,17 @@ describe('SettingsComponent', () => {
 
   it('should initialize with default values', () => {
     expect(component.id).toBeUndefined();
-    expect(component.seconds).toBe(5);
-    expect(component.initialSeconds).toBe(5);
+    expect(component.updatedAudioSkipSeconds).toBe(5);
+    expect(component.initialAudioSkipSeconds).toBe(5);
   });
 
   it('should set the slider value when ngAfterViewInit is called', () => {
-    const sliderElement = fixture.nativeElement.querySelector('#seconds-slider');
-    component.seconds = 10;
+    const SLIDER_ELEMENT = fixture.nativeElement.querySelector('#seconds-slider');
+    component.updatedAudioSkipSeconds = 10;
     fixture.detectChanges();
 
     component.ngAfterViewInit();
-    expect(sliderElement.value).toBe('10');
+    expect(SLIDER_ELEMENT.value).toBe('10');
   });
 
   it('should open and close the modal', () => {
@@ -59,24 +62,24 @@ describe('SettingsComponent', () => {
   });
 
   it('should cancel changes and reset seconds value', () => {
-    component.seconds = 10;
-    component.initialSeconds = 5;
+    component.updatedAudioSkipSeconds = 10;
+    component.initialAudioSkipSeconds = 5;
 
     spyOn(component, 'close');
 
     component.cancel();
-    expect(component.seconds).toBe(5);
+    expect(component.updatedAudioSkipSeconds).toBe(5);
     expect(component.close).toHaveBeenCalled();
   });
 
   it('should apply changes and emit secondsChange event', () => {
     spyOn(component.secondsChange, 'emit');
     spyOn(component, 'close');
-  
-    component.seconds = 10;
-  
+
+    component.updatedAudioSkipSeconds = 10;
+
     component.apply();
-  
+
     expect(component.secondsChange.emit).toHaveBeenCalledWith(10);
     expect(component.close).toHaveBeenCalled();
   });

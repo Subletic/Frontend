@@ -31,48 +31,70 @@ export class SoundBoxComponent {
   public isAudioPlaying = false;
   public bodyText = '';
 
+  public isKeyDown = false;
+  public buttonImage2Src = 'assets/back.svg';
+  public buttonImage3Src = 'assets/forward.svg'
+
   public isSpeedPopoverOpen = false;
   public speedValue = 1;
 
-  constructor (private settingsService: SettingsService) {}
+  constructor(private settingsService: SettingsService) { }
 
   /**
    * Closes Popups if click outside of popup occurs.
-   * 
+   *
    * @param event - Any click event triggered by user.
    */
   @HostListener('document:click', ['$event'])
-  onDocumentMouseDown(event: MouseEvent) {
-    const clickedElement = event.target as HTMLElement;
-    const isInsideSoundButton = this.soundButton.nativeElement.contains(clickedElement);
-    const isInsideSpeedButton = this.speedButton.nativeElement.contains(clickedElement);
-    if (!isInsideSoundButton) {
+  onDocumentMouseDown(event: MouseEvent): void {
+    const CLICKED_ELEMENT = event.target as HTMLElement;
+    const IS_INSIDE_SOUNDBUTTON = this.soundButton.nativeElement.contains(CLICKED_ELEMENT);
+    const IS_INSIDE_SPEEDBUTTON = this.speedButton.nativeElement.contains(CLICKED_ELEMENT);
+    if (!IS_INSIDE_SOUNDBUTTON) {
       this.closePopoverAudio();
-    } 
-    if (!isInsideSpeedButton) {
+    }
+    if (!IS_INSIDE_SPEEDBUTTON) {
       this.closePopoverSpeed();
     }
   }
 
   /**
    * Shortcuts for play/pause, skipBack and skipForwards.
-   * 
+   *
    * @param event - Any key event triggered by user.
    */
   @HostListener('document:keydown', ['$event'])
-  handleKeyboardEvent(event: KeyboardEvent) {
+  handleKeyboardEvent(event: KeyboardEvent): void {
     if (event.ctrlKey && event.altKey) {
       if (event.key === 'd') {
-        this.audioHandler.playOrStopAudio();
+        this.audioHandler.togglePlayback();
         this.isAudioPlaying = this.audioHandler.getIsAudioPlaying();
         event.preventDefault();
       } else if (event.key === 'y') {
         this.audioHandler.skipBackward();
         event.preventDefault();
+        this.isKeyDown = true;
+        this.buttonImage2Src = 'assets/backOnClick.svg';
       } else if (event.key === 'w') {
         this.audioHandler.skipForward();
         event.preventDefault();
+        this.isKeyDown = true;
+        this.buttonImage3Src = 'assets/forwardOnClick.svg';
       }
+    }
+  }
+
+  /**
+   * Resets for the shortcuts.
+   * 
+   * @param event - Key event reset by user.
+   */
+  @HostListener('document:keyup', ['$event'])
+  handleKeyUp(event: KeyboardEvent): void {
+    if (event.ctrlKey && event.altKey) {
+      this.isKeyDown = false;
+      this.buttonImage2Src = 'assets/back.svg';
+      this.buttonImage3Src = 'assets/forward.svg'
     }
   }
 
@@ -80,22 +102,22 @@ export class SoundBoxComponent {
    * Handles playButton press. Calls playOrStopAudio() in audiohandler and
    * switches isAudioPlaying for Icon-Change
    */
-  playButton() {
-    this.audioHandler.playOrStopAudio();
+  playButton(): void {
+    this.audioHandler.togglePlayback();
     this.isAudioPlaying = this.audioHandler.getIsAudioPlaying();
   }
-  
+
   /**
    * Calls skipBackward() function in audioHandler.
    */
-  skipBackwardButton() {
+  skipBackwardButton(): void {
     this.audioHandler.skipBackward();
   }
 
   /**
    * Calls skipForward() function in audioHandler.
    */
-  skipForwardButton() {
+  skipForwardButton(): void {
     this.audioHandler.skipForward();
   }
 
@@ -103,7 +125,7 @@ export class SoundBoxComponent {
    * Opens Settings-Window
    * @param {string} id - Id of the Window to open.
    */
-  openModal(id: string) {
+  openModal(id: string): void {
     this.settingsService.open(id);
   }
 
@@ -111,65 +133,65 @@ export class SoundBoxComponent {
    * Closes Settings-Window
    * @param {string} id - Id of the Window to close.
    */
-  closeModal(id: string) {
+  closeModal(id: string): void {
     this.settingsService.close(id);
   }
 
   /**
    * Switches isAudioPopoverOpen Boolean to the negated value.
    */
-  switchPopoverAudio() {
+  switchPopoverAudio(): void {
     this.isAudioPopoverOpen = !this.isAudioPopoverOpen;
   }
 
   /**
    * Sets isSpeedPopoverOpen to false, causing the Speed Popover to close.
    */
-  closePopoverAudio() {
+  closePopoverAudio(): void {
     this.isAudioPopoverOpen = false;
   }
 
   /**
    * Switches isSpeedPopoverOpen Boolean to the negated value.
    */
-  switchSpeedPopover() {
+  switchSpeedPopover(): void {
     this.isSpeedPopoverOpen = !this.isSpeedPopoverOpen;
   }
 
   /**
    * Sets isSpeedPopoverOpen to false, causing the Speed Popover to close.
    */
-  closePopoverSpeed() {
+  closePopoverSpeed(): void {
     this.isSpeedPopoverOpen = false;
   }
 
-  /** Calls setVolume Function in audioHandler with volume number between -1 and 1. 
-   * @param {number} volume - The new volume value. 
+  /** Calls setVolume Function in audioHandler with volume number between -1 and 1.
+   * @param {number} volume - The new volume value.
    */
-  onVolumeChange(volume: number) {
+  onVolumeChange(volume: number): void {
     this.audioHandler.setVolume(volume);
   }
 
-  /** 
-   * Sets the number of seconds to skip in the audio handler. 
-   * @param {number} seconds - The number of seconds to skip. 
+  /**
+   * Sets the number of seconds to skip in the audio handler.
+   * @param {number} seconds - The number of seconds to skip.
    */
-  onSecondsChange(seconds: number){
+  onSecondsChange(seconds: number): void {
     this.audioHandler.setSkipSeconds(seconds);
   }
 
   /**
-   * Safes the inital volume number between -100 and 100, 
+   * Safes the inital volume number between -100 and 100,
    * so the next slider can be instantiated with the last-current-value of the old one.
    */
-  onVolume100Change(volume100: number) {
+  onVolume100Change(volume100: number): void {
     this.volume100 = volume100;
   }
 
   /**
    * Calls setPlaybackSpeed Function in AudioHandler with emitted speedValue from speed-popup.
    */
-  onSpeedChange(speed: number) {
+  onSpeedChange(speed: number): void {
     this.speedValue = speed;
     this.audioHandler.setPlaybackSpeed(this.speedValue);
   }
@@ -184,10 +206,8 @@ export class SoundBoxComponent {
   /**
    * Sets the settingService of this instance
    */
-  setSettingsService(settingsService: SettingsService) {
+  setSettingsService(settingsService: SettingsService): void {
     this.settingsService = settingsService;
   }
 
 }
-
-
