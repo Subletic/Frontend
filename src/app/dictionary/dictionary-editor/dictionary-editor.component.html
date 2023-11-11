@@ -1,0 +1,5 @@
+<div *ngFor="let vocab of dictionary.transcription_config.additional_vocab">
+    <app-dictionary-row [rowData]="vocab"></app-dictionary-row>
+</div>
+
+<button (click)="addRow()" class="add-row-button">Neue Zeile</button>

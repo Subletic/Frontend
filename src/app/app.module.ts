@@ -21,6 +21,9 @@ import { SpeedPopupComponent } from './sound-box/speed-popup/speed-popup.compone
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatDividerModule } from '@angular/material/divider';
 
+import { DictionaryEditorComponent } from './dictionary/dictionary-editor/dictionary-editor.component';
+import { DictionaryRowComponent } from './dictionary/dictionary-row/dictionary-row.component';
+
 
 @NgModule({
   declarations: [
@@ -31,7 +34,9 @@ import { MatDividerModule } from '@angular/material/divider';
     AudioHandlerComponent,
     SettingsComponent,
     SliderPopupComponent,
-    SpeedPopupComponent
+    SpeedPopupComponent,
+    DictionaryEditorComponent,
+    DictionaryRowComponent
   ],
   imports: [
     BrowserModule,
