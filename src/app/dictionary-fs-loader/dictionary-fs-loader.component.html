@@ -1,0 +1,8 @@
+<div>
+  <input type="file" id="file-input" accept="application/json" (change)="handleFileUpload($event)" #fileUpload>
+  <button mat-stroked-button (click)="fileUpload.click()" [style.color]="getBackgroundColor()">
+    Dictionary upload
+  </button>
+
+  <button mat-stroked-button [style.color]="getBackgroundColor()">Dictionary download</button>
+</div>

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { SignalRService } from "../service/signalRService";
-import { AudioService } from "../service/audioService";
+import { SignalRService } from "../service/signalR.service";
+import { AudioService } from "../service/audio.service";
 import * as Tone from 'tone';
 
 /**
