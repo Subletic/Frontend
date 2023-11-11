@@ -26,16 +26,24 @@ export class DictionaryFsLoaderComponent {
    * Called when the user uploads a file.
    * @param event JSON file uploading event
    */
-  public handleFileUpload(event: Event): void {
+  async handleFileUpload(event: Event): Promise<void> {
     const input = event.target as HTMLInputElement;
 
     if (input.files == null) {
+      this.displayDictionaryErrorToast();
       return;
     }
 
     const file: File = input.files[0];
 
-    this.loadDictionaryFromFile(file);
+    const dictionary = await this.loadDictionaryFromFile(file)
+
+    if (dictionary == null) {
+      this.displayDictionaryErrorToast();
+      return;
+    }
+
+    this.dictionaryService.updateDictionary(dictionary);
   }
 
   /**
@@ -43,31 +51,34 @@ export class DictionaryFsLoaderComponent {
    * If the file is not a valid JSON file, null is returned.
    * @param file JSON file to read
    */
-  private loadDictionaryFromFile(file: File): void {
+  private loadDictionaryFromFile(file: File): Promise<dictionary | null> {
     const fileReader = new FileReader();
 
     fileReader.readAsText(file, "UTF-8");
-    fileReader.onload = () => {
-      try {
-        const dictionary = JSON.parse(fileReader.result as string);
 
-        const dictionaryValid: boolean = this.validateDictionary(dictionary);
+    return new Promise((resolve) => {
+      fileReader.onload = () => {
+        try {
+          const dictionary = JSON.parse(fileReader.result as string);
 
-        if (dictionary == null || !dictionaryValid) {
-          this.loadDictionaryErrorToast();
-          return;
+          const dictionaryValid: boolean = this.validateDictionary(dictionary);
+
+          if (dictionary == null || !dictionaryValid) {
+            resolve(null);
+            return;
+          }
+
+          this.displayDictionarySuccessToast();
+          resolve(dictionary);
+        } catch (e) {
+          console.log(e)
+          resolve(null)
         }
-
-        this.toastr.success("Dictionary wurde erfolgreich geladen!");
-        this.dictionaryService.updateDictionary(dictionary);
-      } catch (e) {
-        this.loadDictionaryErrorToast();
       }
-    }
-    fileReader.onerror = (error) => {
-      this.loadDictionaryErrorToast();
-      console.log(error);
-    }
+      fileReader.onerror = () => {
+        resolve(null);
+      }
+    });
   }
 
   /**
@@ -77,7 +88,7 @@ export class DictionaryFsLoaderComponent {
    */
   private validateDictionary(dictionary: dictionary): boolean {
     // Check if language is provided
-    if (dictionary.transcription_config.language == null) {
+    if (!dictionary.transcription_config.language) {
       return false;
     }
 
@@ -100,8 +111,24 @@ export class DictionaryFsLoaderComponent {
    * Displays an error toast when the user uploads an invalid file.
    * @private
    */
-  private loadDictionaryErrorToast(): void {
-    this.toastr.error("Ungültige Datei!", "Fehler")
+  displayDictionarySuccessToast(): void {
+    try {
+      this.toastr.success("Dictionary wurde erfolgreich geladen!");
+    } catch (e) {
+      console.log("Dictionary wurde erfolgreich geladen!")
+    }
+  }
+
+  /**
+   * Displays an error toast when the user uploads an invalid file.
+   * @private
+   */
+  displayDictionaryErrorToast(): void {
+    try {
+      this.toastr.error("Ungültige Datei!", "Fehler")
+    } catch (e) {
+      console.error("Ungültige Datei!");
+    }
   }
 
   /**
