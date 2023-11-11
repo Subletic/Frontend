@@ -5,7 +5,7 @@ import { LinkedList } from '../data/linkedList/linkedList.model';
 import { WordExport } from '../data/wordToken/wordExport.model';
 import { SignalRService } from '../service/signalRService';
 import { environment } from "../../environments/environment";
-import { SpeechBubbleChain } from '../data/speechBubbleChain.module';
+import { SpeechBubbleChain } from '../data/speechBubbleChain/speechBubbleChain.module';
 import { AudioService } from '../service/audioService';
 
 /**

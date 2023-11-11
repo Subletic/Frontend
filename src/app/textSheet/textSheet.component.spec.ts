@@ -4,7 +4,7 @@ import { WordToken } from '../data/wordToken/wordToken.model';
 import { TextSheetComponent } from './textSheet.component';
 import { SignalRService } from '../service/signalRService';
 import { LinkedList } from '../data/linkedList/linkedList.model';
-import { SpeechBubbleChain } from '../data/speechBubbleChain.module';
+import { SpeechBubbleChain } from '../data/speechBubbleChain/speechBubbleChain.module';
 import { AudioService } from '../service/audioService';
 
 describe('LinkedList', () => {
