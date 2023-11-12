@@ -18,21 +18,21 @@ export class DictionaryService {
    * Initializes the dictionary with default values.
    */
   constructor() {
-    const defaultDictionary = this.generateDefaultDictionary();
+    const DEFAULT_DICTIONARY = this.generateDefaultDictionary();
 
-    this.currentDictionary = defaultDictionary;
-    this.dictionaryUpdated.next(defaultDictionary);
+    this.currentDictionary = DEFAULT_DICTIONARY;
+    this.dictionaryUpdated.next(DEFAULT_DICTIONARY);
   }
 
   /**
    * Generates a default dictionary.
    */
   private generateDefaultDictionary(): dictionary {
-    const language = "de"
-    const additionalVocab: additional_vocab[] = [];
-    const transcriptionConfig = new transcription_config(language, additionalVocab);
+    const LANGUAGE = "de"
+    const ADDITIONAL_VOCAB: additional_vocab[] = [];
+    const TRANSCRIPTION_CONFIG = new transcription_config(LANGUAGE, ADDITIONAL_VOCAB);
 
-    return new dictionary(transcriptionConfig);
+    return new dictionary(TRANSCRIPTION_CONFIG);
   }
 
   /**

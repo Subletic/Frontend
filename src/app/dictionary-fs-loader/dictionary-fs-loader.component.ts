@@ -34,7 +34,6 @@ export class DictionaryFsLoaderComponent {
     }
 
     const file: File = input.files[0];
-
     const dictionary = await this.loadDictionaryFromFile(file)
 
     if (dictionary == null) {
