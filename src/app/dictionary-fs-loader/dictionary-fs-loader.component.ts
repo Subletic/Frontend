@@ -3,7 +3,6 @@ import {DictionaryService} from "../service/dictionary.service";
 import {dictionary} from "../data/dictionary/dictionary.model";
 import {ToastrService} from "ngx-toastr";
 
-
 /**
  * This component provides import/export buttons for the dictionary.
  */
@@ -105,6 +104,22 @@ export class DictionaryFsLoaderComponent {
     }
 
     return true;
+  }
+
+  /**
+   * Called when the user clicks the download button.
+   * Downloads the current dictionary as a JSON file.
+   */
+  handleDictionaryDownload(): void {
+    const dictionary = this.dictionaryService.getDictionary();
+    const dictionaryString = JSON.stringify(dictionary, null, 2);
+
+    const blob = new Blob([dictionaryString], {type: "application/json"})
+    const link = document.createElement('a');
+    link.href = window.URL.createObjectURL(blob);
+    link.download = "dictionary.json";
+    link.click();
+    URL.revokeObjectURL(link.href);
   }
 
   /**

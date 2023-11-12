@@ -1,8 +1,11 @@
 <div>
   <input type="file" id="file-input" accept="application/json" (change)="handleFileUpload($event)" #fileUpload>
-  <button mat-stroked-button (click)="fileUpload.click()" [style.color]="getBackgroundColor()">
-    Dictionary upload
+  <button mat-stroked-button (click)="fileUpload.click()" [style.color]="getBackgroundColor()"
+          class="fs-button-spacing">
+    Dictionary Hochladen
   </button>
 
-  <button mat-stroked-button [style.color]="getBackgroundColor()">Dictionary download</button>
+  <button mat-stroked-button (click)="handleDictionaryDownload()" [style.color]="getBackgroundColor()">
+    Dictionary Speichern
+  </button>
 </div>

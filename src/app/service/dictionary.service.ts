@@ -12,6 +12,7 @@ import {additional_vocab} from "../data/dictionary/additionalVocab.model";
 })
 export class DictionaryService {
   public dictionaryUpdated: Subject<dictionary> = new Subject<dictionary>();
+  public currentDictionary: dictionary;
 
   /**
    * Initializes the dictionary with default values.
@@ -19,6 +20,7 @@ export class DictionaryService {
   constructor() {
     const defaultDictionary = this.generateDefaultDictionary();
 
+    this.currentDictionary = defaultDictionary;
     this.dictionaryUpdated.next(defaultDictionary);
   }
 
@@ -38,6 +40,15 @@ export class DictionaryService {
    * @param dictionary New dictionary
    */
   public updateDictionary(dictionary: dictionary): void {
+    this.currentDictionary = dictionary;
     this.dictionaryUpdated.next(dictionary);
+  }
+
+  /**
+   * Returns the current dictionary.
+   * Used for dictionary export to filesystem.
+   */
+  public getDictionary(): dictionary {
+    return this.currentDictionary;
   }
 }
