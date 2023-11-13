@@ -7,8 +7,7 @@
     display: flex;
     flex-direction: column;
 
-    min-width: auto;
-    max-width: 50%;
+    min-width: 80%;
 }
 
 
@@ -55,6 +54,13 @@ header {
 }
 
 
+.table-action {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+
+}
 
 .add-button {
     background-color: var(--keybindings-background-color);
@@ -64,19 +70,13 @@ header {
     border: none;
     color: white;
 
-    margin-left: 30%;
-    margin-right: 30%;
+    align-self: flex-start;
+    justify-self: center;
+    flex: auto;
+    margin-right: auto;
 
     //evtl noch zu variable machen?
     font-size: 24px;
-}
-
-.sort {
-    display: flex;
-    flex-direction: row;
-    align-items: end;
-    justify-content: end;
-
 }
 
 .sort-button {
@@ -85,8 +85,6 @@ header {
     cursor: pointer;
     border: none;
     color: white;
-
-    //margin-left: auto;
 
     //evtl noch zu variable machen?
     font-size: 24px;
@@ -105,4 +103,36 @@ header {
     background: var(--container-background-color);
     width: 30px;
     margin-top: 2.2px;
+}
+
+.interact {
+    display: flex;
+    flex-direction: row;
+    align-items: start;
+    justify-content: start;
+}
+
+.text {
+    align-self: center;
+    justify-content: center;
+
+    //evtl noch zu variable machen?
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.continue-button {
+    align-self: flex-end;
+    justify-content: flex-end;
+
+    font-size: 30px;
+    font-weight: 500;
+
+    border-radius: 10px;
+    padding: 5px 10px;
+    cursor: pointer;
+    border: none;
+    color: white;
+
+    background-color: var(--color-main-blue);
 }

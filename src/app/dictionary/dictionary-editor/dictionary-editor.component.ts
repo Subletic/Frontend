@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
 import { additional_vocab } from 'src/app/data/dictionary/additionalVocab.model';
 import { DictionaryRowComponent } from '../dictionary-row/dictionary-row.component';
 import { dictionary } from 'src/app/data/dictionary/dictionary.model';
@@ -11,6 +11,7 @@ import { dictionary } from 'src/app/data/dictionary/dictionary.model';
 export class DictionaryEditorComponent {
 
     dictionary: dictionary;
+    @Output() continueToEditorEvent = new EventEmitter<void>();
 
     constructor() {
 
@@ -51,6 +52,11 @@ export class DictionaryEditorComponent {
     //Should call help window later
     callHelp(): void {
 
+    }
+
+    continueToEditor(): void {
+        // Methode, die aufgerufen wird, wenn der "Weiter zum Livestream-Editor" Button geklickt wird
+        this.continueToEditorEvent.emit();
     }
 
 }

@@ -8,3 +8,12 @@ app-sound-box {
     left: 0;
     right: 0;
 }
+
+.dictionaryWrapper {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+
+}

@@ -16,9 +16,9 @@
 </div>
 
 
-<button class="add-button" (click)="addRow()">Zeile hinzufügen</button>
+<div class="table-action">
+    <button class="add-button" (click)="addRow()">Zeile hinzufügen</button>
 
-<div class="sort">
     <button class="sort-button" (click)="sortAlphabetically()">
         <img src="assets/A-Z.svg" alt="Button Image" class="sort-button-image">
     </button>
@@ -27,6 +27,31 @@
         <img src="assets/Z-A.svg" alt="Button Image" class="sort-button-image">
     </button>
 </div>
+
+
+
+<div class="interact">
+
+    <div class="text">
+        Datei importieren
+    </div>
+
+    <button class="sort-button" (click)="sortAlphabetically()">
+        <img src="assets/import.svg" alt="Button Image" class="sort-button-image">
+    </button>
+
+    <div class="text">
+        Datei exportieren
+    </div>
+
+    <button class="sort-button" (click)="sortAlphabetically()">
+        <img src="assets/export.svg" alt="Button Image" class="sort-button-image">
+    </button>
+</div>
+
+
+
+<button class="continue-button" (click)="continueToEditor()">Weiter zum Livestream-Editor</button>
 
 <!-- Testzwecke -->
 <button (click)="outputData()">Output Data</button>
