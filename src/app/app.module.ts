@@ -20,6 +20,8 @@ import { SliderPopupComponent } from './sound-box/slider-popup/slider-popup.comp
 import { SpeedPopupComponent } from './sound-box/speed-popup/speed-popup.component';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatDividerModule } from '@angular/material/divider';
+import { DictionaryFsLoaderComponent } from './settings/dictionary-fs-loader/dictionary-fs-loader.component';
+import {ToastrModule} from "ngx-toastr";
 
 
 @NgModule({
@@ -31,7 +33,8 @@ import { MatDividerModule } from '@angular/material/divider';
     AudioHandlerComponent,
     SettingsComponent,
     SliderPopupComponent,
-    SpeedPopupComponent
+    SpeedPopupComponent,
+    DictionaryFsLoaderComponent
   ],
   imports: [
     BrowserModule,
@@ -43,7 +46,8 @@ import { MatDividerModule } from '@angular/material/divider';
     MatSliderModule,
     BrowserAnimationsModule,
     MatTabsModule,
-    MatDividerModule
+    MatDividerModule,
+    ToastrModule.forRoot(),
   ],
   providers: [],
   bootstrap: [AppComponent]

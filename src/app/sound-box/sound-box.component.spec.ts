@@ -13,6 +13,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SettingsService } from '../settings/settings.service';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatDividerModule } from '@angular/material/divider';
+import {DictionaryFsLoaderComponent} from "../settings/dictionary-fs-loader/dictionary-fs-loader.component";
+import {ToastrService} from "ngx-toastr";
 
 describe('SoundBoxComponent', () => {
   let component: SoundBoxComponent;
@@ -21,7 +23,8 @@ describe('SoundBoxComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [RouterTestingModule, MatIconModule, MatFormFieldModule, FormsModule, MatInputModule, BrowserAnimationsModule, MatTabsModule, MatDividerModule],
-      declarations: [SoundBoxComponent, AudioHandlerComponent, SliderPopupComponent, SettingsComponent]
+      declarations: [SoundBoxComponent, AudioHandlerComponent, SliderPopupComponent, SettingsComponent, DictionaryFsLoaderComponent],
+      providers: [{provide: ToastrService, useValue: ToastrService}]
     }).compileComponents();
   });
 
