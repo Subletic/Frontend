@@ -55,17 +55,24 @@
 }
 
 .delete-button {
-    background-color: var(--color-main-blue);
+    background-color: var(--color-grey);
     color: white;
     border: none;
     border-radius: 50%;
     padding: 5px 10px;
     cursor: pointer;
 
-    margin-right: 10px;
+    margin-left: 10px;
 
     //evtl noch zu variable machen?
     font-size: 20px;
     font-weight: 600;
 
+    &:hover {
+        background-color: var(--color-grey-hoverover);
+    }
+
+    &:active {
+        background-color: var(--color-grey-onclick);
+    }
 }
