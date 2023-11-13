@@ -3,7 +3,7 @@
         <ng-content></ng-content>
         <div class="top-of-div">
             <h1>Einstellungen</h1>
-            <button mat-icon-button style="float: right;" (click)="close();">
+            <button mat-icon-button style="float: right;" (click)="cancel();">
                 <mat-icon>close</mat-icon>
             </button>
         </div>
@@ -85,6 +85,49 @@
                     <div class="row">
                         <div class="action">Löschen</div>
                         <div class="key">Del</div>
+                    </div>
+                </div>
+            </mat-tab>
+
+            <mat-tab label="Fußschalter">
+                <div class="keybinding-container">
+
+                    <img src="assets/footswitch.svg" alt="Foot Switch Image" class="button-image-4" draggable="false"
+                        #footSwitchImage>
+
+                    <mat-divider></mat-divider>
+
+                    <p>Tasten</p>
+                    <div class="row">
+                        <div class="action">REW</div>
+                        <div class="describ">rewind (Zurückspulen)</div>
+                    </div>
+                    <div class="row">
+                        <div class="action">FFWD</div>
+                        <div class="describ">fastforward (Vorspulen)</div>
+                    </div>
+                    <div class="row">
+                        <div class="action">PLAY</div>
+                        <div class="describ">Abspielen / Pausieren</div>
+                    </div>
+
+                    <mat-divider></mat-divider>
+
+                    <p>Tastenkombinationen</p>
+                    <div class="row">
+                        <div class="action">Abspielen (Stopp nach Loslassen)</div>
+                        <div class="key">PLAY</div>
+                        <div class="describ">(Halten)</div>
+                    </div>
+                    <div class="row">
+                        <div class="action">Vorspulen (Stopp nach Loslassen)</div>
+                        <div class="key">FFWD</div>
+                        <div class="describ">(Halten)</div>
+                    </div>
+                    <div class="row">
+                        <div class="action">Zurückspulen (Stopp nach Loslassen)</div>
+                        <div class="key">REW</div>
+                        <div class="describ">(Halten)</div>
                     </div>
                 </div>
             </mat-tab>
