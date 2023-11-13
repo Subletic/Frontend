@@ -1,0 +1,48 @@
+.word-column {
+    background-color: aquamarine;
+    border-radius: 10px;
+    padding: 10px;
+    margin-right: 10px;
+}
+
+.sounds-like-column {
+    background-color: violet;
+    border-radius: 10px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    max-width: 90%;
+}
+
+
+
+.row-container {
+    background-color: #ffffff;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 10px;
+
+
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+
+    //min-width: 30%;
+    //max-width: 90%;
+}
+
+.word-column,
+.sounds-like-column {
+    //direction: ltr;
+    padding: 10px;
+}
+
+
+
+
+.column-container {
+    flex: 1;
+    /* Gleichmäßige Aufteilung der Breite zwischen den beiden Spalten */
+}
