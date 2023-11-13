@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
-import {DictionaryService} from "../service/dictionary.service";
-import {dictionary} from "../data/dictionary/dictionary.model";
+import {DictionaryService} from "../../service/dictionary.service";
+import {dictionary} from "../../data/dictionary/dictionary.model";
 import {ToastrService} from "ngx-toastr";
 
 /**

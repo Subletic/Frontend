@@ -89,7 +89,7 @@ export class SettingsComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   /**
-   * Sets up the slider so it has a colored bar from left to the thumb 
+   * Sets up the slider so it has a colored bar from left to the thumb
    */
   setupSlider(): void {
     const MIN_SKIP_SECONDS = '1';
@@ -109,7 +109,7 @@ export class SettingsComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   /** Calls reload request to backend, then reloads webpage after 2 seconds
-   * 
+   *
    */
   callBackendReload(): void {
     const MILLISECONDS_BEFORE_RELOADING_PAGE = 2000;

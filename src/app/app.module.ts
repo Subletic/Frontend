@@ -20,7 +20,7 @@ import { SliderPopupComponent } from './sound-box/slider-popup/slider-popup.comp
 import { SpeedPopupComponent } from './sound-box/speed-popup/speed-popup.component';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatDividerModule } from '@angular/material/divider';
-import { DictionaryFsLoaderComponent } from './dictionary-fs-loader/dictionary-fs-loader.component';
+import { DictionaryFsLoaderComponent } from './settings/dictionary-fs-loader/dictionary-fs-loader.component';
 import {ToastrModule} from "ngx-toastr";
 
 
