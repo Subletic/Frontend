@@ -1,3 +1,14 @@
+<header>
+    <div class="title">
+
+        Dictionary Editor
+
+    </div>
+    <button class="help" (click)="callHelp()">
+        ?
+    </button>
+</header>
+
 <div class="table">
     <div *ngFor="let vocab of dictionary.transcription_config.additional_vocab">
         <app-dictionary-row [rowData]="vocab" (deleteRow)="onDeleteRow(vocab)"></app-dictionary-row>
@@ -5,8 +16,17 @@
 </div>
 
 
-<button class="add-button" (click)="addRow()">Add Row</button>
+<button class="add-button" (click)="addRow()">Zeile hinzufügen</button>
 
+<div class="sort">
+    <button class="sort-button" (click)="sortAlphabetically()">
+        <img src="assets/A-Z.svg" alt="Button Image" class="sort-button-image">
+    </button>
+
+    <button class="sort-button" (click)="sortReverseAlphabetically()">
+        <img src="assets/Z-A.svg" alt="Button Image" class="sort-button-image">
+    </button>
+</div>
 
 <!-- Testzwecke -->
 <button (click)="outputData()">Output Data</button>

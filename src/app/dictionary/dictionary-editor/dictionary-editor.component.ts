@@ -14,15 +14,13 @@ export class DictionaryEditorComponent {
 
     constructor() {
 
-        this.dictionary = {
-            transcription_config: {
-                language: 'en',
-                additional_vocab: [
-                    { content: 'gnocchi', sounds_like: ['nyohki', 'nokey', 'nochi'] },
-                    { content: 'CEO', sounds_like: ['C.E.O.'] }
-                ]
-            }
-        };
+        this.dictionary = new dictionary({
+            language: 'en',
+            additional_vocab: [
+                { content: 'gnocchi', sounds_like: ['nyohki', 'nokey', 'nochi'] },
+                { content: 'CEO', sounds_like: ['C.E.O.'] }
+            ]
+        });
     }
 
     addRow(): void {
@@ -37,10 +35,22 @@ export class DictionaryEditorComponent {
         }
     }
 
+    sortAlphabetically(): void {
+        this.dictionary.sortAlphabetically();
+    }
+
+    sortReverseAlphabetically(): void {
+        this.dictionary.sortReverseAlphabetically();
+    }
+
     //Testzwecke
     outputData(): void {
         console.log(JSON.stringify(this.dictionary));
     }
 
+    //Should call help window later
+    callHelp(): void {
+
+    }
 
 }
