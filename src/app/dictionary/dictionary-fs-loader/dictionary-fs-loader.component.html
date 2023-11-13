@@ -1,0 +1,18 @@
+<div class="interact">
+  <div class="text">
+    Datei importieren
+  </div>
+
+  <input type="file" id="file-input" accept="application/json" (change)="handleFileUpload($event)" #fileUpload>
+  <button class="sort-button" (click)="fileUpload.click()">
+    <img ngSrc="assets/import.svg" alt="Import Symbol" class="sort-button-image" height="16" width="16">
+  </button>
+
+  <div class="text">
+    Datei exportieren
+  </div>
+
+  <button class="sort-button" (click)="handleDictionaryDownload()">
+    <img ngSrc="assets/export.svg" alt="Export Symbol" class="sort-button-image" height="16" width="16">
+  </button>
+</div>

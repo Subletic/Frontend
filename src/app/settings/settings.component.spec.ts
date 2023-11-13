@@ -8,8 +8,6 @@ import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatDividerModule } from '@angular/material/divider';
-import {DictionaryFsLoaderComponent} from "./dictionary-fs-loader/dictionary-fs-loader.component";
-import {ToastrService} from "ngx-toastr";
 
 
 describe('SettingsComponent', () => {
@@ -18,9 +16,8 @@ describe('SettingsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [SettingsComponent, DictionaryFsLoaderComponent],
+      declarations: [SettingsComponent],
       imports: [MatIconModule, MatFormFieldModule, FormsModule, MatInputModule, BrowserAnimationsModule, MatTabsModule, MatDividerModule],
-      providers: [{provide: ToastrService, useValue: ToastrService}]
     }).compileComponents();
   });
 

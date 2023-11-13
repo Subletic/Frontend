@@ -29,26 +29,7 @@
         </button>
     </div>
 
-
-
-    <div class="interact">
-
-        <div class="text">
-            Datei importieren
-        </div>
-
-        <button class="sort-button" (click)="sortAlphabetically()">
-            <img src="assets/import.svg" alt="Button Image" class="sort-button-image">
-        </button>
-
-        <div class="text">
-            Datei exportieren
-        </div>
-
-        <button class="sort-button" (click)="sortAlphabetically()">
-            <img src="assets/export.svg" alt="Button Image" class="sort-button-image">
-        </button>
-    </div>
+    <app-dictionary-fs-loader></app-dictionary-fs-loader>
 
     <!-- Testzwecke -->
     <button (click)="outputData()">Output Data</button>
