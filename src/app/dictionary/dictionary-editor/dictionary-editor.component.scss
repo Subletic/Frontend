@@ -6,8 +6,6 @@
 
     display: flex;
     flex-direction: column;
-
-
 }
 
 .table {
@@ -25,11 +23,13 @@ header {
 
 .title {
     //evtl noch zu variable machen?
-    font-size: 30px;
+    font-size: 50px;
     font-weight: 500;
 
     margin-bottom: 10px;
-    margin-left: 5%;
+    //padding-left: 5%;
+
+    color: var(--color-main-blue);
 }
 
 .help {
@@ -45,41 +45,24 @@ header {
 
     margin-bottom: 1%;
     margin-left: 1%;
-
 }
 
+.sort {
 
-.table-action {
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: flex-end;
-
-}
-
-.add-button {
-    background-color: var(--keybindings-background-color);
-    border-radius: 10px;
-    padding: 5px 10px;
-    cursor: pointer;
-    border: none;
-    color: white;
-
-    align-self: flex-start;
-    justify-self: center;
-    flex: auto;
-    margin-right: auto;
-
-    //evtl noch zu variable machen?
-    font-size: 24px;
 }
 
 .sort-button {
-    background-color: var(--white);
+    background-color: transparent;
     border-radius: 10px;
     cursor: pointer;
     border: none;
     color: white;
+
+    padding-right: 3%;
 
     //evtl noch zu variable machen?
     font-size: 24px;
@@ -100,21 +83,30 @@ header {
     margin-top: 2.2px;
 }
 
-.interact {
+.table-action {
     display: flex;
     flex-direction: row;
-    align-items: start;
-    justify-content: start;
-}
-
-.text {
-    align-self: center;
+    align-items: center;
     justify-content: center;
 
-    //evtl noch zu variable machen?
-    font-size: 18px;
-    font-weight: 500;
 }
+
+.add-button {
+    background-color: var(--keybindings-background-color);
+    border-radius: 10px;
+    padding: 5px 10px;
+    cursor: pointer;
+    border: none;
+    color: white;
+
+
+    align-self: center;
+    width: 20%; // Du kannst die Breite nach Bedarf anpassen
+
+    //evtl noch zu variable machen?
+    font-size: 24px;
+}
+
 
 .continue-button {
 

@@ -1,4 +1,4 @@
-<div *ngIf="showDictionary; else mainContent">
+<div *ngIf="showDictionary; else mainContent" class="dictionaryWrapper">
     <app-dictionary-editor (continueToEditorEvent)="onContinueToEditor()"></app-dictionary-editor>
 </div>
 <ng-template #mainContent>

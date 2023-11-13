@@ -24,17 +24,17 @@
 
 
 .row-container {
-    background-color: #ffffff;
     border-radius: 10px;
     overflow: hidden;
     margin-bottom: 10px;
-
 
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
 
     align-items: center;
+
+    padding-left: 1.9%;
 
     //min-width: 30%;
     //max-width: 90%;

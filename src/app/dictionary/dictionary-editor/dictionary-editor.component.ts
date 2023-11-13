@@ -13,6 +13,8 @@ export class DictionaryEditorComponent {
     dictionary: dictionary;
     @Output() continueToEditorEvent = new EventEmitter<void>();
 
+    alphabeticBoolean: boolean;
+
     constructor() {
 
         this.dictionary = new dictionary({
@@ -22,6 +24,8 @@ export class DictionaryEditorComponent {
                 { content: 'CEO', sounds_like: ['C.E.O.'] }
             ]
         });
+
+        this.alphabeticBoolean = true;
     }
 
     addRow(): void {
@@ -36,8 +40,15 @@ export class DictionaryEditorComponent {
         }
     }
 
-    sortAlphabetically(): void {
-        this.dictionary.sortAlphabetically();
+    sortAlphabeticallyCall(): void {
+
+        if (this.alphabeticBoolean === true) {
+            this.dictionary.sortAlphabetically();
+            this.alphabeticBoolean = false;
+        } else {
+            this.dictionary.sortReverseAlphabetically();
+            this.alphabeticBoolean = true;
+        }
     }
 
     sortReverseAlphabetically(): void {
