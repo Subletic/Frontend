@@ -3,6 +3,10 @@
     border-radius: 10px;
     padding: 10px;
     margin-right: 10px;
+
+
+    //evtl noch zu variable machen?
+    font-size: 24px;
 }
 
 .sounds-like-column {
@@ -14,6 +18,9 @@
     align-items: flex-start;
 
     max-width: 90%;
+
+    //evtl noch zu variable machen?
+    font-size: 24px;
 }
 
 
@@ -45,4 +52,21 @@
 .column-container {
     flex: 1;
     /* Gleichmäßige Aufteilung der Breite zwischen den beiden Spalten */
+}
+
+
+
+
+
+.delete-button {
+    background-color: var(--color-main-blue);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    padding: 5px 10px;
+    cursor: pointer;
+
+    //evtl noch zu variable machen?
+    font-size: 24px;
+    font-weight: 600;
 }

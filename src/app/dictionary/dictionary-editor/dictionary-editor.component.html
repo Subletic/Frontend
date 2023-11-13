@@ -1,5 +1,12 @@
-<div *ngFor="let vocab of dictionary.transcription_config.additional_vocab">
-    <app-dictionary-row [rowData]="vocab"></app-dictionary-row>
+<div class="table">
+    <div *ngFor="let vocab of dictionary.transcription_config.additional_vocab">
+        <app-dictionary-row [rowData]="vocab" (deleteRow)="onDeleteRow(vocab)"></app-dictionary-row>
+    </div>
 </div>
 
-<button (click)="addRow()" class="add-row-button">Neue Zeile</button>
+
+<button class="add-button" (click)="addRow()">Add Row</button>
+
+
+<!-- Testzwecke -->
+<button (click)="outputData()">Output Data</button>

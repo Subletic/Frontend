@@ -1,4 +1,7 @@
 <div class="row-container">
+    <div>
+        <button class="delete-button" (click)="onDeleteRow()">X</button>
+    </div>
     <div class="column-container">
         <div class="word-column" contenteditable="true" (input)="onContentChange('content', $event)">
             {{ content_copy }}

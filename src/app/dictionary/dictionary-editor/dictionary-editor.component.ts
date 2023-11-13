@@ -26,7 +26,20 @@ export class DictionaryEditorComponent {
     }
 
     addRow(): void {
-        this.dictionary.transcription_config.additional_vocab.push({ content: 'a', sounds_like: ['a', 'ä'] });
+        this.dictionary.transcription_config.additional_vocab.push({ content: '', sounds_like: [''] });
+    }
+
+
+    onDeleteRow(row: additional_vocab): void {
+        const index = this.dictionary.transcription_config.additional_vocab.indexOf(row);
+        if (index !== -1) {
+            this.dictionary.transcription_config.additional_vocab.splice(index, 1);
+        }
+    }
+
+    //Testzwecke
+    outputData(): void {
+        console.log(JSON.stringify(this.dictionary));
     }
 
 

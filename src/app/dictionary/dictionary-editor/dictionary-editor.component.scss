@@ -3,5 +3,29 @@
     margin: 50px;
     padding: 20px;
     border-radius: 15px;
-    display: inline-block;
+
+    display: flex;
+    flex-direction: column;
+
+    min-width: auto;
+    max-width: 90%;
+}
+
+.table {
+    background-color: cadetblue;
+
+}
+
+
+.add-button {
+    background-color: aquamarine;
+    border-radius: 10px;
+    padding: 5px 10px;
+    margin-right: 10px;
+    cursor: pointer;
+    border: none;
+    color: white;
+
+    //evtl noch zu variable machen?
+    font-size: 24px;
 }
