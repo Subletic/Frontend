@@ -4,6 +4,7 @@ import {dictionary} from "../../data/dictionary/dictionary.model";
 import {ToastrService} from "ngx-toastr";
 
 /**
+ * Dictionary Filesystem Loader Component
  * This component provides import/export buttons for the dictionary.
  */
 @Component({
@@ -18,30 +19,30 @@ export class DictionaryFsLoaderComponent {
    * @param dictionaryService Service to manage the dictionary
    * @param toastr Service to display toasts
    */
-  constructor(private dictionaryService: DictionaryService, private toastr: ToastrService) {
+  public constructor(private dictionaryService: DictionaryService, private toastr: ToastrService) {
   }
 
   /**
    * Called when the user uploads a file.
    * @param event JSON file uploading event
    */
-  async handleFileUpload(event: Event): Promise<void> {
-    const input = event.target as HTMLInputElement;
+  public async handleFileUpload(event: Event): Promise<void> {
+    const INPUT = event.target as HTMLInputElement;
 
-    if (input.files == null) {
+    if (INPUT.files == null) {
       this.displayDictionaryErrorToast();
       return;
     }
 
-    const file: File = input.files[0];
-    const dictionary = await this.loadDictionaryFromFile(file)
+    const file: File = INPUT.files[0];
+    const DICTIONARY = await this.loadDictionaryFromFile(file)
 
-    if (dictionary == null) {
+    if (DICTIONARY == null) {
       this.displayDictionaryErrorToast();
       return;
     }
 
-    this.dictionaryService.updateDictionary(dictionary);
+    this.dictionaryService.updateDictionary(DICTIONARY);
   }
 
   /**
@@ -51,21 +52,16 @@ export class DictionaryFsLoaderComponent {
    */
   private loadDictionaryFromFile(file: File): Promise<dictionary | null> {
     const fileReader = new FileReader();
-
     fileReader.readAsText(file, "UTF-8");
-
     return new Promise((resolve) => {
       fileReader.onload = () => {
         try {
           const dictionary = JSON.parse(fileReader.result as string);
-
           const dictionaryValid: boolean = this.validateDictionary(dictionary);
-
           if (dictionary == null || !dictionaryValid) {
             resolve(null);
             return;
           }
-
           this.displayDictionarySuccessToast();
           resolve(dictionary);
         } catch (e) {
@@ -86,20 +82,14 @@ export class DictionaryFsLoaderComponent {
    */
   private validateDictionary(dictionary: dictionary): boolean {
     // Check if language is provided
-    if (!dictionary.transcription_config.language) {
-      return false;
-    }
+    if (!dictionary.transcription_config.language) return false;
 
     // Check if additional vocab is valid
-    const additionalVocab = dictionary.transcription_config.additional_vocab;
-    if (additionalVocab != null) {
-      for (let i = 0; i < additionalVocab.length; i++) {
-        if (additionalVocab[i].content == null) {
-          return false;
-        }
-      }
-    } else {
-      return false;
+    const ADDITIONAL_VOCAB = dictionary.transcription_config.additional_vocab;
+    if (!ADDITIONAL_VOCAB) return false;
+
+    for (let i = 0; i < ADDITIONAL_VOCAB.length; i++) {
+      if (ADDITIONAL_VOCAB[i].content == null) return false
     }
 
     return true;
@@ -109,13 +99,13 @@ export class DictionaryFsLoaderComponent {
    * Called when the user clicks the download button.
    * Downloads the current dictionary as a JSON file.
    */
-  handleDictionaryDownload(): void {
-    const dictionary = this.dictionaryService.getDictionary();
-    const dictionaryString = JSON.stringify(dictionary, null, 2);
+  public handleDictionaryDownload(): void {
+    const DICTIONARY = this.dictionaryService.getDictionary();
+    const DICTIONARY_STRING = JSON.stringify(DICTIONARY, null, 2);
 
-    const blob = new Blob([dictionaryString], {type: "application/json"})
+    const BLOB = new Blob([DICTIONARY_STRING], {type: "application/json"})
     const link = document.createElement('a');
-    link.href = window.URL.createObjectURL(blob);
+    link.href = window.URL.createObjectURL(BLOB);
     link.download = "dictionary.json";
     link.click();
     URL.revokeObjectURL(link.href);
@@ -125,7 +115,7 @@ export class DictionaryFsLoaderComponent {
    * Displays an error toast when the user uploads an invalid file.
    * @private
    */
-  displayDictionarySuccessToast(): void {
+  public displayDictionarySuccessToast(): void {
     try {
       this.toastr.success("Dictionary wurde erfolgreich geladen!");
     } catch (e) {
@@ -137,7 +127,7 @@ export class DictionaryFsLoaderComponent {
    * Displays an error toast when the user uploads an invalid file.
    * @private
    */
-  displayDictionaryErrorToast(): void {
+  public displayDictionaryErrorToast(): void {
     try {
       this.toastr.error("Ungültige Datei!", "Fehler")
     } catch (e) {
@@ -149,7 +139,7 @@ export class DictionaryFsLoaderComponent {
    * Returns the background color of the application.
    * Used for Button styling.
    */
-  getBackgroundColor(): string {
+  public getBackgroundColor(): string {
     return getComputedStyle(document.documentElement).getPropertyValue('--color-main-blue');
   }
 }
