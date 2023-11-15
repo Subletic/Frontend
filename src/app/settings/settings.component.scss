@@ -164,4 +164,16 @@ h1 {
     padding: 10px;
     border-radius: 15%;
     background-color: var(--keybindings-background-color);
+    max-height: 15px;
+}
+
+.describ {
+    display: flex;
+    margin: 5px;
+    align-items: center;
+}
+
+.footSwitchImage {
+    width: 35px;
+    margin-top: 8px;
 }
