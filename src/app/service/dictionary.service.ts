@@ -49,13 +49,14 @@ export class DictionaryService {
    * Posts updated dictionary to backend.
    */
   public postDictionaryToBackend(): void {
-    fetch(environment.apiURL + "/api/CustomDictionary/upload-custom-dictionary", {
+    fetch(environment.apiURL + "/api/CustomDictionary/upload", {
       method: "POST",
       body: JSON.stringify(this.currentDictionary),
       headers: {
         'Content-Type': 'application/json'
       },
       }).then((response) => {
+        console.log(response)
         if (response.ok) return;
         console.error("Error while uploading dictionary to backend.")
     })
