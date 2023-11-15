@@ -20,8 +20,12 @@ import { SliderPopupComponent } from './sound-box/slider-popup/slider-popup.comp
 import { SpeedPopupComponent } from './sound-box/speed-popup/speed-popup.component';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatDividerModule } from '@angular/material/divider';
-import { DictionaryFsLoaderComponent } from './settings/dictionary-fs-loader/dictionary-fs-loader.component';
-import {ToastrModule} from "ngx-toastr";
+import { DictionaryFsLoaderComponent } from './dictionary/dictionary-fs-loader/dictionary-fs-loader.component';
+import { ToastrModule } from "ngx-toastr";
+
+import { DictionaryEditorComponent } from './dictionary/dictionary-editor/dictionary-editor.component';
+import { DictionaryRowComponent } from './dictionary/dictionary-row/dictionary-row.component';
+import {NgOptimizedImage} from "@angular/common";
 
 
 @NgModule({
@@ -34,6 +38,8 @@ import {ToastrModule} from "ngx-toastr";
     SettingsComponent,
     SliderPopupComponent,
     SpeedPopupComponent,
+    DictionaryEditorComponent,
+    DictionaryRowComponent,
     DictionaryFsLoaderComponent
   ],
   imports: [
@@ -48,6 +54,7 @@ import {ToastrModule} from "ngx-toastr";
     MatTabsModule,
     MatDividerModule,
     ToastrModule.forRoot(),
+    NgOptimizedImage,
   ],
   providers: [],
   bootstrap: [AppComponent]
