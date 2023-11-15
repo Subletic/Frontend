@@ -12,7 +12,6 @@
     background-color: transparent;
 }
 
-
 header {
     display: flex;
     flex-direction: row;
@@ -22,18 +21,15 @@ header {
 }
 
 .title {
-    //evtl noch zu variable machen?
-    font-size: 50px;
+    font-size: var(--font-size-dictionary-header-text);
     font-weight: 500;
 
     margin-bottom: 10px;
-    //padding-left: 5%;
 
     color: var(--color-main-blue);
 }
 
 .help {
-
     background-color: rgba(var(--rgb-color-grey), 0.3);
     color: white;
     border: none;
@@ -48,7 +44,6 @@ header {
 }
 
 .sort {
-
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -64,8 +59,7 @@ header {
 
     padding-right: 3%;
 
-    //evtl noch zu variable machen?
-    font-size: 24px;
+    font-size: var(--font-size-dictionary-normal-text);
 }
 
 .sort-button-image {
@@ -99,12 +93,10 @@ header {
     border: none;
     color: white;
 
-
     align-self: center;
-    width: 20%; // Du kannst die Breite nach Bedarf anpassen
+    width: 20%;
 
-    //evtl noch zu variable machen?
-    font-size: 24px;
+    font-size: var(--font-size-dictionary-normal-text);
 }
 
 

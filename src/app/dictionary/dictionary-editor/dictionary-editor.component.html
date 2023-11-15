@@ -1,9 +1,7 @@
 <div class="editor">
     <header>
         <div class="title">
-
             Dictionary Editor
-
         </div>
         <button class="help" (click)="callHelp()">
             ?
@@ -21,18 +19,14 @@
 
     <div class="table">
         <div *ngFor="let vocab of dictionary.transcription_config.additional_vocab">
-            <app-dictionary-row [rowData]="vocab" (deleteRow)="onDeleteRow(vocab)"></app-dictionary-row>
+            <app-dictionary-row [rowData]="vocab" (deleteRow)="onDeleteRow(vocab)"
+                (changedRow)="onChangedRow()"></app-dictionary-row>
         </div>
     </div>
 
     <div class="table-action">
         <button class="add-button" (click)="addRow()">Zeile hinzufügen</button>
     </div>
-
-    <!-- Testzwecke -->
-    <button (click)="outputData()">Output Data</button>
 </div>
-
-
 
 <button class="continue-button" (click)="continueToEditor()">Weiter zum Livestream-Editor</button>

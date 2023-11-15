@@ -11,33 +11,26 @@ export class dictionary {
         this.transcription_config = transcription_config;
     }
 
+    /**
+     * Sorts the list from A-Z, comparing the content-attributes.
+     */
     sortAlphabetically(): void {
         this.transcription_config.additional_vocab.sort((a, b) => {
             const contentA = a.content.toLowerCase();
             const contentB = b.content.toLowerCase();
-
-            if (contentA < contentB) {
-                return -1;
-            }
-            if (contentA > contentB) {
-                return 1;
-            }
-            return 0;
+            return contentA.localeCompare(contentB);
         });
     }
 
+    /**
+     * Sorts the list from Z-A, comparing the content-attributes.
+     */
     sortReverseAlphabetically(): void {
         this.transcription_config.additional_vocab.sort((a, b) => {
             const contentA = a.content.toLowerCase();
             const contentB = b.content.toLowerCase();
-
-            if (contentA > contentB) {
-                return -1;
-            }
-            if (contentA < contentB) {
-                return 1;
-            }
-            return 0;
+            return contentB.localeCompare(contentA);
         });
     }
+
 }

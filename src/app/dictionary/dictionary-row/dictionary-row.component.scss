@@ -4,9 +4,7 @@
     padding: 10px;
     margin-right: 10px;
 
-
-    //evtl noch zu variable machen?
-    font-size: 24px;
+    font-size: var(--font-size-dictionary-normal-text);
 }
 
 .sounds-like-column {
@@ -17,11 +15,8 @@
     flex-direction: column;
     align-items: flex-start;
 
-    //evtl noch zu variable machen?
-    font-size: 24px;
+    font-size: var(--font-size-dictionary-normal-text);
 }
-
-
 
 .row-container {
     border-radius: 10px;
@@ -36,22 +31,15 @@
 
     padding-left: 1.9%;
 
-    //min-width: 30%;
-    //max-width: 90%;
 }
 
 .word-column,
 .sounds-like-column {
-    //direction: ltr;
     padding: 10px;
 }
 
-
-
-
 .column-container {
     flex: 1;
-    /* Gleichmäßige Aufteilung der Breite zwischen den beiden Spalten */
 }
 
 .delete-button {
@@ -64,8 +52,7 @@
 
     margin-left: 10px;
 
-    //evtl noch zu variable machen?
-    font-size: 20px;
+    font-size: var(--font-size-dictionary-delete-button-text);
     font-weight: 600;
 
     &:hover {
