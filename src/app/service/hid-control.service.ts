@@ -29,10 +29,11 @@ export class HidControlService {
       usage: 0x01
     }
   ];
+  public isAudioPlaying = false;
 
   private playFunc: () => void = () => null;
+  private forFunc: () => void = () => null;
   private revFunc: () => void = () => null;
-  private skipFunc: () => void = () => null;
 
   /**
    * Initializes the dictionary with default values.
@@ -44,10 +45,10 @@ export class HidControlService {
     }
   }
 
-  public registerFunctions(playFunc: () => void, revFunc: () => void, skipFunc: () => void) {
+  public registerFunctions(playFunc: () => void, forFunc: () => void, revFunc: () => void) {
     this.playFunc = playFunc;
+    this.forFunc = forFunc;
     this.revFunc = revFunc;
-    this.skipFunc = skipFunc;
   }
 
   private async findAllowedDevices(): Promise<HidDevice[]> {
@@ -103,7 +104,7 @@ export class HidControlService {
             2: "play",
             4: "rewind"
         };
-
+  
         console.log(`pedal says: ${value} (meaning: ${valueMeanings[value]}`);
         switch (value) {
           case 0:
@@ -111,7 +112,7 @@ export class HidControlService {
             this.playFunc();
             break;
           case 1:
-            this.skipFunc();
+            this.forFunc();
             break;
           case 4:
             this.revFunc();
@@ -124,3 +125,4 @@ export class HidControlService {
     });
   }
 }
+
