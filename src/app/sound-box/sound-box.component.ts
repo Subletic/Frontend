@@ -1,5 +1,6 @@
 import { Component, ViewChild, ElementRef, HostListener } from '@angular/core';
 import { AudioHandlerComponent } from '../audio-handler/audio-handler.component';
+import { HidControlService } from "../service/hid-control.service";
 import { SettingsService } from '../settings/settings.service';
 import { SettingsComponent } from '../settings/settings.component';
 import { SliderPopupComponent } from './slider-popup/slider-popup.component';
@@ -38,7 +39,7 @@ export class SoundBoxComponent {
   public isSpeedPopoverOpen = false;
   public speedValue = 1;
 
-  constructor(private settingsService: SettingsService) { }
+  constructor(private settingsService: SettingsService, private hidControlService: HidControlService) { }
 
   /**
    * Closes Popups if click outside of popup occurs.
@@ -86,7 +87,7 @@ export class SoundBoxComponent {
 
   /**
    * Resets for the shortcuts.
-   * 
+   *
    * @param event - Key event reset by user.
    */
   @HostListener('document:keyup', ['$event'])
