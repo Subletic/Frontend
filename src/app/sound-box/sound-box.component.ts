@@ -39,7 +39,14 @@ export class SoundBoxComponent {
   public isSpeedPopoverOpen = false;
   public speedValue = 1;
 
-  constructor(private settingsService: SettingsService, private hidControlService: HidControlService) { }
+  constructor(private settingsService: SettingsService, private hidControlService: HidControlService) {
+    hidControlService.registerFunctions(
+      () => { this.playButton(); },
+      () => { this.skipForwardButton(); },
+      () => { this.skipBackwardButton(); },
+    );
+    hidControlService.configureDevices();
+  }
 
   /**
    * Closes Popups if click outside of popup occurs.

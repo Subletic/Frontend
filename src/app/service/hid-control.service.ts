@@ -1,5 +1,4 @@
-import {Injectable, ViewChild} from '@angular/core';
-import {AudioHandlerComponent} from '../audio-handler/audio-handler.component';
+import {Injectable} from '@angular/core';
 
 interface HidDetails {
   vendorId: number;
@@ -21,8 +20,6 @@ interface HidDevice extends HidDetails {
 })
 export class HidControlService {
 
-  @ViewChild('audioHandler') audioHandler!: AudioHandlerComponent;
-
   private HID_DEVICES: HidDetails[] = [
     {
       // Grundig foot control (USB)
@@ -33,6 +30,10 @@ export class HidControlService {
     }
   ];
 
+  private playFunc: () => void = () => null;
+  private revFunc: () => void = () => null;
+  private skipFunc: () => void = () => null;
+
   /**
    * Initializes the dictionary with default values.
    */
@@ -41,7 +42,12 @@ export class HidControlService {
       console.error('WebHID is not supported in this browser.');
       return;
     }
-    this.configureDevices();
+  }
+
+  public registerFunctions(playFunc: () => void, revFunc: () => void, skipFunc: () => void) {
+    this.playFunc = playFunc;
+    this.revFunc = revFunc;
+    this.skipFunc = skipFunc;
   }
 
   private async findAllowedDevices(): Promise<HidDevice[]> {
@@ -53,7 +59,7 @@ export class HidControlService {
         && handlableDevice.productId === allowedDevice.productId) !== undefined);
   }
 
-  private async configureDevices() {
+  public async configureDevices() {
     const webhid = (navigator as any).hid;
 
     let allowedDevices: HidDevice[] = await this.findAllowedDevices();
@@ -99,6 +105,21 @@ export class HidControlService {
         };
 
         console.log(`pedal says: ${value} (meaning: ${valueMeanings[value]}`);
+        switch (value) {
+          case 0:
+          case 2:
+            this.playFunc();
+            break;
+          case 1:
+            this.skipFunc();
+            break;
+          case 4:
+            this.revFunc();
+            break;
+          default:
+            console.log("Don't know what to do in this state");
+            break;
+        }
       });
     });
   }
