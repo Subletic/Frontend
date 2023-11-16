@@ -3,6 +3,7 @@ import {Subject} from "rxjs";
 import {dictionary} from "../data/dictionary/dictionary.model";
 import {transcription_config} from "../data/dictionary/transcription_config.module";
 import {additional_vocab} from "../data/dictionary/additionalVocab.model";
+import {environment} from "../../environments/environment";
 
 /**
  * Service to provide the dictionary to the components.
@@ -42,6 +43,23 @@ export class DictionaryService {
   public updateDictionary(dictionary: dictionary): void {
     this.currentDictionary = dictionary;
     this.dictionaryUpdated.next(dictionary);
+  }
+
+  /**
+   * Posts updated dictionary to backend.
+   */
+  public postDictionaryToBackend(): void {
+    fetch(environment.apiURL + "/api/CustomDictionary/upload", {
+      method: "POST",
+      body: JSON.stringify(this.currentDictionary),
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      }).then((response) => {
+        console.log(response)
+        if (response.ok) return;
+        console.error("Error while uploading dictionary to backend.")
+    })
   }
 
   /**

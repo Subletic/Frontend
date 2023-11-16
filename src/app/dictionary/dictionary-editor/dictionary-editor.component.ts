@@ -47,7 +47,7 @@ export class DictionaryEditorComponent implements OnInit {
 
     /**
      * Deletes given row from the dictionary.
-     * 
+     *
      * @param row - Row to be deleted.
      */
     onDeleteRow(row: additional_vocab): void {
@@ -66,7 +66,7 @@ export class DictionaryEditorComponent implements OnInit {
     }
 
     /**
-     * Makes call to let the dictionary be sorted alphabetically or 
+     * Makes call to let the dictionary be sorted alphabetically or
      * reverse alphabetically, depending on its current state.
      */
     sortAlphabeticallyCall(): void {
@@ -93,6 +93,7 @@ export class DictionaryEditorComponent implements OnInit {
      * Emits the continue event to the app-component.
      */
     continueToEditor(): void {
+        this.dictionaryService.postDictionaryToBackend();
         this.continueToEditorEvent.emit();
     }
 
