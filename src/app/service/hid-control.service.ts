@@ -29,20 +29,25 @@ export class HidControlService {
       usage: 0x01
     }
   ];
-  public isAudioPlaying = false;
 
   private playFunc: () => void = () => null;
   private forFunc: () => void = () => null;
   private revFunc: () => void = () => null;
 
+  private lastState: number = 0;
+
   /**
    * Initializes the dictionary with default values.
    */
   constructor() {
-    if (!('hid' in navigator)) {
-      console.error('WebHID is not supported in this browser.');
+    if (!this.isSupportedWebHID()) {
+      console.error('WebHID is not supported in this browser, you cannot make use of external control devices.');
       return;
     }
+  }
+
+  private isSupportedWebHID(): boolean {
+    return ('hid' in navigator);
   }
 
   public registerFunctions(playFunc: () => void, forFunc: () => void, revFunc: () => void) {
@@ -61,6 +66,7 @@ export class HidControlService {
   }
 
   public async configureDevices() {
+    if (!this.isSupportedWebHID()) return;
     const webhid = (navigator as any).hid;
 
     let allowedDevices: HidDevice[] = await this.findAllowedDevices();
@@ -98,29 +104,64 @@ export class HidControlService {
         const { data } = event;
 
         const value: number = data.getUint8(0);
-        const valueMeanings: { [state: number]: string; } = {
-            0: "stop last action",
-            1: "fast-forward",
-            2: "play",
-            4: "rewind"
-        };
-  
-        console.log(`pedal says: ${value} (meaning: ${valueMeanings[value]}`);
+
+        // decypher button states for printing
+        let valueMeaning: string = "stop";
+        if (value > 0) {
+          valueMeaning = "";
+          let valueCopy: number = value;
+          do {
+            if (valueCopy >= 4) {
+              valueMeaning += "rewind";
+              valueCopy -= 4;
+            } else if (valueCopy >= 2) {
+              valueMeaning += "play";
+              valueCopy -= 2;
+            } else if (valueCopy >= 1) {
+              valueMeaning += "fast-forward";
+              valueCopy -= 1;
+            }
+
+            if (valueCopy > 0)
+              valueMeaning += " + ";
+          } while (valueCopy > 0);
+        }
+        console.log(`pedal says: ${value} (meaning: ${valueMeaning}`);
+
+        // decide what to do, based on current & last button states
         switch (value) {
+          // nothing pressed, stop
           case 0:
-          case 2:
-            this.playFunc();
+            if (this.lastState === 2)
+              this.playFunc();
             break;
+
+          // only play pressed
+          case 2:
+            if (this.lastState === 0)
+              this.playFunc();
+            break;
+
+          // fast-forward pressed, with or without play
           case 1:
+          case 3:
             this.forFunc();
             break;
+
+          // rewind pressed, with or without play
           case 4:
+          case 6:
             this.revFunc();
             break;
+
+          // anything else, no clue how to respond to it
           default:
             console.log("Don't know what to do in this state");
             break;
         }
+
+        // save this state for following calls
+        this.lastState = value;
       });
     });
   }
