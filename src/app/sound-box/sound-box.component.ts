@@ -40,12 +40,11 @@ export class SoundBoxComponent {
   public speedValue = 1;
 
   constructor(private settingsService: SettingsService, private hidControlService: HidControlService) {
-    hidControlService.registerFunctions(
+    hidControlService.configureDevices(
       () => { this.playButton(); },
       () => { this.skipForwardButton(); },
       () => { this.skipBackwardButton(); },
     );
-    hidControlService.configureDevices();
   }
 
   /**

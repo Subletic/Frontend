@@ -8,6 +8,7 @@ import {Injectable} from '@angular/core';
 })
 export class HidControlService {
 
+  // Devices we can handle
   private HID_DEVICES: HIDDeviceFilter[] = [
     {
       // Grundig foot control (USB)
@@ -18,14 +19,11 @@ export class HidControlService {
     }
   ];
 
-  private playFunc: () => void = () => null;
-  private forFunc: () => void = () => null;
-  private revFunc: () => void = () => null;
-
+  // The previous switch state, required for i.e. differenciating stop->play and play+ffwd->play
   private lastState = 0;
 
   /**
-   * Initializes the dictionary with default values.
+   * Does an initial check for WebHID support, issues one error at the start if WebHID is unsupported in this environment.
    */
   constructor() {
     if (!this.isSupportedWebHID()) {
@@ -34,55 +32,133 @@ export class HidControlService {
     }
   }
 
+  /**
+   * Check for WebHID support
+   */
   private isSupportedWebHID(): boolean {
     return ('hid' in navigator);
   }
 
-  public registerFunctions(playFunc: () => void, forFunc: () => void, revFunc: () => void) {
-    this.playFunc = playFunc;
-    this.forFunc = forFunc;
-    this.revFunc = revFunc;
-  }
-
+  /**
+   * Find devices we've previously been granted access to, and filter out devices we can't actually handle
+   */
   private async findAllowedDevices(): Promise<HIDDevice[]> {
-    const webhid = navigator.hid;
-    const allowedDevices: HIDDevice[] = await webhid.getDevices();
+    const allowedDevices: HIDDevice[] = await navigator.hid.getDevices();
     return allowedDevices.filter (allowedDevice =>
       this.HID_DEVICES.find (handlableDevice =>
         handlableDevice.vendorId === allowedDevice.vendorId
         && handlableDevice.productId === allowedDevice.productId) !== undefined);
   }
 
-  public async configureDevices() {
-    if (!this.isSupportedWebHID()) return;
-    const webhid = navigator.hid;
+  /**
+   * Check if there are devices we could handle, but don't yet have the permissions to,
+   * and request access to them
+   */
+  private async checkForDevices(): Promise<void> {
+    // get permitted devices we care about
+    const alreadyAllowedDevices: HIDDevice[] = await this.findAllowedDevices();
+    console.log(`We have been granted access to ${alreadyAllowedDevices.length} devices`);
 
-    let allowedDevices: HIDDevice[] = await this.findAllowedDevices();
+    // find out what devices we have yet to be granted permission to
+    const unhandledDevices: HIDDeviceFilter[] = this.HID_DEVICES.filter (potentialDevice =>
+      alreadyAllowedDevices.find (allowedDevice =>
+        potentialDevice.vendorId === allowedDevice.vendorId
+        && potentialDevice.productId === allowedDevice.productId) === undefined);
+    console.log(`Of those device(s), we don't yet have permissions to access ${unhandledDevices.length} of them`);
+    if (unhandledDevices.length === 0) return;
+
+    // try to request access to them
+    try {
+      await navigator.hid.requestDevice({
+        filters: unhandledDevices
+      });
+    } catch (e) {
+      console.error ("Unable to request device access");
+    }
+  }
+
+  /**
+   * Make a callback that will be run whenever an allowed & handlable device sends an input state
+   */
+  private makeCallbackDeviceInput(callbackPlay: () => void, callbackFastforward: () => void, callbackRewind: () => void): (ev: HIDInputReportEvent) => void {
+    return (event) => {
+      const { data } = event;
+
+      const value: number = data.getUint8(0);
+
+      // decypher button states for printing
+      let valueMeaning = "stop";
+      if (value > 0) {
+        valueMeaning = "";
+        let valueCopy: number = value;
+        do {
+          if (valueCopy >= 4) {
+            valueMeaning += "rewind";
+            valueCopy -= 4;
+          } else if (valueCopy >= 2) {
+            valueMeaning += "play";
+            valueCopy -= 2;
+          } else if (valueCopy >= 1) {
+            valueMeaning += "fast-forward";
+            valueCopy -= 1;
+          }
+
+          if (valueCopy > 0)
+            valueMeaning += " + ";
+        } while (valueCopy > 0);
+      }
+      console.log(`pedal says: ${value} (meaning: ${valueMeaning}`);
+
+      // decide what to do, based on current & last button states
+      switch (value) {
+        // nothing pressed, stop
+        case 0:
+          if (this.lastState === 2)
+            callbackPlay();
+          break;
+
+        // only play pressed
+        case 2:
+          if (this.lastState === 0)
+            callbackPlay();
+          break;
+
+        // fast-forward pressed, with or without play
+        case 1:
+        case 3:
+          callbackFastforward();
+          break;
+
+        // rewind pressed, with or without play
+        case 4:
+        case 6:
+          callbackRewind();
+          break;
+
+        // anything else, no clue how to respond to it
+        default:
+          console.log("Don't know what to do in this state");
+          break;
+      }
+
+      // save this state for following calls
+      this.lastState = value;
+    }
+  }
+
+  /**
+   * Find devices we can handle, request access to any new ones, and apply input callbacks
+   */
+  public async configureDevices(callbackPlay: () => void, callbackFastforward: () => void, callbackRewind: () => void) {
+    if (!this.isSupportedWebHID()) return;
+
+    await this.checkForDevices();
+
+    const allowedDevices: HIDDevice[] = await this.findAllowedDevices();
     console.log("Currently allowed devices:");
     console.log(allowedDevices);
 
-    const devicesNotYetAllowed: HIDDeviceFilter[] = this.HID_DEVICES.filter (handlableDevice =>
-      allowedDevices.find (allowedDevice =>
-        handlableDevice.vendorId === allowedDevice.vendorId
-        && handlableDevice.productId === allowedDevice.productId) === undefined);
-
-    if (devicesNotYetAllowed.length > 0) {
-      console.log("Devices we could additionally handle:");
-      console.log(devicesNotYetAllowed);
-
-      try {
-        await webhid.requestDevice({
-          filters:devicesNotYetAllowed
-        });
-      } catch (e) {
-        console.error ("Unable to request device access");
-      }
-
-      // get new list, in case more devices were allowed
-      allowedDevices = await this.findAllowedDevices();
-      console.log("Currently allowed devices:");
-      console.log(allowedDevices);
-    }
+    const inputCallback = this.makeCallbackDeviceInput (callbackPlay, callbackFastforward, callbackRewind);
 
     allowedDevices.forEach (async allowedDevice => {
       try {
@@ -92,69 +168,7 @@ export class HidControlService {
         return;
       }
 
-      allowedDevice.addEventListener("inputreport", (event) => {
-        const { data } = event;
-
-        const value: number = data.getUint8(0);
-
-        // decypher button states for printing
-        let valueMeaning = "stop";
-        if (value > 0) {
-          valueMeaning = "";
-          let valueCopy: number = value;
-          do {
-            if (valueCopy >= 4) {
-              valueMeaning += "rewind";
-              valueCopy -= 4;
-            } else if (valueCopy >= 2) {
-              valueMeaning += "play";
-              valueCopy -= 2;
-            } else if (valueCopy >= 1) {
-              valueMeaning += "fast-forward";
-              valueCopy -= 1;
-            }
-
-            if (valueCopy > 0)
-              valueMeaning += " + ";
-          } while (valueCopy > 0);
-        }
-        console.log(`pedal says: ${value} (meaning: ${valueMeaning}`);
-
-        // decide what to do, based on current & last button states
-        switch (value) {
-          // nothing pressed, stop
-          case 0:
-            if (this.lastState === 2)
-              this.playFunc();
-            break;
-
-          // only play pressed
-          case 2:
-            if (this.lastState === 0)
-              this.playFunc();
-            break;
-
-          // fast-forward pressed, with or without play
-          case 1:
-          case 3:
-            this.forFunc();
-            break;
-
-          // rewind pressed, with or without play
-          case 4:
-          case 6:
-            this.revFunc();
-            break;
-
-          // anything else, no clue how to respond to it
-          default:
-            console.log("Don't know what to do in this state");
-            break;
-        }
-
-        // save this state for following calls
-        this.lastState = value;
-      });
+      allowedDevice.addEventListener("inputreport", inputCallback);
     });
   }
 }
