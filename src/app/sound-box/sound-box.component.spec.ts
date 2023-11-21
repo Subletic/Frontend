@@ -13,6 +13,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SettingsService } from '../settings/settings.service';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatDividerModule } from '@angular/material/divider';
+import {DictionaryFsLoaderComponent} from "../dictionary/dictionary-fs-loader/dictionary-fs-loader.component";
+import {ToastrService} from "ngx-toastr";
+import { HidControlService } from '../service/hid-control.service';
 
 describe('SoundBoxComponent', () => {
   let component: SoundBoxComponent;
@@ -21,7 +24,8 @@ describe('SoundBoxComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [RouterTestingModule, MatIconModule, MatFormFieldModule, FormsModule, MatInputModule, BrowserAnimationsModule, MatTabsModule, MatDividerModule],
-      declarations: [SoundBoxComponent, AudioHandlerComponent, SliderPopupComponent, SettingsComponent]
+      declarations: [SoundBoxComponent, AudioHandlerComponent, SliderPopupComponent, SettingsComponent, DictionaryFsLoaderComponent],
+      providers: [{provide: ToastrService, useValue: ToastrService}]
     }).compileComponents();
   });
 
@@ -122,7 +126,8 @@ describe('SoundBoxComponent', () => {
 
   it('should close the speed popover', () => {
     const SETTINGS_SERVICE = new SettingsService();
-    const component = new SoundBoxComponent(SETTINGS_SERVICE);
+    const HID_DEVICES_SERVICE = new HidControlService();
+    const component = new SoundBoxComponent(SETTINGS_SERVICE, HID_DEVICES_SERVICE);
     component.isSpeedPopoverOpen = true;
 
     component.closePopoverSpeed();
@@ -132,7 +137,8 @@ describe('SoundBoxComponent', () => {
 
   it('should toggle the speed popover', () => {
     const SETTINGS_SERVICE = new SettingsService();
-    const component = new SoundBoxComponent(SETTINGS_SERVICE);
+    const HID_DEVICES_SERVICE = new HidControlService();
+    const component = new SoundBoxComponent(SETTINGS_SERVICE, HID_DEVICES_SERVICE);
     component.isSpeedPopoverOpen = false;
 
     component.switchSpeedPopover();
@@ -145,7 +151,7 @@ describe('SoundBoxComponent', () => {
   });
 
   it('should open the specified modal', () => {
-    const component = new SoundBoxComponent(new SettingsService());
+    const component = new SoundBoxComponent(new SettingsService(), new HidControlService);
     const settingsService = jasmine.createSpyObj('SettingsService', ['open']);
     component.setSettingsService(settingsService);
 
@@ -156,7 +162,7 @@ describe('SoundBoxComponent', () => {
   });
 
   it('should close the specified modal', () => {
-    const component = new SoundBoxComponent(new SettingsService());
+    const component = new SoundBoxComponent(new SettingsService(), new HidControlService);
     const settingsService = jasmine.createSpyObj('SettingsService', ['close']);
     component.setSettingsService(settingsService);
 
@@ -167,7 +173,7 @@ describe('SoundBoxComponent', () => {
   });
 
   it('should set the skip seconds in the audio handler', () => {
-    const component = new SoundBoxComponent(new SettingsService());
+    const component = new SoundBoxComponent(new SettingsService(), new HidControlService);
     const audioHandler = jasmine.createSpyObj('AudioHandlerComponent', ['setSkipSeconds']);
     component.audioHandler = audioHandler;
 
@@ -178,7 +184,7 @@ describe('SoundBoxComponent', () => {
   });
 
   it('should set the playback speed in the audio handler', () => {
-    const component = new SoundBoxComponent(new SettingsService());
+    const component = new SoundBoxComponent(new SettingsService(), new HidControlService);
     const audioHandler = jasmine.createSpyObj('AudioHandlerComponent', ['setPlaybackSpeed']);
     component.audioHandler = audioHandler;
 
@@ -190,7 +196,8 @@ describe('SoundBoxComponent', () => {
 
   it('should return the SettingsService element', () => {
     const SETTINGS_SERVICE = new SettingsService();
-    const component = new SoundBoxComponent(SETTINGS_SERVICE);
+    const HID_DEVICES_SERVICE = new HidControlService();
+    const component = new SoundBoxComponent(SETTINGS_SERVICE, HID_DEVICES_SERVICE);
 
     const RESULT = component.getSettingsService();
 
@@ -212,7 +219,7 @@ describe('SoundBoxComponent', () => {
   */
 
   it('should handle the keyboard events for skipBackwardEvent', () => {
-    const component = new SoundBoxComponent(new SettingsService());
+    const component = new SoundBoxComponent(new SettingsService(), new HidControlService);
     const audioHandler = jasmine.createSpyObj('AudioHandlerComponent', ['playOrStopAudio', 'skipBackward', 'skipForward']);
     component.audioHandler = audioHandler;
 
@@ -223,7 +230,7 @@ describe('SoundBoxComponent', () => {
   });
 
   it('should handle the keyboard events for skipForwardEvent', () => {
-    const component = new SoundBoxComponent(new SettingsService());
+    const component = new SoundBoxComponent(new SettingsService(), new HidControlService);
     const audioHandler = jasmine.createSpyObj('AudioHandlerComponent', ['playOrStopAudio', 'skipBackward', 'skipForward']);
     component.audioHandler = audioHandler;
 

@@ -1,4 +1,4 @@
-import { SpeechBubbleExport } from "./speechBubble/speechBubbleExport.model";
+import { SpeechBubbleExport } from "../speechBubble/speechBubbleExport.model";
 
 /**
 * The SpeechBubbleChain class represents a chain of speech bubbles.

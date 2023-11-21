@@ -8,3 +8,13 @@ app-sound-box {
     left: 0;
     right: 0;
 }
+
+.dictionaryWrapper {
+    padding-left: 15%;
+    padding-right: 15%;
+
+    @media (max-width: 992px) {
+        padding-left: 0;
+        padding-right: 0;
+    }
+}

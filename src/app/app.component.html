@@ -1,4 +1,7 @@
-<app-text-sheet></app-text-sheet>
-
-<!-- SoundBoxComponent -->
-<app-sound-box></app-sound-box>
+<div *ngIf="showDictionary; else mainContent" class="dictionaryWrapper">
+    <app-dictionary-editor (continueToEditorEvent)="onContinueToEditor()"></app-dictionary-editor>
+</div>
+<ng-template #mainContent>
+    <app-text-sheet *ngIf="!showDictionary"></app-text-sheet>
+    <app-sound-box *ngIf="!showDictionary"></app-sound-box>
+</ng-template>

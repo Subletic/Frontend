@@ -3,10 +3,10 @@ import { SpeechBubble } from '../data/speechBubble/speechBubble.model';
 import { SpeechBubbleExport } from '../data/speechBubble/speechBubbleExport.model';
 import { LinkedList } from '../data/linkedList/linkedList.model';
 import { WordExport } from '../data/wordToken/wordExport.model';
-import { SignalRService } from '../service/signalRService';
+import { SignalRService } from '../service/signalR.service';
 import { environment } from "../../environments/environment";
-import { SpeechBubbleChain } from '../data/speechBubbleChain.module';
-import { AudioService } from '../service/audioService';
+import { SpeechBubbleChain } from '../data/speechBubbleChain/speechBubbleChain.module';
+import { AudioService } from '../service/audio.service';
 
 /**
  * The TextSheetComponent represents a component that handles the speech bubbles in a text sheet.
@@ -205,7 +205,7 @@ export class TextSheetComponent implements OnInit {
   /**
   * Deletes a speech bubble from the speechBubbles list based on the id.
   * The speech bubble is removed from the list.
-  * 
+  *
   * @param id - The id of the speechbubble to be removed.
   */
   public deleteSpeechBubble(id: number): void {
@@ -238,7 +238,7 @@ export class TextSheetComponent implements OnInit {
 
   /**
    * Finds SpeechBubbles that match the given audioTime and call adjustWordsFontWeight for their word list.
-   * 
+   *
    * @param audioTime - the current Audio Time
    */
   public fontWeightForSpeechBubblesAt(audioTime: number): void {
@@ -258,7 +258,7 @@ export class TextSheetComponent implements OnInit {
 
   /**
    * Checks if given audioTime and SpeechBubble time slot match.
-   * 
+   *
    * @param audioTime - Time stamp to compare own time slot with.
    */
   private currentAudioTimeInSpeechbubbleTime(SpeechBubble: SpeechBubble, audioTime: number): boolean {

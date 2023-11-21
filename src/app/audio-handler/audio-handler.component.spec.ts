@@ -1,6 +1,6 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { AudioHandlerComponent } from './audio-handler.component';
-import { SignalRService } from '../service/signalRService';
+import { SignalRService } from '../service/signalR.service';
 
 //Hard to implement meaningful tests because most methods work directly on the Web Audio API - Audio Elements
 class MockAudioContext {
