@@ -84,28 +84,19 @@ export class HidControlService {
     return (event) => {
       const { data } = event;
 
+      const REWIND_BIT = 1 << 2;
+      const PLAY_BIT = 1 << 1;
+      const FASTFORWARD_BIT = 1 << 0;
       const value: number = data.getUint8(0);
 
       // decypher button states for printing
       let valueMeaning = "stop";
       if (value > 0) {
-        valueMeaning = "";
-        let valueCopy: number = value;
-        do {
-          if (valueCopy >= 4) {
-            valueMeaning += "rewind";
-            valueCopy -= 4;
-          } else if (valueCopy >= 2) {
-            valueMeaning += "play";
-            valueCopy -= 2;
-          } else if (valueCopy >= 1) {
-            valueMeaning += "fast-forward";
-            valueCopy -= 1;
-          }
-
-          if (valueCopy > 0)
-            valueMeaning += " + ";
-        } while (valueCopy > 0);
+        const meaningsSet: string[] = [];
+        if ((value & REWIND_BIT) !== REWIND_BIT) meaningsSet.push("rewind");
+        if ((value & PLAY_BIT) !== PLAY_BIT) meaningsSet.push("play");
+        if ((value & FASTFORWARD_BIT) !== FASTFORWARD_BIT) meaningsSet.push("fast-forward");
+        valueMeaning = meaningsSet.toString();
       }
       console.log(`pedal says: ${value} (meaning: ${valueMeaning}`);
 
@@ -113,25 +104,25 @@ export class HidControlService {
       switch (value) {
         // nothing pressed, stop
         case 0:
-          if (this.lastState === 2)
+          if (this.lastState === PLAY_BIT)
             callbackPlay();
           break;
 
         // only play pressed
-        case 2:
+        case PLAY_BIT:
           if (this.lastState === 0)
             callbackPlay();
           break;
 
         // fast-forward pressed, with or without play
-        case 1:
-        case 3:
+        case FASTFORWARD_BIT:
+        case FASTFORWARD_BIT + PLAY_BIT:
           callbackFastforward();
           break;
 
         // rewind pressed, with or without play
-        case 4:
-        case 6:
+        case REWIND_BIT:
+        case REWIND_BIT + PLAY_BIT:
           callbackRewind();
           break;
 
