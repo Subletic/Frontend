@@ -1,6 +1,7 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { StartConfigComponent } from './start-config.component';
+import {StartConfigComponent} from './start-config.component';
+import {MatSliderModule} from "@angular/material/slider";
 
 describe('StartConfigComponent', () => {
   let component: StartConfigComponent;
@@ -8,7 +9,8 @@ describe('StartConfigComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [StartConfigComponent]
+      declarations: [StartConfigComponent],
+      imports: [MatSliderModule],
     });
     fixture = TestBed.createComponent(StartConfigComponent);
     component = fixture.componentInstance;
