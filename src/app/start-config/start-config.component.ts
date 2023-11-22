@@ -1,4 +1,5 @@
 import {Component} from '@angular/core';
+import {ConfigurationService} from "../service/configuration.service";
 
 @Component({
   selector: 'app-start-config',
@@ -6,6 +7,9 @@ import {Component} from '@angular/core';
   styleUrls: ['./start-config.component.scss'],
 })
 export class StartConfigComponent {
+
+  constructor(private configurationService: ConfigurationService) {
+  }
 
   private selectedBufferLength = 2;
 
@@ -19,10 +23,11 @@ export class StartConfigComponent {
     const SLIDER_VALUE: string = (event.target as HTMLInputElement).value;
 
     this.selectedBufferLength = BUFFER_LENGTHS[+SLIDER_VALUE];
-    console.log(this.selectedBufferLength)
+    this.configurationService.updateDelayLength(this.selectedBufferLength);
   }
 
   public getSelectedBufferLength(): number {
     return this.selectedBufferLength;
   }
+
 }

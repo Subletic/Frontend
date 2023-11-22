@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {DictionaryService} from "../../service/dictionary.service";
+import {ConfigurationService} from "../../service/configuration.service";
 import {dictionary} from "../../data/dictionary/dictionary.model";
 import {ToastrService} from "ngx-toastr";
 
@@ -15,11 +15,11 @@ import {ToastrService} from "ngx-toastr";
 export class DictionaryFsLoaderComponent {
 
   /**
-   * Gets dictionaryService from dependency injection.
-   * @param dictionaryService Service to manage the dictionary
+   * Gets configurationService from dependency injection.
+   * @param configurationService Service to manage the dictionary
    * @param toastr Service to display toasts
    */
-  public constructor(private dictionaryService: DictionaryService, private toastr: ToastrService) {
+  public constructor(private configurationService: ConfigurationService, private toastr: ToastrService) {
   }
 
   /**
@@ -42,11 +42,11 @@ export class DictionaryFsLoaderComponent {
       return;
     }
 
-    this.dictionaryService.updateDictionary(DICTIONARY);
+    this.configurationService.updateDictionary(DICTIONARY);
   }
 
   /**
-   * Reads a JSON file and posts its content to the dictionaryService.
+   * Reads a JSON file and posts its content to the configurationService.
    * If the file is not a valid JSON file, null is returned.
    * @param file JSON file to read
    */
@@ -100,7 +100,7 @@ export class DictionaryFsLoaderComponent {
    * Downloads the current dictionary as a JSON file.
    */
   public handleDictionaryDownload(): void {
-    const DICTIONARY = this.dictionaryService.getDictionary();
+    const DICTIONARY = this.configurationService.getDictionary();
     const DICTIONARY_STRING = JSON.stringify(DICTIONARY, null, 2);
 
     const BLOB = new Blob([DICTIONARY_STRING], {type: "application/json"})

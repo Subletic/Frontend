@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DictionaryEditorComponent } from './dictionary-editor.component';
 import { additional_vocab } from 'src/app/data/dictionary/additionalVocab.model';
 import { dictionary } from 'src/app/data/dictionary/dictionary.model';
-import { DictionaryService } from 'src/app/service/dictionary.service';
+import { ConfigurationService } from 'src/app/service/configuration.service';
 import { Subscription } from 'rxjs';
 import { transcription_config } from 'src/app/data/dictionary/transcription_config.module';
 import { DictionaryFsLoaderComponent } from '../dictionary-fs-loader/dictionary-fs-loader.component';
@@ -13,18 +13,18 @@ import { DictionaryRowComponent } from '../dictionary-row/dictionary-row.compone
 describe('DictionaryEditorComponent', () => {
     let component: DictionaryEditorComponent;
     let fixture: ComponentFixture<DictionaryEditorComponent>;
-    let dictionaryService: DictionaryService;
+    let dictionaryService: ConfigurationService;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
             declarations: [DictionaryEditorComponent, DictionaryFsLoaderComponent, DictionaryRowComponent],
             imports: [ToastrModule.forRoot()],
-            providers: [DictionaryService],
+            providers: [ConfigurationService],
         });
 
         fixture = TestBed.createComponent(DictionaryEditorComponent);
         component = fixture.componentInstance;
-        dictionaryService = TestBed.inject(DictionaryService);
+        dictionaryService = TestBed.inject(ConfigurationService);
         fixture.detectChanges();
     });
 
