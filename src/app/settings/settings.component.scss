@@ -9,10 +9,9 @@ app-settings {
     .settings {
         /* modal container fixed across whole screen */
         position: fixed;
-        width: 500px;
         height: 600px;
         max-height: 700px;
-        top: 50%;
+        top: 45%;
         left: 50%;
         transform: translate(-50%, -50%);
 
@@ -22,6 +21,7 @@ app-settings {
 
         .settings-body {
             max-height: 700px;
+            max-width: 500px;
             padding: 20px;
             background: var(--textsheet-background-color);
 
@@ -53,26 +53,6 @@ app-settings {
         justify-content: flex-end;
     }
 
-    //SCSS for temporary reload button ~Finn --------
-    .button-image {
-        width: 30px;
-        margin-top: 2.2px;
-    }
-
-    .reload-button {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background-color: transparent;
-        border-radius: 20%;
-        outline: none;
-        cursor: pointer;
-        border: none;
-        background: var(--container-background-color);
-    }
-
-    //End SCSS for reload --------------------
-
 }
 
 
@@ -91,27 +71,28 @@ body.settings-open {
     align-self: self-end;
 }
 
+/*
+END from Jason Watmore (@cornflourblue) --------------------------------------
+*/
+
 h1 {
     color: var(--color-grey-hoverover);
     font-weight: normal;
 }
 
 .seconds-container {
-    min-width: 100px;
-    max-width: 300px;
-    width: 100%;
     display: flex;
     flex-direction: column;
-    margin: 40px;
-    //border: 2px solid;
+    width: 100%;
     align-items: center;
+    justify-items: center;
+    margin: 40px 0px 30px;
 }
 
 .seconds-label-container {
     display: flex;
-    justify-content: space-between;
-    width: 270px;
-    //border: 2px solid;
+    justify-content: space-around;
+    width: 100%;
 }
 
 .seconds-value-label {
@@ -119,20 +100,41 @@ h1 {
 }
 
 .slider {
-    margin: 20px 10px 0;
-    //border: 2px solid;
-    width: 300px;
+    margin-top: 20px;
+    width: 80%;
 }
 
 .slider input[type=range].styled-slider {
     width: 98%;
 }
 
+
+//SCSS for temporary reload button ~Finn --------
+.button-image {
+    width: 30px;
+    margin-top: 2.2px;
+}
+
+.reload-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    border-radius: 20%;
+    outline: none;
+    cursor: pointer;
+    border: none;
+    background: var(--container-background-color);
+}
+
+//End SCSS for reload --------------------
+
 .keybinding-container {
     display: flex;
     flex-direction: column;
-    margin: 5px;
-    max-height: 400px;
+    margin: 5px 0px 5px 10px;
+    max-height: 60vh;
+    width: 470px;
     padding-right: 20px;
     overflow: auto;
 
@@ -141,36 +143,55 @@ h1 {
     }
 }
 
-.row {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 15px;
+.key-grid {
+    display: grid;
+    grid-template-columns: 4;
+    justify-items: center; //oder start
+    align-items: center;
+
+    gap: 18px 10px;
+    margin: 0px 0px 18px 15px;
+}
+
+.key1,
+.key2,
+.key3,
+.switch {
+    text-align: center;
+    font-size: 16px;
+    color: var(--keybindings-font-color);
+
+    padding: 13px;
+    border-radius: 20%;
+    background-color: var(--keybindings-background-color);
 }
 
 .action {
-    flex: 1;
-    display: flex;
-    margin: 5px;
-    margin-left: 20px;
-    align-items: center;
+    grid-column: 1 / 1;
+    padding-right: 15px;
+    width: 170px;
 }
 
-.key {
-    text-align: center;
-    font-size: 14px;
-    color: var(--keybindings-font-color);
+.key1 {
+    grid-column: 2 / 2;
+}
 
-    margin: 5px;
-    padding: 10px;
-    border-radius: 15%;
-    background-color: var(--keybindings-background-color);
-    max-height: 15px;
+.key2 {
+    grid-column: 3 / 3;
+}
+
+.key3 {
+    grid-column: 4 / 4;
 }
 
 .describ {
-    display: flex;
+    grid-column: 3 / 3;
     margin: 5px;
     align-items: center;
+}
+
+.switch {
+    grid-column: 1 / 1;
 }
 
 .footSwitchImage {
