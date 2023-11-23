@@ -13,7 +13,7 @@
       [displayWith]="formatSliderValues"
       (change)="updateSelectedBufferLength($event)"
       class="buffer-slider">
-      <input matSliderThumb>
+      <input matSliderThumb value="2">
     </mat-slider>
 
     <div class="text fixed-width">{{getSelectedBufferLength()}} min</div>

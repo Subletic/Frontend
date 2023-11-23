@@ -5,5 +5,5 @@
 </div>
 <ng-template #mainContent>
     <app-text-sheet *ngIf="!showDictionary"></app-text-sheet>
-    <app-sound-box *ngIf="!showDictionary"></app-sound-box>
+    <app-sound-box #soundBox *ngIf="!showDictionary"></app-sound-box>
 </ng-template>

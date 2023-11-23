@@ -1,6 +1,10 @@
-import {Component} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {ConfigurationService} from "./service/configuration.service";
+import {SoundBoxComponent} from "./sound-box/sound-box.component";
 
+/**
+ * Component containing the main page of the software.
+ */
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -10,12 +14,28 @@ export class AppComponent {
   showDictionary = true;
   title = 'Frontend';
 
+  private soundBox: SoundBoxComponent | undefined;
+
+  @ViewChild('soundBox', {static: false}) set content(content: SoundBoxComponent) {
+    if (content) { // initially setter gets called with undefined
+      this.soundBox = content;
+      const bufferLengthInMinutes = this.configurationService.getBufferLengthInMinutes();
+      this.soundBox?.initAudioContexts(bufferLengthInMinutes);
+    }
+  }
+
+  /**
+   * Initializes the configuration service.
+   * @param configurationService Reference to the configuration service.
+   */
   constructor(private configurationService: ConfigurationService) {
   }
 
-  continueToEditor(): void {
+  /**
+   * Callback function for exiting the configuration screen.
+   */
+  public continueToEditor(): void {
     this.showDictionary = false;
     this.configurationService.postConfigurationToBackend();
   }
-
 }

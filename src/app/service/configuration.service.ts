@@ -48,31 +48,32 @@ export class ConfigurationService {
     this.dictionaryUpdated.next(dictionary);
   }
 
+  /**
+   * Returns the current dictionary.
+   */
   public getDictionary(): dictionary {
     return this.currentDictionary;
   }
 
+  /**
+   * Returns the delay length in minutes.
+   */
+  public getBufferLengthInMinutes(): number {
+    return this.delayLengthInMinutes;
+  }
+
+  /**
+   * Updates the delay length in minutes.
+   * @param delayLength New delay length in minutes
+   */
   public updateDelayLength(delayLength: number): void {
     this.delayLengthInMinutes = delayLength;
   }
 
-  // /**
-  //  * Posts updated dictionary to backend.
-  //  */
-  // public postDictionaryToBackend(): void {
-  //   fetch(environment.apiURL + "/api/CustomDictionary/upload", {
-  //     method: "POST",
-  //     body: JSON.stringify(this.currentDictionary),
-  //     headers: {
-  //       'Content-Type': 'application/json'
-  //     },
-  //     }).then((response) => {
-  //       console.log(response)
-  //       if (response.ok) return;
-  //       console.error("Error while uploading dictionary to backend.")
-  //   })
-  // }
 
+  /**
+   * Posts the current configuration to the backend.
+   */
   public postConfigurationToBackend(): void {
     const CONFIG = new Config(
       this.currentDictionary,

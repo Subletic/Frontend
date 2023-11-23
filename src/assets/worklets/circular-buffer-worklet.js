@@ -38,7 +38,7 @@ class CircularBufferWorklet extends AudioWorkletProcessor {
 
     // Buffer parameters
     const SAMPLE_RATE = 48000;
-    const BUFFER_LENGTH_IN_SECONDS = 30;
+    const BUFFER_LENGTH_IN_SECONDS = 120;
     const SAFETY_MARGIN_IN_SECONDS = 2;
 
     // Circular buffer initialization
@@ -86,6 +86,11 @@ class CircularBufferWorklet extends AudioWorkletProcessor {
         break;
       case 'setWorkletState':
         this.setWorkletState(message.workletState);
+        break;
+      case 'setBufferLength':
+        this.bufferLengthInSeconds = message.bufferLengthInSeconds;
+        this.totalBufferSize = this.samplesPerSecond * this.bufferLengthInSeconds;
+        this.buffer = new Float32Array(this.totalBufferSize);
         break;
       default:
         console.log("Unknown message type!");
