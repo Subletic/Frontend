@@ -29,7 +29,7 @@ export class DictionaryFsLoaderComponent {
   public async handleFileUpload(event: Event): Promise<void> {
     const INPUT = event.target as HTMLInputElement;
 
-    if (INPUT.files == null) {
+    if (INPUT.files == null || INPUT.files[0] == null) {
       this.displayDictionaryErrorToast();
       return;
     }
@@ -133,13 +133,5 @@ export class DictionaryFsLoaderComponent {
     } catch (e) {
       console.error("Ungültige Datei!");
     }
-  }
-
-  /**
-   * Returns the background color of the application.
-   * Used for Button styling.
-   */
-  public getBackgroundColor(): string {
-    return getComputedStyle(document.documentElement).getPropertyValue('--color-main-blue');
   }
 }

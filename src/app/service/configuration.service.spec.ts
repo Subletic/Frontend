@@ -57,4 +57,13 @@ describe('ConfigurationService', () => {
 
     expect(service.isConfigValid()).toBeFalse();
   });
+
+  it('should post configuration to backend', () => {
+    const okResponse = new Response(null, {status: 200});
+    const fetchSpy = spyOn(window, 'fetch').and.resolveTo(okResponse);
+
+    service.postConfigurationToBackend();
+
+    expect(fetchSpy).toHaveBeenCalled();
+  });
 });
