@@ -1,6 +1,7 @@
 import {Component, ViewChild} from '@angular/core';
 import {ConfigurationService} from "./service/configuration.service";
 import {SoundBoxComponent} from "./sound-box/sound-box.component";
+import {ToastrService} from "ngx-toastr";
 
 /**
  * Component containing the main page of the software.
@@ -27,14 +28,20 @@ export class AppComponent {
   /**
    * Initializes the configuration service.
    * @param configurationService Reference to the configuration service.
+   * @param toastr Service to display toasts
    */
-  constructor(private configurationService: ConfigurationService) {
+  constructor(private configurationService: ConfigurationService, private toastr: ToastrService) {
   }
 
   /**
    * Callback function for exiting the configuration screen.
    */
   public continueToEditor(): void {
+    if (!this.configurationService.isConfigValid()) {
+      this.toastr.error("Konfiguration ist nicht gültig. Bitte überprüfen Sie Ihre Eingaben.");
+      return;
+    }
+
     this.showDictionary = false;
     this.configurationService.postConfigurationToBackend();
   }

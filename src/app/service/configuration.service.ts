@@ -70,6 +70,29 @@ export class ConfigurationService {
     this.delayLengthInMinutes = delayLength;
   }
 
+  /**
+   * Checks if the current configuration is valid before posting to the backend.
+   * @returns True if configuration is valid, false otherwise.
+   */
+  public isConfigValid(): boolean {
+    // Check if delay length is valid
+    if (this.delayLengthInMinutes < 0.5 || this.delayLengthInMinutes > 10 || isNaN(this.delayLengthInMinutes)) {
+      return false;
+    }
+
+    // Check if sounds like exists for empty word
+    for (const word of this.currentDictionary.transcription_config.additional_vocab) {
+      if (word.content == "" && word.sounds_like != null && word.sounds_like.length > 0) {
+        return false;
+      }
+    }
+
+    // Check if language provided
+    if (!this.currentDictionary.transcription_config.language) return false;
+
+    return true;
+  }
+
 
   /**
    * Posts the current configuration to the backend.
@@ -86,10 +109,10 @@ export class ConfigurationService {
       headers: {
         'Content-Type': 'application/json'
       },
-      }).then((response) => {
-        console.log(response)
-        if (response.ok) return;
-        console.error("Error while uploading configuration to backend.")
+    }).then((response) => {
+      console.log(response)
+      if (response.ok) return;
+      console.error("Error while uploading configuration to backend.")
     })
   }
 }

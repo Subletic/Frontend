@@ -24,6 +24,10 @@
 .buffer-slider {
   flex-grow: 2;
   max-width: 350px;
+  --mdc-slider-active-track-color: var(--color-main-blue);
+  --mdc-slider-inactive-track-color: var(--color-dark-grey);
+  --mdc-slider-handle-color: var(--color-main-blue);
+  --mdc-slider-focus-handle-color: var(--color-main-blue);
 }
 
 .text {

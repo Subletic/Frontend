@@ -1,21 +1,8 @@
-import { TestBed, ComponentFixture } from '@angular/core/testing';
-import { AudioHandlerComponent } from './audio-handler.component';
-import { SignalRService } from '../service/signalR.service';
+import {TestBed, ComponentFixture} from '@angular/core/testing';
+import {AudioHandlerComponent} from './audio-handler.component';
+import {SignalRService} from '../service/signalR.service';
 
 //Hard to implement meaningful tests because most methods work directly on the Web Audio API - Audio Elements
-class MockAudioContext {
-  state: 'running' | 'suspended' = 'suspended';
-
-  suspend() {
-    this.state = 'suspended';
-    return Promise.resolve();
-  }
-
-  resume() {
-    this.state = 'running';
-    return Promise.resolve();
-  }
-}
 
 describe('AudioHandlerComponent', () => {
   let component: AudioHandlerComponent;
@@ -26,7 +13,6 @@ describe('AudioHandlerComponent', () => {
       declarations: [AudioHandlerComponent],
       providers: [
         SignalRService,
-        { provide: AudioContext, useClass: MockAudioContext }
       ]
     }).compileComponents();
   });
@@ -40,7 +26,6 @@ describe('AudioHandlerComponent', () => {
   it('should create the component', () => {
     expect(component).toBeTruthy();
   });
-
 
   it('should set the volume in setVolume method', () => {
     const sliderVolumeValue = 0.5;
@@ -56,5 +41,13 @@ describe('AudioHandlerComponent', () => {
     component.setSkipSeconds(seconds);
     // Assert
     expect(component['skipSeconds']).toEqual(seconds);
+  });
+
+  it('should set playback speed correctly', () => {
+    const speed = 1.5;
+
+    component.setPlaybackSpeed(speed);
+
+    expect(component['sampleRate']).toEqual(72000);
   });
 });
