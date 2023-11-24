@@ -52,10 +52,8 @@ describe('AudioHandlerComponent', () => {
   });
 
   it('should initialize audio contexts correctly', () => {
-    const initAudioContextsSpy = spyOn<any>(component, 'initNewAudioContext').and.callThrough();
-
     component.initAudioContexts(1)
 
-    expect(initAudioContextsSpy).toHaveBeenCalledTimes(7);
+    expect(component['audioContexts'].length).toEqual(7);
   });
 });
