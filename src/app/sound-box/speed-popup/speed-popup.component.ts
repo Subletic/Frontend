@@ -4,7 +4,7 @@ import {
   Output,
   EventEmitter,
   ElementRef,
-} from '@angular/core'
+} from '@angular/core';
 
 /**
  * Represents a popup that includes button for controlling the audio speed.
@@ -15,8 +15,8 @@ import {
   styleUrls: ['./speed-popup.component.scss'],
 })
 export class SpeedPopupComponent {
-  @Input() speedValue!: number
-  @Output() speedChange = new EventEmitter<number>()
+  @Input() speedValue!: number;
+  @Output() speedChange = new EventEmitter<number>();
 
   constructor(public elementRef: ElementRef) {}
 
@@ -25,7 +25,7 @@ export class SpeedPopupComponent {
    * @param speed - Input value
    */
   emitNewSpeed(speed: number): void {
-    this.speedValue = speed
-    this.speedChange.emit(this.speedValue)
+    this.speedValue = speed;
+    this.speedChange.emit(this.speedValue);
   }
 }
