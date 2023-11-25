@@ -54,7 +54,7 @@
 }
 
 .slider-triangle:before {
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   left: 0;
@@ -62,7 +62,8 @@
   height: 0;
   border-style: solid;
   border-width: 10px 10px 0 0;
-  border-color: var(--textsheet-background-color) transparent transparent transparent;
+  border-color: var(--textsheet-background-color) transparent transparent
+    transparent;
 }
 
 /// Code not generated on a website, but slightly improved by us
@@ -70,21 +71,21 @@
 
 /*generated with Input range slider CSS style generator (version 20211225)
 https://toughengineer.github.io/demo/slider-styler*/
-input[type=range].styled-slider {
+input[type='range'].styled-slider {
   width: 15em;
   -webkit-appearance: none;
   appearance: none;
 }
 
 /*progress support*/
-input[type=range].styled-slider.slider-progress {
+input[type='range'].styled-slider.slider-progress {
   --range: calc(var(--max) - var(--min));
   --ratio: calc((var(--value) - var(--min)) / var(--range));
   --sx: calc(0.5 * 1.5em + var(--ratio) * (100% - 1.5em));
 }
 
 /*webkit*/
-input[type=range].styled-slider::-webkit-slider-thumb {
+input[type='range'].styled-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   width: 1.5em;
   height: 1.5em;
@@ -95,7 +96,7 @@ input[type=range].styled-slider::-webkit-slider-thumb {
   margin-top: calc(max((0.7em - 1px - 1px) * 0.5, 0px) - 1.5em * 0.5);
 }
 
-input[type=range].styled-slider::-webkit-slider-runnable-track {
+input[type='range'].styled-slider::-webkit-slider-runnable-track {
   height: 0.7em;
   border: 1px solid var(--color-grey);
   border-radius: 0.5em;
@@ -103,28 +104,31 @@ input[type=range].styled-slider::-webkit-slider-runnable-track {
   box-shadow: none;
 }
 
-input[type=range].styled-slider::-webkit-slider-thumb:hover {
+input[type='range'].styled-slider::-webkit-slider-thumb:hover {
   background: var(--color-darker-grey);
 }
 
-input[type=range].styled-slider:hover::-webkit-slider-runnable-track {
+input[type='range'].styled-slider:hover::-webkit-slider-runnable-track {
   border-color: var(--color-grey-onclick);
 }
 
-input[type=range].styled-slider::-webkit-slider-thumb:active {
+input[type='range'].styled-slider::-webkit-slider-thumb:active {
   background: var(--color-black);
 }
 
-input[type=range].styled-slider:active::-webkit-slider-runnable-track {
+input[type='range'].styled-slider:active::-webkit-slider-runnable-track {
   border-color: var(--color-grey-hoverover);
 }
 
-input[type=range].styled-slider.slider-progress::-webkit-slider-runnable-track {
-  background: linear-gradient(var(--color-main-blue), var(--color-main-blue)) 0/var(--sx) 100% no-repeat, var(--textsheet-background-color);
+input[type='range'].styled-slider.slider-progress::-webkit-slider-runnable-track {
+  background:
+    linear-gradient(var(--color-main-blue), var(--color-main-blue)) 0 /
+      var(--sx) 100% no-repeat,
+    var(--textsheet-background-color);
 }
 
 /*mozilla*/
-input[type=range].styled-slider::-moz-range-thumb {
+input[type='range'].styled-slider::-moz-range-thumb {
   width: 1.5em;
   height: 1.5em;
   border-radius: 1em;
@@ -133,7 +137,7 @@ input[type=range].styled-slider::-moz-range-thumb {
   box-shadow: 0 0 2px 0.2px var(--color-grey-hoverover);
 }
 
-input[type=range].styled-slider::-moz-range-track {
+input[type='range'].styled-slider::-moz-range-track {
   height: max(calc(0.7em - 1px - 1px), 0px);
   border: 1px solid var(--color-grey-hoverover);
   border-radius: 0.5em;
@@ -141,38 +145,41 @@ input[type=range].styled-slider::-moz-range-track {
   box-shadow: none;
 }
 
-input[type=range].styled-slider::-moz-range-thumb:hover {
+input[type='range'].styled-slider::-moz-range-thumb:hover {
   background: var(--color-darker-grey);
 }
 
-input[type=range].styled-slider:hover::-moz-range-track {
+input[type='range'].styled-slider:hover::-moz-range-track {
   border-color: var(--color-grey-hoverover);
 }
 
-input[type=range].styled-slider::-moz-range-thumb:active {
+input[type='range'].styled-slider::-moz-range-thumb:active {
   background: var(--color-black);
 }
 
-input[type=range].styled-slider:active::-moz-range-track {
+input[type='range'].styled-slider:active::-moz-range-track {
   border-color: var(--color-grey-hoverover);
 }
 
-input[type=range].styled-slider.slider-progress::-moz-range-track {
-  background: linear-gradient(var(--color-main-blue), var(--color-main-blue)) 0/var(--sx) 100% no-repeat, var(--textsheet-background-color);
+input[type='range'].styled-slider.slider-progress::-moz-range-track {
+  background:
+    linear-gradient(var(--color-main-blue), var(--color-main-blue)) 0 /
+      var(--sx) 100% no-repeat,
+    var(--textsheet-background-color);
 }
 
 /*ms*/
-input[type=range].styled-slider::-ms-fill-upper {
+input[type='range'].styled-slider::-ms-fill-upper {
   background: transparent;
   border-color: transparent;
 }
 
-input[type=range].styled-slider::-ms-fill-lower {
+input[type='range'].styled-slider::-ms-fill-lower {
   background: transparent;
   border-color: transparent;
 }
 
-input[type=range].styled-slider::-ms-thumb {
+input[type='range'].styled-slider::-ms-thumb {
   width: 1.5em;
   height: 1.5em;
   border-radius: 1em;
@@ -183,7 +190,7 @@ input[type=range].styled-slider::-ms-thumb {
   box-sizing: border-box;
 }
 
-input[type=range].styled-slider::-ms-track {
+input[type='range'].styled-slider::-ms-track {
   height: 0.7em;
   border-radius: 0.5em;
   background: var(--textsheet-background-color);
@@ -192,23 +199,23 @@ input[type=range].styled-slider::-ms-track {
   box-sizing: border-box;
 }
 
-input[type=range].styled-slider::-ms-thumb:hover {
+input[type='range'].styled-slider::-ms-thumb:hover {
   background: var(--color-darker-grey);
 }
 
-input[type=range].styled-slider:hover::-ms-track {
+input[type='range'].styled-slider:hover::-ms-track {
   border-color: var(--color-grey-hoverover);
 }
 
-input[type=range].styled-slider::-ms-thumb:active {
+input[type='range'].styled-slider::-ms-thumb:active {
   background: var(--color-black);
 }
 
-input[type=range].styled-slider:active::-ms-track {
+input[type='range'].styled-slider:active::-ms-track {
   border-color: var(--color-grey-onclick);
 }
 
-input[type=range].styled-slider.slider-progress::-ms-fill-lower {
+input[type='range'].styled-slider.slider-progress::-ms-fill-lower {
   height: max(calc(0.7em - 1px - 1px), 0px);
   border-radius: 0.5em 0 0 0.5em;
   margin: -1px 0 -1px -1px;

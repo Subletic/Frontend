@@ -1,10 +1,10 @@
-import { Component, ViewChild, ElementRef, HostListener } from '@angular/core';
-import { AudioHandlerComponent } from '../audio-handler/audio-handler.component';
-import { HidControlService } from "../service/hid-control.service";
-import { SettingsService } from '../settings/settings.service';
-import { SettingsComponent } from '../settings/settings.component';
-import { SliderPopupComponent } from './slider-popup/slider-popup.component';
-import { SpeedPopupComponent } from './speed-popup/speed-popup.component';
+import { Component, ViewChild, ElementRef, HostListener } from '@angular/core'
+import { AudioHandlerComponent } from '../audio-handler/audio-handler.component'
+import { HidControlService } from '../service/hid-control.service'
+import { SettingsService } from '../settings/settings.service'
+import { SettingsComponent } from '../settings/settings.component'
+import { SliderPopupComponent } from './slider-popup/slider-popup.component'
+import { SpeedPopupComponent } from './speed-popup/speed-popup.component'
 
 /**
  * The SoundBoxComponent represents a component that displays the bottom bar of the application.
@@ -14,37 +14,45 @@ import { SpeedPopupComponent } from './speed-popup/speed-popup.component';
 @Component({
   selector: 'app-sound-box',
   templateUrl: './sound-box.component.html',
-  styleUrls: ['./sound-box.component.scss']
+  styleUrls: ['./sound-box.component.scss'],
 })
 export class SoundBoxComponent {
+  @ViewChild('audioHandler') audioHandler!: AudioHandlerComponent
+  @ViewChild('soundButton', { static: false }) soundButton!: ElementRef
+  @ViewChild('speedButton', { static: false }) speedButton!: ElementRef
 
-  @ViewChild('audioHandler') audioHandler!: AudioHandlerComponent;
-  @ViewChild('soundButton', { static: false }) soundButton!: ElementRef;
-  @ViewChild('speedButton', { static: false }) speedButton!: ElementRef;
+  @ViewChild(SliderPopupComponent) sliderPopup!: SliderPopupComponent
+  @ViewChild(SpeedPopupComponent) speedPopup!: SpeedPopupComponent
+  @ViewChild(SettingsComponent) settingsComponent!: SettingsComponent
 
-  @ViewChild(SliderPopupComponent) sliderPopup!: SliderPopupComponent;
-  @ViewChild(SpeedPopupComponent) speedPopup!: SpeedPopupComponent;
-  @ViewChild(SettingsComponent) settingsComponent!: SettingsComponent;
+  public isPopupOpen = false
+  public isAudioPopoverOpen = false
+  public volume100 = 0
+  public isAudioPlaying = false
+  public bodyText = ''
 
-  public isPopupOpen = false;
-  public isAudioPopoverOpen = false;
-  public volume100 = 0;
-  public isAudioPlaying = false;
-  public bodyText = '';
-
-  public isKeyDown = false;
-  public buttonImage2Src = 'assets/back.svg';
+  public isKeyDown = false
+  public buttonImage2Src = 'assets/back.svg'
   public buttonImage3Src = 'assets/forward.svg'
 
-  public isSpeedPopoverOpen = false;
-  public speedValue = 1;
+  public isSpeedPopoverOpen = false
+  public speedValue = 1
 
-  constructor(private settingsService: SettingsService, private hidControlService: HidControlService) {
+  constructor(
+    private settingsService: SettingsService,
+    private hidControlService: HidControlService,
+  ) {
     hidControlService.configureDevices(
-      () => { this.playButton(); },
-      () => { this.skipForwardButton(); },
-      () => { this.skipBackwardButton(); },
-    );
+      () => {
+        this.playButton()
+      },
+      () => {
+        this.skipForwardButton()
+      },
+      () => {
+        this.skipBackwardButton()
+      },
+    )
   }
 
   /**
@@ -54,14 +62,16 @@ export class SoundBoxComponent {
    */
   @HostListener('document:click', ['$event'])
   onDocumentMouseDown(event: MouseEvent): void {
-    const CLICKED_ELEMENT = event.target as HTMLElement;
-    const IS_INSIDE_SOUNDBUTTON = this.soundButton.nativeElement.contains(CLICKED_ELEMENT);
-    const IS_INSIDE_SPEEDBUTTON = this.speedButton.nativeElement.contains(CLICKED_ELEMENT);
+    const CLICKED_ELEMENT = event.target as HTMLElement
+    const IS_INSIDE_SOUNDBUTTON =
+      this.soundButton.nativeElement.contains(CLICKED_ELEMENT)
+    const IS_INSIDE_SPEEDBUTTON =
+      this.speedButton.nativeElement.contains(CLICKED_ELEMENT)
     if (!IS_INSIDE_SOUNDBUTTON) {
-      this.closePopoverAudio();
+      this.closePopoverAudio()
     }
     if (!IS_INSIDE_SPEEDBUTTON) {
-      this.closePopoverSpeed();
+      this.closePopoverSpeed()
     }
   }
 
@@ -74,19 +84,19 @@ export class SoundBoxComponent {
   handleKeyboardEvent(event: KeyboardEvent): void {
     if (event.ctrlKey && event.altKey) {
       if (event.key === 'd') {
-        this.audioHandler.togglePlayback();
-        this.isAudioPlaying = this.audioHandler.getIsAudioPlaying();
-        event.preventDefault();
+        this.audioHandler.togglePlayback()
+        this.isAudioPlaying = this.audioHandler.getIsAudioPlaying()
+        event.preventDefault()
       } else if (event.key === 'y') {
-        this.audioHandler.skipBackward();
-        event.preventDefault();
-        this.isKeyDown = true;
-        this.buttonImage2Src = 'assets/backOnClick.svg';
+        this.audioHandler.skipBackward()
+        event.preventDefault()
+        this.isKeyDown = true
+        this.buttonImage2Src = 'assets/backOnClick.svg'
       } else if (event.key === 'w') {
-        this.audioHandler.skipForward();
-        event.preventDefault();
-        this.isKeyDown = true;
-        this.buttonImage3Src = 'assets/forwardOnClick.svg';
+        this.audioHandler.skipForward()
+        event.preventDefault()
+        this.isKeyDown = true
+        this.buttonImage3Src = 'assets/forwardOnClick.svg'
       }
     }
   }
@@ -99,8 +109,8 @@ export class SoundBoxComponent {
   @HostListener('document:keyup', ['$event'])
   handleKeyUp(event: KeyboardEvent): void {
     if (event.ctrlKey && event.altKey) {
-      this.isKeyDown = false;
-      this.buttonImage2Src = 'assets/back.svg';
+      this.isKeyDown = false
+      this.buttonImage2Src = 'assets/back.svg'
       this.buttonImage3Src = 'assets/forward.svg'
     }
   }
@@ -110,22 +120,22 @@ export class SoundBoxComponent {
    * switches isAudioPlaying for Icon-Change
    */
   playButton(): void {
-    this.audioHandler.togglePlayback();
-    this.isAudioPlaying = this.audioHandler.getIsAudioPlaying();
+    this.audioHandler.togglePlayback()
+    this.isAudioPlaying = this.audioHandler.getIsAudioPlaying()
   }
 
   /**
    * Calls skipBackward() function in audioHandler.
    */
   skipBackwardButton(): void {
-    this.audioHandler.skipBackward();
+    this.audioHandler.skipBackward()
   }
 
   /**
    * Calls skipForward() function in audioHandler.
    */
   skipForwardButton(): void {
-    this.audioHandler.skipForward();
+    this.audioHandler.skipForward()
   }
 
   /**
@@ -133,7 +143,7 @@ export class SoundBoxComponent {
    * @param {string} id - Id of the Window to open.
    */
   openModal(id: string): void {
-    this.settingsService.open(id);
+    this.settingsService.open(id)
   }
 
   /**
@@ -141,42 +151,42 @@ export class SoundBoxComponent {
    * @param {string} id - Id of the Window to close.
    */
   closeModal(id: string): void {
-    this.settingsService.close(id);
+    this.settingsService.close(id)
   }
 
   /**
    * Switches isAudioPopoverOpen Boolean to the negated value.
    */
   switchPopoverAudio(): void {
-    this.isAudioPopoverOpen = !this.isAudioPopoverOpen;
+    this.isAudioPopoverOpen = !this.isAudioPopoverOpen
   }
 
   /**
    * Sets isSpeedPopoverOpen to false, causing the Speed Popover to close.
    */
   closePopoverAudio(): void {
-    this.isAudioPopoverOpen = false;
+    this.isAudioPopoverOpen = false
   }
 
   /**
    * Switches isSpeedPopoverOpen Boolean to the negated value.
    */
   switchSpeedPopover(): void {
-    this.isSpeedPopoverOpen = !this.isSpeedPopoverOpen;
+    this.isSpeedPopoverOpen = !this.isSpeedPopoverOpen
   }
 
   /**
    * Sets isSpeedPopoverOpen to false, causing the Speed Popover to close.
    */
   closePopoverSpeed(): void {
-    this.isSpeedPopoverOpen = false;
+    this.isSpeedPopoverOpen = false
   }
 
   /** Calls setVolume Function in audioHandler with volume number between -1 and 1.
    * @param {number} volume - The new volume value.
    */
   onVolumeChange(volume: number): void {
-    this.audioHandler.setVolume(volume);
+    this.audioHandler.setVolume(volume)
   }
 
   /**
@@ -184,7 +194,7 @@ export class SoundBoxComponent {
    * @param {number} seconds - The number of seconds to skip.
    */
   onSecondsChange(seconds: number): void {
-    this.audioHandler.setSkipSeconds(seconds);
+    this.audioHandler.setSkipSeconds(seconds)
   }
 
   /**
@@ -192,29 +202,28 @@ export class SoundBoxComponent {
    * so the next slider can be instantiated with the last-current-value of the old one.
    */
   onVolume100Change(volume100: number): void {
-    this.volume100 = volume100;
+    this.volume100 = volume100
   }
 
   /**
    * Calls setPlaybackSpeed Function in AudioHandler with emitted speedValue from speed-popup.
    */
   onSpeedChange(speed: number): void {
-    this.speedValue = speed;
-    this.audioHandler.setPlaybackSpeed(this.speedValue);
+    this.speedValue = speed
+    this.audioHandler.setPlaybackSpeed(this.speedValue)
   }
 
   /**
    * Returns the SettingsService Element of this Instance
    */
   getSettingsService(): SettingsService {
-    return this.settingsService;
+    return this.settingsService
   }
 
   /**
    * Sets the settingService of this instance
    */
   setSettingsService(settingsService: SettingsService): void {
-    this.settingsService = settingsService;
+    this.settingsService = settingsService
   }
-
 }
