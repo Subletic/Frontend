@@ -1,6 +1,17 @@
-﻿import { Component, ViewEncapsulation, ElementRef, Input, Output, OnInit, OnDestroy, EventEmitter, ViewChild, AfterViewInit } from '@angular/core';
-import { SettingsService } from './settings.service';
-import { environment } from "../../environments/environment";
+﻿import {
+  Component,
+  ViewEncapsulation,
+  ElementRef,
+  Input,
+  Output,
+  OnInit,
+  OnDestroy,
+  EventEmitter,
+  ViewChild,
+  AfterViewInit,
+} from '@angular/core'
+import { SettingsService } from './settings.service'
+import { environment } from '../../environments/environment'
 
 /**
  * The SettingsComponent represents a settings modal that allows users to configure certain options.
@@ -9,126 +20,143 @@ import { environment } from "../../environments/environment";
 @Component({
   selector: 'app-settings',
   templateUrl: 'settings.component.html',
-  styleUrls: ['settings.component.scss', '../sound-box/slider-popup/slider-popup.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  styleUrls: [
+    'settings.component.scss',
+    '../sound-box/slider-popup/slider-popup.component.scss',
+  ],
+  encapsulation: ViewEncapsulation.None,
 })
 export class SettingsComponent implements OnInit, OnDestroy, AfterViewInit {
-  @Input() id!: string;   // The unique identifier for the settings modal
-  @Output() secondsChange = new EventEmitter<number>();   // Event emitter to notify parent components of changes
+  @Input() id!: string // The unique identifier for the settings modal
+  @Output() secondsChange = new EventEmitter<number>() // Event emitter to notify parent components of changes
 
-  @ViewChild('secondsSlider', { static: false }) secondsSlider!: ElementRef<HTMLInputElement>;
+  @ViewChild('secondsSlider', { static: false })
+  secondsSlider!: ElementRef<HTMLInputElement>
 
-  public initialAudioSkipSeconds = 5;
-  @Input() updatedAudioSkipSeconds = this.initialAudioSkipSeconds;
+  public initialAudioSkipSeconds = 5
+  @Input() updatedAudioSkipSeconds = this.initialAudioSkipSeconds
 
-  private element!: HTMLElement;
+  private element!: HTMLElement
 
-  constructor(private settingsService: SettingsService, private el: ElementRef<HTMLElement>) {
-    this.element = el.nativeElement;
+  constructor(
+    private settingsService: SettingsService,
+    private el: ElementRef<HTMLElement>,
+  ) {
+    this.element = el.nativeElement
   }
 
   ngOnInit(): void {
     // Ensure that the "id" attribute exists for the modal
     if (!this.id) {
-      console.error('modal must have an id');
-      return;
+      console.error('modal must have an id')
+      return
     }
 
     // Move the element to the bottom of the page (just before </body>) so it can be displayed above everything else
-    document.body.appendChild(this.element);
+    document.body.appendChild(this.element)
 
-    this.setupSlider();
+    this.setupSlider()
 
     // Close the modal when clicking on the background
     this.element.addEventListener('click', (el: MouseEvent) => {
-      if (el.target instanceof HTMLElement && el.target.className === 'settings') {
-        this.cancel();
+      if (
+        el.target instanceof HTMLElement &&
+        el.target.className === 'settings'
+      ) {
+        this.cancel()
       }
-    });
+    })
 
     // Add this modal instance to the settings service so it can be accessed from other components
-    this.settingsService.add(this);
+    this.settingsService.add(this)
   }
 
   ngAfterViewInit(): void {
-    this.secondsSlider.nativeElement.value = this.updatedAudioSkipSeconds.toString();
-    this.setupSlider();
+    this.secondsSlider.nativeElement.value =
+      this.updatedAudioSkipSeconds.toString()
+    this.setupSlider()
   }
 
   // Remove this modal instance from the settings service when the component is destroyed
   ngOnDestroy(): void {
-    this.settingsService.remove(this.id);
-    this.element.remove();
+    this.settingsService.remove(this.id)
+    this.element.remove()
   }
 
   // Open the modal and display it on the screen
   open(): void {
-    this.element.style.display = 'block';
-    document.body.classList.add('settings-open');
-    this.initialAudioSkipSeconds = this.updatedAudioSkipSeconds;
-    this.setupSlider();
+    this.element.style.display = 'block'
+    document.body.classList.add('settings-open')
+    this.initialAudioSkipSeconds = this.updatedAudioSkipSeconds
+    this.setupSlider()
   }
 
   // Close the modal and hide it from the screen
   close(): void {
-    this.element.style.display = 'none';
-    document.body.classList.remove('settings-open');
-    this.setupSlider();
+    this.element.style.display = 'none'
+    document.body.classList.remove('settings-open')
+    this.setupSlider()
   }
 
   // Cancels changes, resets seconds value and closes modal
   cancel(): void {
-    this.updatedAudioSkipSeconds = this.initialAudioSkipSeconds;
-    this.close();
+    this.updatedAudioSkipSeconds = this.initialAudioSkipSeconds
+    this.close()
   }
 
   // Apply the settings changes and emit the "secondsChange" event to notify the parent component
   apply(): void {
-    this.secondsChange.emit(this.updatedAudioSkipSeconds);
-    this.close();
+    this.secondsChange.emit(this.updatedAudioSkipSeconds)
+    this.close()
   }
 
   /**
    * Sets up the slider so it has a colored bar from left to the thumb
    */
   setupSlider(): void {
-    const MIN_SKIP_SECONDS = '1';
-    const MAX_SKIP_SECONDS = '20';
+    const MIN_SKIP_SECONDS = '1'
+    const MAX_SKIP_SECONDS = '20'
 
-    document.querySelectorAll<HTMLInputElement>('input[type="range"].slider-progress').forEach((e: HTMLInputElement) => {
-      e.style.setProperty('--value', e.value);
-      e.style.setProperty('--min', e.min === '' ? MIN_SKIP_SECONDS : e.min);
-      e.style.setProperty('--max', e.max === '' ? MAX_SKIP_SECONDS : e.max);
-      e.addEventListener('input', () => e.style.setProperty('--value', e.value));
-    });
+    document
+      .querySelectorAll<HTMLInputElement>('input[type="range"].slider-progress')
+      .forEach((e: HTMLInputElement) => {
+        e.style.setProperty('--value', e.value)
+        e.style.setProperty('--min', e.min === '' ? MIN_SKIP_SECONDS : e.min)
+        e.style.setProperty('--max', e.max === '' ? MAX_SKIP_SECONDS : e.max)
+        e.addEventListener('input', () =>
+          e.style.setProperty('--value', e.value),
+        )
+      })
   }
 
   // Get the background color defined in the CSS variable "--color-main-blue"
   getBackgroundColor(): string {
-    return getComputedStyle(document.documentElement).getPropertyValue('--color-main-blue');
+    return getComputedStyle(document.documentElement).getPropertyValue(
+      '--color-main-blue',
+    )
   }
 
   /** Calls reload request to backend, then reloads webpage after 2 seconds
    *
    */
   callBackendReload(): void {
-    const MILLISECONDS_BEFORE_RELOADING_PAGE = 2000;
+    const MILLISECONDS_BEFORE_RELOADING_PAGE = 2000
 
     fetch(environment.apiURL + '/api/restart', {
       method: 'POST',
     })
-      .then(response => {
+      .then((response) => {
         if (response.ok) {
-          console.log('Called for restart');
+          console.log('Called for restart')
           setTimeout(() => {
-            window.location.reload();
-          }, MILLISECONDS_BEFORE_RELOADING_PAGE);
+            window.location.reload()
+          }, MILLISECONDS_BEFORE_RELOADING_PAGE)
         } else {
-          console.error('Error with calling restart');
+          console.error('Error with calling restart')
         }
       })
-      .catch(error => {
-        console.error('Error with calling restart:', error);
-      });
+      .catch((error) => {
+        console.error('Error with calling restart:', error)
+      })
   }
 }
