@@ -20,13 +20,13 @@ $Frontend-warn: mat.define-palette(mat.$red-palette);
 // Create the theme object. A theme consists of configurations for individual
 // theming systems such as "color" or "typography".
 $Frontend-theme: mat.define-light-theme(
-    (
-        color: (
-            primary: $Frontend-primary,
-            accent: $Frontend-accent,
-            warn: $Frontend-warn,
-        ),
-    )
+  (
+    color: (
+      primary: $Frontend-primary,
+      accent: $Frontend-accent,
+      warn: $Frontend-warn,
+    ),
+  )
 );
 
 // Include theme styles for core and each component used in your app.
@@ -38,43 +38,43 @@ $Frontend-theme: mat.define-light-theme(
 /* Definiere Farbvariablen */
 html,
 body {
-    margin: 0;
-    height: 100%;
+  margin: 0;
+  height: 100%;
 
-    background-color: var(--background-color);
+  background-color: var(--background-color);
 }
 
 :root {
-    --container-background-color: #ffffff;
-    --textsheet-background-color: #ffffff;
-    --background-color: #f3f3f3;
-    --color-grey: #afafaf;
-    --color-grey-hoverover: #a1a1a1;
-    --color-grey-onclick: #838383;
-    --color-dark-grey: #383838;
-    --color-darker-grey: #2c2c2c;
-    --color-main-blue: #0147b1;
-    --color-black: #000000;
-    --text-color: #ffffff;
-    --box-shadow-color: #0000004d;
-    --circle-background-color: #afafaf59;
-    --keybindings-background-color: #2d62b1;
-    --keybindings-font-color: #e0eff7;
+  --container-background-color: #ffffff;
+  --textsheet-background-color: #ffffff;
+  --background-color: #f3f3f3;
+  --color-grey: #afafaf;
+  --color-grey-hoverover: #a1a1a1;
+  --color-grey-onclick: #838383;
+  --color-dark-grey: #383838;
+  --color-darker-grey: #2c2c2c;
+  --color-main-blue: #0147b1;
+  --color-black: #000000;
+  --text-color: #ffffff;
+  --box-shadow-color: #0000004d;
+  --circle-background-color: #afafaf59;
+  --keybindings-background-color: #2d62b1;
+  --keybindings-font-color: #e0eff7;
 
-    --rgb-color-black: 0, 0, 0;
-    --rgb-color-grey: 175, 175, 175;
+  --rgb-color-black: 0, 0, 0;
+  --rgb-color-grey: 175, 175, 175;
 
-    --font-size-dictionary-header-text: 50px;
-    --font-size-dictionary-normal-text: 24px;
-    --font-size-dictionary-delete-button-text: 20px;
+  --font-size-dictionary-header-text: 50px;
+  --font-size-dictionary-normal-text: 24px;
+  --font-size-dictionary-delete-button-text: 20px;
 }
 
 html,
 body {
-    height: 100%;
+  height: 100%;
 }
 
 body {
-    margin: 0;
-    font-family: Roboto, 'Helvetica Neue', sans-serif;
+  margin: 0;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
 }

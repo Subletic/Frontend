@@ -11,105 +11,98 @@ import { ToastrModule } from 'ngx-toastr'
 import { DictionaryRowComponent } from '../dictionary-row/dictionary-row.component'
 
 describe('DictionaryEditorComponent', () => {
-    let component: DictionaryEditorComponent
-    let fixture: ComponentFixture<DictionaryEditorComponent>
-    let dictionaryService: DictionaryService
+  let component: DictionaryEditorComponent
+  let fixture: ComponentFixture<DictionaryEditorComponent>
+  let dictionaryService: DictionaryService
 
-    beforeEach(() => {
-        TestBed.configureTestingModule({
-            declarations: [
-                DictionaryEditorComponent,
-                DictionaryFsLoaderComponent,
-                DictionaryRowComponent,
-            ],
-            imports: [ToastrModule.forRoot()],
-            providers: [DictionaryService],
-        })
-
-        fixture = TestBed.createComponent(DictionaryEditorComponent)
-        component = fixture.componentInstance
-        dictionaryService = TestBed.inject(DictionaryService)
-        fixture.detectChanges()
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      declarations: [
+        DictionaryEditorComponent,
+        DictionaryFsLoaderComponent,
+        DictionaryRowComponent,
+      ],
+      imports: [ToastrModule.forRoot()],
+      providers: [DictionaryService],
     })
 
-    it('should create', () => {
-        expect(component).toBeTruthy()
-    })
+    fixture = TestBed.createComponent(DictionaryEditorComponent)
+    component = fixture.componentInstance
+    dictionaryService = TestBed.inject(DictionaryService)
+    fixture.detectChanges()
+  })
 
-    it('should add a new row to the dictionary', () => {
-        const initialRows =
-            component.dictionary.transcription_config.additional_vocab.length
+  it('should create', () => {
+    expect(component).toBeTruthy()
+  })
 
-        component.addRow()
+  it('should add a new row to the dictionary', () => {
+    const initialRows =
+      component.dictionary.transcription_config.additional_vocab.length
 
-        expect(
-            component.dictionary.transcription_config.additional_vocab.length,
-        ).toEqual(initialRows + 1)
-    })
+    component.addRow()
 
-    it('should delete a row from the dictionary', () => {
-        const row: additional_vocab = { content: 'test', sounds_like: ['test'] }
-        component.dictionary.transcription_config.additional_vocab.push(row)
+    expect(
+      component.dictionary.transcription_config.additional_vocab.length,
+    ).toEqual(initialRows + 1)
+  })
 
-        const initialRows =
-            component.dictionary.transcription_config.additional_vocab.length
+  it('should delete a row from the dictionary', () => {
+    const row: additional_vocab = { content: 'test', sounds_like: ['test'] }
+    component.dictionary.transcription_config.additional_vocab.push(row)
 
-        component.onDeleteRow(row)
+    const initialRows =
+      component.dictionary.transcription_config.additional_vocab.length
 
-        expect(
-            component.dictionary.transcription_config.additional_vocab.length,
-        ).toEqual(initialRows - 1)
-    })
+    component.onDeleteRow(row)
 
-    it('should sort alphabetically and reverse alphabetically', () => {
-        const row1: additional_vocab = {
-            content: 'banana',
-            sounds_like: ['test'],
-        }
-        const row2: additional_vocab = {
-            content: 'apple',
-            sounds_like: ['test'],
-        }
-        component.dictionary.transcription_config.additional_vocab.push(
-            row1,
-            row2,
-        )
+    expect(
+      component.dictionary.transcription_config.additional_vocab.length,
+    ).toEqual(initialRows - 1)
+  })
 
-        //Nullwert am Anfang beachten!
-        component.sortAlphabeticallyCall()
-        expect(
-            component.dictionary.transcription_config.additional_vocab[1]
-                .content,
-        ).toBe('apple')
+  it('should sort alphabetically and reverse alphabetically', () => {
+    const row1: additional_vocab = {
+      content: 'banana',
+      sounds_like: ['test'],
+    }
+    const row2: additional_vocab = {
+      content: 'apple',
+      sounds_like: ['test'],
+    }
+    component.dictionary.transcription_config.additional_vocab.push(row1, row2)
 
-        component.sortAlphabeticallyCall()
-        expect(
-            component.dictionary.transcription_config.additional_vocab[0]
-                .content,
-        ).toBe('banana')
-    })
+    //Nullwert am Anfang beachten!
+    component.sortAlphabeticallyCall()
+    expect(
+      component.dictionary.transcription_config.additional_vocab[1].content,
+    ).toBe('apple')
 
-    it('should update dictionary when service emits update', () => {
-        const TRANSCRIPTION_CONFIG = new transcription_config('en', [
-            { content: 'updated', sounds_like: ['test'] },
-        ])
-        const UPDATED_DICTIONARY: dictionary = new dictionary(
-            TRANSCRIPTION_CONFIG,
-        )
+    component.sortAlphabeticallyCall()
+    expect(
+      component.dictionary.transcription_config.additional_vocab[0].content,
+    ).toBe('banana')
+  })
 
-        spyOn(dictionaryService.dictionaryUpdated, 'subscribe').and.callFake(
-            (callback: (value: dictionary) => void) => {
-                callback(UPDATED_DICTIONARY)
-                return {
-                    unsubscribe: () => {
-                        console.log()
-                    },
-                } as Subscription
-            },
-        )
+  it('should update dictionary when service emits update', () => {
+    const TRANSCRIPTION_CONFIG = new transcription_config('en', [
+      { content: 'updated', sounds_like: ['test'] },
+    ])
+    const UPDATED_DICTIONARY: dictionary = new dictionary(TRANSCRIPTION_CONFIG)
 
-        dictionaryService.updateDictionary(UPDATED_DICTIONARY)
+    spyOn(dictionaryService.dictionaryUpdated, 'subscribe').and.callFake(
+      (callback: (value: dictionary) => void) => {
+        callback(UPDATED_DICTIONARY)
+        return {
+          unsubscribe: () => {
+            console.log()
+          },
+        } as Subscription
+      },
+    )
 
-        expect(component.dictionary).toEqual(UPDATED_DICTIONARY)
-    })
+    dictionaryService.updateDictionary(UPDATED_DICTIONARY)
+
+    expect(component.dictionary).toEqual(UPDATED_DICTIONARY)
+  })
 })

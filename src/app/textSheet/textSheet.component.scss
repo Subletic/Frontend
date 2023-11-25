@@ -1,73 +1,73 @@
 .middle-container {
-    max-width: 1000px;
-    overflow-y: scroll;
-    overflow-x: hidden;
-    //height: 95.65vh;
+  max-width: 1000px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  //height: 95.65vh;
 
-    min-height: 95.65%;
-    max-height: 95.65%;
+  min-height: 95.65%;
+  max-height: 95.65%;
 
-    margin-left: Auto;
-    margin-right: Auto;
+  margin-left: Auto;
+  margin-right: Auto;
 
-    background-color: var(--textsheet-background-color);
+  background-color: var(--textsheet-background-color);
 }
 
 .middle-container h1 {
-    font-size: 24px;
-    text-align: center;
-    max-width: 100%;
+  font-size: 24px;
+  text-align: center;
+  max-width: 100%;
 }
 
 .innerBoxes {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0 20px;
-    box-sizing: border-box;
-    margin-left: auto;
-    margin-right: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 20px;
+  box-sizing: border-box;
+  margin-left: auto;
+  margin-right: auto;
 
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 /* width */
 ::-webkit-scrollbar {
-    width: 12px;
+  width: 12px;
 }
 
 /* Handle */
 ::-webkit-scrollbar-track {
-    background: var(--background-color);
+  background: var(--background-color);
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-    background: var(--color-grey);
-    border-radius: 12px;
-    width: 12px;
+  background: var(--color-grey);
+  border-radius: 12px;
+  width: 12px;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-    background: var(--color-grey-hoverover);
+  background: var(--color-grey-hoverover);
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:active {
-    background: var(--color-grey-onclick);
+  background: var(--color-grey-onclick);
 }
 
 @media (max-width: 768px) {
-    .middle-container {
-        height: auto;
-        padding: 20px;
-        height: 100vh;
-    }
+  .middle-container {
+    height: auto;
+    padding: 20px;
+    height: 100vh;
+  }
 
-    .middle-container h1 {
-        font-size: 18px;
-    }
+  .middle-container h1 {
+    font-size: 18px;
+  }
 }

@@ -1,64 +1,64 @@
 .word-column {
-    background-color: var(--background-color);
-    border-radius: 10px;
-    padding: 10px;
-    margin-right: 10px;
+  background-color: var(--background-color);
+  border-radius: 10px;
+  padding: 10px;
+  margin-right: 10px;
 
-    font-size: var(--font-size-dictionary-normal-text);
+  font-size: var(--font-size-dictionary-normal-text);
 }
 
 .sounds-like-column {
-    background-color: var(--background-color);
-    border-radius: 10px;
-    padding: 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+  background-color: var(--background-color);
+  border-radius: 10px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 
-    font-size: var(--font-size-dictionary-normal-text);
+  font-size: var(--font-size-dictionary-normal-text);
 }
 
 .row-container {
-    border-radius: 10px;
-    overflow: hidden;
-    margin-bottom: 10px;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 10px;
 
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
 
-    align-items: center;
+  align-items: center;
 
-    padding-left: 1.9%;
+  padding-left: 1.9%;
 }
 
 .word-column,
 .sounds-like-column {
-    padding: 10px;
+  padding: 10px;
 }
 
 .column-container {
-    flex: 1;
+  flex: 1;
 }
 
 .delete-button {
-    background-color: var(--color-grey);
-    color: white;
-    border: none;
-    border-radius: 50%;
-    padding: 5px 10px;
-    cursor: pointer;
+  background-color: var(--color-grey);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  padding: 5px 10px;
+  cursor: pointer;
 
-    margin-left: 10px;
+  margin-left: 10px;
 
-    font-size: var(--font-size-dictionary-delete-button-text);
-    font-weight: 600;
+  font-size: var(--font-size-dictionary-delete-button-text);
+  font-weight: 600;
 
-    &:hover {
-        background-color: var(--color-grey-hoverover);
-    }
+  &:hover {
+    background-color: var(--color-grey-hoverover);
+  }
 
-    &:active {
-        background-color: var(--color-grey-onclick);
-    }
+  &:active {
+    background-color: var(--color-grey-onclick);
+  }
 }
