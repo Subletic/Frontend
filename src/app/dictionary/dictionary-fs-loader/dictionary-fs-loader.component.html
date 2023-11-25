@@ -16,7 +16,10 @@
     Export
   </div>
 
-  <button class="sort-button" (click)="handleDictionaryDownload()">
+  <button class="sort-button" (click)="handleDictionaryDownloadJSON()">
+    <img ngSrc="assets/export.svg" alt="Export Symbol" class="sort-button-image" height="28" width="28">
+  </button>
+  <button class="sort-button" (click)="handleDictionaryDownloadCSV()">
     <img ngSrc="assets/export.svg" alt="Export Symbol" class="sort-button-image" height="28" width="28">
   </button>
 </div>
