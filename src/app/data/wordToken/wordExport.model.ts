@@ -1,4 +1,4 @@
-import { WordToken } from './wordToken.model'
+import { WordToken } from './wordToken.model';
 
 /**
  * WordExport represents an instance of WordToken but only with the necessary info needed to
@@ -6,11 +6,11 @@ import { WordToken } from './wordToken.model'
  * example 'id' because it is only needed for addressing the word-content together with the spans.
  */
 export class WordExport {
-  public word: string
-  public confidence: number
-  public startTime: number
-  public endTime: number
-  public speaker: number
+  public word: string;
+  public confidence: number;
+  public startTime: number;
+  public endTime: number;
+  public speaker: number;
 
   constructor(
     word: string,
@@ -19,11 +19,11 @@ export class WordExport {
     endTime: number,
     speaker: number,
   ) {
-    this.word = word
-    this.confidence = confidence
-    this.startTime = startTime
-    this.endTime = endTime
-    this.speaker = speaker
+    this.word = word;
+    this.confidence = confidence;
+    this.startTime = startTime;
+    this.endTime = endTime;
+    this.speaker = speaker;
   }
 
   /**
@@ -38,7 +38,7 @@ export class WordExport {
       StartTime: this.startTime,
       EndTime: this.endTime,
       Speaker: this.speaker,
-    }
+    };
   }
 
   /**
@@ -51,6 +51,6 @@ export class WordExport {
       this.startTime,
       this.endTime,
       this.speaker,
-    )
+    );
   }
 }

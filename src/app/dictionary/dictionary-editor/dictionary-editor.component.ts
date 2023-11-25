@@ -1,7 +1,7 @@
-import { Component, Output, EventEmitter, OnInit } from '@angular/core'
-import { additional_vocab } from 'src/app/data/dictionary/additionalVocab.model'
-import { dictionary } from 'src/app/data/dictionary/dictionary.model'
-import { DictionaryService } from 'src/app/service/dictionary.service'
+import { Component, Output, EventEmitter, OnInit } from '@angular/core';
+import { additional_vocab } from 'src/app/data/dictionary/additionalVocab.model';
+import { dictionary } from 'src/app/data/dictionary/dictionary.model';
+import { DictionaryService } from 'src/app/service/dictionary.service';
 
 /**
  * Components represents the dictionary-editor as a whole.
@@ -12,24 +12,24 @@ import { DictionaryService } from 'src/app/service/dictionary.service'
   styleUrls: ['./dictionary-editor.component.scss'],
 })
 export class DictionaryEditorComponent implements OnInit {
-  dictionary: dictionary
-  @Output() continueToEditorEvent = new EventEmitter<void>()
+  dictionary: dictionary;
+  @Output() continueToEditorEvent = new EventEmitter<void>();
 
-  alphabeticBoolean: boolean
+  alphabeticBoolean: boolean;
 
   constructor(private dictionaryService: DictionaryService) {
     this.dictionary = new dictionary({
       language: 'en',
       additional_vocab: [{ content: '', sounds_like: [''] }],
-    })
+    });
 
-    this.alphabeticBoolean = true
+    this.alphabeticBoolean = true;
   }
 
   ngOnInit(): void {
     this.dictionaryService.dictionaryUpdated.subscribe((updatedDictionary) => {
-      this.dictionary = updatedDictionary
-    })
+      this.dictionary = updatedDictionary;
+    });
   }
 
   /**
@@ -39,8 +39,8 @@ export class DictionaryEditorComponent implements OnInit {
     this.dictionary.transcription_config.additional_vocab.push({
       content: '',
       sounds_like: [''],
-    })
-    this.dictionaryService.updateDictionary(this.dictionary)
+    });
+    this.dictionaryService.updateDictionary(this.dictionary);
   }
 
   /**
@@ -50,18 +50,18 @@ export class DictionaryEditorComponent implements OnInit {
    */
   onDeleteRow(row: additional_vocab): void {
     const index =
-      this.dictionary.transcription_config.additional_vocab.indexOf(row)
+      this.dictionary.transcription_config.additional_vocab.indexOf(row);
     if (index !== -1) {
-      this.dictionary.transcription_config.additional_vocab.splice(index, 1)
+      this.dictionary.transcription_config.additional_vocab.splice(index, 1);
     }
-    this.dictionaryService.updateDictionary(this.dictionary)
+    this.dictionaryService.updateDictionary(this.dictionary);
   }
 
   /**
    * Reacts to emitted 'changed row' and therefore updates dictionary service
    */
   onChangedRow(): void {
-    this.dictionaryService.updateDictionary(this.dictionary)
+    this.dictionaryService.updateDictionary(this.dictionary);
   }
 
   /**
@@ -70,11 +70,11 @@ export class DictionaryEditorComponent implements OnInit {
    */
   sortAlphabeticallyCall(): void {
     if (this.alphabeticBoolean === true) {
-      this.dictionary.sortAlphabetically()
-      this.alphabeticBoolean = false
+      this.dictionary.sortAlphabetically();
+      this.alphabeticBoolean = false;
     } else {
-      this.dictionary.sortReverseAlphabetically()
-      this.alphabeticBoolean = true
+      this.dictionary.sortReverseAlphabetically();
+      this.alphabeticBoolean = true;
     }
   }
 
@@ -84,14 +84,14 @@ export class DictionaryEditorComponent implements OnInit {
    */
   callHelp(): void {
     //Should call help window later
-    console.log('Help is called!')
+    console.log('Help is called!');
   }
 
   /**
    * Emits the continue event to the app-component.
    */
   continueToEditor(): void {
-    this.dictionaryService.postDictionaryToBackend()
-    this.continueToEditorEvent.emit()
+    this.dictionaryService.postDictionaryToBackend();
+    this.continueToEditorEvent.emit();
   }
 }

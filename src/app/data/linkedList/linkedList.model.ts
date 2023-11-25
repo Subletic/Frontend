@@ -1,17 +1,17 @@
-import { Node } from './node.model'
+import { Node } from './node.model';
 
 /**
  * Data Structure representing the linkedList concept in datastructures.
  */
 export class LinkedList<T> {
-  public head: Node<T> | null = null
-  public tail: Node<T> | null = null
-  public currentIndex: number
+  public head: Node<T> | null = null;
+  public tail: Node<T> | null = null;
+  public currentIndex: number;
 
   constructor() {
-    this.head = null
-    this.tail = null
-    this.currentIndex = 0
+    this.head = null;
+    this.tail = null;
+    this.currentIndex = 0;
   }
 
   /**
@@ -22,16 +22,16 @@ export class LinkedList<T> {
    * @returns A JSON-formatted string containing the extracted data from the list.
    */
   public toJSON<U>(getDataFunction: (data: T) => U): string {
-    const elements: U[] = []
-    let current = this.head
+    const elements: U[] = [];
+    let current = this.head;
 
     while (current) {
-      const DATA = getDataFunction(current.data)
-      elements.push(DATA)
-      current = current.next
+      const DATA = getDataFunction(current.data);
+      elements.push(DATA);
+      current = current.next;
     }
 
-    return JSON.stringify(elements)
+    return JSON.stringify(elements);
   }
 
   /**
@@ -40,19 +40,19 @@ export class LinkedList<T> {
    * @param data - The data attribute given to the new node
    */
   public add(data: T): void {
-    const node = new Node(data)
-    node.id = this.currentIndex
-    this.currentIndex++
+    const node = new Node(data);
+    node.id = this.currentIndex;
+    this.currentIndex++;
 
     if (!this.head) {
-      this.head = node
-      this.tail = node
-      return
+      this.head = node;
+      this.tail = node;
+      return;
     }
     if (this.tail) {
-      this.tail.next = node
-      node.prev = this.tail
-      this.tail = node
+      this.tail.next = node;
+      node.prev = this.tail;
+      this.tail = node;
     }
   }
 
@@ -62,25 +62,25 @@ export class LinkedList<T> {
    * @param data - The data attribute which should be searched for for deletion
    */
   public remove(data: T): void {
-    let current = this.head
+    let current = this.head;
 
     while (current) {
       if (current.data === data) {
         if (current === this.head) {
-          this.head = current.next
+          this.head = current.next;
         }
         if (current === this.tail) {
-          this.tail = current.prev
+          this.tail = current.prev;
         }
         if (current.prev) {
-          current.prev.next = current.next
+          current.prev.next = current.next;
         }
         if (current.next) {
-          current.next.prev = current.prev
+          current.next.prev = current.prev;
         }
-        return
+        return;
       }
-      current = current.next
+      current = current.next;
     }
   }
 
@@ -90,30 +90,30 @@ export class LinkedList<T> {
    * @param {T} prevWord - The data of the node after which the new node should be inserted.
    */
   public insertAfter(newData: T, prevData: T): void {
-    let current = this.head
+    let current = this.head;
 
     while (current) {
       if (current.data !== prevData) {
-        current = current.next
-        continue
+        current = current.next;
+        continue;
       }
 
-      const newNode = new Node(newData)
-      newNode.id = this.currentIndex
-      this.currentIndex++
-      newNode.prev = current
-      newNode.next = current.next
+      const newNode = new Node(newData);
+      newNode.id = this.currentIndex;
+      this.currentIndex++;
+      newNode.prev = current;
+      newNode.next = current.next;
 
       if (current === this.tail) {
-        this.tail = newNode
+        this.tail = newNode;
       }
-      current.next = newNode
+      current.next = newNode;
 
       if (newNode.next) {
-        newNode.next.prev = newNode
+        newNode.next.prev = newNode;
       }
 
-      return
+      return;
     }
   }
 
@@ -126,13 +126,13 @@ export class LinkedList<T> {
    * @returns A string containing the extracted and formatted data from the list.
    */
   public printDataList<U>(getDataFunction: (data: T) => U): string {
-    let current = this.head
-    const data = []
+    let current = this.head;
+    const data = [];
     while (current) {
-      data.push(getDataFunction(current.data))
-      current = current.next
+      data.push(getDataFunction(current.data));
+      current = current.next;
     }
-    return data.join(' ')
+    return data.join(' ');
   }
 
   /**
@@ -141,13 +141,13 @@ export class LinkedList<T> {
    * @returns The number of elements in the linked list.
    */
   public size(): number {
-    let current = this.head
-    let count = 0
+    let current = this.head;
+    let count = 0;
     while (current) {
-      count++
-      current = current.next
+      count++;
+      current = current.next;
     }
-    return count
+    return count;
   }
 
   /**
@@ -158,13 +158,13 @@ export class LinkedList<T> {
    * @returns A string containing the formatted representation of the linked list.
    */
   public toString(): string {
-    let current = this.head
-    const elements = []
+    let current = this.head;
+    const elements = [];
     while (current) {
-      elements.push(current.data)
-      current = current.next
+      elements.push(current.data);
+      current = current.next;
     }
-    return elements.join(' ')
+    return elements.join(' ');
   }
 
   /**
@@ -174,14 +174,14 @@ export class LinkedList<T> {
    * @returns The identifier (id) of the specified data element, or null if not found.
    */
   public getNodeId(data: T): number | null {
-    let current = this.head
+    let current = this.head;
     while (current) {
       if (current.data === data) {
-        return current.id
+        return current.id;
       }
-      current = current.next
+      current = current.next;
     }
-    return null
+    return null;
   }
 
   /**
@@ -190,13 +190,13 @@ export class LinkedList<T> {
    * @returns {T|null} - The found data or null if not found.
    */
   public getDataById(id: number): T | null {
-    let current = this.head
+    let current = this.head;
     while (current) {
       if (current.id === id) {
-        return current.data
+        return current.data;
       }
-      current = current.next
+      current = current.next;
     }
-    return null
+    return null;
   }
 }

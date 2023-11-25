@@ -1,7 +1,7 @@
-import { LinkedList } from '../linkedList/linkedList.model'
-import { WordToken } from '../wordToken/wordToken.model'
-import { WordExport } from '../wordToken/wordExport.model'
-import { SpeechBubble } from './speechBubble.model'
+import { LinkedList } from '../linkedList/linkedList.model';
+import { WordToken } from '../wordToken/wordToken.model';
+import { WordExport } from '../wordToken/wordExport.model';
+import { SpeechBubble } from './speechBubble.model';
 
 /**
  * SpeechBubbleExport represents the important information about
@@ -9,11 +9,11 @@ import { SpeechBubble } from './speechBubble.model'
  * Object can then be send to backend.
  */
 export class SpeechBubbleExport {
-  public id: number
-  public speaker: number
-  public startTime: number
-  public endTime: number
-  public speechBubbleContent: WordExport[]
+  public id: number;
+  public speaker: number;
+  public startTime: number;
+  public endTime: number;
+  public speechBubbleContent: WordExport[];
 
   constructor(
     id: number,
@@ -22,11 +22,11 @@ export class SpeechBubbleExport {
     end: number,
     speechBubbleContent: WordExport[],
   ) {
-    this.id = id
-    this.speaker = speaker
-    this.startTime = begin
-    this.endTime = end
-    this.speechBubbleContent = speechBubbleContent
+    this.id = id;
+    this.speaker = speaker;
+    this.startTime = begin;
+    this.endTime = end;
+    this.speechBubbleContent = speechBubbleContent;
   }
 
   /**
@@ -43,7 +43,7 @@ export class SpeechBubbleExport {
       SpeechBubbleContent: this.speechBubbleContent.map((wordExport) =>
         wordExport.toJSON(),
       ),
-    }
+    };
   }
 
   /**
@@ -51,11 +51,11 @@ export class SpeechBubbleExport {
    *
    */
   public toSpeechBubble(): SpeechBubble {
-    const words = new LinkedList<WordToken>()
+    const words = new LinkedList<WordToken>();
 
     this.speechBubbleContent.forEach((element) => {
-      words.add(element.toWordToken())
-    })
+      words.add(element.toWordToken());
+    });
 
     return new SpeechBubble(
       this.speaker,
@@ -63,6 +63,6 @@ export class SpeechBubbleExport {
       this.endTime,
       words,
       this.id,
-    )
+    );
   }
 }
