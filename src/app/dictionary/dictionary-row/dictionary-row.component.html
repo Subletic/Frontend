@@ -1,11 +1,19 @@
 <div class="row-container">
     <div class="column-container">
-        <div class="word-column" contenteditable="true" (input)="onContentChange('content', $event)">
+        <div
+            class="word-column"
+            contenteditable="true"
+            (input)="onContentChange('content', $event)"
+        >
             {{ content_copy }}
         </div>
     </div>
     <div class="column-container">
-        <div class="sounds-like-column" contenteditable="true" (input)="onContentChange('sounds_like', $event)">
+        <div
+            class="sounds-like-column"
+            contenteditable="true"
+            (input)="onContentChange('sounds_like', $event)"
+        >
             {{ sounds_like_copy }}
         </div>
     </div>

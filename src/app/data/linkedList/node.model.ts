@@ -5,13 +5,13 @@
  */
 
 export class Node<T> {
-  public data: T;
-  public id: number;
-  public prev: Node<T> | null = null;
-  public next: Node<T> | null = null;
+    public data: T
+    public id: number
+    public prev: Node<T> | null = null
+    public next: Node<T> | null = null
 
-  constructor(data: T) {
-    this.data = data;
-    this.id = 0;
-  }
+    constructor(data: T) {
+        this.data = data
+        this.id = 0
+    }
 }
