@@ -1,18 +1,13 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg id="Ebene_2" data-name="Ebene 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 43">
-  <defs>
-    <style>
-      .cls-1 {
-        fill: #0147b1;
-        stroke-width: 0px;
-      }
-    </style>
-  </defs>
+<svg width="43" height="42" xmlns="http://www.w3.org/2000/svg" data-name="Ebene 2">
+ <g>
+  <title>Layer 1</title>
   <g id="Ebene_1-2" data-name="Ebene 1">
-    <rect class="cls-1" x="14.47" y="8.68" width="8.14" height="18.1" transform="translate(37.27 35.26) rotate(179.41)"/>
-    <polygon class="cls-1" points="18.36 0 8.98 11.35 27.98 11.16 18.36 0"/>
-    <rect class="cls-1" y="26" width="7" height="17"/>
-    <rect class="cls-1" x="14" y="22" width="7" height="35" transform="translate(-22 57) rotate(-90)"/>
-    <rect class="cls-1" x="29" y="26" width="7" height="17"/>
+   <rect transform="rotate(179.41 40.27 34.76)" class="cls-1" x="54.74" y="43.44" width="8.14" height="18.1" fill="#0147b1" stroke-width="0px" id="svg_1"/>
+   <polygon class="cls-1" points="21.360000610351562,-0.4999999403953552 11.979999542236328,10.850000143051147 30.979999542236328,10.65999960899353 21.360000610351562,-0.4999999403953552 " fill="#0147b1" stroke-width="0px" id="svg_2"/>
+   <rect class="cls-1" y="25.5" width="7" height="17" fill="#0147b1" stroke-width="0px" id="svg_3" x="3"/>
+   <rect transform="rotate(-90 -19 56.5)" class="cls-1" x="-5" y="78.5" width="7" height="35" fill="#0147b1" stroke-width="0px" id="svg_4"/>
+   <rect class="cls-1" x="32" y="25.5" width="7" height="17" fill="#0147b1" stroke-width="0px" id="svg_5"/>
   </g>
+ </g>
+
 </svg>

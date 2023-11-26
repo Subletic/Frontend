@@ -1,0 +1,44 @@
+.config-wrapper {
+  display: flex;
+  flex-direction: column;
+  background-color: #FFFFFF;
+  margin: 50px;
+  padding: 20px;
+  border-radius: 15px;
+}
+
+.title {
+  align-self: center;
+  font-size: var(--font-size-dictionary-header-text);
+  font-weight: 500;
+  margin-bottom: 24px;
+  color: var(--color-main-blue);
+}
+
+.slider-wrapper {
+  display: flex;
+  gap: 30px;
+  justify-content: center;
+}
+
+.buffer-slider {
+  flex-grow: 2;
+  max-width: 350px;
+  --mdc-slider-active-track-color: var(--color-main-blue);
+  --mdc-slider-inactive-track-color: var(--color-dark-grey);
+  --mdc-slider-handle-color: var(--color-main-blue);
+  --mdc-slider-focus-handle-color: var(--color-main-blue);
+}
+
+.text {
+  align-self: center;
+  justify-content: center;
+
+  //evtl noch zu variable machen?
+  font-size: 24px;
+  font-weight: 500;
+}
+
+.fixed-width {
+  width: 100px;
+}
