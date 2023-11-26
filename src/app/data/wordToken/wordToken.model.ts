@@ -2,7 +2,7 @@ import { WordExport } from './wordExport.model';
 
 /**
  * WordToken represents a single word from a textbox. It acts as a node within one of the two linkedList
- * classes. 
+ * classes.
  */
 export class WordToken {
   public word: string;
@@ -14,7 +14,13 @@ export class WordToken {
   public color: string;
   public fontWeight: string;
 
-  constructor(word: string, confidence: number, startTime: number, endTime: number, speaker: number) {
+  constructor(
+    word: string,
+    confidence: number,
+    startTime: number,
+    endTime: number,
+    speaker: number,
+  ) {
     this.word = word;
     this.confidence = confidence;
     this.startTime = startTime;
@@ -27,8 +33,8 @@ export class WordToken {
   }
 
   /**
-  * Sets the color based on the confidence value.
-  */
+   * Sets the color based on the confidence value.
+   */
   public setColor(): void {
     const HIGH_CONFIDENCE = 0.9;
     const MID_CONFIDENCE = 0.7;
@@ -52,7 +58,7 @@ export class WordToken {
 
   /**
    * Sets the text of the current object to a new value.
-   * 
+   *
    * @param newWord - the new text to set to
    */
   public setWord(newWord: string): void {
@@ -63,14 +69,20 @@ export class WordToken {
    * Returns an WordExport Objekt similiar to this Instance of WordToken
    */
   public getExport(): WordExport {
-    return new WordExport(this.word, this.confidence, this.startTime, this.endTime, this.speaker);
+    return new WordExport(
+      this.word,
+      this.confidence,
+      this.startTime,
+      this.endTime,
+      this.speaker,
+    );
   }
 
   /**
-  * Updates the colors of the word.
-  * 
-  * @pre Should only be called if the confidence actually changed.
-  */
+   * Updates the colors of the word.
+   *
+   * @pre Should only be called if the confidence actually changed.
+   */
   public updateWordColor(): void {
     const HIGHEST_CONFIDENCE = 1;
     const COLOR_BLACK = '#000000';
@@ -82,20 +94,21 @@ export class WordToken {
 
   /**
    * Adjusts FontWeight based on a given time.
-   * 
+   *
    * @param audioTime - Time stamp to compare own time slot with.
    */
   public adjustFontWeight(audioTime: number) {
-    this.fontWeight = this.currentAudioTimeOnWord(audioTime) ? 'bold' : 'normal';
+    this.fontWeight = this.currentAudioTimeOnWord(audioTime)
+      ? 'bold'
+      : 'normal';
   }
 
   /**
    * Compares given audioTime to time stamp of this word.
-   * 
+   *
    * @param audioTime - Time stamp to compare own time slot with.
    */
   private currentAudioTimeOnWord(audioTime: number): boolean {
-    return (this.startTime <= audioTime && this.endTime >= audioTime);
+    return this.startTime <= audioTime && this.endTime >= audioTime;
   }
-
 }

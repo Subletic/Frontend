@@ -1,16 +1,16 @@
-import {Injectable} from '@angular/core';
-import {Subject} from "rxjs";
-import {dictionary} from "../data/dictionary/dictionary.model";
-import {transcription_config} from "../data/dictionary/transcription_config.module";
-import {additional_vocab} from "../data/dictionary/additionalVocab.model";
-import {environment} from "../../environments/environment";
-import {Config} from "../data/config/config.model";
+import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
+import { dictionary } from '../data/dictionary/dictionary.model';
+import { transcription_config } from '../data/dictionary/transcription_config.module';
+import { additional_vocab } from '../data/dictionary/additionalVocab.model';
+import { environment } from '../../environments/environment';
+import { Config } from '../data/config/config.model';
 
 /**
  * Service to provide the dictionary to the components.
  */
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ConfigurationService {
   public dictionaryUpdated: Subject<dictionary> = new Subject<dictionary>();
@@ -32,9 +32,12 @@ export class ConfigurationService {
    * Generates a default dictionary.
    */
   private generateDefaultDictionary(): dictionary {
-    const LANGUAGE = "de"
+    const LANGUAGE = 'de';
     const ADDITIONAL_VOCAB: additional_vocab[] = [];
-    const TRANSCRIPTION_CONFIG = new transcription_config(LANGUAGE, ADDITIONAL_VOCAB);
+    const TRANSCRIPTION_CONFIG = new transcription_config(
+      LANGUAGE,
+      ADDITIONAL_VOCAB,
+    );
 
     return new dictionary(TRANSCRIPTION_CONFIG);
   }
@@ -76,13 +79,22 @@ export class ConfigurationService {
    */
   public isConfigValid(): boolean {
     // Check if delay length is valid
-    if (this.delayLengthInMinutes < 0.5 || this.delayLengthInMinutes > 10 || isNaN(this.delayLengthInMinutes)) {
+    if (
+      this.delayLengthInMinutes < 0.5 ||
+      this.delayLengthInMinutes > 10 ||
+      isNaN(this.delayLengthInMinutes)
+    ) {
       return false;
     }
 
     // Check if sounds like exists for empty word
-    for (const word of this.currentDictionary.transcription_config.additional_vocab) {
-      if (word.content == "" && word.sounds_like != null && word.sounds_like.length > 0) {
+    for (const word of this.currentDictionary.transcription_config
+      .additional_vocab) {
+      if (
+        word.content == '' &&
+        word.sounds_like != null &&
+        word.sounds_like.length > 0
+      ) {
         return false;
       }
     }
@@ -93,26 +105,25 @@ export class ConfigurationService {
     return true;
   }
 
-
   /**
    * Posts the current configuration to the backend.
    */
   public postConfigurationToBackend(): void {
     const CONFIG = new Config(
       this.currentDictionary,
-      this.delayLengthInMinutes
-    )
+      this.delayLengthInMinutes,
+    );
 
-    fetch(environment.apiURL + "/api/Configuration/upload", {
-      method: "POST",
+    fetch(environment.apiURL + '/api/Configuration/upload', {
+      method: 'POST',
       body: JSON.stringify(CONFIG),
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
     }).then((response) => {
-      console.log(response)
+      console.log(response);
       if (response.ok) return;
-      console.error("Error while uploading configuration to backend.")
-    })
+      console.error('Error while uploading configuration to backend.');
+    });
   }
 }

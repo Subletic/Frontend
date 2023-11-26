@@ -1,13 +1,12 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 
 /**
  * Service to request & configure access to external HID control devices (foot control, hand control, etc)
  */
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class HidControlService {
-
   // Devices we can handle
   private HID_DEVICES: HIDDeviceFilter[] = [
     {
@@ -15,8 +14,8 @@ export class HidControlService {
       vendorId: 0x15d8,
       productId: 0x0024,
       usagePage: 0xffff,
-      usage: 0x01
-    }
+      usage: 0x01,
+    },
   ];
 
   // The previous switch state, required for i.e. differenciating stop->play and play+ffwd->play
@@ -27,7 +26,9 @@ export class HidControlService {
    */
   constructor() {
     if (!this.isSupportedWebHID()) {
-      console.error("WebHID is not supported in this browser, you cannot make use of external control devices.");
+      console.error(
+        'WebHID is not supported in this browser, you cannot make use of external control devices.',
+      );
       return;
     }
   }
@@ -36,7 +37,7 @@ export class HidControlService {
    * Check for WebHID support
    */
   private isSupportedWebHID(): boolean {
-    return ('hid' in navigator);
+    return 'hid' in navigator;
   }
 
   /**
@@ -44,10 +45,14 @@ export class HidControlService {
    */
   private async findAllowedDevices(): Promise<HIDDevice[]> {
     const allowedDevices: HIDDevice[] = await navigator.hid.getDevices();
-    return allowedDevices.filter (allowedDevice =>
-      this.HID_DEVICES.find (handlableDevice =>
-        handlableDevice.vendorId === allowedDevice.vendorId
-        && handlableDevice.productId === allowedDevice.productId) !== undefined);
+    return allowedDevices.filter(
+      (allowedDevice) =>
+        this.HID_DEVICES.find(
+          (handlableDevice) =>
+            handlableDevice.vendorId === allowedDevice.vendorId &&
+            handlableDevice.productId === allowedDevice.productId,
+        ) !== undefined,
+    );
   }
 
   /**
@@ -57,30 +62,42 @@ export class HidControlService {
   private async checkForDevices(): Promise<void> {
     // get permitted devices we care about
     const alreadyAllowedDevices: HIDDevice[] = await this.findAllowedDevices();
-    console.log(`We have been granted access to ${alreadyAllowedDevices.length} devices`);
+    console.log(
+      `We have been granted access to ${alreadyAllowedDevices.length} devices`,
+    );
 
     // find out what devices we have yet to be granted permission to
-    const unhandledDevices: HIDDeviceFilter[] = this.HID_DEVICES.filter (potentialDevice =>
-      alreadyAllowedDevices.find (allowedDevice =>
-        potentialDevice.vendorId === allowedDevice.vendorId
-        && potentialDevice.productId === allowedDevice.productId) === undefined);
-    console.log(`Of those device(s), we don't yet have permissions to access ${unhandledDevices.length} of them`);
+    const unhandledDevices: HIDDeviceFilter[] = this.HID_DEVICES.filter(
+      (potentialDevice) =>
+        alreadyAllowedDevices.find(
+          (allowedDevice) =>
+            potentialDevice.vendorId === allowedDevice.vendorId &&
+            potentialDevice.productId === allowedDevice.productId,
+        ) === undefined,
+    );
+    console.log(
+      `Of those device(s), we don't yet have permissions to access ${unhandledDevices.length} of them`,
+    );
     if (unhandledDevices.length === 0) return;
 
     // try to request access to them
     try {
       await navigator.hid.requestDevice({
-        filters: unhandledDevices
+        filters: unhandledDevices,
       });
     } catch (e) {
-      console.error ("Unable to request device access");
+      console.error('Unable to request device access');
     }
   }
 
   /**
    * Make a callback that will be run whenever an allowed & handlable device sends an input state
    */
-  private makeCallbackDeviceInput(callbackPlay: () => void, callbackFastforward: () => void, callbackRewind: () => void): (ev: HIDInputReportEvent) => void {
+  private makeCallbackDeviceInput(
+    callbackPlay: () => void,
+    callbackFastforward: () => void,
+    callbackRewind: () => void,
+  ): (ev: HIDInputReportEvent) => void {
     return (event) => {
       const { data } = event;
 
@@ -90,12 +107,13 @@ export class HidControlService {
       const value: number = data.getUint8(0);
 
       // decypher button states for printing
-      let valueMeaning = "stop";
+      let valueMeaning = 'stop';
       if (value > 0) {
         const meaningsSet: string[] = [];
-        if ((value & REWIND_BIT) !== REWIND_BIT) meaningsSet.push("rewind");
-        if ((value & PLAY_BIT) !== PLAY_BIT) meaningsSet.push("play");
-        if ((value & FASTFORWARD_BIT) !== FASTFORWARD_BIT) meaningsSet.push("fast-forward");
+        if ((value & REWIND_BIT) !== REWIND_BIT) meaningsSet.push('rewind');
+        if ((value & PLAY_BIT) !== PLAY_BIT) meaningsSet.push('play');
+        if ((value & FASTFORWARD_BIT) !== FASTFORWARD_BIT)
+          meaningsSet.push('fast-forward');
         valueMeaning = meaningsSet.toString();
       }
       console.log(`pedal says: ${value} (meaning: ${valueMeaning}`);
@@ -104,14 +122,12 @@ export class HidControlService {
       switch (value) {
         // nothing pressed, stop
         case 0:
-          if (this.lastState === PLAY_BIT)
-            callbackPlay();
+          if (this.lastState === PLAY_BIT) callbackPlay();
           break;
 
         // only play pressed
         case PLAY_BIT:
-          if (this.lastState === 0)
-            callbackPlay();
+          if (this.lastState === 0) callbackPlay();
           break;
 
         // fast-forward pressed, with or without play
@@ -134,33 +150,43 @@ export class HidControlService {
 
       // save this state for following calls
       this.lastState = value;
-    }
+    };
   }
 
   /**
    * Find devices we can handle, request access to any new ones, and apply input callbacks
    */
-  public async configureDevices(callbackPlay: () => void, callbackFastforward: () => void, callbackRewind: () => void) {
+  public async configureDevices(
+    callbackPlay: () => void,
+    callbackFastforward: () => void,
+    callbackRewind: () => void,
+  ) {
     if (!this.isSupportedWebHID()) return;
 
     await this.checkForDevices();
 
     const allowedDevices: HIDDevice[] = await this.findAllowedDevices();
-    console.log("Currently allowed devices:");
+    console.log('Currently allowed devices:');
     console.log(allowedDevices);
 
-    const inputCallback = this.makeCallbackDeviceInput (callbackPlay, callbackFastforward, callbackRewind);
+    const inputCallback = this.makeCallbackDeviceInput(
+      callbackPlay,
+      callbackFastforward,
+      callbackRewind,
+    );
 
-    allowedDevices.forEach (async allowedDevice => {
+    allowedDevices.forEach(async (allowedDevice) => {
       try {
         await allowedDevice.open();
       } catch (e) {
-        console.log(`Failed to open device ${allowedDevice.vendorId}:${allowedDevice.productId}:`, (e as Error).message);
+        console.log(
+          `Failed to open device ${allowedDevice.vendorId}:${allowedDevice.productId}:`,
+          (e as Error).message,
+        );
         return;
       }
 
-      allowedDevice.addEventListener("inputreport", inputCallback);
+      allowedDevice.addEventListener('inputreport', inputCallback);
     });
   }
 }
-

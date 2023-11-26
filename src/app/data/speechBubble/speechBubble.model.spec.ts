@@ -60,8 +60,12 @@ describe('SpeechBubble', () => {
     expect(speechBubbleExport.startTime).toBe(0);
     expect(speechBubbleExport.endTime).toBe(3);
     expect(speechBubbleExport.speechBubbleContent.length).toBe(2);
-    expect(speechBubbleExport.speechBubbleContent[0]).toEqual(wordToken1.getExport());
-    expect(speechBubbleExport.speechBubbleContent[1]).toEqual(wordToken2.getExport());
+    expect(speechBubbleExport.speechBubbleContent[0]).toEqual(
+      wordToken1.getExport(),
+    );
+    expect(speechBubbleExport.speechBubbleContent[1]).toEqual(
+      wordToken2.getExport(),
+    );
   });
 
   it('should not remove any words when the LinkedList is empty', () => {
@@ -142,22 +146,22 @@ describe('LinkedList', () => {
         Confidence: 0.9,
         StartTime: 0,
         EndTime: 1,
-        Speaker: 1
+        Speaker: 1,
       },
       {
         Word: 'World',
         Confidence: 0.8,
         StartTime: 2,
         EndTime: 3,
-        Speaker: 1
+        Speaker: 1,
       },
       {
         Word: '!',
         Confidence: 0.7,
         StartTime: 4,
         EndTime: 5,
-        Speaker: 1
-      }
+        Speaker: 1,
+      },
     ];
     const json = linkedList.toJSON((data: WordToken) => data.getExport());
 

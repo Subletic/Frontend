@@ -1,9 +1,9 @@
-import { SpeechBubbleExport } from "../speechBubble/speechBubbleExport.model";
+import { SpeechBubbleExport } from '../speechBubble/speechBubbleExport.model';
 
 /**
-* The SpeechBubbleChain class represents a chain of speech bubbles.
-* It is used for exporting and importing speech bubbles in JSON format.
-*/
+ * The SpeechBubbleChain class represents a chain of speech bubbles.
+ * It is used for exporting and importing speech bubbles in JSON format.
+ */
 export class SpeechBubbleChain {
   public SpeechbubbleChain: SpeechBubbleExport[];
 
@@ -21,7 +21,9 @@ export class SpeechBubbleChain {
    */
   toJSON() {
     return {
-      SpeechbubbleChain: this.SpeechbubbleChain.map(speechBubble => speechBubble.toJSON())
+      SpeechbubbleChain: this.SpeechbubbleChain.map((speechBubble) =>
+        speechBubble.toJSON(),
+      ),
     };
   }
 }

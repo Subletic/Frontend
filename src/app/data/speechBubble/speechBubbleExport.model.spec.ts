@@ -9,7 +9,10 @@ describe('SpeechBubbleExport', () => {
   beforeEach(() => {
     wordExport1 = new WordExport('Hello', 0.9, 0, 1, 1);
     wordExport2 = new WordExport('World', 0.8, 2, 3, 1);
-    speechBubbleExport = new SpeechBubbleExport(1, 1, 0, 3, [wordExport1, wordExport2]);
+    speechBubbleExport = new SpeechBubbleExport(1, 1, 0, 3, [
+      wordExport1,
+      wordExport2,
+    ]);
   });
 
   it('should correctly initialize SpeechBubbleExport instance', () => {
@@ -34,16 +37,16 @@ describe('SpeechBubbleExport', () => {
           Confidence: 0.9,
           StartTime: 0,
           EndTime: 1,
-          Speaker: 1
+          Speaker: 1,
         },
         {
           Word: 'World',
           Confidence: 0.8,
           StartTime: 2,
           EndTime: 3,
-          Speaker: 1
-        }
-      ]
+          Speaker: 1,
+        },
+      ],
     };
 
     expect(speechBubbleExport.toJSON()).toEqual(EXPECTED_JSON);

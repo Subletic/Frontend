@@ -16,7 +16,7 @@ describe('WordToken', () => {
       Confidence: 0.8,
       StartTime: 10,
       EndTime: 20,
-      Speaker: 1
+      Speaker: 1,
     };
 
     const EXPORTED = TOKEN.getExport();
@@ -36,7 +36,6 @@ describe('WordToken', () => {
     token.setWord('grape');
     expect(token.word).toBe('grape');
   });
-
 
   it('should set font weight to bold when audio time is within the word', () => {
     const wordToken = new WordToken('test', 0.8, 0, 1, 1);

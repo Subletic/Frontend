@@ -1,31 +1,33 @@
 <div class="editor">
-    <header>
-        <div class="title">
-            Dictionary Editor
-        </div>
-        <button class="help" (click)="callHelp()">
-            ?
-        </button>
-    </header>
+  <header>
+    <div class="title">Dictionary Editor</div>
+    <button class="help" (click)="callHelp()">?</button>
+  </header>
 
-    <app-dictionary-fs-loader></app-dictionary-fs-loader>
+  <app-dictionary-fs-loader></app-dictionary-fs-loader>
 
-    <div class="sort">
-        <button class="sort-button" (click)="sortAlphabeticallyCall()">
-            <img [src]="alphabeticBoolean ? 'assets/Z-A.svg' : 'assets/A-Z.svg'" alt="Button Image"
-                class="sort-button-image">
-        </button>
+  <div class="sort">
+    <button class="sort-button" (click)="sortAlphabeticallyCall()">
+      <img
+        [src]="alphabeticBoolean ? 'assets/Z-A.svg' : 'assets/A-Z.svg'"
+        alt="Button Image"
+        class="sort-button-image"
+      />
+    </button>
+  </div>
+
+  <div class="table">
+    <div *ngFor="let vocab of dictionary.transcription_config.additional_vocab">
+      <app-dictionary-row
+        [rowData]="vocab"
+        (deleteRow)="onDeleteRow(vocab)"
+        (changedRow)="onChangedRow()"
+      ></app-dictionary-row>
     </div>
+  </div>
 
-    <div class="table">
-        <div *ngFor="let vocab of dictionary.transcription_config.additional_vocab">
-            <app-dictionary-row [rowData]="vocab" (deleteRow)="onDeleteRow(vocab)"
-                (changedRow)="onChangedRow()"></app-dictionary-row>
-        </div>
-    </div>
-
-    <div class="table-action">
-        <button class="add-button" (click)="addRow()">Zeile hinzufügen</button>
-    </div>
+  <div class="table-action">
+    <button class="add-button" (click)="addRow()">Zeile hinzufügen</button>
+  </div>
 </div>
 

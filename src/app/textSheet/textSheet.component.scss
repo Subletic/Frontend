@@ -1,9 +1,8 @@
 .middle-container {
-
   max-width: 1000px;
   overflow-y: scroll;
   overflow-x: hidden;
-  //height: 95.65vh; 
+  //height: 95.65vh;
 
   min-height: 95.65%;
   max-height: 95.65%;
@@ -60,7 +59,6 @@
 ::-webkit-scrollbar-thumb:active {
   background: var(--color-grey-onclick);
 }
-
 
 @media (max-width: 768px) {
   .middle-container {
