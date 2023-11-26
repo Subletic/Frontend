@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { SignalRService } from "../service/signalR.service";
-import { AudioService } from "../service/audio.service";
+import {Component, OnInit} from '@angular/core';
+import {SignalRService} from "../service/signalR.service";
+import {AudioService} from "../service/audio.service";
 import * as Tone from 'tone';
 
 /**
@@ -49,17 +49,25 @@ export class AudioHandlerComponent implements OnInit {
   private readTimeInMilliseconds = 0;
 
   /**
-   * Gets the reference to the SignalRService and sets up all audioContexts.
+   * Gets the reference to required Services.
    * @param signalRService - The SignalRService to get the reference to.
    * @param audioService - The AudioService to get the reference to.
    */
   constructor(private signalRService: SignalRService, private audioService: AudioService) {
+  }
+
+
+  /**
+   * Initializes all audio contexts for different playback speeds.
+   * @param bufferLengthInMinutes
+   */
+  public initAudioContexts(bufferLengthInMinutes: number): void {
     const BASE_SAMPLE_RATE = 48000;
     const SPEED_MULTIPLIERS = [0.5, 0.7, 0.9, 1, 1.1, 1.3, 1.5]
 
     // Setup all audio contexts
     for (const multiplier of SPEED_MULTIPLIERS) {
-      this.initNewAudioContext(BASE_SAMPLE_RATE, multiplier)
+      this.initNewAudioContext(BASE_SAMPLE_RATE, multiplier, bufferLengthInMinutes);
     }
   }
 
@@ -67,9 +75,10 @@ export class AudioHandlerComponent implements OnInit {
    * Creates new AudioContext for a given playback rate multiplier.
    * @param BASE_SAMPLE_RATE Base sample rate of the raw audio.
    * @param multiplier Playback rate multiplier.
+   * @param bufferLengthInMinutes Length of the audio buffer in minutes.
    */
-  initNewAudioContext(BASE_SAMPLE_RATE: number, multiplier: number): void {
-    const audioContext = new AudioContext({ sampleRate: BASE_SAMPLE_RATE * multiplier })
+  private initNewAudioContext(BASE_SAMPLE_RATE: number, multiplier: number, bufferLengthInMinutes: number): void {
+    const audioContext = new AudioContext({sampleRate: BASE_SAMPLE_RATE * multiplier})
     audioContext.audioWorklet
       .addModule('/assets/worklets/circular-buffer-worklet.js')
       .catch((err) => {
@@ -77,6 +86,10 @@ export class AudioHandlerComponent implements OnInit {
       })
       .then(() => {
         const newAudioBufferNode = new AudioWorkletNode(audioContext, 'circular-buffer-worklet')
+        newAudioBufferNode.port.postMessage({
+          type: "setBufferLength",
+          bufferLengthInSeconds: bufferLengthInMinutes * 60,
+        })
         newAudioBufferNode.port.onmessage = (event) => {
           if (event.data.type === "workletState") {
             this.replaceAudioContext(event.data.workletState);
@@ -130,12 +143,12 @@ export class AudioHandlerComponent implements OnInit {
     if (!this.audioPlaying) {
       this.audioContext.resume().then(() => {
         this.audioPlaying = true;
-        this.audioBufferNode?.port.postMessage({ type: "play" });
+        this.audioBufferNode?.port.postMessage({type: "play"});
       })
     } else {
       this.audioContext.suspend().then(() => {
         this.audioPlaying = false;
-        this.audioBufferNode?.port.postMessage({ type: "pause" });
+        this.audioBufferNode?.port.postMessage({type: "pause"});
       })
     }
   }
@@ -174,7 +187,7 @@ export class AudioHandlerComponent implements OnInit {
     const BASE_SAMPLE_RATE = 48000;
     this.setPitchModifier(speed);
     this.sampleRate = Math.round(BASE_SAMPLE_RATE * speed);
-    this.audioBufferNode?.port.postMessage({ type: "getWorkletState" });
+    this.audioBufferNode?.port.postMessage({type: "getWorkletState"});
   }
 
   /**
@@ -192,14 +205,14 @@ export class AudioHandlerComponent implements OnInit {
    * Skips forward in the audio playback by the specified number of seconds.
    */
   public skipForward(): void {
-    this.audioBufferNode?.port.postMessage({ type: "skipForward", seconds: this.skipSeconds });
+    this.audioBufferNode?.port.postMessage({type: "skipForward", seconds: this.skipSeconds});
   }
 
   /**
    * Skips backward in the audio playback by the specified number of seconds.
    */
   public skipBackward(): void {
-    this.audioBufferNode?.port.postMessage({ type: "skipBackward", seconds: this.skipSeconds })
+    this.audioBufferNode?.port.postMessage({type: "skipBackward", seconds: this.skipSeconds})
   }
 
   /**
@@ -262,7 +275,7 @@ export class AudioHandlerComponent implements OnInit {
    */
   private replaceAudioContext(workletState: WorkletState): void {
     // Pause and disconnect nodes
-    this.audioBufferNode?.port.postMessage({ type: "pause" });
+    this.audioBufferNode?.port.postMessage({type: "pause"});
     this.audioBufferNode?.disconnect();
     this.gainNode.disconnect();
 
@@ -278,7 +291,7 @@ export class AudioHandlerComponent implements OnInit {
       type: "setWorkletState",
       workletState: workletState,
     });
-    this.audioBufferNode?.port.postMessage({ type: "play" });
+    this.audioBufferNode?.port.postMessage({type: "play"});
 
     // Connect nodes
     Tone.setContext(this.audioContext)
@@ -288,6 +301,7 @@ export class AudioHandlerComponent implements OnInit {
     pitchShiftNode.pitch = 0;
 
     this.gainNode = this.audioContext.createGain();
+    this.gainNode.gain.setValueAtTime(this.volume, this.audioContext.currentTime);
     this.audioBufferNode?.connect(this.gainNode);
 
     if (this.audioBufferNode == undefined) return;

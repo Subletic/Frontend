@@ -119,6 +119,22 @@ describe('DictionaryFsLoaderComponent', () => {
     }
   );
 
+  it('should not accept a null file', async () => {
+      const MOCK_FILE = null;
+      const MOCK_EVENT = {
+        target: {
+          files: [MOCK_FILE]
+        }
+      } as unknown as Event;
+
+      spyOn(component, 'displayDictionaryErrorToast');
+
+      await component.handleFileUpload(MOCK_EVENT);
+
+      expect(component.displayDictionaryErrorToast).toHaveBeenCalled();
+    }
+  );
+
   it('should download a JSON file', async () => {
     const spyObject = createSpyObj('a', ['click']);
     spyOn(document, 'createElement').and.returnValue(spyObject);
