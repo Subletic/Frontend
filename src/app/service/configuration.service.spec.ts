@@ -1,6 +1,6 @@
-import {ConfigurationService} from "./configuration.service";
-import {dictionary} from "../data/dictionary/dictionary.model";
-import {transcription_config} from "../data/dictionary/transcription_config.module";
+import { ConfigurationService } from './configuration.service';
+import { dictionary } from '../data/dictionary/dictionary.model';
+import { transcription_config } from '../data/dictionary/transcription_config.module';
 
 describe('ConfigurationService', () => {
   let service: ConfigurationService;
@@ -8,9 +8,8 @@ describe('ConfigurationService', () => {
     service = new ConfigurationService();
   });
 
-
   it('should update dictionary correctly', () => {
-    const newDictionary = new dictionary(new transcription_config("en", []));
+    const newDictionary = new dictionary(new transcription_config('en', []));
 
     service.updateDictionary(newDictionary);
 
@@ -39,27 +38,33 @@ describe('ConfigurationService', () => {
 
   it('should validate configuration correctly when valid', () => {
     service.updateDelayLength(5);
-    service.updateDictionary(new dictionary(new transcription_config("en", [])));
+    service.updateDictionary(
+      new dictionary(new transcription_config('en', [])),
+    );
 
     expect(service.isConfigValid()).toBeTrue();
   });
 
   it('should validate configuration correctly when invalid', () => {
     service.updateDelayLength(0);
-    service.updateDictionary(new dictionary(new transcription_config("", [])));
+    service.updateDictionary(new dictionary(new transcription_config('', [])));
 
     expect(service.isConfigValid()).toBeFalse();
   });
 
   it('should validate configuration correctly when empty word with sounds_like', () => {
     service.updateDelayLength(1);
-    service.updateDictionary(new dictionary(new transcription_config("", [{content: "", sounds_like: ["test"]}])));
+    service.updateDictionary(
+      new dictionary(
+        new transcription_config('', [{ content: '', sounds_like: ['test'] }]),
+      ),
+    );
 
     expect(service.isConfigValid()).toBeFalse();
   });
 
   it('should post configuration to backend', () => {
-    const okResponse = new Response(null, {status: 200});
+    const okResponse = new Response(null, { status: 200 });
     const fetchSpy = spyOn(window, 'fetch').and.resolveTo(okResponse);
 
     service.postConfigurationToBackend();

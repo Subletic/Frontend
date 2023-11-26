@@ -11,22 +11,26 @@ import { ToastrModule } from 'ngx-toastr';
 import { DictionaryRowComponent } from '../dictionary-row/dictionary-row.component';
 
 describe('DictionaryEditorComponent', () => {
-    let component: DictionaryEditorComponent;
-    let fixture: ComponentFixture<DictionaryEditorComponent>;
-    let dictionaryService: ConfigurationService;
+  let component: DictionaryEditorComponent;
+  let fixture: ComponentFixture<DictionaryEditorComponent>;
+  let dictionaryService: ConfigurationService;
 
-    beforeEach(() => {
-        TestBed.configureTestingModule({
-            declarations: [DictionaryEditorComponent, DictionaryFsLoaderComponent, DictionaryRowComponent],
-            imports: [ToastrModule.forRoot()],
-            providers: [ConfigurationService],
-        });
-
-        fixture = TestBed.createComponent(DictionaryEditorComponent);
-        component = fixture.componentInstance;
-        dictionaryService = TestBed.inject(ConfigurationService);
-        fixture.detectChanges();
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      declarations: [
+        DictionaryEditorComponent,
+        DictionaryFsLoaderComponent,
+        DictionaryRowComponent,
+      ],
+      imports: [ToastrModule.forRoot()],
+      providers: [ConfigurationService],
     });
+
+    fixture = TestBed.createComponent(DictionaryEditorComponent);
+    component = fixture.componentInstance;
+    dictionaryService = TestBed.inject(ConfigurationService);
+    fixture.detectChanges();
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();

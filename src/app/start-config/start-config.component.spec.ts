@@ -1,7 +1,7 @@
-import {ComponentFixture, TestBed} from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import {StartConfigComponent} from './start-config.component';
-import {MatSliderModule} from "@angular/material/slider";
+import { StartConfigComponent } from './start-config.component';
+import { MatSliderModule } from '@angular/material/slider';
 
 describe('StartConfigComponent', () => {
   let component: StartConfigComponent;
@@ -31,7 +31,7 @@ describe('StartConfigComponent', () => {
   });
 
   it('should update selected buffer length correctly', () => {
-    const event = {target: {value: '5'}} as unknown as Event;
+    const event = { target: { value: '5' } } as unknown as Event;
     const expectedIndex = 5;
     const expectedBufferLength = 3;
 
@@ -50,7 +50,7 @@ describe('StartConfigComponent', () => {
   });
 
   it('should handle invalid slider value on update', () => {
-    const event = {target: {value: 'invalid'}} as unknown as Event;
+    const event = { target: { value: 'invalid' } } as unknown as Event;
 
     component.updateSelectedBufferLength(event);
 
@@ -59,7 +59,7 @@ describe('StartConfigComponent', () => {
   });
 
   it('should handle out of range slider value on update', () => {
-    const event = {target: {value: '20'}} as unknown as Event;
+    const event = { target: { value: '20' } } as unknown as Event;
 
     component.updateSelectedBufferLength(event);
 

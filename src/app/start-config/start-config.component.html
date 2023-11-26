@@ -12,10 +12,11 @@
       discrete
       [displayWith]="mapSliderValues"
       (change)="updateSelectedBufferLength($event)"
-      class="buffer-slider">
-      <input matSliderThumb value="2">
+      class="buffer-slider"
+    >
+      <input matSliderThumb value="2" />
     </mat-slider>
 
-    <div class="text fixed-width">{{getSelectedBufferLength()}} min</div>
+    <div class="text fixed-width">{{ getSelectedBufferLength() }} min</div>
   </div>
 </div>
