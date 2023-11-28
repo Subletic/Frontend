@@ -114,7 +114,7 @@ export class ConfigurationService {
       this.delayLengthInMinutes,
     );
 
-    fetch(environment.apiURL + '/api/Configuration/upload', {
+    fetch(environment.BACKEND_URL + '/api/Configuration/upload', {
       method: 'POST',
       body: JSON.stringify(CONFIG),
       headers: {

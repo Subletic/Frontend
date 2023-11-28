@@ -108,7 +108,7 @@ describe('SettingsComponent', () => {
 
     component.callBackendReload();
     expect(window.fetch).toHaveBeenCalledWith(
-      environment.apiURL + '/api/restart',
+      environment.BACKEND_URL + '/api/restart',
       { method: 'POST' },
     );
 

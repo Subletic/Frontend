@@ -142,7 +142,7 @@ export class SettingsComponent implements OnInit, OnDestroy, AfterViewInit {
   callBackendReload(): void {
     const MILLISECONDS_BEFORE_RELOADING_PAGE = 2000;
 
-    fetch(environment.apiURL + '/api/restart', {
+    fetch(environment.BACKEND_URL + '/api/restart', {
       method: 'POST',
     })
       .then((response) => {

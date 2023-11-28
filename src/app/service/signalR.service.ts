@@ -18,7 +18,7 @@ export class SignalRService {
 
   constructor() {
     this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl(environment.apiURL + '/communicationHub') // Specify the SignalR endpoint URL
+      .withUrl(environment.BACKEND_URL + '/communicationHub') // Specify the SignalR endpoint URL
       .build();
 
     this.hubConnection

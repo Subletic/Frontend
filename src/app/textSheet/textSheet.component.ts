@@ -169,7 +169,7 @@ export class TextSheetComponent implements OnInit {
     const SPEECHBUBBLE_CHAIN = new SpeechBubbleChain(speechBubbleExportList);
     const JSON_DATA = SPEECHBUBBLE_CHAIN.toJSON();
 
-    fetch(environment.apiURL + '/api/speechbubble/update', {
+    fetch(environment.BACKEND_URL + '/api/speechbubble/update', {
       method: 'POST',
       body: JSON.stringify(JSON_DATA),
       headers: {
