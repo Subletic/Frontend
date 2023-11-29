@@ -11,7 +11,7 @@
   AfterViewInit,
 } from '@angular/core';
 import { SettingsService } from './settings.service';
-import { environment } from '../../environments/environment';
+import { environment } from '../../environments/environment.prod';
 
 /**
  * The SettingsComponent represents a settings modal that allows users to configure certain options.
