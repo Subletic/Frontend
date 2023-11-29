@@ -16,6 +16,12 @@ export class HidControlService {
       usagePage: 0xffff,
       usage: 0x01,
     },
+
+    {
+      // Olympus hand control
+      vendorId: 0x07b4,
+      productId: 0x026e,
+    }
   ];
 
   // The previous switch state, required for i.e. differenciating stop->play and play+ffwd->play
@@ -104,22 +110,23 @@ export class HidControlService {
       const REWIND_BIT = 1 << 2;
       const PLAY_BIT = 1 << 1;
       const FASTFORWARD_BIT = 1 << 0;
-      const value: number = data.getUint8(0);
+      const footValue: number = data.getUint8(0);
+      const handValue: number = data.getUint8(2);
 
       // decypher button states for printing
       let valueMeaning = 'stop';
-      if (value > 0) {
+      if ((footValue | handValue) > 0) {
         const meaningsSet: string[] = [];
-        if ((value & REWIND_BIT) !== REWIND_BIT) meaningsSet.push('rewind');
-        if ((value & PLAY_BIT) !== PLAY_BIT) meaningsSet.push('play');
-        if ((value & FASTFORWARD_BIT) !== FASTFORWARD_BIT)
+        if (((footValue | handValue) & REWIND_BIT) == REWIND_BIT) meaningsSet.push('rewind');
+        if (((footValue | handValue) & PLAY_BIT) == PLAY_BIT) meaningsSet.push('play');
+        if (((footValue | handValue) & FASTFORWARD_BIT) == FASTFORWARD_BIT)
           meaningsSet.push('fast-forward');
         valueMeaning = meaningsSet.toString();
       }
-      console.log(`pedal says: ${value} (meaning: ${valueMeaning}`);
+      console.log(`pedal says: ${handValue | footValue} (meaning: ${valueMeaning}`);
 
       // decide what to do, based on current & last button states
-      switch (value) {
+      switch (footValue | handValue) {
         // nothing pressed, stop
         case 0:
           if (this.lastState === PLAY_BIT) callbackPlay();
@@ -149,7 +156,7 @@ export class HidControlService {
       }
 
       // save this state for following calls
-      this.lastState = value;
+      this.lastState = footValue | handValue;
     };
   }
 
