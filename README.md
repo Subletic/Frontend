@@ -9,9 +9,12 @@ In some cases it can help to use `cmd` instead of the `powershell`, if `npm` or 
 | Description | Command |
 |-------------|---------|
 | Install Node.js | `winget install OpenJS.NodeJS` |
+| Check if Node.js installation was successful | `npm --version` |
 | Install angular-cli | `npm install -g @angular/cli` |
+| Check if Angular installation was successful | `ng version` |
 | Load all dependency's |`npm update` |
 | Start Angular in development-mode | `ng serve -o` or <br> `ng serve -o --configuration=development` |
+| Run UnitTests | `ng test` |
 
 ## Ports and Connection
 
