@@ -14,6 +14,8 @@ import { ToastrService } from "ngx-toastr";
 })
 export class DictionaryFsLoaderComponent {
 
+  public exportFileName = "";
+
   /**
    * Gets dictionaryService from dependency injection.
    * @param dictionaryService Service to manage the dictionary
@@ -106,7 +108,7 @@ export class DictionaryFsLoaderComponent {
     const BLOB = new Blob([DICTIONARY_STRING], { type: "application/json" })
     const link = document.createElement('a');
     link.href = window.URL.createObjectURL(BLOB);
-    link.download = "dictionary.json";
+    link.download = this.exportFileName === "" ? "dictionary" : `${this.exportFileName}`;
     link.click();
     URL.revokeObjectURL(link.href);
   }
@@ -124,12 +126,14 @@ export class DictionaryFsLoaderComponent {
       return;
     }
 
+
+
     const CSV_CONTENT = this.convertDictionaryToCSV(DICTIONARY);
     const BLOB = new Blob([CSV_CONTENT], { type: "text/csv" });
 
     const link = document.createElement('a');
     link.href = window.URL.createObjectURL(BLOB);
-    link.download = "dictionary.csv";
+    link.download = this.exportFileName === "" ? "dictionary" : `${this.exportFileName}`;
     link.click();
 
     URL.revokeObjectURL(link.href);

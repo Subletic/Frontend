@@ -8,18 +8,36 @@
     <img ngSrc="assets/import.svg" alt="Import Symbol" class="sort-button-image" height="28" width="28">
   </button>
 
-  <div class="white">
+  <div class="white"></div>
 
+  <div>
+    <div class="text">
+      Export
+    </div>
+
+    <div class="subtext">
+      Dateiname
+    </div>
+
+    <mat-form-field>
+      <input matInput [(ngModel)]="exportFileName">
+    </mat-form-field>
+
+    <div class="subtext">
+      Dateiformat
+    </div>
+
+    <div class="format-buttons">
+      <button class="download-button" (click)="handleDictionaryDownloadJSON()">
+        <img ngSrc="assets/export.svg" alt="Export Symbol" class="sort-button-image" height="28" width="28">
+        <span>.json</span>
+      </button>
+
+      <button class="download-button" (click)="handleDictionaryDownloadCSV()">
+        <img ngSrc="assets/export.svg" alt="Export Symbol" class="sort-button-image" height="28" width="28">
+        <span>.csv</span>
+      </button>
+    </div>
   </div>
 
-  <div class="text">
-    Export
-  </div>
-
-  <button class="sort-button" (click)="handleDictionaryDownloadJSON()">
-    <img ngSrc="assets/export.svg" alt="Export Symbol" class="sort-button-image" height="28" width="28">
-  </button>
-  <button class="sort-button" (click)="handleDictionaryDownloadCSV()">
-    <img ngSrc="assets/export.svg" alt="Export Symbol" class="sort-button-image" height="28" width="28">
-  </button>
 </div>
