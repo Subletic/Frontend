@@ -4,7 +4,7 @@ import { SpeechBubbleExport } from '../data/speechBubble/speechBubbleExport.mode
 import { LinkedList } from '../data/linkedList/linkedList.model';
 import { WordExport } from '../data/wordToken/wordExport.model';
 import { SignalRService } from '../service/signalR.service';
-import { environment } from '../../environments/environment';
+import { environment } from '../../environments/environment.prod';
 import { SpeechBubbleChain } from '../data/speechBubbleChain/speechBubbleChain.module';
 import { AudioService } from '../service/audio.service';
 
@@ -169,7 +169,7 @@ export class TextSheetComponent implements OnInit {
     const SPEECHBUBBLE_CHAIN = new SpeechBubbleChain(speechBubbleExportList);
     const JSON_DATA = SPEECHBUBBLE_CHAIN.toJSON();
 
-    fetch(environment.apiURL + '/api/speechbubble/update', {
+    fetch(environment.BACKEND_URL + '/api/speechbubble/update', {
       method: 'POST',
       body: JSON.stringify(JSON_DATA),
       headers: {
