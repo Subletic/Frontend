@@ -103,6 +103,7 @@ export class HidControlService {
     callbackPlay: () => void,
     callbackFastforward: () => void,
     callbackRewind: () => void,
+    inputOffset: number,
   ): (ev: HIDInputReportEvent) => void {
     return (event) => {
       const { data } = event;
@@ -110,23 +111,23 @@ export class HidControlService {
       const REWIND_BIT = 1 << 2;
       const PLAY_BIT = 1 << 1;
       const FASTFORWARD_BIT = 1 << 0;
-      const footValue: number = data.getUint8(0);
-      const handValue: number = data.getUint8(2);
+      const value: number = data.getUint8(inputOffset);
+      
 
       // decypher button states for printing
       let valueMeaning = 'stop';
-      if ((footValue | handValue) > 0) {
+      if ((value) > 0) {
         const meaningsSet: string[] = [];
-        if (((footValue | handValue) & REWIND_BIT) == REWIND_BIT) meaningsSet.push('rewind');
-        if (((footValue | handValue) & PLAY_BIT) == PLAY_BIT) meaningsSet.push('play');
-        if (((footValue | handValue) & FASTFORWARD_BIT) == FASTFORWARD_BIT)
+        if (((value) & REWIND_BIT) == REWIND_BIT) meaningsSet.push('rewind');
+        if (((value) & PLAY_BIT) == PLAY_BIT) meaningsSet.push('play');
+        if (((value) & FASTFORWARD_BIT) == FASTFORWARD_BIT)
           meaningsSet.push('fast-forward');
         valueMeaning = meaningsSet.toString();
       }
-      console.log(`pedal says: ${handValue | footValue} (meaning: ${valueMeaning}`);
+      console.log(`pedal says: ${value} (meaning: ${valueMeaning}`);
 
       // decide what to do, based on current & last button states
-      switch (footValue | handValue) {
+      switch (value) {
         // nothing pressed, stop
         case 0:
           if (this.lastState === PLAY_BIT) callbackPlay();
@@ -156,7 +157,7 @@ export class HidControlService {
       }
 
       // save this state for following calls
-      this.lastState = footValue | handValue;
+      this.lastState = value;
     };
   }
 
@@ -176,10 +177,18 @@ export class HidControlService {
     console.log('Currently allowed devices:');
     console.log(allowedDevices);
 
-    const inputCallback = this.makeCallbackDeviceInput(
+    const inputFootCallback = this.makeCallbackDeviceInput(
       callbackPlay,
       callbackFastforward,
       callbackRewind,
+      0,
+    );
+
+    const inputHandCallback = this.makeCallbackDeviceInput(
+      callbackPlay,
+      callbackFastforward,
+      callbackRewind,
+      2,
     );
 
     allowedDevices.forEach(async (allowedDevice) => {
@@ -193,7 +202,12 @@ export class HidControlService {
         return;
       }
 
-      allowedDevice.addEventListener('inputreport', inputCallback);
+      let deviceCallback = inputFootCallback;
+      if (allowedDevice.vendorId === 0x07b4 && allowedDevice.productId === 0x026e) {
+        deviceCallback = inputHandCallback;
+      }
+
+      allowedDevice.addEventListener('inputreport', deviceCallback);
     });
   }
 }
