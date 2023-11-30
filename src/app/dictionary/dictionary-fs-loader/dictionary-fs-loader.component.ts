@@ -2,7 +2,9 @@ import { Component } from '@angular/core';
 import { DictionaryService } from "../../service/dictionary.service";
 import { dictionary } from "../../data/dictionary/dictionary.model";
 import { ToastrService } from "ngx-toastr";
-import { ExportFormat, JsonExport, CsvExport } from '../export-format.interface';
+import { ExportFormat } from './dictionary-export/dictionary-export.interface';
+import { JsonExport } from './dictionary-export/dictionary-export-json';
+import { CsvExport } from './dictionary-export/dictionary-export-csv';
 
 /**
  * Dictionary Filesystem Loader Component
