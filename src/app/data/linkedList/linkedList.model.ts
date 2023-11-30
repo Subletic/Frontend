@@ -151,6 +151,25 @@ export class LinkedList<T> {
   }
 
   /**
+ * Replaces the data of a node in the linked list without changing its id, next, and previous properties.
+ * 
+ * @param {T} oldData - The data of the node to be replaced.
+ * @param {T} newData - The new data to replace the old data.
+ */
+  public replaceData(oldData: T, newData: T): void {
+    let current = this.head;
+
+    while (current) {
+      if (current.data === oldData) {
+        current.data = newData;
+        return;
+      }
+
+      current = current.next;
+    }
+  }
+
+  /**
    * Converts the linked list into a formatted string by iterating through the elements
    * and converting each element's data to a string. The elements are then joined into
    * a single string with a space delimiter.

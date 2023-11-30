@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, ViewChild, ElementRef, Input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, AfterViewInit, ViewChild, ElementRef, Input, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { WordToken } from '../data/wordToken/wordToken.model';
 import { SpeechBubble } from '../data/speechBubble/speechBubble.model';
 import { Node } from '../data/linkedList/node.model';
@@ -22,7 +22,7 @@ export class TextBoxComponent implements AfterViewInit {
   @Input() speechBubble!: SpeechBubble;
   @ViewChild('textboxContainer', { static: true }) textboxContainerRef!: ElementRef;
 
-  //constructor(private cdr: ChangeDetectorRef) { }
+  constructor(private cdr: ChangeDetectorRef) { }
 
   /**
    * After Init of View, generates the Words from the data structure
@@ -35,29 +35,12 @@ export class TextBoxComponent implements AfterViewInit {
     if (this.speechBubble.words.head == null) {
       this.speechBubble.words.add(new WordToken('', 1, 1, 1, 1));
     }
-    //textbox.innerHTML = this.generateHTML();
+
     this.setEventListeners(textbox);
 
     this.adjustCurrentWordInterval();
 
     this.textboxContainerRef.nativeElement.id = `${this.speechBubble.id}`;
-  }
-
-  /**
-  * Generates the HTML representation of the textbox content.
-  * Each word in the textbox is wrapped in a <span> element with a unique ID and the contenteditable attribute.
-  * The generated HTML string contains all the word elements separated by a space.
-  * @returns The HTML string representing the textbox content.
-  */
-  public generateHTML(): string {
-    const wordElements: string[] = []
-    let current = this.speechBubble.words.head;
-    while (current) {
-      const WORD_WITH_ID = `<span id="${this.speechBubble.id}_${current.id}" style="color: ${current.data.color}; font-weight: ${current.data.fontWeight}" contenteditable="true">${current.data.word}</span>`;
-      wordElements.push(WORD_WITH_ID);
-      current = current.next;
-    }
-    return wordElements.join(' ');
   }
 
   /**
@@ -76,32 +59,6 @@ export class TextBoxComponent implements AfterViewInit {
     console.log('Word: ' + HOVERED_WORD + ', ID: ' + ID);
     console.log('Current Word: ', CURRENT_WORD);
     console.log('Print Text:', this.speechBubble.printText());
-  }
-
-  /**
-   * Handles KeyboardEvent on Textbox. 
-   * Covers 2 cases: Space is pressend and Backspace is pressed at position 0.
-   * Calls either handleBackSpacePressAtStart() or handleSpacePress() as follower functions.
-   * 
-   * @param event - Any KeyboardEvent on the textbox
-   * 
-   * @pre should be added as event listener to a textbox Element 
-   * 
-   */
-  public handleKeyboardEventTextbox(event: KeyboardEvent): void {
-    const SELECTED_SPAN = event.target as HTMLElement;
-    const CURRENT_TEXT = SELECTED_SPAN.textContent;
-    const CURSOR_POSITION = window.getSelection()?.getRangeAt(0)?.startOffset;
-    const SPAN_ID = SELECTED_SPAN.id;
-    const IS_IN_FULL_SELECTION = window.getSelection()?.toString().length === CURRENT_TEXT?.length;
-
-    if (CURSOR_POSITION === 0 && event.key === 'Backspace') {
-      this.handleBackspacePressAtStart(SELECTED_SPAN, CURRENT_TEXT, IS_IN_FULL_SELECTION, SPAN_ID, event)
-    }
-
-    if (event.code === 'Space') {
-      this.handleSpacePress(SELECTED_SPAN, CURRENT_TEXT, CURSOR_POSITION, SPAN_ID, event);
-    }
   }
 
   /**
@@ -223,85 +180,6 @@ export class TextBoxComponent implements AfterViewInit {
   }
 
   /**
-    * This function handles the case when the Space key is pressed without the Shift key in the middle of a word.
-    * Splits the current word into two words at the cursor position
-    * If the text before the cursor is not empty, a new
-    * empty word is inserted after the current word in the LinkedList.
-    * The new word and the new empty word are displayed in separate
-    * contenteditable spans, and the focus is set to the new span.
-    * 
-    * @param selectedSpan - The event target as an HTMLElement
-    * @param currentText - The textContent of the selected Span
-    * @param cursorPosition - The cursor position at the time of the call
-    * @param spanId - Id of the selectedSpan
-    * @param event - The keyboard event triggered by user.
-    */
-  public handleSpacePress(selectedSpan: HTMLElement, currentText: string | null, cursorPosition: number | undefined, spanId: string, event: KeyboardEvent): void {
-    if (!(currentText && typeof cursorPosition === 'number')) return;
-    const WORD_BEFORE_CURSOR = currentText.substring(0, cursorPosition);
-    const WORD_AFTER_CURSOR = currentText.substring(cursorPosition);
-    selectedSpan.textContent = WORD_BEFORE_CURSOR;
-    this.adjustColor(selectedSpan.getAttribute('id'));
-
-    const ID_PART = spanId.split('_');
-    const ID = Number(ID_PART[1]);
-
-    if (WORD_BEFORE_CURSOR.trim() !== '') {
-
-      this.handleSpacePressInsideWord(selectedSpan, ID, WORD_BEFORE_CURSOR, WORD_AFTER_CURSOR);
-
-    } else if (WORD_BEFORE_CURSOR.trim() == '') {
-      const currentWord = this.speechBubble.words.getDataById(ID);
-      if (!currentWord) return;
-      currentWord.setWord(WORD_AFTER_CURSOR);
-      selectedSpan.textContent = WORD_AFTER_CURSOR;
-      selectedSpan.insertAdjacentText('beforebegin', ' ');
-      selectedSpan.focus();
-
-    }
-
-    event.preventDefault();
-  }
-
-  /**
-   * Handles visual and logical insertion of new word with given word-String to set to.
-   * 
-   * A new Word is inserted after current word. This new word gets the part of the old word which
-   * was right from the cursor. 
-   * 
-   * @param selectedSpan - 
-   * @param ID - ID of original word 
-   * @param WORD_BEFORE_CURSOR - Part of the word which was left to the cursor
-   * @param WORD_AFTER_CURSOR - Part of the word which was right to the cursor
-   */
-  handleSpacePressInsideWord(selectedSpan: HTMLElement, ID: number, WORD_BEFORE_CURSOR: string, WORD_AFTER_CURSOR: string): void {
-
-    const currentWord = this.speechBubble.words.getDataById(ID);
-    if (!currentWord) return;
-    const newWord = new WordToken(WORD_AFTER_CURSOR, 1, currentWord.startTime, currentWord.endTime, currentWord.speaker);
-    currentWord.updateWordColor();
-
-    currentWord.confidence = 1;
-    this.speechBubble.words.insertAfter(newWord, currentWord);
-    currentWord.word = WORD_BEFORE_CURSOR;
-
-    const newSpan = document.createElement('span');
-
-    const newWordNodeId = this.speechBubble.words.getNodeId(newWord);
-    if (!newWordNodeId) return;
-    newSpan.id = this.speechBubble.id + "_" + newWordNodeId.toString();
-
-    newSpan.contentEditable = 'true';
-    newSpan.textContent = WORD_AFTER_CURSOR;
-
-    selectedSpan.insertAdjacentElement('afterend', newSpan);
-    selectedSpan.insertAdjacentText('afterend', ' ');
-
-    newSpan.focus();
-
-  }
-
-  /**
    * Checks if Element needs to adjust its color.
    * 
    * @param currentText - The Text the word started with
@@ -327,7 +205,9 @@ export class TextBoxComponent implements AfterViewInit {
    * 
    * @param event - Any KeyboardEvent
    */
-  public updateWord(event: KeyboardEvent): void {
+  //public updateWord(event: KeyboardEvent): void {
+  public updateWord(): void {
+    /*
     const selectedSpan = event.target as HTMLElement;
     const CURRENT_TEXT = selectedSpan.textContent;
 
@@ -338,6 +218,9 @@ export class TextBoxComponent implements AfterViewInit {
     if (!CURRENT_TEXT) return;
     word.setWord(CURRENT_TEXT);
     selectedSpan.textContent = CURRENT_TEXT;
+    */
+
+    this.cdr.detectChanges();
   }
 
   /**
@@ -366,11 +249,6 @@ export class TextBoxComponent implements AfterViewInit {
       this.logInfoAboutTextbox(event);
     })
 
-    textbox.addEventListener('keydown', (event: KeyboardEvent) => {
-      console.log(event);
-      this.handleKeyboardEventTextbox(event);
-    })
-
     /**
      * The keydown function doesn't cover the latest change of the .textContent 
      * Attribute of a span, because typescript prioritises the keydown EventListener instead of 
@@ -378,9 +256,12 @@ export class TextBoxComponent implements AfterViewInit {
      * Therefore, there needs to be a keyup listener that updates
      * the data structure so the words are always correct when send 
      * to backend. (keydown > update .textContent > keyup)
+     * 
+     * maybe fixed by the new change to text-box?
      */
     textbox.addEventListener('keyup', (event: KeyboardEvent) => {
-      this.updateWord(event);
+      //this.updateWord(event);
+      this.updateWord();
     })
   }
 
@@ -415,7 +296,6 @@ export class TextBoxComponent implements AfterViewInit {
     }
   }
 
-
   getWordsArray(): Node<WordToken>[] {
     const wordsArray: Node<WordToken>[] = [];
     let current = this.speechBubble.words.head;
@@ -427,5 +307,56 @@ export class TextBoxComponent implements AfterViewInit {
 
     return wordsArray;
   }
+
+  /**
+   * When the need for a new word is emitted by an existing word (emitter), creates that word and places it after the emitter.
+   * 
+   * @param wordAfter - String for the new word.
+   * @param idOfEmitter - ID of emitting word to access its variables.
+   */
+  newWordAfter(wordAfter: string, idOfEmitter: number): void {
+    const EMITTER = this.speechBubble.getWordTokenById(idOfEmitter);
+    if (!EMITTER) return;
+
+    const NEW_WORD_AFTER = new WordToken(wordAfter, EMITTER.confidence, EMITTER.startTime, EMITTER.endTime, EMITTER.speaker);
+    this.speechBubble.words.insertAfter(NEW_WORD_AFTER, EMITTER);
+
+    this.cdr.detectChanges();
+
+    this.focusSpan(NEW_WORD_AFTER);
+  }
+
+  /**
+   * When a word calls for a change in its data, puts that new data in place of the existing data. 
+   */
+  onWordUpdate(changedWord: WordToken, idOfEmitter: number): void {
+    const EMITTER = this.speechBubble.words.getDataById(idOfEmitter);
+    if (!EMITTER) return;
+    this.speechBubble.words.replaceData(EMITTER, changedWord)
+
+    this.cdr.detectChanges();
+  }
+
+  /**
+   * Focuses on the span with the given word, if it exists.
+   * 
+   * @param word - Word to look for in existing spans.
+   */
+  focusSpan(word: WordToken): void {
+
+    const WORD_ID = this.speechBubble.words.getNodeId(word);
+    const SPAN_ID = this.speechBubble.id.toString() + "_" + WORD_ID;
+    const SPAN = document.getElementById(SPAN_ID);
+    if (SPAN) {
+      SPAN.focus();
+    }
+  }
+
+
+
+
+
+
+
 
 }
