@@ -118,9 +118,9 @@ export class HidControlService {
       let valueMeaning = 'stop';
       if ((value) > 0) {
         const meaningsSet: string[] = [];
-        if (((value) & REWIND_BIT) == REWIND_BIT) meaningsSet.push('rewind');
-        if (((value) & PLAY_BIT) == PLAY_BIT) meaningsSet.push('play');
-        if (((value) & FASTFORWARD_BIT) == FASTFORWARD_BIT)
+        if ((value & REWIND_BIT) == REWIND_BIT) meaningsSet.push('rewind');
+        if ((value & PLAY_BIT) == PLAY_BIT) meaningsSet.push('play');
+        if ((value & FASTFORWARD_BIT) == FASTFORWARD_BIT)
           meaningsSet.push('fast-forward');
         valueMeaning = meaningsSet.toString();
       }
