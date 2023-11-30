@@ -102,7 +102,7 @@ export class DictionaryFsLoaderComponent {
    * Called when the user clicks the download button.
    * Downloads the current dictionary as a JSON file.
    */
-  public handleDictionaryDownloadJSON(): void {
+  public handleDictionaryDownloadJson(): void {
     const DICTIONARY = this.dictionaryService.getDictionary();
     const exportFormat: ExportFormat = new JsonExport();
     exportFormat.download(this.exportFileName, DICTIONARY);
@@ -112,7 +112,7 @@ export class DictionaryFsLoaderComponent {
    * Called when the user clicks the download button.
    * Downloads the current dictionary as a CSV file.
    */
-  public handleDictionaryDownloadCSV(): void {
+  public handleDictionaryDownloadCsv(): void {
     const DICTIONARY = this.dictionaryService.getDictionary();
     const exportFormat: ExportFormat = new CsvExport();
     exportFormat.download(this.exportFileName, DICTIONARY);

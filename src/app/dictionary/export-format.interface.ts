@@ -20,7 +20,7 @@ export class JsonExport implements ExportFormat {
 
 export class CsvExport implements ExportFormat {
     download(fileName: string, dictionary: dictionary): void {
-        const CSV_CONTENT = this.convertDictionaryToCSV(dictionary);
+        const CSV_CONTENT = this.convertDictionaryToCsv(dictionary);
         const BLOB = new Blob([CSV_CONTENT], { type: "text/csv" });
 
         const link = document.createElement('a');
@@ -36,7 +36,7 @@ export class CsvExport implements ExportFormat {
      * @param dictionary Dictionary to convert
      * @returns CSV-formatted string
      */
-    private convertDictionaryToCSV(dictionary: dictionary): string {
+    private convertDictionaryToCsv(dictionary: dictionary): string {
         const rows: string[] = [];
 
         const dataRows = dictionary.transcription_config.additional_vocab.map((vocabItem) => {
@@ -45,6 +45,7 @@ export class CsvExport implements ExportFormat {
             return [content, soundsLike].join(';');
         });
 
+        rows.push('Content;SoundsLike');
         rows.push(...dataRows);
 
         return rows.join('\n');
