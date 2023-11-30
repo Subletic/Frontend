@@ -111,7 +111,7 @@ export class ConfigurationService {
    */
   public postConfigurationToBackend(): void {
     const CONFIG = new Config(
-      this.currentDictionary,
+      this.currentDictionary.transcription_config,
       this.delayLengthInMinutes,
     );
 
