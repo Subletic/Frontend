@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { DictionaryService } from "../../service/dictionary.service";
 import { dictionary } from "../../data/dictionary/dictionary.model";
 import { ToastrService } from "ngx-toastr";
+import { ExportFormat, JsonExport, CsvExport } from '../export-format.interface';
 
 /**
  * Dictionary Filesystem Loader Component
@@ -103,16 +104,9 @@ export class DictionaryFsLoaderComponent {
    */
   public handleDictionaryDownloadJSON(): void {
     const DICTIONARY = this.dictionaryService.getDictionary();
-    const DICTIONARY_STRING = JSON.stringify(DICTIONARY, null, 2);
-
-    const BLOB = new Blob([DICTIONARY_STRING], { type: "application/json" })
-    const link = document.createElement('a');
-    link.href = window.URL.createObjectURL(BLOB);
-    link.download = this.exportFileName === "" ? "dictionary" : `${this.exportFileName}`;
-    link.click();
-    URL.revokeObjectURL(link.href);
+    const exportFormat: ExportFormat = new JsonExport();
+    exportFormat.download(this.exportFileName, DICTIONARY);
   }
-
 
   /**
    * Called when the user clicks the download button.
@@ -120,42 +114,8 @@ export class DictionaryFsLoaderComponent {
    */
   public handleDictionaryDownloadCSV(): void {
     const DICTIONARY = this.dictionaryService.getDictionary();
-
-    if (!DICTIONARY || Object.keys(DICTIONARY).length === 0) {
-      this.displayDictionaryErrorToast();
-      return;
-    }
-
-
-
-    const CSV_CONTENT = this.convertDictionaryToCSV(DICTIONARY);
-    const BLOB = new Blob([CSV_CONTENT], { type: "text/csv" });
-
-    const link = document.createElement('a');
-    link.href = window.URL.createObjectURL(BLOB);
-    link.download = this.exportFileName === "" ? "dictionary" : `${this.exportFileName}`;
-    link.click();
-
-    URL.revokeObjectURL(link.href);
-  }
-
-  /**
-   * Converts the dictionary to a CSV-formatted string.
-   * @param dictionary Dictionary to convert
-   * @returns CSV-formatted string
-   */
-  private convertDictionaryToCSV(dictionary: dictionary): string {
-    const rows: string[] = [];
-
-    const dataRows = dictionary.transcription_config.additional_vocab.map((vocabItem) => {
-      const content = vocabItem.content || '';
-      const soundsLike = vocabItem.sounds_like ? vocabItem.sounds_like.join(';') : '';
-      return [content, soundsLike].join(';');
-    });
-
-    rows.push(...dataRows);
-
-    return rows.join('\n');
+    const exportFormat: ExportFormat = new CsvExport();
+    exportFormat.download(this.exportFileName, DICTIONARY);
   }
 
   /**
