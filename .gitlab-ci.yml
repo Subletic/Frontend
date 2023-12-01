@@ -9,7 +9,7 @@ build:
   before_script:
     - npm install
   script:
-    - npm run build configuration=production
+    - npm run build:prod
 
 lint:
   stage: verification
