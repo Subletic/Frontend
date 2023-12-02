@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DictionaryFsLoaderComponent } from './dictionary-fs-loader.component';
 import { ToastrService } from "ngx-toastr";
-import createSpyObj = jasmine.createSpyObj;
 
 
 describe('DictionaryFsLoaderComponent', () => {
@@ -118,35 +117,5 @@ describe('DictionaryFsLoaderComponent', () => {
     expect(component.displayDictionaryErrorToast).toHaveBeenCalled();
   }
   );
-
-  it('should download a JSON file', async () => {
-    const spyObject = createSpyObj('a', ['click']);
-    spyOn(document, 'createElement').and.returnValue(spyObject);
-
-    component.handleDictionaryDownloadJSON();
-
-    expect(document.createElement).toHaveBeenCalledTimes(1);
-    expect(document.createElement).toHaveBeenCalledWith('a');
-
-    expect(spyObject.href).toContain('blob:')
-    expect(spyObject.download).toBe('dictionary.json');
-    expect(spyObject.click).toHaveBeenCalledTimes(1);
-    expect(spyObject.click).toHaveBeenCalledWith();
-  });
-
-  it('should download a CSV file', async () => {
-    const spyObject = createSpyObj('a', ['click']);
-    spyOn(document, 'createElement').and.returnValue(spyObject);
-
-    component.handleDictionaryDownloadCSV();
-
-    expect(document.createElement).toHaveBeenCalledTimes(1);
-    expect(document.createElement).toHaveBeenCalledWith('a');
-
-    expect(spyObject.href).toContain('blob:')
-    expect(spyObject.download).toBe('dictionary.csv');
-    expect(spyObject.click).toHaveBeenCalledTimes(1);
-    expect(spyObject.click).toHaveBeenCalledWith();
-  });
 });
 

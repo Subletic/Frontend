@@ -2,9 +2,6 @@ import { Component } from '@angular/core';
 import { DictionaryService } from "../../service/dictionary.service";
 import { dictionary } from "../../data/dictionary/dictionary.model";
 import { ToastrService } from "ngx-toastr";
-import { ExportFormat } from './dictionary-export/dictionary-export.interface';
-import { JsonExport } from './dictionary-export/dictionary-export-json';
-import { CsvExport } from './dictionary-export/dictionary-export-csv';
 
 /**
  * Dictionary Filesystem Loader Component
@@ -17,13 +14,8 @@ import { CsvExport } from './dictionary-export/dictionary-export-csv';
 })
 export class DictionaryFsLoaderComponent {
 
-  public exportFileName = "";
+  isExportPopupOpen = false;
 
-  /**
-   * Gets dictionaryService from dependency injection.
-   * @param dictionaryService Service to manage the dictionary
-   * @param toastr Service to display toasts
-   */
   public constructor(private dictionaryService: DictionaryService, private toastr: ToastrService) {
   }
 
@@ -100,25 +92,6 @@ export class DictionaryFsLoaderComponent {
     return true;
   }
 
-  /**
-   * Called when the user clicks the download button.
-   * Downloads the current dictionary as a JSON file.
-   */
-  public handleDictionaryDownloadJson(): void {
-    const DICTIONARY = this.dictionaryService.getDictionary();
-    const exportFormat: ExportFormat = new JsonExport();
-    exportFormat.download(this.exportFileName, DICTIONARY);
-  }
-
-  /**
-   * Called when the user clicks the download button.
-   * Downloads the current dictionary as a CSV file.
-   */
-  public handleDictionaryDownloadCsv(): void {
-    const DICTIONARY = this.dictionaryService.getDictionary();
-    const exportFormat: ExportFormat = new CsvExport();
-    exportFormat.download(this.exportFileName, DICTIONARY);
-  }
 
   /**
    * Displays an error toast when the user uploads an invalid file.
@@ -150,5 +123,18 @@ export class DictionaryFsLoaderComponent {
    */
   public getBackgroundColor(): string {
     return getComputedStyle(document.documentElement).getPropertyValue('--color-main-blue');
+  }
+
+  openExportPopup() {
+    this.isExportPopupOpen = true;
+  }
+
+  closeExportPopup() {
+    this.isExportPopupOpen = false;
+  }
+
+  getUpdatedDictionary(): dictionary {
+    const DICTIONARY = this.dictionaryService.getDictionary();
+    return DICTIONARY;
   }
 }

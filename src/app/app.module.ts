@@ -25,8 +25,8 @@ import { ToastrModule } from "ngx-toastr";
 
 import { DictionaryEditorComponent } from './dictionary/dictionary-editor/dictionary-editor.component';
 import { DictionaryRowComponent } from './dictionary/dictionary-row/dictionary-row.component';
-import {NgOptimizedImage} from "@angular/common";
-
+import { NgOptimizedImage } from "@angular/common";
+import { ExportPopupComponent } from './dictionary/dictionary-fs-loader/export-popup/export-popup.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +40,8 @@ import {NgOptimizedImage} from "@angular/common";
     SpeedPopupComponent,
     DictionaryEditorComponent,
     DictionaryRowComponent,
-    DictionaryFsLoaderComponent
+    DictionaryFsLoaderComponent,
+    ExportPopupComponent
   ],
   imports: [
     BrowserModule,
@@ -54,7 +55,7 @@ import {NgOptimizedImage} from "@angular/common";
     MatTabsModule,
     MatDividerModule,
     ToastrModule.forRoot(),
-    NgOptimizedImage,
+    NgOptimizedImage
   ],
   providers: [],
   bootstrap: [AppComponent]
