@@ -5,6 +5,7 @@ import { transcription_config } from '../data/dictionary/transcription_config.mo
 import { additional_vocab } from '../data/dictionary/additionalVocab.model';
 import { environment } from '../../environments/environment.prod';
 import { Config } from '../data/config/config.model';
+import { DictionaryError } from '../data/error/DictionaryError';
 
 /**
  * Service to provide the dictionary to the components.
@@ -76,34 +77,42 @@ export class ConfigurationService {
 
   /**
    * Checks if the current configuration is valid before posting to the backend.
-   * @returns True if configuration is valid, false otherwise.
+   * @throws DictionaryError if the configuration is invalid
    */
-  public isConfigValid(): boolean {
-    // Check if delay length is valid
+  public isConfigValid(): void {
+    const VALID_BUFFER_LENGTHS = [
+      0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 6, 7, 8, 9, 10,
+    ];
     if (
-      this.delayLengthInMinutes < 0.5 ||
-      this.delayLengthInMinutes > 10 ||
+      !VALID_BUFFER_LENGTHS.includes(this.delayLengthInMinutes) ||
       isNaN(this.delayLengthInMinutes)
     ) {
-      return false;
+      throw new DictionaryError('Ungültige Buffer Länge!');
+    }
+
+    if (
+      this.currentDictionary.transcription_config.additional_vocab.length > 1000
+    ) {
+      throw new DictionaryError(
+        'Maximale SoundsLike Anzahl überschritten (1000)!',
+      );
     }
 
     // Check if sounds like exists for empty word
     for (const word of this.currentDictionary.transcription_config
       .additional_vocab) {
       if (
-        word.content == '' &&
+        !word.content &&
         word.sounds_like != null &&
         word.sounds_like.length > 0
       ) {
-        return false;
+        throw new DictionaryError('SoundsLike Angaben fehlerhaft!');
       }
     }
 
     // Check if language provided
-    if (!this.currentDictionary.transcription_config.language) return false;
-
-    return true;
+    if (!this.currentDictionary.transcription_config.language)
+      throw new DictionaryError('Keine Sprache angegeben!');
   }
 
   /**

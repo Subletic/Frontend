@@ -1,4 +1,4 @@
-import {transcription_config} from "../dictionary/transcription_config.module";
+import { transcription_config } from '../dictionary/transcription_config.module';
 
 export class Config {
   public dictionary: transcription_config;
