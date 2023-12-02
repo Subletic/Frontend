@@ -1,5 +1,9 @@
 import { Injectable } from '@angular/core';
 
+interface HIDDeviceDetails extends HIDDeviceFilter {
+  inputOffset: number,
+}
+
 /**
  * Service to request & configure access to external HID control devices (foot control, hand control, etc)
  */
@@ -8,13 +12,21 @@ import { Injectable } from '@angular/core';
 })
 export class HidControlService {
   // Devices we can handle
-  private HID_DEVICES: HIDDeviceFilter[] = [
+  private HID_DEVICES: HIDDeviceDetails[] = [
     {
       // Grundig foot control (USB)
       vendorId: 0x15d8,
       productId: 0x0024,
       usagePage: 0xffff,
       usage: 0x01,
+      inputOffset: 0,
+    },
+
+    {
+      // Olympus hand control
+      vendorId: 0x07b4,
+      productId: 0x026e,
+      inputOffset: 2,
     },
   ];
 
@@ -97,6 +109,7 @@ export class HidControlService {
     callbackPlay: () => void,
     callbackFastforward: () => void,
     callbackRewind: () => void,
+    inputOffset: number,
   ): (ev: HIDInputReportEvent) => void {
     return (event) => {
       const { data } = event;
@@ -104,15 +117,15 @@ export class HidControlService {
       const REWIND_BIT = 1 << 2;
       const PLAY_BIT = 1 << 1;
       const FASTFORWARD_BIT = 1 << 0;
-      const value: number = data.getUint8(0);
+      const value: number = data.getUint8(inputOffset);
 
       // decypher button states for printing
       let valueMeaning = 'stop';
       if (value > 0) {
         const meaningsSet: string[] = [];
-        if ((value & REWIND_BIT) !== REWIND_BIT) meaningsSet.push('rewind');
-        if ((value & PLAY_BIT) !== PLAY_BIT) meaningsSet.push('play');
-        if ((value & FASTFORWARD_BIT) !== FASTFORWARD_BIT)
+        if ((value & REWIND_BIT) == REWIND_BIT) meaningsSet.push('rewind');
+        if ((value & PLAY_BIT) == PLAY_BIT) meaningsSet.push('play');
+        if ((value & FASTFORWARD_BIT) == FASTFORWARD_BIT)
           meaningsSet.push('fast-forward');
         valueMeaning = meaningsSet.toString();
       }
@@ -153,6 +166,17 @@ export class HidControlService {
     };
   }
 
+  private getInputOffset (device: HIDDevice): number {
+    const potentialDetails = this.HID_DEVICES.find(
+      (potentialDetails) =>
+        potentialDetails.vendorId === device.vendorId && potentialDetails.productId === device.productId);
+    if (typeof potentialDetails === "undefined") {
+      console.warn (`Cannot get HID input offset for unknown device ${device.vendorId}:${device.productId}, defaulting to 0`)
+      return 0
+    }
+    return potentialDetails.inputOffset
+  }
+
   /**
    * Find devices we can handle, request access to any new ones, and apply input callbacks
    */
@@ -169,12 +193,6 @@ export class HidControlService {
     console.log('Currently allowed devices:');
     console.log(allowedDevices);
 
-    const inputCallback = this.makeCallbackDeviceInput(
-      callbackPlay,
-      callbackFastforward,
-      callbackRewind,
-    );
-
     allowedDevices.forEach(async (allowedDevice) => {
       try {
         await allowedDevice.open();
@@ -186,7 +204,12 @@ export class HidControlService {
         return;
       }
 
-      allowedDevice.addEventListener('inputreport', inputCallback);
+      allowedDevice.addEventListener('inputreport', this.makeCallbackDeviceInput (
+        callbackPlay,
+        callbackFastforward,
+        callbackRewind,
+        this.getInputOffset (allowedDevice),
+      ));
     });
   }
 }
