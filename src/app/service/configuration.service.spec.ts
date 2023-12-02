@@ -1,6 +1,7 @@
 import { ConfigurationService } from './configuration.service';
 import { dictionary } from '../data/dictionary/dictionary.model';
 import { transcription_config } from '../data/dictionary/transcription_config.module';
+import { DictionaryError } from '../data/error/DictionaryError';
 
 describe('ConfigurationService', () => {
   let service: ConfigurationService;
@@ -42,14 +43,18 @@ describe('ConfigurationService', () => {
       new dictionary(new transcription_config('en', [])),
     );
 
-    expect(service.isConfigValid()).toBeTrue();
+    expect(() => service.isConfigValid()).not.toThrowMatching(
+      (e) => e instanceof Error,
+    );
   });
 
   it('should validate configuration correctly when invalid', () => {
     service.updateDelayLength(0);
     service.updateDictionary(new dictionary(new transcription_config('', [])));
 
-    expect(service.isConfigValid()).toBeFalse();
+    expect(() => service.isConfigValid()).toThrowMatching(
+      (e) => e instanceof DictionaryError,
+    );
   });
 
   it('should validate configuration correctly when empty word with sounds_like', () => {
@@ -60,7 +65,9 @@ describe('ConfigurationService', () => {
       ),
     );
 
-    expect(service.isConfigValid()).toBeFalse();
+    expect(() => service.isConfigValid()).toThrowMatching(
+      (e) => e instanceof DictionaryError,
+    );
   });
 
   it('should post configuration to backend', () => {

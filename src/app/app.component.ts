@@ -2,6 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { ConfigurationService } from './service/configuration.service';
 import { SoundBoxComponent } from './sound-box/sound-box.component';
 import { ToastrService } from 'ngx-toastr';
+import { DictionaryError } from './data/error/DictionaryError';
 
 /**
  * Component containing the main page of the software.
@@ -43,11 +44,17 @@ export class AppComponent {
    * Callback function for exiting the configuration screen.
    */
   public continueToEditor(): void {
-    if (!this.configurationService.isConfigValid()) {
-      this.toastr.error(
-        'Konfiguration ist nicht gültig. Bitte überprüfen Sie Ihre Eingaben.',
-      );
-      return;
+    try {
+      this.configurationService.isConfigValid();
+    } catch (e) {
+      if (e instanceof DictionaryError) {
+        this.toastr.error(e.message, 'Fehler');
+      } else {
+        this.toastr.error(
+          'Konfiguration ist nicht gültig. Bitte überprüfen Sie Ihre Eingaben.',
+          'Fehler',
+        );
+      }
     }
 
     this.showDictionary = false;

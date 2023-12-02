@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ConfigurationService } from '../../service/configuration.service';
 import { dictionary } from '../../data/dictionary/dictionary.model';
 import { ToastrService } from 'ngx-toastr';
+import { DictionaryError } from '../../data/error/DictionaryError';
 
 /**
  * Dictionary Filesystem Loader Component
@@ -39,7 +40,6 @@ export class DictionaryFsLoaderComponent {
     const DICTIONARY = await this.loadDictionaryFromFile(file);
 
     if (DICTIONARY == null) {
-      this.displayDictionaryErrorToast();
       return;
     }
 
@@ -58,14 +58,17 @@ export class DictionaryFsLoaderComponent {
       fileReader.onload = () => {
         try {
           const dictionary = JSON.parse(fileReader.result as string);
-          const dictionaryValid: boolean = this.validateDictionary(dictionary);
-          if (dictionary == null || !dictionaryValid) {
+          this.validateDictionary(dictionary);
+          if (dictionary == null) {
             resolve(null);
             return;
           }
           this.displayDictionarySuccessToast();
           resolve(dictionary);
         } catch (e) {
+          if (e instanceof DictionaryError)
+            this.displayDictionaryErrorToast(e.message);
+          else this.displayDictionaryErrorToast();
           console.log(e);
           resolve(null);
         }
@@ -79,21 +82,27 @@ export class DictionaryFsLoaderComponent {
   /**
    * Validates the file structure of the provided json.
    * @param dictionary Dictionary to validate
-   * @returns true if the dictionary is valid, false otherwise
+   * @throws DictionaryError if the dictionary is invalid
    */
-  private validateDictionary(dictionary: dictionary): boolean {
+  private validateDictionary(dictionary: dictionary): void {
     // Check if language is provided
-    if (!dictionary.transcription_config.language) return false;
+    if (!dictionary.transcription_config.language)
+      throw new DictionaryError('Keine Sprache angegeben!');
 
     // Check if additional vocab is valid
     const ADDITIONAL_VOCAB = dictionary.transcription_config.additional_vocab;
-    if (!ADDITIONAL_VOCAB) return false;
+    if (!ADDITIONAL_VOCAB)
+      throw new DictionaryError('Kein SoundsLike angegeben!');
+
+    if (ADDITIONAL_VOCAB.length > 1000)
+      throw new DictionaryError(
+        'Maximale SoundsLike Anzahl überschritten (1000)!',
+      );
 
     for (let i = 0; i < ADDITIONAL_VOCAB.length; i++) {
-      if (ADDITIONAL_VOCAB[i].content == null) return false;
+      if (!ADDITIONAL_VOCAB[i].content)
+        throw new DictionaryError('SoundsLike Angaben fehlerhaft!');
     }
-
-    return true;
   }
 
   /**
@@ -126,11 +135,11 @@ export class DictionaryFsLoaderComponent {
 
   /**
    * Displays an error toast when the user uploads an invalid file.
-   * @private
+   * @param errorMessage Error message to display
    */
-  public displayDictionaryErrorToast(): void {
+  public displayDictionaryErrorToast(errorMessage = 'Ungültige Datei!'): void {
     try {
-      this.toastr.error('Ungültige Datei!', 'Fehler');
+      this.toastr.error(errorMessage, 'Fehler');
     } catch (e) {
       console.error('Ungültige Datei!');
     }
