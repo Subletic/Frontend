@@ -2,6 +2,7 @@ stages:
   - build
   - verification
   - build-docker
+  - deploy
 
 build:
   stage: build
