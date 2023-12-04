@@ -14,7 +14,7 @@ export class JsonExport implements ExportFormat {
         const link = document.createElement('a');
 
         link.href = window.URL.createObjectURL(BLOB);
-        link.download = fileName === "" ? "dictionary" : `${fileName}`;
+        link.download = fileName === "" ? "dictionary.json" : `${fileName}`;
         link.click();
         URL.revokeObjectURL(link.href);
     }
