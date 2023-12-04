@@ -12,4 +12,6 @@ export interface ExportFormat {
      * @returns {void}
      */
     download(fileName: string, dictionary: dictionary): void;
+
+    upload(): void;
 }

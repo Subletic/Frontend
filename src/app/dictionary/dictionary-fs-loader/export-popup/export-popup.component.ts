@@ -47,14 +47,19 @@ export class ExportPopupComponent {
     exportFormat.download(this.exportFileName, DICTIONARY);
   }
 
+  /**
+   * Checks if the input field contains special characters and updates the UI accordingly.
+   * 
+   * @returns {boolean} True if the input contains special characters, otherwise false.
+   */
   public checkForSpecialCharacters(): boolean {
     const downloadButtons = document.querySelectorAll('.download-button') as NodeListOf<HTMLButtonElement>;
     const inputField = document.getElementById('fileNameInput') as HTMLInputElement;
     const inputValue = inputField.value;
 
-    const specialCharacters = ['/', '\\', ':', '*', '?', '"', '<', '>', '|'];
+    const SPECIALCHARACTERS = ['/', '\\', ':', '*', '?', '"', '<', '>', '|'];
 
-    const containsSpecialCharacter = specialCharacters.some(char => inputValue.includes(char));
+    const containsSpecialCharacter = SPECIALCHARACTERS.some(char => inputValue.includes(char));
 
     if (containsSpecialCharacter) {
       inputField.style.border = '1px solid red';
@@ -63,13 +68,14 @@ export class ExportPopupComponent {
         button.disabled = true;
       });
       return true;
-    } else {
-      inputField.style.border = '';
-      inputField.style.outline = '';
-      downloadButtons.forEach(button => {
-        button.disabled = false;
-      });
-      return false;
     }
+
+    inputField.style.border = '';
+    inputField.style.outline = '';
+    downloadButtons.forEach(button => {
+      button.disabled = false;
+    });
+
+    return false;
   }
 }

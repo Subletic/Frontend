@@ -18,4 +18,8 @@ export class JsonExport implements ExportFormat {
         link.click();
         URL.revokeObjectURL(link.href);
     }
+
+    upload(): void {
+        return;
+    }
 }

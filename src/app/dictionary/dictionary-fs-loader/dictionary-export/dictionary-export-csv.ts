@@ -19,6 +19,10 @@ export class CsvExport implements ExportFormat {
         URL.revokeObjectURL(link.href);
     }
 
+    upload(): void {
+        return;
+    }
+
     /**
      * Converts the dictionary to a CSV-formatted string.
      * @param dictionary Dictionary to convert
