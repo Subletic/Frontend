@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { ConfigurationService } from '../../service/configuration.service';
 import { dictionary } from '../../data/dictionary/dictionary.model';
 import { ToastrService } from 'ngx-toastr';
+import { ConfigurationService } from '../../service/configuration.service';
 import { DictionaryError } from '../../data/error/DictionaryError';
 
 /**
@@ -14,6 +14,8 @@ import { DictionaryError } from '../../data/error/DictionaryError';
   styleUrls: ['./dictionary-fs-loader.component.scss'],
 })
 export class DictionaryFsLoaderComponent {
+  isExportPopupOpen = false;
+
   /**
    * Gets configurationService from dependency injection.
    * @param configurationService Service to manage the dictionary
@@ -106,22 +108,6 @@ export class DictionaryFsLoaderComponent {
   }
 
   /**
-   * Called when the user clicks the download button.
-   * Downloads the current dictionary as a JSON file.
-   */
-  public handleDictionaryDownload(): void {
-    const DICTIONARY = this.configurationService.getDictionary();
-    const DICTIONARY_STRING = JSON.stringify(DICTIONARY, null, 2);
-
-    const BLOB = new Blob([DICTIONARY_STRING], { type: 'application/json' });
-    const link = document.createElement('a');
-    link.href = window.URL.createObjectURL(BLOB);
-    link.download = 'dictionary.json';
-    link.click();
-    URL.revokeObjectURL(link.href);
-  }
-
-  /**
    * Displays an error toast when the user uploads an invalid file.
    * @private
    */
@@ -143,5 +129,28 @@ export class DictionaryFsLoaderComponent {
     } catch (e) {
       console.error('Ungültige Datei!');
     }
+  }
+
+  /**
+   * Returns the background color of the application.
+   * Used for Button styling.
+   */
+  public getBackgroundColor(): string {
+    return getComputedStyle(document.documentElement).getPropertyValue(
+      '--color-main-blue',
+    );
+  }
+
+  openExportPopup() {
+    this.isExportPopupOpen = true;
+  }
+
+  closeExportPopup() {
+    this.isExportPopupOpen = false;
+  }
+
+  getUpdatedDictionary(): dictionary {
+    const DICTIONARY = this.configurationService.getDictionary();
+    return DICTIONARY;
   }
 }

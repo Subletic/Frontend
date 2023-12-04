@@ -18,11 +18,10 @@
     />
   </button>
 
-  <div class="white"></div>
-
   <div class="text">Export</div>
 
-  <button class="sort-button" (click)="handleDictionaryDownload()">
+  <input type="file" id="file-input" />
+  <button class="sort-button" (click)="openExportPopup()">
     <img
       ngSrc="assets/export.svg"
       alt="Export Symbol"
@@ -31,4 +30,9 @@
       width="28"
     />
   </button>
+
+  <app-export-popup
+    *ngIf="isExportPopupOpen"
+    (closed)="closeExportPopup()"
+  ></app-export-popup>
 </div>

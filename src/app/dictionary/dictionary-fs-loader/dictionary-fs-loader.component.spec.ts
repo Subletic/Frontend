@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DictionaryFsLoaderComponent } from './dictionary-fs-loader.component';
 import { ToastrService } from 'ngx-toastr';
-import createSpyObj = jasmine.createSpyObj;
 import { transcription_config } from '../../data/dictionary/transcription_config.module';
 import { dictionary } from '../../data/dictionary/dictionary.model';
 
@@ -227,20 +226,5 @@ describe('DictionaryFsLoaderComponent', () => {
     await component.handleFileUpload(MOCK_EVENT);
 
     expect(component.displayDictionaryErrorToast).toHaveBeenCalledWith();
-  });
-
-  it('should download a JSON file', async () => {
-    const spyObject = createSpyObj('a', ['click']);
-    spyOn(document, 'createElement').and.returnValue(spyObject);
-
-    component.handleDictionaryDownload();
-
-    expect(document.createElement).toHaveBeenCalledTimes(1);
-    expect(document.createElement).toHaveBeenCalledWith('a');
-
-    expect(spyObject.href).toContain('blob:');
-    expect(spyObject.download).toBe('dictionary.json');
-    expect(spyObject.click).toHaveBeenCalledTimes(1);
-    expect(spyObject.click).toHaveBeenCalledWith();
   });
 });
