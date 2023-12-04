@@ -46,4 +46,30 @@ export class ExportPopupComponent {
     const exportFormat: ExportFormat = new CsvExport();
     exportFormat.download(this.exportFileName, DICTIONARY);
   }
+
+  public checkForSpecialCharacters(): boolean {
+    const downloadButtons = document.querySelectorAll('.download-button') as NodeListOf<HTMLButtonElement>;
+    const inputField = document.getElementById('fileNameInput') as HTMLInputElement;
+    const inputValue = inputField.value;
+
+    const specialCharacters = ['/', '\\', ':', '*', '?', '"', '<', '>', '|'];
+
+    const containsSpecialCharacter = specialCharacters.some(char => inputValue.includes(char));
+
+    if (containsSpecialCharacter) {
+      inputField.style.border = '1px solid red';
+      inputField.style.outline = '1px solid red';
+      downloadButtons.forEach(button => {
+        button.disabled = true;
+      });
+      return true;
+    } else {
+      inputField.style.border = '';
+      inputField.style.outline = '';
+      downloadButtons.forEach(button => {
+        button.disabled = false;
+      });
+      return false;
+    }
+  }
 }

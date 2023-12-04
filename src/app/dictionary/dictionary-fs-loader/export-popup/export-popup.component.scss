@@ -44,10 +44,32 @@ h1 {
     margin: 20px 0px 10px 0px;
 }
 
-mat-form-field {
-    width: 80%;
+#textfield {
+    display: block;
+    height: 55px;
     margin: 20px;
     margin-left: 15px;
+    padding: 2px;
+}
+
+input {
+    width: 80%;
+    height: 32px;
+    border-radius: 5px;
+    font-size: 18px;
+    box-sizing: border-box;
+    margin-left: 10px;
+}
+
+.error-container {
+    height: 15px;
+    margin-left: 10px;
+}
+
+#errorText {
+    font-size: 13px;
+    color: red;
+    margin: 0px;
 }
 
 .format-buttons {
@@ -71,16 +93,25 @@ mat-form-field {
     border-radius: 4px;
     font-size: 16px;
     background-color: var(--white);
-}
 
-.download-button:hover {
-    border: 2px solid;
-    border-color: var(--color-main-blue);
-}
+    &:hover {
+        border: 2px solid;
+        border-color: var(--color-main-blue);
+    }
 
-.download-button:active {
-    border: 2px solid;
-    border-color: green;
+
+    &:active {
+        border: 2px solid;
+        border-color: green;
+    }
+
+    &:disabled {
+        opacity: 0.6;
+    }
+
+    &:disabled:hover {
+        border: 2px solid;
+    }
 }
 
 span {

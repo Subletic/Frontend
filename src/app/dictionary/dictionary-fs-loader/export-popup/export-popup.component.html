@@ -13,9 +13,14 @@
                 Dateiname
             </div>
 
-            <mat-form-field>
-                <input matInput [(ngModel)]="exportFileName">
-            </mat-form-field>
+            <div id="texfield">
+                <input [(ngModel)]="exportFileName" (input)="checkForSpecialCharacters()" type="text" id="fileNameInput"
+                    placeholder="Name festlegen (optional)">
+                <div class="error-container">
+                    <p id="errorText" *ngIf="checkForSpecialCharacters()">Keine Sonderzeichen: / \ * ? " &lt; &gt; |
+                    </p>
+                </div>
+            </div>
 
             <div class="subtext">
                 Dateiformat
