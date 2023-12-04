@@ -1,0 +1,22 @@
+<div class="config-wrapper">
+  <div class="title">Konfiguration</div>
+
+  <div class="slider-wrapper">
+    <div class="text">Bufferlänge</div>
+
+    <mat-slider
+      [min]="0"
+      [max]="14"
+      [step]="1"
+      showTickMarks
+      discrete
+      [displayWith]="mapSliderValues"
+      (change)="updateSelectedBufferLength($event)"
+      class="buffer-slider"
+    >
+      <input matSliderThumb value="3" />
+    </mat-slider>
+
+    <div class="text fixed-width">{{ getSelectedBufferLength() }} min</div>
+  </div>
+</div>

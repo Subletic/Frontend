@@ -8,7 +8,7 @@ describe('SliderPopupComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [SliderPopupComponent]
+      declarations: [SliderPopupComponent],
     }).compileComponents();
   });
 

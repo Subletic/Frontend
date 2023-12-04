@@ -21,12 +21,13 @@ import { SpeedPopupComponent } from './sound-box/speed-popup/speed-popup.compone
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatDividerModule } from '@angular/material/divider';
 import { DictionaryFsLoaderComponent } from './dictionary/dictionary-fs-loader/dictionary-fs-loader.component';
-import { ToastrModule } from "ngx-toastr";
+import { ToastrModule } from 'ngx-toastr';
 
 import { DictionaryEditorComponent } from './dictionary/dictionary-editor/dictionary-editor.component';
 import { DictionaryRowComponent } from './dictionary/dictionary-row/dictionary-row.component';
-import { NgOptimizedImage } from "@angular/common";
 import { ExportPopupComponent } from './dictionary/dictionary-fs-loader/export-popup/export-popup.component';
+import { NgOptimizedImage } from '@angular/common';
+import { StartConfigComponent } from './start-config/start-config.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import { ExportPopupComponent } from './dictionary/dictionary-fs-loader/export-p
     DictionaryEditorComponent,
     DictionaryRowComponent,
     DictionaryFsLoaderComponent,
-    ExportPopupComponent
+    ExportPopupComponent,
+    StartConfigComponent
   ],
   imports: [
     BrowserModule,
@@ -58,6 +60,6 @@ import { ExportPopupComponent } from './dictionary/dictionary-fs-loader/export-p
     NgOptimizedImage
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule { }

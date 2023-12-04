@@ -10,7 +10,7 @@ describe('WordExport', () => {
         Confidence: 0.8,
         StartTime: 0,
         EndTime: 1,
-        Speaker: 1
+        Speaker: 1,
       };
       expect(WORD_EXPORT.toJSON()).toEqual(EXPECTED_JSON);
     });

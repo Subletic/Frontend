@@ -1,170 +1,206 @@
 ﻿<div class="settings">
-    <div class="settings-body">
-        <ng-content></ng-content>
-        <div class="top-of-div">
-            <h1>Einstellungen</h1>
-            <button mat-icon-button style="float: right;" (click)="cancel();">
-                <mat-icon>close</mat-icon>
-            </button>
+  <div class="settings-body">
+    <ng-content></ng-content>
+    <div class="top-of-div">
+      <h1>Einstellungen</h1>
+      <button mat-icon-button style="float: right" (click)="cancel()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+    <mat-tab-group>
+      <mat-tab label="Allgemein">
+        <div class="seconds-container">
+          <div class="seconds-label-container">
+            <div id="seconds-name-label" class="seconds-name-label">
+              Sprungweite
+            </div>
+            <div class="seconds-value-label">
+              {{ updatedAudioSkipSeconds }} Sekunden
+            </div>
+          </div>
+          <div class="slider">
+            <input
+              type="range"
+              id="seconds-slider"
+              min="1"
+              max="20"
+              class="styled-slider slider-progress"
+              [(ngModel)]="updatedAudioSkipSeconds"
+              #secondsInput="ngModel"
+              #secondsSlider
+            />
+          </div>
         </div>
 
-        <mat-tab-group>
-            <mat-tab label="Allgemein">
-                <div class="seconds-container">
-                    <div class="seconds-label-container">
-                        <div id="seconds-name-label" class="seconds-name-label">Sprungweite</div>
-                        <div class="seconds-value-label">{{updatedAudioSkipSeconds}} Sekunden</div>
-                    </div>
-                    <div class="slider">
-                        <input type="range" id="seconds-slider" min="1" max="20" class="styled-slider slider-progress"
-                            [(ngModel)]="updatedAudioSkipSeconds" #secondsInput="ngModel" #secondsSlider>
-                    </div>
-                </div>
+        <div class="reload-button">
+          <p>Reload Backend</p>
+          <button (click)="callBackendReload()" class="reload-button">
+            <img
+              src="assets/reload.svg"
+              alt="Button Image"
+              class="button-image"
+              (mousedown)="buttonImage7.src = 'assets/reloadOnClick.svg'"
+              (mouseup)="buttonImage7.src = 'assets/reload.svg'"
+              #buttonImage7
+            />
+          </button>
+        </div>
 
-                <div class="reload-button">
-                    <p>Reload Backend</p>
-                    <button (click)="callBackendReload()" class="reload-button">
-                        <img src="assets/reload.svg" alt="Button Image" class="button-image"
-                            (mousedown)=" buttonImage7.src='assets/reloadOnClick.svg'"
-                            (mouseup)=" buttonImage7.src='assets/reload.svg'" #buttonImage7>
-                    </button>
-                </div>
+        <div class="buttons-container">
+          <button
+            mat-stroked-button
+            class="settings-button"
+            [style.color]="getBackgroundColor()"
+            (click)="apply()"
+          >
+            Anwenden
+          </button>
+          <button
+            mat-stroked-button
+            class="settings-button"
+            [style.color]="getBackgroundColor()"
+            (click)="cancel()"
+          >
+            Abbrechen
+          </button>
+        </div>
+      </mat-tab>
 
-                <div class="buttons-container">
-                    <button mat-stroked-button class="settings-button" [style.color]="getBackgroundColor()"
-                        (click)="apply();">Anwenden</button>
-                    <button mat-stroked-button class="settings-button" [style.color]="getBackgroundColor()"
-                        (click)="cancel();">Abbrechen</button>
-                </div>
-            </mat-tab>
+      <mat-tab label="Tastenkombinationen">
+        <div class="keybinding-container">
+          <p>Audio-Wiedergabe</p>
+          <div class="key-grid">
+            <div class="action">Abspielen/Pausieren</div>
+            <div class="key1">Ctrl</div>
+            <div class="key2">Space</div>
 
-            <mat-tab label="Tastenkombinationen">
-                <div class="keybinding-container">
-                    <p>Audio-Wiedergabe</p>
-                    <div class="key-grid">
-                        <div class="action">Abspielen/Pausieren</div>
-                        <div class="key1">Ctrl</div>
-                        <div class="key2">Space</div>
+            <div class="action">Zurückspulen</div>
+            <div class="key1">Ctrl</div>
+            <div class="key2">R</div>
 
-                        <div class="action">Zurückspulen</div>
-                        <div class="key1">Ctrl</div>
-                        <div class="key2">R</div>
+            <div class="action">Vorspulen</div>
+            <div class="key1">Ctrl</div>
+            <div class="key2">&#x21B2;</div>
 
-                        <div class="action">Vorspulen</div>
-                        <div class="key1">Ctrl</div>
-                        <div class="key2"> &#x21B2;</div>
+            <div class="action">Abspielgeschwindigkeit erhöhen</div>
+            <div class="key1">Ctrl</div>
+            <div class="key2">&#x25B3;</div>
 
-                        <div class="action">Abspielgeschwindigkeit erhöhen</div>
-                        <div class="key1">Ctrl</div>
-                        <div class="key2">&#x25B3;</div>
+            <div class="action">Abspielgeschwindigkeit senken</div>
+            <div class="key1">Ctrl</div>
+            <div class="key2">&#x25BD;</div>
+            <div class="key3">&#x25BD;</div>
 
-                        <div class="action">Abspielgeschwindigkeit senken</div>
-                        <div class="key1">Ctrl</div>
-                        <div class="key2">&#x25BD;</div>
-                        <div class="key3">&#x25BD;</div>
+            <div class="action">Lautstärke erhöhen</div>
+            <div class="key1">Ctrl</div>
+            <div class="key2">]</div>
 
-                        <div class="action">Lautstärke erhöhen</div>
-                        <div class="key1">Ctrl</div>
-                        <div class="key2">]</div>
+            <div class="action">Lautstärke senken</div>
+            <div class="key1">Ctrl</div>
+            <div class="key2">[</div>
+          </div>
 
-                        <div class="action">Lautstärke senken</div>
-                        <div class="key1">Ctrl</div>
-                        <div class="key2">[</div>
-                    </div>
+          <mat-divider></mat-divider>
 
-                    <mat-divider></mat-divider>
+          <p>Textbearbeitung</p>
+          <div class="key-grid">
+            <div class="action">Markieren</div>
+            <div class="key1">Ctrl</div>
+            <div class="key2">&#x25C1; / &#x25B7;</div>
 
-                    <p>Textbearbeitung</p>
-                    <div class="key-grid">
-                        <div class="action">Markieren</div>
-                        <div class="key1">Ctrl</div>
-                        <div class="key2">&#x25C1; / &#x25B7;</div>
+            <div class="action">Löschen</div>
+            <div class="key1">&#x27F5;</div>
+          </div>
+        </div>
+      </mat-tab>
 
-                        <div class="action">Löschen</div>
-                        <div class="key1">&#x27F5;</div>
-                    </div>
-                </div>
-            </mat-tab>
+      <mat-tab label="Fußschalter">
+        <div class="keybinding-container">
+          <img
+            src="assets/footswitch.svg"
+            alt="Foot Switch Image"
+            class="button-image-4"
+            draggable="false"
+            #footSwitchImage
+          />
 
-            <mat-tab label="Fußschalter">
-                <div class="keybinding-container">
+          <mat-divider></mat-divider>
 
-                    <img src="assets/footswitch.svg" alt="Foot Switch Image" class="button-image-4" draggable="false"
-                        #footSwitchImage>
+          <p>Tasten</p>
+          <div class="key-grid">
+            <div class="switch">REW</div>
+            <div class="describ">rewind (Zurückspulen)</div>
 
-                    <mat-divider></mat-divider>
+            <div class="switch">FFWD</div>
+            <div class="describ">fastforward (Vorspulen)</div>
 
-                    <p>Tasten</p>
-                    <div class="key-grid">
-                        <div class="switch">REW</div>
-                        <div class="describ">rewind (Zurückspulen)</div>
+            <div class="switch">PLAY</div>
+            <div class="describ">Abspielen / Pausieren</div>
+          </div>
 
-                        <div class="switch">FFWD</div>
-                        <div class="describ">fastforward (Vorspulen)</div>
+          <mat-divider></mat-divider>
 
-                        <div class="switch">PLAY</div>
-                        <div class="describ">Abspielen / Pausieren</div>
-                    </div>
+          <p>Tastenkombinationen</p>
+          <div class="key-grid">
+            <div class="action">Abspielen (Stopp nach Loslassen)</div>
+            <div class="key1">PLAY</div>
+            <div class="describ">(Halten)</div>
 
-                    <mat-divider></mat-divider>
+            <div class="action">Vorspulen (Stopp nach Loslassen)</div>
+            <div class="key1">FFWD</div>
+            <div class="describ">(Halten)</div>
 
-                    <p>Tastenkombinationen</p>
-                    <div class="key-grid">
-                        <div class="action">Abspielen (Stopp nach Loslassen)</div>
-                        <div class="key1">PLAY</div>
-                        <div class="describ">(Halten)</div>
+            <div class="action">Zurückspulen (Stopp nach Loslassen)</div>
+            <div class="key1">REW</div>
+            <div class="describ">(Halten)</div>
+          </div>
+        </div>
+      </mat-tab>
 
-                        <div class="action">Vorspulen (Stopp nach Loslassen)</div>
-                        <div class="key1">FFWD</div>
-                        <div class="describ">(Halten)</div>
+      <mat-tab label="Handschalter">
+        <div class="keybinding-container">
+          <img
+            src="assets/handswitch.svg"
+            alt="Foot Switch Image"
+            class="button-image-4"
+            draggable="false"
+            #footSwitchImage
+          />
 
-                        <div class="action">Zurückspulen (Stopp nach Loslassen)</div>
-                        <div class="key1">REW</div>
-                        <div class="describ">(Halten)</div>
-                    </div>
-                </div>
-            </mat-tab>
+          <mat-divider></mat-divider>
 
-            <mat-tab label="Handschalter">
-                <div class="keybinding-container">
+          <p>Tasten</p>
+          <div class="key-grid">
+            <div class="switch">L</div>
+            <div class="describ">rewind (Zurückspulen)</div>
 
-                    <img src="assets/handswitch.svg" alt="Foot Switch Image" class="button-image-4" draggable="false"
-                        #footSwitchImage>
+            <div class="switch">M</div>
+            <div class="describ">fastforward (Vorspulen)</div>
 
-                    <mat-divider></mat-divider>
+            <div class="switch">R</div>
+            <div class="describ">Abspielen / Pausieren</div>
+          </div>
 
-                    <p>Tasten</p>
-                    <div class="key-grid">
-                        <div class="switch">L</div>
-                        <div class="describ">rewind (Zurückspulen)</div>
+          <mat-divider></mat-divider>
 
-                        <div class="switch">M</div>
-                        <div class="describ">fastforward (Vorspulen)</div>
+          <p>Tastenkombinationen</p>
+          <div class="key-grid">
+            <div class="action">Abspielen (Stopp nach Loslassen)</div>
+            <div class="key1">L</div>
+            <div class="describ">(Halten)</div>
 
-                        <div class="switch">R</div>
-                        <div class="describ">Abspielen / Pausieren</div>
-                    </div>
+            <div class="action">Vorspulen (Stopp nach Loslassen)</div>
+            <div class="key1">M</div>
+            <div class="describ">(Halten)</div>
 
-                    <mat-divider></mat-divider>
-
-                    <p>Tastenkombinationen</p>
-                    <div class="key-grid">
-                        <div class="action">Abspielen (Stopp nach Loslassen)</div>
-                        <div class="key1">L</div>
-                        <div class="describ">(Halten)</div>
-
-                        <div class="action">Vorspulen (Stopp nach Loslassen)</div>
-                        <div class="key1">M</div>
-                        <div class="describ">(Halten)</div>
-
-                        <div class="action">Zurückspulen (Stopp nach Loslassen)</div>
-                        <div class="key1">R</div>
-                        <div class="describ">(Halten)</div>
-                    </div>
-                </div>
-            </mat-tab>
-        </mat-tab-group>
-
-    </div>
+            <div class="action">Zurückspulen (Stopp nach Loslassen)</div>
+            <div class="key1">R</div>
+            <div class="describ">(Halten)</div>
+          </div>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
 </div>
 <div class="settings-background"></div>

@@ -52,39 +52,11 @@
   outline: none;
   cursor: pointer;
   border: none;
+  width: auto;
   background: var(--container-background-color);
-  width: 30px;
   margin-top: 2.2px;
 }
 
 .white {
   width: 3%;
-}
-
-.subtext {
-  margin-top: 20px;
-  margin-bottom: 10px;
-}
-
-.format-buttons {
-  display: flex;
-  justify-content: space-around;
-}
-
-.download-button {
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-
-  padding-right: 15px;
-  margin-right: 10px;
-
-  border: none;
-  border-radius: 4px;
-  font-size: 16px;
-  background-color: var(--white);
-}
-
-.download-button:hover {
-  background-color: #e7e7e7;
 }
