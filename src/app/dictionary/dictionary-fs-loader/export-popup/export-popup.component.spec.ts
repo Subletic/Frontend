@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ExportPopupComponent } from './export-popup.component';
 import { DictionaryFsLoaderComponent } from '../dictionary-fs-loader.component';
 import createSpyObj = jasmine.createSpyObj;
-import { ToastrService } from "ngx-toastr";
+import { ToastrService } from 'ngx-toastr';
 import { ToastrModule } from 'ngx-toastr';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
@@ -48,7 +48,7 @@ describe('ExportPopupComponent', () => {
     expect(document.createElement).toHaveBeenCalledTimes(1);
     expect(document.createElement).toHaveBeenCalledWith('a');
 
-    expect(spyObject.href).toContain('blob:')
+    expect(spyObject.href).toContain('blob:');
     expect(spyObject.download).toBe('dictionary.json');
     expect(spyObject.click).toHaveBeenCalledTimes(1);
     expect(spyObject.click).toHaveBeenCalledWith();
@@ -63,7 +63,7 @@ describe('ExportPopupComponent', () => {
     expect(document.createElement).toHaveBeenCalledTimes(1);
     expect(document.createElement).toHaveBeenCalledWith('a');
 
-    expect(spyObject.href).toContain('blob:')
+    expect(spyObject.href).toContain('blob:');
     expect(spyObject.download).toBe('dictionary.csv');
     expect(spyObject.click).toHaveBeenCalledTimes(1);
     expect(spyObject.click).toHaveBeenCalledWith();

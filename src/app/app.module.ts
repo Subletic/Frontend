@@ -43,7 +43,7 @@ import { StartConfigComponent } from './start-config/start-config.component';
     DictionaryRowComponent,
     DictionaryFsLoaderComponent,
     ExportPopupComponent,
-    StartConfigComponent
+    StartConfigComponent,
   ],
   imports: [
     BrowserModule,
@@ -57,9 +57,9 @@ import { StartConfigComponent } from './start-config/start-config.component';
     MatTabsModule,
     MatDividerModule,
     ToastrModule.forRoot(),
-    NgOptimizedImage
+    NgOptimizedImage,
   ],
   providers: [],
   bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

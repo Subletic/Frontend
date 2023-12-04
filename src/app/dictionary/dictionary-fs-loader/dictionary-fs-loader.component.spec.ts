@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DictionaryFsLoaderComponent } from './dictionary-fs-loader.component';
-import { ToastrService } from "ngx-toastr";
+import { ToastrService } from 'ngx-toastr';
 import createSpyObj = jasmine.createSpyObj;
 import { transcription_config } from '../../data/dictionary/transcription_config.module';
 import { dictionary } from '../../data/dictionary/dictionary.model';

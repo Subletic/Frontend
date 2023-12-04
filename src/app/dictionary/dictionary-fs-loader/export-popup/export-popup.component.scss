@@ -1,119 +1,118 @@
 .overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
-    z-index: 1001;
+  z-index: 1001;
 }
 
 .export-popup {
-    position: relative;
-    bottom: 50px;
-    width: 400px;
-    height: 390px;
-    background-color: #fff;
-    border: 1px solid #ccc;
-    border-radius: 12px;
-    padding: 20px;
+  position: relative;
+  bottom: 50px;
+  width: 400px;
+  height: 390px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  padding: 20px;
 }
 
 .export-layout {
-    flex: 1;
-    margin: 0px 15px 15px 40px;
+  flex: 1;
+  margin: 0px 15px 15px 40px;
 }
 
 .top-of-div {
-    display: flex;
-    justify-content: space-between;
+  display: flex;
+  justify-content: space-between;
 }
 
 h1 {
-    color: var(--color-grey-hoverover);
-    font-weight: normal;
-    align-self: flex-end;
+  color: var(--color-grey-hoverover);
+  font-weight: normal;
+  align-self: flex-end;
 }
 
 .subtext {
-    font-size: 20px;
-    margin: 20px 0px 10px 0px;
+  font-size: 20px;
+  margin: 20px 0px 10px 0px;
 }
 
 #textfield {
-    display: block;
-    height: 55px;
-    margin: 20px;
-    margin-left: 15px;
-    padding: 2px;
+  display: block;
+  height: 55px;
+  margin: 20px;
+  margin-left: 15px;
+  padding: 2px;
 }
 
 input {
-    width: 80%;
-    height: 32px;
-    border-radius: 5px;
-    font-size: 18px;
-    box-sizing: border-box;
-    margin-left: 10px;
+  width: 80%;
+  height: 32px;
+  border-radius: 5px;
+  font-size: 18px;
+  box-sizing: border-box;
+  margin-left: 10px;
 }
 
 .error-container {
-    height: 15px;
-    margin-left: 10px;
+  height: 15px;
+  margin-left: 10px;
 }
 
 #errorText {
-    font-size: 13px;
-    color: red;
-    margin: 0px;
+  font-size: 13px;
+  color: red;
+  margin: 0px;
 }
 
 .format-buttons {
-    display: flex;
-    width: 80%;
-    justify-content: space-between;
-    margin: 10px;
-    margin-left: 10px;
-    padding: 2px;
+  display: flex;
+  width: 80%;
+  justify-content: space-between;
+  margin: 10px;
+  margin-left: 10px;
+  padding: 2px;
 }
 
 .download-button {
-    display: flex;
-    align-items: center;
-    padding: 12px;
-    cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  cursor: pointer;
 
+  border: 2px solid;
+  border-color: white;
+
+  border-radius: 4px;
+  font-size: 16px;
+  background-color: var(--white);
+
+  &:hover {
     border: 2px solid;
-    border-color: white;
+    border-color: var(--color-main-blue);
+  }
 
-    border-radius: 4px;
-    font-size: 16px;
-    background-color: var(--white);
+  &:active {
+    border: 2px solid;
+    border-color: green;
+  }
 
-    &:hover {
-        border: 2px solid;
-        border-color: var(--color-main-blue);
-    }
+  &:disabled {
+    opacity: 0.6;
+  }
 
-
-    &:active {
-        border: 2px solid;
-        border-color: green;
-    }
-
-    &:disabled {
-        opacity: 0.6;
-    }
-
-    &:disabled:hover {
-        border: 2px solid;
-    }
+  &:disabled:hover {
+    border: 2px solid;
+  }
 }
 
 span {
-    margin-left: 10px;
+  margin-left: 10px;
 }

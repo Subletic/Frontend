@@ -11,26 +11,25 @@ import { DictionaryFsLoaderComponent } from '../dictionary-fs-loader.component';
 @Component({
   selector: 'app-export-popup',
   templateUrl: './export-popup.component.html',
-  styleUrls: ['./export-popup.component.scss']
+  styleUrls: ['./export-popup.component.scss'],
 })
 export class ExportPopupComponent {
-
   @Output() closed = new EventEmitter<void>();
-  public exportFileName = "";
+  public exportFileName = '';
 
-  constructor(private dictionaryFsLoader: DictionaryFsLoaderComponent) { }
+  constructor(private dictionaryFsLoader: DictionaryFsLoaderComponent) {}
 
   /**
-  * Closes the export popup.
-  */
+   * Closes the export popup.
+   */
   close() {
     this.closed.emit();
   }
 
   /**
-  * Called when the user clicks the download button.
-  * Downloads the current dictionary as a JSON file.
-  */
+   * Called when the user clicks the download button.
+   * Downloads the current dictionary as a JSON file.
+   */
   public handleDictionaryDownloadJson(): void {
     const DICTIONARY = this.dictionaryFsLoader.getUpdatedDictionary();
     const exportFormat: ExportFormat = new JsonExport();
@@ -49,22 +48,28 @@ export class ExportPopupComponent {
 
   /**
    * Checks if the input field contains special characters and updates the UI accordingly.
-   * 
+   *
    * @returns {boolean} True if the input contains special characters, otherwise false.
    */
   public checkForSpecialCharacters(): boolean {
-    const downloadButtons = document.querySelectorAll('.download-button') as NodeListOf<HTMLButtonElement>;
-    const inputField = document.getElementById('fileNameInput') as HTMLInputElement;
+    const downloadButtons = document.querySelectorAll(
+      '.download-button',
+    ) as NodeListOf<HTMLButtonElement>;
+    const inputField = document.getElementById(
+      'fileNameInput',
+    ) as HTMLInputElement;
     const inputValue = inputField.value;
 
     const SPECIALCHARACTERS = ['/', '\\', ':', '*', '?', '"', '<', '>', '|'];
 
-    const containsSpecialCharacter = SPECIALCHARACTERS.some(char => inputValue.includes(char));
+    const containsSpecialCharacter = SPECIALCHARACTERS.some((char) =>
+      inputValue.includes(char),
+    );
 
     if (containsSpecialCharacter) {
       inputField.style.border = '1px solid red';
       inputField.style.outline = '1px solid red';
-      downloadButtons.forEach(button => {
+      downloadButtons.forEach((button) => {
         button.disabled = true;
       });
       return true;
@@ -72,7 +77,7 @@ export class ExportPopupComponent {
 
     inputField.style.border = '';
     inputField.style.outline = '';
-    downloadButtons.forEach(button => {
+    downloadButtons.forEach((button) => {
       button.disabled = false;
     });
 

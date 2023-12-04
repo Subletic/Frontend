@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { dictionary } from "../../data/dictionary/dictionary.model";
-import { ToastrService } from "ngx-toastr";
+import { dictionary } from '../../data/dictionary/dictionary.model';
+import { ToastrService } from 'ngx-toastr';
 import { ConfigurationService } from '../../service/configuration.service';
 import { DictionaryError } from '../../data/error/DictionaryError';
 
@@ -14,7 +14,6 @@ import { DictionaryError } from '../../data/error/DictionaryError';
   styleUrls: ['./dictionary-fs-loader.component.scss'],
 })
 export class DictionaryFsLoaderComponent {
-
   isExportPopupOpen = false;
 
   /**
@@ -25,7 +24,7 @@ export class DictionaryFsLoaderComponent {
   public constructor(
     private configurationService: ConfigurationService,
     private toastr: ToastrService,
-  ) { }
+  ) {}
 
   /**
    * Called when the user uploads a file.
@@ -137,7 +136,9 @@ export class DictionaryFsLoaderComponent {
    * Used for Button styling.
    */
   public getBackgroundColor(): string {
-    return getComputedStyle(document.documentElement).getPropertyValue('--color-main-blue');
+    return getComputedStyle(document.documentElement).getPropertyValue(
+      '--color-main-blue',
+    );
   }
 
   openExportPopup() {

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 interface HIDDeviceDetails extends HIDDeviceFilter {
-  inputOffset: number,
+  inputOffset: number;
 }
 
 /**
@@ -166,15 +166,19 @@ export class HidControlService {
     };
   }
 
-  private getInputOffset (device: HIDDevice): number {
+  private getInputOffset(device: HIDDevice): number {
     const potentialDetails = this.HID_DEVICES.find(
       (potentialDetails) =>
-        potentialDetails.vendorId === device.vendorId && potentialDetails.productId === device.productId);
-    if (typeof potentialDetails === "undefined") {
-      console.warn (`Cannot get HID input offset for unknown device ${device.vendorId}:${device.productId}, defaulting to 0`)
-      return 0
+        potentialDetails.vendorId === device.vendorId &&
+        potentialDetails.productId === device.productId,
+    );
+    if (typeof potentialDetails === 'undefined') {
+      console.warn(
+        `Cannot get HID input offset for unknown device ${device.vendorId}:${device.productId}, defaulting to 0`,
+      );
+      return 0;
     }
-    return potentialDetails.inputOffset
+    return potentialDetails.inputOffset;
   }
 
   /**
@@ -204,12 +208,15 @@ export class HidControlService {
         return;
       }
 
-      allowedDevice.addEventListener('inputreport', this.makeCallbackDeviceInput (
-        callbackPlay,
-        callbackFastforward,
-        callbackRewind,
-        this.getInputOffset (allowedDevice),
-      ));
+      allowedDevice.addEventListener(
+        'inputreport',
+        this.makeCallbackDeviceInput(
+          callbackPlay,
+          callbackFastforward,
+          callbackRewind,
+          this.getInputOffset(allowedDevice),
+        ),
+      );
     });
   }
 }
