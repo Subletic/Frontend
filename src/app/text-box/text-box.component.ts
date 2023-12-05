@@ -43,186 +43,8 @@ export class TextBoxComponent implements AfterViewInit {
     this.textboxContainerRef.nativeElement.id = `${this.speechBubble.id}`;
   }
 
-  /**
-   * Prints info about a certain textbox when its hovered over.
-   * 
-   * @param event - Any MouseEvent on the Textbox
-   */
-  public logInfoAboutTextbox(event: MouseEvent): void {
-    const TARGET = event.target as HTMLElement;
-    if (!(TARGET.tagName === 'SPAN')) return;
-    const HOVERED_WORD = TARGET.textContent;
-    const ID_PART = TARGET.id.split('_');
-    const ID = Number(ID_PART[1]);
-    const CURRENT_WORD = this.speechBubble.words.getDataById(ID);
-
-    console.log('Word: ' + HOVERED_WORD + ', ID: ' + ID);
-    console.log('Current Word: ', CURRENT_WORD);
-    console.log('Print Text:', this.speechBubble.printText());
-  }
-
-  /**
-   * This function handles the case when the Backspace key is pressed at the start of a word.
-   * Word is in full selection -> Delete as a whole
-   * Previous Word exists -> Merges with previous Word
-   * PrevWord doesn't exist -> Merges with next Word
-   * 
-   * @param selectedSpan - The event target as an HTMLElement
-   * @param currentText - The textContent of the selected Span
-   * @param cursorPosition - The cursor position at the time of the call
-   * @param isInFullSelection - Boolean that states if the currentWort is fully selected by user
-   * @param event - The keyboard event triggered by user.
-   * 
-   * @pre Function should be called when backspace is pressed at start of a word
-   */
-  public handleBackspacePressAtStart(selectedSpan: HTMLElement, currentText: string | null, isInFullSelection: boolean, spanId: string, event: KeyboardEvent): void {
-    const PREV_SPAN = selectedSpan.previousElementSibling as HTMLSpanElement;
-    if (isInFullSelection) {
-      this.isInFullSelectionDeletion(selectedSpan, spanId, event);
-      return;
-    }
-
-    if (PREV_SPAN && !PREV_SPAN.getAttribute('id') != null) {
-      this.mergeWithPreviousWord(selectedSpan, currentText, PREV_SPAN, event);
-      return;
-    }
-
-    const nextSpan = selectedSpan.nextElementSibling as HTMLSpanElement;
-    if (nextSpan) {
-      this.mergeWithFollowingWord(selectedSpan, currentText, nextSpan, event);
-      return;
-    }
-  }
-
-  /**
-   * Handles the case that the whole word is in selection and backspace is pressed.
-   * Deletes the currentWord in the data structure.
-   * 
-   * @param selectedSpan - The event target as an HTMLElement
-   * @param spanId - Id of the selectedSpan
-   * @param event - The keyboard event triggered by user.
-   */
-  public isInFullSelectionDeletion(selectedSpan: HTMLElement, spanId: string, event: KeyboardEvent): void {
-    const ID_PART = spanId.split('_');
-    const ID = Number(ID_PART[1]);
-    const currentWord = this.speechBubble.words.getDataById(ID);
-    if (!currentWord) return
-    currentWord.word = '';
-    this.speechBubble.words.remove(currentWord);
-    selectedSpan.remove();
-    event.preventDefault();
-    return;
-  }
-
-  /**
-   * Merges the current Word with the previous one,
-   * both within the data structure as well as for the spans.
-   * 
-   * @param selectedSpan - The event target as an HTMLElement
-   * @param currentText - The textContent of the selected Span
-   * @param prevSpan - The previous Span to merge into
-   * @param event - The keyboard event triggered by user.
-   * 
-   * @pre There needs to be a previous word
-   */
-  public mergeWithPreviousWord(selectedSpan: HTMLElement, currentText: string | null, prevSpan: HTMLSpanElement, event: KeyboardEvent): void {
-    const ID_PART_PREV_WORD = prevSpan.id.split('_');
-    const ID_PREV_WORD = Number(ID_PART_PREV_WORD[1]);
-    const prevWord = this.speechBubble.words.getDataById(ID_PREV_WORD);
-    if (!prevWord) return;
-    prevWord.word += currentText;
-    if (!prevSpan.getAttribute('id')) return;
-    const ID_PART = selectedSpan.id.split('_');
-    const ID = Number(ID_PART[1]);
-    const CURRENT_WORD = this.speechBubble.words.getDataById(ID);
-    if (!CURRENT_WORD) return;
-    this.speechBubble.words.remove(CURRENT_WORD);
-    prevSpan.insertAdjacentElement('afterend', selectedSpan);
-    selectedSpan.remove();
-    prevSpan.textContent = prevWord.word;
-    prevSpan.focus();
-    this.adjustColor(prevSpan.getAttribute('id'));
-    event.preventDefault();
-    return;
-  }
-
-  /**
-   * Merges the current Word with the next one,
-   * both within the data structure as well as for the spans.
-   * 
-   * @param selectedSpan - The event target as an HTMLElement
-   * @param currentText - The textContent of the selected Span
-   * @param nextSpan - The following Span to merge into
-   * @param event - The keyboard event triggered by user.
-   * 
-   * @pre There needs to be a following word
-   */
-  public mergeWithFollowingWord(selectedSpan: HTMLElement, currentText: string | null, nextSpan: HTMLSpanElement, event: KeyboardEvent): void {
-    if (!nextSpan) return;
-    const ID_PART_NEXT_SPAN = nextSpan.id.split('_');
-    const ID_NEXT_SPAN = Number(ID_PART_NEXT_SPAN[1]);
-    const nextWord = this.speechBubble.words.getDataById(ID_NEXT_SPAN);
-
-    if (!nextWord) return;
-    nextWord.word = currentText + nextWord.word;
-    if (!selectedSpan.getAttribute('id')) return;
-
-    const ID_PART = selectedSpan.id.split('_');
-    const ID = Number(ID_PART[1]);
-    const CURRENT_WORD = this.speechBubble.words.getDataById(ID);
-    if (!CURRENT_WORD) return;
-    this.speechBubble.words.remove(CURRENT_WORD);
-    selectedSpan.remove();
-    nextSpan.focus();
-    this.adjustColor(nextSpan.getAttribute('id'));
-    event.preventDefault();
-    return;
-  }
-
-  /**
-   * Checks if Element needs to adjust its color.
-   * 
-   * @param currentText - The Text the word started with
-   * @param newText - The possibly adjusted text
-   * @param spanId - The id of the span of this word
-   */
-  public adjustColor(spanId: string | null): void {
-
-    if (!spanId) return;
-    const ID_PART = spanId.split('_');
-    const ID = Number(ID_PART[1]);
-
-    const CHANGED_WORD = this.speechBubble.words.getDataById(ID);
-    if (!CHANGED_WORD) return;
-    const span = document.getElementById(spanId);
-    if (!span) return;
-    const COLOR_BLACK = '#000000';
-    span.style.color = COLOR_BLACK;
-  }
-
-  /**
-   * Updates the word the event is about in the data structure.
-   * 
-   * @param event - Any KeyboardEvent
-   */
-  //public updateWord(event: KeyboardEvent): void {
-  public updateWord(): void {
-    /*
-    const selectedSpan = event.target as HTMLElement;
-    const CURRENT_TEXT = selectedSpan.textContent;
-
-    const ID_PART = selectedSpan.id.split('_');
-    const ID = Number(ID_PART[1]);
-    const word = this.speechBubble.words.getDataById(ID);
-    if (!word) return;
-    if (!CURRENT_TEXT) return;
-    word.setWord(CURRENT_TEXT);
-    selectedSpan.textContent = CURRENT_TEXT;
-    */
-
-    this.cdr.detectChanges();
-  }
-
+  //Könnte so angepasst werden, dass die Wörter selbst prüfen, ob sie leer sind und dann deleteSelf emitten? Was ist in dem
+  //Fall mit Standardsspeechbubble, die ein leeres Textfeld zur Eingabe braucht? Doch isFirst Attribut? 
   /**
   * Removes empty objects from the LinkedList of words.
   */
@@ -249,19 +71,8 @@ export class TextBoxComponent implements AfterViewInit {
       this.logInfoAboutTextbox(event);
     })
 
-    /**
-     * The keydown function doesn't cover the latest change of the .textContent 
-     * Attribute of a span, because typescript prioritises the keydown EventListener instead of 
-     * updating the .textContent of the span first.
-     * Therefore, there needs to be a keyup listener that updates
-     * the data structure so the words are always correct when send 
-     * to backend. (keydown > update .textContent > keyup)
-     * 
-     * maybe fixed by the new change to text-box?
-     */
-    textbox.addEventListener('keyup', (event: KeyboardEvent) => {
-      //this.updateWord(event);
-      this.updateWord();
+    textbox.addEventListener('keyup', () => {
+      this.cdr.detectChanges();
     })
   }
 
@@ -347,16 +158,64 @@ export class TextBoxComponent implements AfterViewInit {
     const WORD_ID = this.speechBubble.words.getNodeId(word);
     const SPAN_ID = this.speechBubble.id.toString() + "_" + WORD_ID;
     const SPAN = document.getElementById(SPAN_ID);
-    if (SPAN) {
-      SPAN.focus();
-    }
+    if (!SPAN) return;
+    SPAN.focus();
+
   }
 
+  /**
+   * Deletes emitter from speechBubble.
+   * 
+   * @param idOfEmitter - ID of emitting word to access its variables.
+   */
+  onDeleteSelfCall(idOfEmitter: number): void {
 
+    const EMITTER = this.speechBubble.getWordTokenById(idOfEmitter);
+    if (!EMITTER) return;
+    this.speechBubble.words.remove(EMITTER);
+    this.cdr.detectChanges();
+  }
 
+  /**
+   * On call of emitting word, adds word-attribute to previous words (if existing) and calls for delete of emitter. (Merge)
+   * 
+   * @param idOfEmitter - ID of emitting word to access its variables.
+   */
+  combineWords(idOfEmitter: number): void {
 
+    let current = this.speechBubble.words.head;
 
+    while (current) {
+      if (current.id === idOfEmitter) {
+        if (!current.prev || current == this.speechBubble.words.head) return;
+        const COMBINED_WORDS = current.prev.data.word + current.data.word;
+        current.prev.data.word = COMBINED_WORDS;
 
+        this.onDeleteSelfCall(idOfEmitter);
+        return;
+      }
+      current = current.next;
+    }
+    return;
 
+  }
+
+  /**
+ * Prints info about a certain textbox when its hovered over.
+ * 
+ * @param event - Any MouseEvent on the Textbox
+ */
+  public logInfoAboutTextbox(event: MouseEvent): void {
+    const TARGET = event.target as HTMLElement;
+    if (!(TARGET.tagName === 'SPAN')) return;
+    const HOVERED_WORD = TARGET.textContent;
+    const ID_PART = TARGET.id.split('_');
+    const ID = Number(ID_PART[1]);
+    const CURRENT_WORD = this.speechBubble.words.getDataById(ID);
+
+    console.log('Word: ' + HOVERED_WORD + ', ID: ' + ID);
+    console.log('Current Word: ', CURRENT_WORD);
+    console.log('Print Text:', this.speechBubble.printText());
+  }
 
 }

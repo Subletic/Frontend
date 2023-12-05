@@ -114,7 +114,7 @@ describe('TextBoxComponent', () => {
       expect(component.speechBubble.words.getDataById(9999)).toBeNull();
     });
   });
-
+  /*relevante Tests, sollte mit in Word übernommen werden, gab es so aber auch weiter unten schon?
   describe('handleBackspacePressAtStart', () => {
     it('should delete word if in full selection', () => {
       const selectedSpan = document.getElementById('span');
@@ -136,76 +136,69 @@ describe('TextBoxComponent', () => {
         expect(component.speechBubble.words.head.data.word).toEqual('prevtest');
       }
     });
-    it('should merge with following word if no previous word exists', () => {
-      const selectedSpan = document.getElementById('span');
-      if (!selectedSpan) return;
-      selectedSpan.textContent = 'test';
-      const nextSpan = document.createElement('span');
-      nextSpan.textContent = 'next';
-      const EVENT = new KeyboardEvent('keydown', { key: 'Backspace' });
-      component.handleBackspacePressAtStart(selectedSpan, 'test', false, '1', EVENT);
-      if (component.speechBubble.words.head && component.speechBubble.words.head.next) {
-        expect(component.speechBubble.words.head.data.word).toEqual('testnext');
-      }
-    });
-  });
-
-  /*
-  Auslagern in word, was man davon noch benuzten kann...
-
-  describe('handleSpacePress', () => {
-    it('should split word on space press', () => {
-      const selectedSpan = document.createElement('span');
-      selectedSpan.textContent = 'test';
-      const EVENT = new KeyboardEvent('keydown', { code: 'Space' });
-      component.handleSpacePress(selectedSpan, 'test', 2, '1', EVENT);
-      if (component.speechBubble.words.head && component.speechBubble.words.head.next) {
-        expect(component.speechBubble.words.head.data.word).toEqual('te');
-        expect(component.speechBubble.words.head.next.data.word).toEqual('st');
-      }
-    });
-    it('should not split word if cursor is at start', () => {
-      const selectedSpan = document.createElement('span');
-      selectedSpan.textContent = 'test';
-      const EVENT = new KeyboardEvent('keydown', { code: 'Space' });
-      component.handleSpacePress(selectedSpan, 'test', 0, '1', EVENT);
-      if (component.speechBubble.words.head && component.speechBubble.words.head.next) {
-        expect(component.speechBubble.words.head.data.word).toEqual('');
-        expect(component.speechBubble.words.head.next.data.word).toEqual('test');
-      }
-    });
-  });
-  */
-
-  it('should not add an empty word if textbox.words.head is null', () => {
-    const textbox = component.speechBubble;
-    textbox.words.head = null;
-    spyOn(textbox.words, 'add');
-
-    component.ngAfterViewInit();
-
-    expect(textbox.words.add).toHaveBeenCalledWith(jasmine.any(Object));
-  });
-
-  /*
-    evtl unnötig, denke nicht, dass das übernommen werden muss
-  
-    it('should not handle space press if currentText or cursorPosition is null', () => {
-      const SELECTED_SPAN = document.createElement('span');
-      const CURRENT_TEXT = null;
-      const CURSOR_POSITION = 5;
-      const SPAN_ID = '123';
-      const EVENT = new KeyboardEvent('keydown', { code: 'Space' });
-      spyOn(component.speechBubble.words, 'getDataById');
-  
-      component.handleSpacePress(SELECTED_SPAN, CURRENT_TEXT, CURSOR_POSITION, SPAN_ID, EVENT);
-  
-      expect(component.speechBubble.words.getDataById).not.toHaveBeenCalled();
-    });
     */
 
 });
 
+/*
+Auslagern in word, was man davon noch benuzten kann...
+
+describe('handleSpacePress', () => {
+  it('should split word on space press', () => {
+    const selectedSpan = document.createElement('span');
+    selectedSpan.textContent = 'test';
+    const EVENT = new KeyboardEvent('keydown', { code: 'Space' });
+    component.handleSpacePress(selectedSpan, 'test', 2, '1', EVENT);
+    if (component.speechBubble.words.head && component.speechBubble.words.head.next) {
+      expect(component.speechBubble.words.head.data.word).toEqual('te');
+      expect(component.speechBubble.words.head.next.data.word).toEqual('st');
+    }
+  });
+  it('should not split word if cursor is at start', () => {
+    const selectedSpan = document.createElement('span');
+    selectedSpan.textContent = 'test';
+    const EVENT = new KeyboardEvent('keydown', { code: 'Space' });
+    component.handleSpacePress(selectedSpan, 'test', 0, '1', EVENT);
+    if (component.speechBubble.words.head && component.speechBubble.words.head.next) {
+      expect(component.speechBubble.words.head.data.word).toEqual('');
+      expect(component.speechBubble.words.head.next.data.word).toEqual('test');
+    }
+  });
+});
+ 
+
+it('should not add an empty word if textbox.words.head is null', () => {
+  const textbox = component.speechBubble;
+  textbox.words.head = null;
+  spyOn(textbox.words, 'add');
+
+  component.ngAfterViewInit();
+
+  expect(textbox.words.add).toHaveBeenCalledWith(jasmine.any(Object));
+});
+*/
+
+/*
+  evtl unnötig, denke nicht, dass das übernommen werden muss
+ 
+  it('should not handle space press if currentText or cursorPosition is null', () => {
+    const SELECTED_SPAN = document.createElement('span');
+    const CURRENT_TEXT = null;
+    const CURSOR_POSITION = 5;
+    const SPAN_ID = '123';
+    const EVENT = new KeyboardEvent('keydown', { code: 'Space' });
+    spyOn(component.speechBubble.words, 'getDataById');
+ 
+    component.handleSpacePress(SELECTED_SPAN, CURRENT_TEXT, CURSOR_POSITION, SPAN_ID, EVENT);
+ 
+    expect(component.speechBubble.words.getDataById).not.toHaveBeenCalled();
+  });
+
+
+});
+*/
+
+/* 
 describe('TextBoxComponent', () => {
   let component: TextBoxComponent;
   let selectedSpan: HTMLElement;
@@ -223,6 +216,9 @@ describe('TextBoxComponent', () => {
     prevSpan = document.createElement('span');
     event = new KeyboardEvent('keydown');
   });
+
+  relevante Tests, sollte mit übernommen werden in word
+
 
   it('should merge with previous word when word is in full selection', () => {
     selectedSpan.textContent = currentText;
@@ -257,9 +253,10 @@ describe('TextBoxComponent', () => {
     expect(component.speechBubble.words.tail?.data).toBe(CURRENT_WORD);
     expect(prevSpan.getAttribute('id')).toBeNull();
     expect(event.defaultPrevented).toBeFalse();
-
   });
+ 
 });
+ */
 
 describe('TextBoxComponent', () => {
   let component: TextBoxComponent;
@@ -430,6 +427,7 @@ describe('TextBoxComponent', () => {
     }
   });
  */
+
   it('should update word highlight styles based on FontWeight', () => {
     // Create a mock data structure with sample fontWeight values
     const words = new LinkedList<WordToken>();

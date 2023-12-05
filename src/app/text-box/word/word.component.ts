@@ -12,53 +12,44 @@ export class WordComponent implements OnInit, AfterViewInit {
     @Input() id!: number;
     @Input() idParent!: number;
     spanID!: string;
+    wordPrint!: string;
 
     @Output() dataUpdate: EventEmitter<{ changedWord: WordToken, idOfEmitter: number }> = new EventEmitter<{ changedWord: WordToken, idOfEmitter: number }>();
     @Output() newWordAfter: EventEmitter<{ wordAfter: string, idOfEmitter: number }> = new EventEmitter<{ wordAfter: string, idOfEmitter: number }>();
+
+    @Output() addSelfToPrevWord: EventEmitter<{ idOfEmitter: number }> = new EventEmitter<{ idOfEmitter: number }>();
+    @Output() deleteSelf: EventEmitter<{ idOfEmitter: number }> = new EventEmitter<{ idOfEmitter: number }>();
+
 
     @ViewChild('self', { static: true }) selfRef!: ElementRef;
 
     ngOnInit(): void {
         this.spanID = `${this.idParent}_${this.id}`;
+        this.wordPrint = this.word.word;
+
     }
 
     ngAfterViewInit(): void {
 
-        this.selfRef.nativeElement.addEventListener('keydown', (event: KeyboardEvent) => {
-
-            this.handleKeydownEvent(event);
-        })
+        this.setEventListeners();
     }
+
 
     public handleKeydownEvent(event: KeyboardEvent): void {
         const SELECTED_SPAN = event.target as HTMLElement;
-        //lint
-        //const CURRENT_TEXT = SELECTED_SPAN.textContent;
+        const CURRENT_TEXT = SELECTED_SPAN.textContent;
         const CURSOR_POSITION = window.getSelection()?.getRangeAt(0)?.startOffset;
-
-        //not yet used, lint
-        //const SPAN_ID = SELECTED_SPAN.id;
-        //const IS_IN_FULL_SELECTION = window.getSelection()?.toString().length === CURRENT_TEXT?.length;
+        const IS_IN_FULL_SELECTION = window.getSelection()?.toString().length === CURRENT_TEXT?.length;
 
         if (event.code === 'Space') {
             this.handleSpacePress(SELECTED_SPAN, CURSOR_POSITION, event);
+            return;
         }
 
-        /*
-        später
-        
         if (CURSOR_POSITION === 0 && event.key === 'Backspace') {
-          this.handleBackspacePressAtStart(SELECTED_SPAN, CURRENT_TEXT, IS_IN_FULL_SELECTION, SPAN_ID, event)
+            this.handleBackspacePressAtStart(IS_IN_FULL_SELECTION);
+            return;
         }
-        */
-    }
-
-    /**
-     * Function should be called whenever there is a change made to the data of the "word" attribute.
-     */
-    public onDataChange() {
-        if (!this.id) return;
-        this.dataUpdate.emit({ changedWord: this.word, idOfEmitter: this.id });
     }
 
     /**
@@ -89,6 +80,57 @@ export class WordComponent implements OnInit, AfterViewInit {
         event.preventDefault();
     }
 
+    /**
+     * This function handles the case when the Backspace key is pressed at the start of a word.
+     * Word is in full selection -> Delete as a whole
+     * Previous Word exists -> Merges with previous Word
 
+    * @param isInFullSelection - Boolean that states if the currentWort is fully selected by user
+    * 
+    * @pre Function should be called when backspace is pressed at start of a word
+    */
+    public handleBackspacePressAtStart(isInFullSelection: boolean): void {
+        if (isInFullSelection) {
+            this.deleteSelf.emit({ idOfEmitter: this.id });
+            return;
+        }
 
+        this.addSelfToPrevWord.emit({ idOfEmitter: this.id });
+        return;
+    }
+
+    /**
+   * Sets event listeners for the textbox to enable methods that use input data.
+   */
+    private setEventListeners(): void {
+
+        this.selfRef.nativeElement.addEventListener('keydown', (event: KeyboardEvent) => {
+
+            this.handleKeydownEvent(event);
+        })
+
+        /**
+         * The keydown function doesn't cover the latest change of the .textContent 
+         * Attribute of a span, because typescript prioritises the keydown EventListener instead of 
+         * updating the .textContent of the span first.
+         * Therefore, there needs to be a keyup listener that updates
+         * the data structure so the words are always correct when send 
+         * to backend. (keydown > update .textContent > keyup)
+         */
+        this.selfRef.nativeElement.addEventListener('keyup', () => {
+
+            this.updateWord();
+        })
+    }
+
+    /**
+     * Updates the word the event is about in the data structure.
+     * 
+     * @param event - Any KeyboardEvent
+     */
+    public updateWord(): void {
+        this.word.word = this.selfRef.nativeElement.textContent;
+        this.dataUpdate.emit({ changedWord: this.word, idOfEmitter: this.id });
+
+    }
 }
