@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SettingsComponent } from './settings.component';
-import { environment } from '../../environments/environment';
+import { environment } from '../../environments/environment.prod';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
@@ -9,7 +9,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatDividerModule } from '@angular/material/divider';
 
-
 describe('SettingsComponent', () => {
   let component: SettingsComponent;
   let fixture: ComponentFixture<SettingsComponent>;
@@ -17,7 +16,15 @@ describe('SettingsComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [SettingsComponent],
-      imports: [MatIconModule, MatFormFieldModule, FormsModule, MatInputModule, BrowserAnimationsModule, MatTabsModule, MatDividerModule],
+      imports: [
+        MatIconModule,
+        MatFormFieldModule,
+        FormsModule,
+        MatInputModule,
+        BrowserAnimationsModule,
+        MatTabsModule,
+        MatDividerModule,
+      ],
     }).compileComponents();
   });
 
@@ -38,7 +45,8 @@ describe('SettingsComponent', () => {
   });
 
   it('should set the slider value when ngAfterViewInit is called', () => {
-    const SLIDER_ELEMENT = fixture.nativeElement.querySelector('#seconds-slider');
+    const SLIDER_ELEMENT =
+      fixture.nativeElement.querySelector('#seconds-slider');
     component.updatedAudioSkipSeconds = 10;
     fixture.detectChanges();
 
@@ -58,7 +66,9 @@ describe('SettingsComponent', () => {
 
     component.close();
     expect(component.close).toHaveBeenCalled();
-    expect(document.body.classList.remove).toHaveBeenCalledWith('settings-open');
+    expect(document.body.classList.remove).toHaveBeenCalledWith(
+      'settings-open',
+    );
   });
 
   it('should cancel changes and reset seconds value', () => {
@@ -88,7 +98,7 @@ describe('SettingsComponent', () => {
     spyOn(window, 'fetch').and.returnValue(
       Promise.resolve({
         ok: status === 200,
-      } as Response)
+      } as Response),
     );
   };
 
@@ -97,10 +107,15 @@ describe('SettingsComponent', () => {
     mockFetch(500);
 
     component.callBackendReload();
-    expect(window.fetch).toHaveBeenCalledWith(environment.apiURL + '/api/restart', { method: 'POST' });
+    expect(window.fetch).toHaveBeenCalledWith(
+      environment.BACKEND_URL + '/api/restart',
+      { method: 'POST' },
+    );
 
     await new Promise((resolve) => setTimeout(resolve, 0));
 
-    expect(window.console.error).toHaveBeenCalledWith('Error with calling restart');
+    expect(window.console.error).toHaveBeenCalledWith(
+      'Error with calling restart',
+    );
   });
 });

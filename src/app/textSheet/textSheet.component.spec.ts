@@ -63,7 +63,6 @@ describe('LinkedList', () => {
     };
     expect(SPEECHBUBBLE_CHAIN.toJSON()).toEqual(expectedJson);
   });
-
 });
 
 describe('TextSheetComponent', () => {
@@ -75,7 +74,7 @@ describe('TextSheetComponent', () => {
     signalRService = new SignalRService();
     audioService = new AudioService();
     component = new TextSheetComponent(signalRService, audioService);
-    component.speechBubbles = new LinkedList<SpeechBubble>;
+    component.speechBubbles = new LinkedList<SpeechBubble>();
   });
 
   it('should initialize with a speech bubble', () => {
@@ -90,7 +89,6 @@ describe('TextSheetComponent', () => {
 
   it('should remove a speech bubble', () => {
     const INITIAL_LENGTH = component.getSpeechBubblesArray().length;
-
 
     const NEW_SPEECHBUBBLE = new SpeechBubble(0, 0, 0);
     component.speechBubbles.add(NEW_SPEECHBUBBLE);
@@ -108,8 +106,12 @@ describe('TextSheetComponent', () => {
     component.speechBubbles.add(TEST_SPEECHBUBBLE_1);
     component.speechBubbles.add(TEST_SPEECHBUBBLE_2);
 
-    const SPEECHBUBBLE_WITH_ID_1 = component.getSpeechBubbleById(TEST_SPEECHBUBBLE_1.id);
-    const SPEECHBUBBLE_WITH_ID_2 = component.getSpeechBubbleById(TEST_SPEECHBUBBLE_2.id);
+    const SPEECHBUBBLE_WITH_ID_1 = component.getSpeechBubbleById(
+      TEST_SPEECHBUBBLE_1.id,
+    );
+    const SPEECHBUBBLE_WITH_ID_2 = component.getSpeechBubbleById(
+      TEST_SPEECHBUBBLE_2.id,
+    );
     const SPEECHBUBBLE_WITH_ID_999 = component.getSpeechBubbleById(999); // Non-existent id
 
     expect(SPEECHBUBBLE_WITH_ID_1).toBe(TEST_SPEECHBUBBLE_1);
@@ -125,7 +127,9 @@ describe('TextSheetComponent', () => {
 
     component.callExportToJson(TEST_SPEECHBUBBLE.id);
 
-    expect(component.exportToJson).toHaveBeenCalledWith([TEST_SPEECHBUBBLE.getExport()]);
+    expect(component.exportToJson).toHaveBeenCalledWith([
+      TEST_SPEECHBUBBLE.getExport(),
+    ]);
   });
 
   it('should retrieve an array of all speech bubbles', () => {
@@ -156,7 +160,9 @@ describe('TextSheetComponent', () => {
     spyOn(component, 'getSpeechBubbleById').and.returnValue(undefined);
     const SPEECHBUBBLE_DTO_NULL: SpeechBubbleExport[] = [];
     component.importfromJson(SPEECHBUBBLE_DTO_NULL);
-    expect(console.error).toHaveBeenCalledWith('Invalid speechBubbleChain object.');
+    expect(console.error).toHaveBeenCalledWith(
+      'Invalid speechBubbleChain object.',
+    );
   });
 
   it('should return early if speechBubble is falsy', () => {
@@ -211,17 +217,27 @@ describe('TextSheetComponent', () => {
     jasmine.clock().uninstall();
   });
 
-
   it('should adjust word font weight for speech bubbles at the given audio time', () => {
+    const speechBubble1 = new SpeechBubble(
+      1,
+      0,
+      6,
+      new LinkedList<WordToken>(),
+      0,
+    );
+    const speechBubble2 = new SpeechBubble(
+      2,
+      6.01,
+      12,
+      new LinkedList<WordToken>(),
+      1,
+    );
+    const WORD_1 = new WordToken('Hallo', 1, 0, 2, 1);
+    const WORD_2 = new WordToken('an', 1, 2.01, 4, 1);
+    const WORD_3 = new WordToken('Welt', 1, 4.01, 6, 1);
 
-    const speechBubble1 = new SpeechBubble(1, 0, 6, new LinkedList<WordToken>, 0);
-    const speechBubble2 = new SpeechBubble(2, 6.01, 12, new LinkedList<WordToken>, 1);
-    const WORD_1 = new WordToken("Hallo", 1, 0, 2, 1);
-    const WORD_2 = new WordToken("an", 1, 2.01, 4, 1);
-    const WORD_3 = new WordToken("Welt", 1, 4.01, 6, 1);
-
-    const WORD_4 = new WordToken("Hallo", 1, 6.01, 9, 1);
-    const WORD_5 = new WordToken("Zurück!", 1, 6.01, 12, 1);
+    const WORD_4 = new WordToken('Hallo', 1, 6.01, 9, 1);
+    const WORD_5 = new WordToken('Zurück!', 1, 6.01, 12, 1);
 
     WORD_1.fontWeight = 'normal';
     WORD_2.fontWeight = 'normal';
@@ -240,8 +256,14 @@ describe('TextSheetComponent', () => {
 
     const AUDIOTIME = 1.5;
 
-    const adjustWordsFontWeightSpy1 = spyOn(speechBubble1, 'adjustWordsFontWeight');
-    const adjustWordsFontWeightSpy2 = spyOn(speechBubble2, 'adjustWordsFontWeight');
+    const adjustWordsFontWeightSpy1 = spyOn(
+      speechBubble1,
+      'adjustWordsFontWeight',
+    );
+    const adjustWordsFontWeightSpy2 = spyOn(
+      speechBubble2,
+      'adjustWordsFontWeight',
+    );
 
     component.fontWeightForSpeechBubblesAt(AUDIOTIME);
 
@@ -250,12 +272,10 @@ describe('TextSheetComponent', () => {
 
     //expect(speechBubble1.words.head?.data.fontWeight).toBe('bold');
     expect(speechBubble1.words.head?.next?.data.fontWeight).toBe('normal');
-    expect(speechBubble1.words.head?.next?.next?.data.fontWeight).toBe('normal');
+    expect(speechBubble1.words.head?.next?.next?.data.fontWeight).toBe(
+      'normal',
+    );
     expect(speechBubble2.words.head?.data.fontWeight).toBe('normal');
     expect(speechBubble2.words.head?.next?.data.fontWeight).toBe('normal');
   });
-
-
 });
-
-

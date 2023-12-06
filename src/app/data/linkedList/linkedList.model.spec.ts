@@ -62,25 +62,27 @@ describe('LinkedList', () => {
         Confidence: 0.9,
         StartTime: 0,
         EndTime: 1,
-        Speaker: 1
+        Speaker: 1,
       },
       {
         Word: 'World',
         Confidence: 0.8,
         StartTime: 2,
         EndTime: 3,
-        Speaker: 1
+        Speaker: 1,
       },
       {
         Word: '!',
         Confidence: 0.7,
         StartTime: 4,
         EndTime: 5,
-        Speaker: 1
-      }
+        Speaker: 1,
+      },
     ];
 
-    const LIST_TO_JSON = linkedList.toJSON((data: WordToken) => data.getExport());
+    const LIST_TO_JSON = linkedList.toJSON((data: WordToken) =>
+      data.getExport(),
+    );
 
     expect(LIST_TO_JSON).toEqual(JSON.stringify(EXPECTED_JSON));
   });

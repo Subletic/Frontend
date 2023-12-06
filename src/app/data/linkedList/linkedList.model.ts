@@ -36,7 +36,7 @@ export class LinkedList<T> {
 
   /**
    * Adds a new Node to the end of the LinkedList
-   * 
+   *
    * @param data - The data attribute given to the new node
    */
   public add(data: T): void {
@@ -58,7 +58,7 @@ export class LinkedList<T> {
 
   /**
    * Removes a node from the linkedList. Node for removal is identified by input data.
-   * 
+   *
    * @param data - The data attribute which should be searched for for deletion
    */
   public remove(data: T): void {
@@ -132,7 +132,7 @@ export class LinkedList<T> {
       data.push(getDataFunction(current.data));
       current = current.next;
     }
-    return data.join(" ");
+    return data.join(' ');
   }
 
   /**
@@ -183,7 +183,7 @@ export class LinkedList<T> {
       elements.push(current.data);
       current = current.next;
     }
-    return elements.join(" ");
+    return elements.join(' ');
   }
 
   /**
@@ -202,7 +202,6 @@ export class LinkedList<T> {
     }
     return null;
   }
-
 
   /**
    * Finds data in the linkedList by the ID of its Node.

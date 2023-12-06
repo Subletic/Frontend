@@ -28,7 +28,13 @@ describe('TextBoxComponent', () => {
   });
 
   it('should find a word by its ID', () => {
-    const speechBubble = new SpeechBubble(0, 0, 0, new LinkedList<WordToken>, 0);
+    const speechBubble = new SpeechBubble(
+      0,
+      0,
+      0,
+      new LinkedList<WordToken>(),
+      0,
+    );
     speechBubble.words = new LinkedList<WordToken>();
     const WORD_1 = new WordToken('Hello', 1, 1, 1, 1);
     const WORD_2 = new WordToken('World', 2, 1, 1, 1);
@@ -48,7 +54,9 @@ describe('TextBoxComponent', () => {
 
   it('should add an empty word if the word list is empty in ngAfterViewInit', () => {
     const component = new TextBoxComponent();
-    component.textboxContainerRef = { nativeElement: document.createElement('div') };
+    component.textboxContainerRef = {
+      nativeElement: document.createElement('div'),
+    };
     component.textboxRef = { nativeElement: document.createElement('div') };
     component.speechBubble = new SpeechBubble(1, 1, 1, new LinkedList<WordToken>, 0);
 
@@ -63,7 +71,9 @@ describe('TextBoxComponent', () => {
 
   it('should add the mouseover event listener to the textbox in ngAfterViewInit', () => {
     const component = new TextBoxComponent();
-    component.textboxContainerRef = { nativeElement: document.createElement('div') };
+    component.textboxContainerRef = {
+      nativeElement: document.createElement('div'),
+    };
     const MOCK_TEXTBOX = document.createElement('div');
     component.textboxRef = { nativeElement: MOCK_TEXTBOX };
     component.speechBubble = new SpeechBubble(1, 1, 1, new LinkedList<WordToken>, 0);
@@ -72,7 +82,10 @@ describe('TextBoxComponent', () => {
 
     component.ngAfterViewInit();
 
-    expect(MOCK_TEXTBOX.addEventListener).toHaveBeenCalledWith('mouseover', jasmine.any(Function));
+    expect(MOCK_TEXTBOX.addEventListener).toHaveBeenCalledWith(
+      'mouseover',
+      jasmine.any(Function),
+    );
   });
   */
 
@@ -94,10 +107,15 @@ describe('TextBoxComponent', () => {
     component.logInfoAboutTextbox(MOCK_EVENT);
 
     expect(console.log).toHaveBeenCalledWith('Word: Hello, ID: 1');
-    expect(console.log).toHaveBeenCalledWith('Current Word: ', jasmine.any(WordToken));
-    expect(console.log).toHaveBeenCalledWith('Print Text:', jasmine.any(String));
+    expect(console.log).toHaveBeenCalledWith(
+      'Current Word: ',
+      jasmine.any(WordToken),
+    );
+    expect(console.log).toHaveBeenCalledWith(
+      'Print Text:',
+      jasmine.any(String),
+    );
   });
-
 
   it('should remove empty objects from the word list', () => {
     const EMPTY_WORD = new WordToken('', 1, 1, 1, 1);
@@ -279,7 +297,6 @@ describe('TextBoxComponent', () => {
   Weitere Tests für handle space press
 
   it('should handle Space press', () => {
-
     const words = new LinkedList<WordToken>();
     words.add(new WordToken('Hello', 0.9, 1, 2, 1));
     words.add(new WordToken('world,', 0.8, 2, 4, 1));
@@ -296,19 +313,24 @@ describe('TextBoxComponent', () => {
 
     const EVENT = new KeyboardEvent('keydown', { key: ' ' });
 
-    const SELECTED_SPAN = fixture.nativeElement.querySelector('span')
+    const SELECTED_SPAN = fixture.nativeElement.querySelector('span');
     const CURRENT_TEXT = 'Hello';
     const CURSOR_POSITION = 2;
     const SPAN_ID = '0';
 
-    component.handleSpacePress(SELECTED_SPAN, CURRENT_TEXT, CURSOR_POSITION, SPAN_ID, EVENT);
+    component.handleSpacePress(
+      SELECTED_SPAN,
+      CURRENT_TEXT,
+      CURSOR_POSITION,
+      SPAN_ID,
+      EVENT,
+    );
 
     expect(SELECTED_SPAN.textContent).toBe('He');
   });
   
 
   it('should handle Space press with "" before', () => {
-
     const words = new LinkedList<WordToken>();
     words.add(new WordToken('Hello', 0.9, 1, 2, 1));
     words.add(new WordToken('world,', 0.8, 2, 4, 1));
@@ -330,7 +352,13 @@ describe('TextBoxComponent', () => {
     const CURSOR_POSITION = 0;
     const SPAN_ID = '0_0';
 
-    component.handleSpacePress(SELECTED_SPAN, CURRENT_TEXT, CURSOR_POSITION, SPAN_ID, EVENT);
+    component.handleSpacePress(
+      SELECTED_SPAN,
+      CURRENT_TEXT,
+      CURSOR_POSITION,
+      SPAN_ID,
+      EVENT,
+    );
 
     expect(SELECTED_SPAN.textContent).toBe('Hello');
   });
@@ -398,7 +426,6 @@ describe('TextBoxComponent', () => {
    
 
   it('should handle merge with previous from handleBackspace', () => {
-
     const words = new LinkedList<WordToken>();
     words.add(new WordToken('Hello', 0.9, 1, 2, 1));
     words.add(new WordToken('world,', 0.8, 2, 4, 1));
@@ -420,7 +447,13 @@ describe('TextBoxComponent', () => {
     const SPAN_ID = '0_1';
 
     if (SELECTED_SPAN) {
-      component.handleBackspacePressAtStart(SELECTED_SPAN, CURRENT_TEXT, false, SPAN_ID, EVENT);
+      component.handleBackspacePressAtStart(
+        SELECTED_SPAN,
+        CURRENT_TEXT,
+        false,
+        SPAN_ID,
+        EVENT,
+      );
     }
     if (component.speechBubble.words.head) {
       expect(component.speechBubble.words.head.data.word).toBe('Helloworld,');
@@ -463,7 +496,4 @@ describe('TextBoxComponent', () => {
 
     expect(mockSpan2.style.fontWeight).toBe('bold');
   });
-
-
-
 });

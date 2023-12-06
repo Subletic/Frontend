@@ -1,4 +1,13 @@
-import { Component, Input, Output, EventEmitter, ElementRef, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  ElementRef,
+  OnInit,
+  ViewChild,
+  AfterViewInit,
+} from '@angular/core';
 
 /**
  * Represents a popup that includes a slider for controlling the audio volume.
@@ -6,10 +15,9 @@ import { Component, Input, Output, EventEmitter, ElementRef, OnInit, ViewChild, 
 @Component({
   selector: 'app-slider-popup',
   templateUrl: './slider-popup.component.html',
-  styleUrls: ['./slider-popup.component.scss']
+  styleUrls: ['./slider-popup.component.scss'],
 })
 export class SliderPopupComponent implements OnInit, AfterViewInit {
-
   //Volume is value between -1 and 1, volume100 between -100 and 100 for slider capability
   @Input() volume = 0;
   private volume100 = 0;
@@ -17,9 +25,10 @@ export class SliderPopupComponent implements OnInit, AfterViewInit {
   @Output() volumeChange = new EventEmitter<number>();
   @Output() volume100Change = new EventEmitter<number>();
 
-  @ViewChild('volumeSlider', { static: false }) volumeSlider!: ElementRef<HTMLInputElement>;
+  @ViewChild('volumeSlider', { static: false })
+  volumeSlider!: ElementRef<HTMLInputElement>;
 
-  constructor(public elementRef: ElementRef) { }
+  constructor(public elementRef: ElementRef) {}
 
   ngOnInit(): void {
     this.setupSlider();
@@ -31,18 +40,22 @@ export class SliderPopupComponent implements OnInit, AfterViewInit {
   }
 
   /**
-   * Sets up the slider so it has a colored bar from bottom to the thumb 
+   * Sets up the slider so it has a colored bar from bottom to the thumb
    */
   setupSlider(): void {
     const MIN_SLIDER_VOLUME = '0';
     const MAX_SLIDER_VOLUME = '100';
 
-    document.querySelectorAll<HTMLInputElement>('input[type="range"].slider-progress').forEach((e: HTMLInputElement) => {
-      e.style.setProperty('--value', e.value);
-      e.style.setProperty('--min', e.min === '' ? MIN_SLIDER_VOLUME : e.min);
-      e.style.setProperty('--max', e.max === '' ? MAX_SLIDER_VOLUME : e.max);
-      e.addEventListener('input', () => e.style.setProperty('--value', e.value));
-    });
+    document
+      .querySelectorAll<HTMLInputElement>('input[type="range"].slider-progress')
+      .forEach((e: HTMLInputElement) => {
+        e.style.setProperty('--value', e.value);
+        e.style.setProperty('--min', e.min === '' ? MIN_SLIDER_VOLUME : e.min);
+        e.style.setProperty('--max', e.max === '' ? MAX_SLIDER_VOLUME : e.max);
+        e.addEventListener('input', () =>
+          e.style.setProperty('--value', e.value),
+        );
+      });
   }
 
   /**
@@ -73,5 +86,4 @@ export class SliderPopupComponent implements OnInit, AfterViewInit {
   setVolume100(volume100: number): void {
     this.volume100 = volume100;
   }
-
 }
