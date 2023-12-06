@@ -151,11 +151,11 @@ export class LinkedList<T> {
   }
 
   /**
- * Replaces the data of a node in the linked list without changing its id, next, and previous properties.
- * 
- * @param {T} oldData - The data of the node to be replaced.
- * @param {T} newData - The new data to replace the old data.
- */
+   * Replaces the data of a node in the linked list without changing its id, next, and previous properties.
+   *
+   * @param {T} oldData - The data of the node to be replaced.
+   * @param {T} newData - The new data to replace the old data.
+   */
   public replaceData(oldData: T, newData: T): void {
     let current = this.head;
 

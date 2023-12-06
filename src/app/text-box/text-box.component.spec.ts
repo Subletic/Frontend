@@ -19,7 +19,7 @@ describe('TextBoxComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(TextBoxComponent);
     component = fixture.componentInstance;
-    component.speechBubble = new SpeechBubble(0, 0, 0, new LinkedList, 0);
+    component.speechBubble = new SpeechBubble(0, 0, 0, new LinkedList(), 0);
     fixture.detectChanges();
   });
 
@@ -89,10 +89,15 @@ describe('TextBoxComponent', () => {
   });
   */
 
-
   it('should log the information about the hovered word in logInfoAboutTextbox', () => {
     const component = new TextBoxComponent(cdr);
-    component.speechBubble = new SpeechBubble(1, 1, 1, new LinkedList<WordToken>, 0);
+    component.speechBubble = new SpeechBubble(
+      1,
+      1,
+      1,
+      new LinkedList<WordToken>(),
+      0,
+    );
     component.speechBubble.words.add(new WordToken('Hello', 1, 1, 1, 1));
     component.speechBubble.words.add(new WordToken('World', 2, 1, 1, 1));
 
@@ -124,7 +129,9 @@ describe('TextBoxComponent', () => {
 
     component.removeEmptyObjects();
 
-    expect(component.speechBubble.words.remove).toHaveBeenCalledWith(EMPTY_WORD);
+    expect(component.speechBubble.words.remove).toHaveBeenCalledWith(
+      EMPTY_WORD,
+    );
   });
 
   describe('findWordById', () => {
@@ -155,7 +162,6 @@ describe('TextBoxComponent', () => {
       }
     });
     */
-
 });
 
 /*
@@ -289,7 +295,7 @@ describe('TextBoxComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(TextBoxComponent);
     component = fixture.componentInstance;
-    component.speechBubble = new SpeechBubble(0, 0, 0, new LinkedList, 0);
+    component.speechBubble = new SpeechBubble(0, 0, 0, new LinkedList(), 0);
     fixture.detectChanges();
   });
 
