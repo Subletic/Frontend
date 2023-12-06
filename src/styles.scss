@@ -19,10 +19,15 @@ $Frontend-warn: mat.define-palette(mat.$red-palette);
 
 // Create the theme object. A theme consists of configurations for individual
 // theming systems such as "color" or "typography".
-$Frontend-theme: mat.define-light-theme((color: (primary: $Frontend-primary,
-        accent: $Frontend-accent,
-        warn: $Frontend-warn,
-      )));
+$Frontend-theme: mat.define-light-theme(
+  (
+    color: (
+      primary: $Frontend-primary,
+      accent: $Frontend-accent,
+      warn: $Frontend-warn,
+    ),
+  )
+);
 
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
@@ -44,14 +49,14 @@ body {
   --textsheet-background-color: #ffffff;
   --background-color: #f3f3f3;
   --color-grey: #afafaf;
-  --color-grey-hoverover: #A1A1A1;
+  --color-grey-hoverover: #a1a1a1;
   --color-grey-onclick: #838383;
   --color-dark-grey: #383838;
-  --color-darker-grey: #2C2C2C;
-  --color-main-blue: #0147B1;
+  --color-darker-grey: #2c2c2c;
+  --color-main-blue: #0147b1;
   --color-black: #000000;
   --text-color: #ffffff;
-  --box-shadow-color: #0000004D;
+  --box-shadow-color: #0000004d;
   --circle-background-color: #afafaf59;
   --keybindings-background-color: #2d62b1;
   --keybindings-font-color: #e0eff7;
@@ -59,12 +64,10 @@ body {
   --rgb-color-black: 0, 0, 0;
   --rgb-color-grey: 175, 175, 175;
 
-
   --font-size-dictionary-header-text: 50px;
   --font-size-dictionary-normal-text: 24px;
   --font-size-dictionary-delete-button-text: 20px;
 }
-
 
 html,
 body {
@@ -73,5 +76,5 @@ body {
 
 body {
   margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
 }

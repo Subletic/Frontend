@@ -1,7 +1,14 @@
 <div class="slider-wrapper" #sliderWrapper>
-    <div class="slider-container">
-        <input type="range" id="volume-slider" min="-100" max="100" class="styled-slider slider-progress"
-            (input)="onVolumeChange($event)" #volumeSlider>
-    </div>
-    <div class="slider-triangle"></div>
+  <div class="slider-container">
+    <input
+      type="range"
+      id="volume-slider"
+      min="-100"
+      max="100"
+      class="styled-slider slider-progress"
+      (input)="onVolumeChange($event)"
+      #volumeSlider
+    />
+  </div>
+  <div class="slider-triangle"></div>
 </div>

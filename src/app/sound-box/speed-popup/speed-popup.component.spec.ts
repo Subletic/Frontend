@@ -8,9 +8,8 @@ describe('SpeedPopupComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [SpeedPopupComponent]
-    })
-      .compileComponents();
+      declarations: [SpeedPopupComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

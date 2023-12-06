@@ -4,7 +4,7 @@ import { WordToken } from '../wordToken/wordToken.model';
 import { SpeechBubbleExport } from './speechBubbleExport.model';
 
 /**
- * Instance of SpeechBubble represents the content of one textbox within the 
+ * Instance of SpeechBubble represents the content of one textbox within the
  * program. Holds a linkedList of words and has itsself a node-structure with previous and next
  * to be integrated into a linkedList itself.
  */
@@ -17,7 +17,13 @@ export class SpeechBubble {
 
   private static currentId = 0;
 
-  public constructor(speaker: number, begin: number, end: number, list?: LinkedList<WordToken>, id?: number) {
+  public constructor(
+    speaker: number,
+    begin: number,
+    end: number,
+    list?: LinkedList<WordToken>,
+    id?: number,
+  ) {
     if (id != null) {
       this.id = id;
     } else {
@@ -53,14 +59,14 @@ export class SpeechBubble {
     return '[' + text.join(', ') + ']';
   }
 
-  /** 
+  /**
    * Returns a String with basic information about this speechbubble.
    */
   public toString(): string {
     return `[${this.id}, ${this.words.size()}, ${this.begin}]`;
   }
 
-  /** 
+  /**
    * Returns a wordExportList representing the current word-list of this instance of a speechbubble.
    */
   public toList(): WordExport[] {
@@ -77,7 +83,13 @@ export class SpeechBubble {
    * Returns an SpeechBubblExport Object for this instance of a speechbubble.
    */
   public getExport(): SpeechBubbleExport {
-    return new SpeechBubbleExport(this.id, this.speaker, this.begin, this.end, this.toList());
+    return new SpeechBubbleExport(
+      this.id,
+      this.speaker,
+      this.begin,
+      this.end,
+      this.toList(),
+    );
   }
 
   /**
@@ -102,7 +114,7 @@ export class SpeechBubble {
     }
   }
 
-  /** 
+  /**
    * Returns the WordToken with the specified id if it exists.
    */
   public getWordTokenById(id: number): WordToken | undefined {
@@ -119,7 +131,7 @@ export class SpeechBubble {
 
   /**
    * Adjusts the fontWeight of all words based on a time stamp.
-   * 
+   *
    * @param audioTime - TimeStamp to give to called function with.
    */
   public adjustWordsFontWeight(audioTime: number) {
@@ -129,5 +141,4 @@ export class SpeechBubble {
       current = current.next;
     }
   }
-
 }

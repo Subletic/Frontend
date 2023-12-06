@@ -3,177 +3,194 @@ from Jason Watmore (@cornflourblue) https://github.com/cornflourblue/angular-9-c
 */
 
 app-settings {
-    /* modals are hidden by default */
-    display: none;
+  /* modals are hidden by default */
+  display: none;
 
-    .settings {
-        /* modal container fixed across whole screen */
-        position: fixed;
-        width: 500px;
-        height: 600px;
-        max-height: 700px;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
+  .settings {
+    /* modal container fixed across whole screen */
+    position: fixed;
+    height: 600px;
+    max-height: 700px;
+    top: 39%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 
-        /* z-index must be higher than .settings-background */
-        z-index: 1000;
+    /* z-index must be higher than .settings-background */
+    z-index: 1000;
 
+    .settings-body {
+      max-height: 700px;
+      max-width: 500px;
+      padding: 20px;
+      background: var(--textsheet-background-color);
 
-        .settings-body {
-            max-height: 700px;
-            padding: 20px;
-            background: var(--textsheet-background-color);
-
-            border-radius: 12px;
-            /* margin exposes part of the modal background */
-            margin: 40px;
-            overflow: hidden;
-        }
+      border-radius: 12px;
+      /* margin exposes part of the modal background */
+      margin: 40px;
+      overflow: hidden;
     }
+  }
 
-    .settings-background {
-        /* modal background fixed across whole screen */
-        position: fixed;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
+  .settings-background {
+    /* modal background fixed across whole screen */
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
 
-        /* semi-transparent black  */
-        background-color: var(--color-black);
-        opacity: 0.75;
+    /* semi-transparent black  */
+    background-color: var(--color-black);
+    opacity: 0.75;
 
-        /* z-index must be below .settings and above everything else  */
-        z-index: 900;
-    }
+    /* z-index must be below .settings and above everything else  */
+    z-index: 900;
+  }
 
-    .buttons-container {
-        display: flex;
-        justify-content: flex-end;
-    }
-
-    //SCSS for temporary reload button ~Finn --------
-    .button-image {
-        width: 30px;
-        margin-top: 2.2px;
-    }
-
-    .reload-button {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background-color: transparent;
-        border-radius: 20%;
-        outline: none;
-        cursor: pointer;
-        border: none;
-        background: var(--container-background-color);
-    }
-
-    //End SCSS for reload --------------------
-
+  .buttons-container {
+    display: flex;
+    justify-content: flex-end;
+  }
 }
 
-
 body.settings-open {
-    /* body overflow is hidden to hide main scrollbar when modal window is open*/
-    overflow: hidden;
+  /* body overflow is hidden to hide main scrollbar when modal window is open*/
+  overflow: hidden;
 }
 
 .top-of-div {
-    display: flex;
-    justify-content: space-between;
+  display: flex;
+  justify-content: space-between;
 }
 
 .settings-button {
-    margin: 10px;
-    align-self: self-end;
+  margin: 10px;
+  align-self: self-end;
 }
 
+/*
+END from Jason Watmore (@cornflourblue) --------------------------------------
+*/
+
 h1 {
-    color: var(--color-grey-hoverover);
-    font-weight: normal;
+  color: var(--color-grey-hoverover);
+  font-weight: normal;
 }
 
 .seconds-container {
-    min-width: 100px;
-    max-width: 300px;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    margin: 40px;
-    //border: 2px solid;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: center;
+  justify-items: center;
+  margin: 40px 0px 30px;
 }
 
 .seconds-label-container {
-    display: flex;
-    justify-content: space-between;
-    width: 270px;
-    //border: 2px solid;
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
 }
 
 .seconds-value-label {
-    font-weight: 600;
+  font-weight: 600;
 }
 
 .slider {
-    margin: 20px 10px 0;
-    //border: 2px solid;
-    width: 300px;
+  margin-top: 20px;
+  width: 80%;
 }
 
-.slider input[type=range].styled-slider {
-    width: 98%;
+.slider input[type='range'].styled-slider {
+  width: 98%;
 }
+
+//SCSS for temporary reload button ~Finn --------
+.button-image {
+  width: 30px;
+  margin-top: 2.2px;
+}
+
+.reload-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  border-radius: 20%;
+  outline: none;
+  cursor: pointer;
+  border: none;
+  background: var(--container-background-color);
+}
+
+//End SCSS for reload --------------------
 
 .keybinding-container {
-    display: flex;
-    flex-direction: column;
-    margin: 5px;
-    max-height: 400px;
-    padding-right: 20px;
-    overflow: auto;
+  display: flex;
+  flex-direction: column;
+  margin: 5px 0px 5px 10px;
+  height: 520px;
+  width: 470px;
+  padding-right: 20px;
+  overflow: auto;
 
-    p {
-        font-size: 18px;
-    }
+  p {
+    font-size: 18px;
+  }
 }
 
-.row {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 15px;
+.key-grid {
+  display: grid;
+  grid-template-columns: 4;
+  justify-items: center; //oder start
+  align-items: center;
+
+  gap: 18px 10px;
+  margin: 0px 0px 18px 15px;
+}
+
+.key1,
+.key2,
+.key3,
+.switch {
+  text-align: center;
+  font-size: 16px;
+  color: var(--keybindings-font-color);
+
+  padding: 13px;
+  border-radius: 20%;
+  background-color: var(--keybindings-background-color);
 }
 
 .action {
-    flex: 1;
-    display: flex;
-    margin: 5px;
-    margin-left: 20px;
-    align-items: center;
+  grid-column: 1 / 1;
+  padding-right: 15px;
+  width: 170px;
 }
 
-.key {
-    text-align: center;
-    font-size: 14px;
-    color: var(--keybindings-font-color);
+.key1 {
+  grid-column: 2 / 2;
+}
 
-    margin: 5px;
-    padding: 10px;
-    border-radius: 15%;
-    background-color: var(--keybindings-background-color);
-    max-height: 15px;
+.key2 {
+  grid-column: 3 / 3;
+}
+
+.key3 {
+  grid-column: 4 / 4;
 }
 
 .describ {
-    display: flex;
-    margin: 5px;
-    align-items: center;
+  grid-column: 3 / 3;
+  margin: 5px;
+  align-items: center;
+}
+
+.switch {
+  grid-column: 1 / 1;
 }
 
 .footSwitchImage {
-    width: 35px;
-    margin-top: 8px;
+  width: 35px;
+  margin-top: 8px;
 }
