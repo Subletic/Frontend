@@ -1,18 +1,11 @@
 <div #textboxContainer class="textboxContainer">
   <div #textbox class="textbox">
-    <div
-      *ngFor="let current of getWordsArray()"
-      style="display: inline-block; margin-right: 5px"
-    >
-      <app-word-component
-        [word]="current.data"
-        [id]="current.id"
-        [idParent]="this.speechBubble.id"
+    <div *ngFor="let current of getWordsArray()">
+      <app-word-component class="test" [word]="current.data" [id]="current.id" [idParent]="this.speechBubble.id"
         (dataUpdate)="onWordUpdate($event.changedWord, $event.idOfEmitter)"
         (newWordAfter)="newWordAfter($event.wordAfter, $event.idOfEmitter)"
         (deleteSelf)="onDeleteSelfCall($event.idOfEmitter)"
-        (addSelfToPrevWord)="combineWords($event.idOfEmitter)"
-      ></app-word-component>
+        (addSelfToPrevWord)="combineWords($event.idOfEmitter)"></app-word-component>
     </div>
   </div>
 </div>

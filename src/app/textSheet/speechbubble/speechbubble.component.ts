@@ -213,7 +213,7 @@ export class SpeechbubbleComponent implements AfterViewInit {
     if (!SPAN) return;
     SPAN.focus();
 
-    SPAN.textContent = word.word.trim();
+    //SPAN.textContent = word.word.trim();
   }
 
   /**

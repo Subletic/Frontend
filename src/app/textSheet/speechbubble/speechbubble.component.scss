@@ -14,9 +14,13 @@
   user-select: text;
 }
 
-.textbox div span {
-  display: contents;
-  user-select: none;
+.textbox div {
+  float: left;
+  margin-right: 5px;
+}
+
+.test {
+  overflow: none;
 }
 
 .textbox div::after {
