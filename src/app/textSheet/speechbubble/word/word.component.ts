@@ -26,6 +26,7 @@ export class WordComponent implements OnInit, AfterViewInit {
     changedWord: WordToken;
     idOfEmitter: number;
   }> = new EventEmitter<{ changedWord: WordToken; idOfEmitter: number }>();
+
   @Output() newWordAfter: EventEmitter<{
     wordAfter: string;
     idOfEmitter: number;
@@ -33,6 +34,7 @@ export class WordComponent implements OnInit, AfterViewInit {
 
   @Output() addSelfToPrevWord: EventEmitter<{ idOfEmitter: number }> =
     new EventEmitter<{ idOfEmitter: number }>();
+
   @Output() deleteSelf: EventEmitter<{ idOfEmitter: number }> =
     new EventEmitter<{ idOfEmitter: number }>();
 
@@ -78,7 +80,7 @@ export class WordComponent implements OnInit, AfterViewInit {
   public handleSpacePress(
     selectedSpan: HTMLElement,
     cursorPosition: number | undefined,
-    event: KeyboardEvent,
+    event: KeyboardEvent
   ): void {
     const WORD_BEFORE_CURSOR = this.selfRef.nativeElement.textContent.substring(
       0,
@@ -119,6 +121,7 @@ export class WordComponent implements OnInit, AfterViewInit {
     }
 
     this.addSelfToPrevWord.emit({ idOfEmitter: this.id });
+    this.deleteSelf.emit({ idOfEmitter: this.id });
     return;
   }
 

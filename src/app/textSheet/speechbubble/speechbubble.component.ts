@@ -111,6 +111,12 @@ export class SpeechbubbleComponent implements AfterViewInit {
     }
   }
 
+  /**
+   * Retrieves an array of WordToken nodes from the linked list of words in the SpeechBubble.
+   * Each node in the array represents a word in the speechBubble's content.
+   *
+   * @returns An array of Node<WordToken> representing the words in the SpeechBubble.
+   */
   getWordsArray(): Node<WordToken>[] {
     const wordsArray: Node<WordToken>[] = [];
     let current = this.speechBubble.words.head;
@@ -121,6 +127,29 @@ export class SpeechbubbleComponent implements AfterViewInit {
     }
 
     return wordsArray;
+  }
+
+  /**
+   * When a word calls for a change in its data, puts that new data in place of the existing data.
+   */
+  onWordUpdate(changedWord: WordToken, idOfEmitter: number): void {
+    const EMITTER = this.speechBubble.words.getDataById(idOfEmitter);
+    if (!EMITTER) return;
+    this.speechBubble.words.replaceData(EMITTER, changedWord);
+
+    this.cdr.detectChanges();
+  }
+
+  /**
+   * Deletes emitter from speechBubble.
+   *
+   * @param idOfEmitter - ID of emitting word to access its variables.
+   */
+  onDeleteSelfCall(idOfEmitter: number): void {
+    const EMITTER = this.speechBubble.getWordTokenById(idOfEmitter);
+    if (!EMITTER) return;
+    this.speechBubble.words.remove(EMITTER);
+    this.cdr.detectChanges();
   }
 
   /**
@@ -138,49 +167,14 @@ export class SpeechbubbleComponent implements AfterViewInit {
       EMITTER.confidence,
       EMITTER.startTime,
       EMITTER.endTime,
-      EMITTER.speaker,
+      EMITTER.speaker
     );
     this.speechBubble.words.insertAfter(NEW_WORD_AFTER, EMITTER);
 
     this.cdr.detectChanges();
 
     this.focusSpan(NEW_WORD_AFTER);
-  }
-
-  /**
-   * When a word calls for a change in its data, puts that new data in place of the existing data.
-   */
-  onWordUpdate(changedWord: WordToken, idOfEmitter: number): void {
-    const EMITTER = this.speechBubble.words.getDataById(idOfEmitter);
-    if (!EMITTER) return;
-    this.speechBubble.words.replaceData(EMITTER, changedWord);
-
-    this.cdr.detectChanges();
-  }
-
-  /**
-   * Focuses on the span with the given word, if it exists.
-   *
-   * @param word - Word to look for in existing spans.
-   */
-  focusSpan(word: WordToken): void {
-    const WORD_ID = this.speechBubble.words.getNodeId(word);
-    const SPAN_ID = this.speechBubble.id.toString() + '_' + WORD_ID;
-    const SPAN = document.getElementById(SPAN_ID);
-    if (!SPAN) return;
-    SPAN.focus();
-  }
-
-  /**
-   * Deletes emitter from speechBubble.
-   *
-   * @param idOfEmitter - ID of emitting word to access its variables.
-   */
-  onDeleteSelfCall(idOfEmitter: number): void {
-    const EMITTER = this.speechBubble.getWordTokenById(idOfEmitter);
-    if (!EMITTER) return;
-    this.speechBubble.words.remove(EMITTER);
-    this.cdr.detectChanges();
+    this.setCursorPosition(NEW_WORD_AFTER, 0);
   }
 
   /**
@@ -194,15 +188,59 @@ export class SpeechbubbleComponent implements AfterViewInit {
     while (current) {
       if (current.id === idOfEmitter) {
         if (!current.prev || current == this.speechBubble.words.head) return;
+        const PREV_WORD_LENGTH = current.prev.data.word.length;
         const COMBINED_WORDS = current.prev.data.word + current.data.word;
         current.prev.data.word = COMBINED_WORDS;
-
-        this.onDeleteSelfCall(idOfEmitter);
+        this.focusSpan(current.prev.data);
+        this.setCursorPosition(current.prev.data, PREV_WORD_LENGTH);
         return;
       }
       current = current.next;
     }
     return;
+  }
+
+  /**
+   * Focuses on the span with the given word, if it exists.
+   * In case of a merge before that, sets textContent and cursor position.
+   *
+   * @param word - Word to look for in existing spans.
+   */
+  focusSpan(word: WordToken): void {
+    const WORD_ID = this.speechBubble.words.getNodeId(word);
+    const SPAN_ID = this.speechBubble.id.toString() + '_' + WORD_ID;
+    const SPAN = document.getElementById(SPAN_ID);
+    if (!SPAN) return;
+    SPAN.focus();
+
+    SPAN.textContent = word.word.trim();
+  }
+
+  /**
+   * Sets the cursor position within a span element.
+   *
+   * @param word - Word to look for in existing spans.
+   * @param position - The position to set the cursor within the span.
+   */
+  setCursorPosition(word: WordToken, position: number): void {
+    const WORD_ID = this.speechBubble.words.getNodeId(word);
+    const SPAN_ID = this.speechBubble.id.toString() + '_' + WORD_ID;
+    const SPAN = document.getElementById(SPAN_ID);
+
+    if (!SPAN) return;
+    const TEXT_NODE = SPAN.firstChild;
+    const range = document.createRange();
+
+
+    if (!TEXT_NODE) return;
+    range.setStart(TEXT_NODE, position);
+    range.collapse(true);
+
+    const selection = window.getSelection();
+    selection?.removeAllRanges();
+    selection?.addRange(range);
+
+    TEXT_NODE.textContent = word.word;
   }
 
   /**

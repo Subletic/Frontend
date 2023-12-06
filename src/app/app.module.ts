@@ -25,7 +25,7 @@ import { ToastrModule } from 'ngx-toastr';
 
 import { DictionaryEditorComponent } from './dictionary/dictionary-editor/dictionary-editor.component';
 import { DictionaryRowComponent } from './dictionary/dictionary-row/dictionary-row.component';
-import { NgOptimizedImage } from "@angular/common";
+import { NgOptimizedImage } from '@angular/common';
 import { WordComponent } from './textSheet/speechbubble/word/word.component';
 import { ExportPopupComponent } from './dictionary/dictionary-fs-loader/export-popup/export-popup.component';
 import { StartConfigComponent } from './start-config/start-config.component';
@@ -45,7 +45,7 @@ import { StartConfigComponent } from './start-config/start-config.component';
     DictionaryFsLoaderComponent,
     WordComponent,
     ExportPopupComponent,
-    StartConfigComponent
+    StartConfigComponent,
   ],
   imports: [
     BrowserModule,
@@ -64,4 +64,4 @@ import { StartConfigComponent } from './start-config/start-config.component';
   providers: [],
   bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

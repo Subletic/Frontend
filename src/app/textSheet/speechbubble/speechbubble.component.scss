@@ -14,11 +14,11 @@
   user-select: text;
 }
 
-.textbox span {
-  display: inline;
+.textbox div span {
+  display: contents;
   user-select: none;
 }
 
-.textbox span::after {
+.textbox div::after {
   content: ' ';
 }
