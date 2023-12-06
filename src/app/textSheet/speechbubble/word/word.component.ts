@@ -8,7 +8,7 @@ import {
   Output,
   OnInit,
 } from '@angular/core';
-import { WordToken } from '../../data/wordToken/wordToken.model';
+import { WordToken } from '../../../data/wordToken/wordToken.model';
 
 @Component({
   selector: 'app-word-component',

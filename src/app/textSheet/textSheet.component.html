@@ -1,9 +1,6 @@
 <div class="middle-container">
   <div *ngFor="let speechBubble of getSpeechBubblesArray()" class="innerBoxes">
-    <app-text-box
-      [speechBubble]="speechBubble"
-      (focusout)="onFocusOut(speechBubble.id)"
-      #textBoxRefs
-    ></app-text-box>
+    <app-speechbubble [speechBubble]="speechBubble" (focusout)="onFocusOut(speechBubble.id)"
+      #textBoxRefs></app-speechbubble>
   </div>
 </div>

@@ -7,9 +7,9 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
 } from '@angular/core';
-import { WordToken } from '../data/wordToken/wordToken.model';
-import { SpeechBubble } from '../data/speechBubble/speechBubble.model';
-import { Node } from '../data/linkedList/node.model';
+import { WordToken } from '../../data/wordToken/wordToken.model';
+import { SpeechBubble } from '../../data/speechBubble/speechBubble.model';
+import { Node } from '../../data/linkedList/node.model';
 
 /**
  * The TextBoxComponent represents a component that handles the SpeechBubble data.
@@ -19,18 +19,18 @@ import { Node } from '../data/linkedList/node.model';
  * The data inside the TextBox is directly connected to the data-structure of the speechBubbles.
  */
 @Component({
-  selector: 'app-text-box',
-  templateUrl: './text-box.component.html',
-  styleUrls: ['./text-box.component.scss'],
+  selector: 'app-speechbubble',
+  templateUrl: './speechbubble.component.html',
+  styleUrls: ['./speechbubble.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TextBoxComponent implements AfterViewInit {
+export class SpeechbubbleComponent implements AfterViewInit {
   @ViewChild('textbox', { static: true }) textboxRef!: ElementRef;
   @Input() speechBubble!: SpeechBubble;
   @ViewChild('textboxContainer', { static: true })
   textboxContainerRef!: ElementRef;
 
-  constructor(private cdr: ChangeDetectorRef) {}
+  constructor(private cdr: ChangeDetectorRef) { }
 
   /**
    * After Init of View, generates the Words from the data structure

@@ -1,23 +1,23 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { TextBoxComponent } from './text-box.component';
-import { SpeechBubble } from '../data/speechBubble/speechBubble.model';
-import { WordToken } from '../data/wordToken/wordToken.model';
-import { LinkedList } from '../data/linkedList/linkedList.model';
+import { SpeechbubbleComponent } from './speechbubble.component';
+import { SpeechBubble } from '../../data/speechBubble/speechBubble.model';
+import { WordToken } from '../../data/wordToken/wordToken.model';
+import { LinkedList } from '../..//data/linkedList/linkedList.model';
 import { ChangeDetectorRef } from '@angular/core';
 
-describe('TextBoxComponent', () => {
-  let component: TextBoxComponent;
-  let fixture: ComponentFixture<TextBoxComponent>;
+describe('SpeechbubbleComponent', () => {
+  let component: SpeechbubbleComponent;
+  let fixture: ComponentFixture<SpeechbubbleComponent>;
   let cdr: ChangeDetectorRef;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [TextBoxComponent],
+      declarations: [SpeechbubbleComponent],
     }).compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TextBoxComponent);
+    fixture = TestBed.createComponent(SpeechbubbleComponent);
     component = fixture.componentInstance;
     component.speechBubble = new SpeechBubble(0, 0, 0, new LinkedList(), 0);
     fixture.detectChanges();
@@ -53,7 +53,7 @@ describe('TextBoxComponent', () => {
   Gibt es die Funktion aktuell noch? Sollte so sein, wahrscheinlich in Word umlagern?
 
   it('should add an empty word if the word list is empty in ngAfterViewInit', () => {
-    const component = new TextBoxComponent();
+    const component = new SpeechbubbleComponent();
     component.textboxContainerRef = {
       nativeElement: document.createElement('div'),
     };
@@ -70,7 +70,7 @@ describe('TextBoxComponent', () => {
   Von der Idee her okay, in word umlagern dann
 
   it('should add the mouseover event listener to the textbox in ngAfterViewInit', () => {
-    const component = new TextBoxComponent();
+    const component = new SpeechbubbleComponent();
     component.textboxContainerRef = {
       nativeElement: document.createElement('div'),
     };
@@ -90,7 +90,7 @@ describe('TextBoxComponent', () => {
   */
 
   it('should log the information about the hovered word in logInfoAboutTextbox', () => {
-    const component = new TextBoxComponent(cdr);
+    const component = new SpeechbubbleComponent(cdr);
     component.speechBubble = new SpeechBubble(
       1,
       1,
@@ -223,8 +223,8 @@ it('should not add an empty word if textbox.words.head is null', () => {
 */
 
 /* 
-describe('TextBoxComponent', () => {
-  let component: TextBoxComponent;
+describe('SpeechbubbleComponent', () => {
+  let component: SpeechbubbleComponent;
   let selectedSpan: HTMLElement;
   let currentText: string;
   let prevSpan: HTMLSpanElement;
@@ -232,7 +232,7 @@ describe('TextBoxComponent', () => {
   let cdr: ChangeDetectorRef;
 
   beforeEach(() => {
-    component = new TextBoxComponent(cdr);
+    component = new SpeechbubbleComponent(cdr);
     component.speechBubble = new SpeechBubble(1, 1, 1, new LinkedList<WordToken>, 0);
     component.speechBubble.words = new LinkedList();
     selectedSpan = document.createElement('span');
@@ -282,18 +282,18 @@ describe('TextBoxComponent', () => {
 });
  */
 
-describe('TextBoxComponent', () => {
-  let component: TextBoxComponent;
-  let fixture: ComponentFixture<TextBoxComponent>;
+describe('SpeechbubbleComponent', () => {
+  let component: SpeechbubbleComponent;
+  let fixture: ComponentFixture<SpeechbubbleComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [TextBoxComponent],
+      declarations: [SpeechbubbleComponent],
     }).compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TextBoxComponent);
+    fixture = TestBed.createComponent(SpeechbubbleComponent);
     component = fixture.componentInstance;
     component.speechBubble = new SpeechBubble(0, 0, 0, new LinkedList(), 0);
     fixture.detectChanges();
