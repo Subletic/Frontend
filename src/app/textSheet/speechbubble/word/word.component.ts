@@ -80,7 +80,7 @@ export class WordComponent implements OnInit, AfterViewInit {
   public handleSpacePress(
     selectedSpan: HTMLElement,
     cursorPosition: number | undefined,
-    event: KeyboardEvent
+    event: KeyboardEvent,
   ): void {
     const WORD_BEFORE_CURSOR = this.selfRef.nativeElement.textContent.substring(
       0,
@@ -89,7 +89,7 @@ export class WordComponent implements OnInit, AfterViewInit {
     const WORD_AFTER_CURSOR =
       this.selfRef.nativeElement.textContent.substring(cursorPosition);
 
-    console.log("SOWEIT");
+    console.log('SOWEIT');
 
     if (WORD_BEFORE_CURSOR.trim() == '') return;
 

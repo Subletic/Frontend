@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SpeechbubbleComponent } from './speechbubble.component';
 import { SpeechBubble } from '../../data/speechBubble/speechBubble.model';
 import { WordToken } from '../../data/wordToken/wordToken.model';
@@ -39,7 +39,6 @@ describe('SpeechbubbleComponent', () => {
     expect(component.speechBubble.words.size()).toBe(0);
   });
 
-
   it('should find a word by its ID', () => {
     const speechBubble = new SpeechBubble(
       0,
@@ -61,7 +60,6 @@ describe('SpeechbubbleComponent', () => {
     const NOT_FOUND_WORD = component.speechBubble.words.getDataById(2);
     expect(NOT_FOUND_WORD).toBeNull();
   });
-
 
   it('should update word highlight styles based on FontWeight', () => {
     // Create a mock data structure with sample fontWeight values
@@ -143,12 +141,10 @@ describe('SpeechbubbleComponent', () => {
 
     if (!component.speechBubble.words.head) return;
     const updatedWordCopy = component.speechBubble.words.head.next;
-    if (updatedWordCopy)
-      expect(updatedWordCopy.data).toEqual(updatedWord);
+    if (updatedWordCopy) expect(updatedWordCopy.data).toEqual(updatedWord);
   });
 
   it('should not update any word when onWordUpdate is called with an invalid ID', () => {
-
     spyOn(component.cdr, 'detectChanges');
     const originalWord = new WordToken('Hello', 1, 1, 1, 1);
     component.speechBubble.words.add(originalWord);
@@ -188,7 +184,12 @@ describe('SpeechbubbleComponent', () => {
 
     component.newWordAfter('World', 1);
 
-    if (!component.speechBubble.words.head || !component.speechBubble.words.head.next || !component.speechBubble.words.head.next.next) return;
+    if (
+      !component.speechBubble.words.head ||
+      !component.speechBubble.words.head.next ||
+      !component.speechBubble.words.head.next.next
+    )
+      return;
     const newWordAfter = component.speechBubble.words.head.next.next.data;
 
     expect(newWordAfter.word).toBe('World');
@@ -214,7 +215,11 @@ describe('SpeechbubbleComponent', () => {
 
     component.combineWords(2);
 
-    if (!component.speechBubble.words.head || !component.speechBubble.words.head.next) return;
+    if (
+      !component.speechBubble.words.head ||
+      !component.speechBubble.words.head.next
+    )
+      return;
     const combinedWord = component.speechBubble.words.head.next.data;
 
     expect(combinedWord.word).toBe('HelloWorld');
@@ -229,7 +234,11 @@ describe('SpeechbubbleComponent', () => {
 
     component.combineWords(3);
 
-    if (!component.speechBubble.words.head || !component.speechBubble.words.head.next) return;
+    if (
+      !component.speechBubble.words.head ||
+      !component.speechBubble.words.head.next
+    )
+      return;
     const wordAfterCombine = component.speechBubble.words.head.next.data;
 
     expect(wordAfterCombine.word).toBe('Hello');
@@ -244,7 +253,6 @@ describe('SpeechbubbleComponent', () => {
   });
 
   it('should focus on the span when focusSpan is called', () => {
-
     const word1 = new WordToken('Hello', 1, 1, 1, 1);
     component.speechBubble.words.add(word1);
     component.cdr.detectChanges();
@@ -252,8 +260,7 @@ describe('SpeechbubbleComponent', () => {
     const firstSpan = document.getElementById('0_1');
     if (!firstSpan) return;
 
-    if (component.speechBubble.words.head)
-      component.focusSpan(word1);
+    if (component.speechBubble.words.head) component.focusSpan(word1);
 
     const focusedElement = document.activeElement?.id;
 
@@ -285,7 +292,6 @@ describe('SpeechbubbleComponent', () => {
     }, 2);
   });
   */
-
 
   //wieder ältere Tests aus text-box
   it('should log the information about the hovered word in logInfoAboutTextbox', () => {

@@ -10,7 +10,6 @@ import {
 import { WordToken } from '../../data/wordToken/wordToken.model';
 import { SpeechBubble } from '../../data/speechBubble/speechBubble.model';
 import { Node } from '../../data/linkedList/node.model';
-import { timeout } from 'rxjs';
 
 /**
  * The TextBoxComponent represents a component that handles the SpeechBubble data.
@@ -31,7 +30,7 @@ export class SpeechbubbleComponent implements AfterViewInit {
   @ViewChild('textboxContainer', { static: true })
   textboxContainerRef!: ElementRef;
 
-  constructor(public cdr: ChangeDetectorRef) { }
+  constructor(public cdr: ChangeDetectorRef) {}
 
   /**
    * After Init of View, generates the Words from the data structure
@@ -168,7 +167,7 @@ export class SpeechbubbleComponent implements AfterViewInit {
       EMITTER.confidence,
       EMITTER.startTime,
       EMITTER.endTime,
-      EMITTER.speaker
+      EMITTER.speaker,
     );
     this.speechBubble.words.insertAfter(NEW_WORD_AFTER, EMITTER);
 
@@ -235,7 +234,7 @@ export class SpeechbubbleComponent implements AfterViewInit {
     if (!TEXT_NODE) return;
     TEXT_NODE.textContent = word.word;
 
-    setTimeout(() => {
+    const interval = setInterval(() => {
       range.setStart(TEXT_NODE, position);
       range.collapse(true);
 
@@ -243,10 +242,10 @@ export class SpeechbubbleComponent implements AfterViewInit {
       if (!selection) return;
       selection.removeAllRanges();
       selection.addRange(range);
+
+      clearInterval(interval);
     }, 2);
-
   }
-
 
   /**
    * Prints info about a certain textbox when its hovered over.
