@@ -112,12 +112,12 @@ export class WordComponent implements OnInit, AfterViewInit {
      * Word is in full selection -> Delete as a whole
      * Previous Word exists -> Merges with previous Word
 
-    * @param isInFullSelection - Boolean that states if the currentWort is fully selected by user
+    * @param inFullSelection - Boolean that states if the currentWort is fully selected by user
     * 
     * @pre Function should be called when backspace is pressed at start of a word
     */
-  public handleBackspacePressAtStart(isInFullSelection: boolean): void {
-    if (isInFullSelection) {
+  public handleBackspacePressAtStart(inFullSelection: boolean): void {
+    if (inFullSelection) {
       this.deleteSelf.emit({ idOfEmitter: this.id });
       return;
     }

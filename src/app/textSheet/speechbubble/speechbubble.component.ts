@@ -30,7 +30,7 @@ export class SpeechbubbleComponent implements AfterViewInit {
   @ViewChild('textboxContainer', { static: true })
   textboxContainerRef!: ElementRef;
 
-  constructor(public cdr: ChangeDetectorRef) {}
+  constructor(public cdr: ChangeDetectorRef) { }
 
   /**
    * After Init of View, generates the Words from the data structure
@@ -39,20 +39,16 @@ export class SpeechbubbleComponent implements AfterViewInit {
    */
   ngAfterViewInit(): void {
     const textbox = this.textboxRef.nativeElement;
-
     if (this.speechBubble.words.head == null) {
       this.speechBubble.words.add(new WordToken('', 1, 1, 1, 1));
     }
-
     this.setEventListeners(textbox);
-
     this.adjustCurrentWordInterval();
-
     this.textboxContainerRef.nativeElement.id = `${this.speechBubble.id}`;
   }
 
-  //Könnte so angepasst werden, dass die Wörter selbst prüfen, ob sie leer sind und dann deleteSelf emitten? Was ist in dem
-  //Fall mit Standardsspeechbubble, die ein leeres Textfeld zur Eingabe braucht? Doch isFirst Attribut?
+  // Könnte so angepasst werden, dass die Wörter selbst prüfen, ob sie leer sind und dann deleteSelf emitten? Was ist in dem
+  // Fall mit Standardsspeechbubble, die ein leeres Textfeld zur Eingabe braucht? Doch isFirst Attribut?
   /**
    * Removes empty objects from the LinkedList of words.
    */
@@ -161,7 +157,6 @@ export class SpeechbubbleComponent implements AfterViewInit {
   newWordAfter(wordAfter: string, idOfEmitter: number): void {
     const EMITTER = this.speechBubble.getWordTokenById(idOfEmitter);
     if (!EMITTER) return;
-
     const NEW_WORD_AFTER = new WordToken(
       wordAfter,
       EMITTER.confidence,
@@ -170,9 +165,7 @@ export class SpeechbubbleComponent implements AfterViewInit {
       EMITTER.speaker,
     );
     this.speechBubble.words.insertAfter(NEW_WORD_AFTER, EMITTER);
-
     this.cdr.detectChanges();
-
     this.focusSpan(NEW_WORD_AFTER);
     this.setCursorPosition(NEW_WORD_AFTER, 0);
   }
