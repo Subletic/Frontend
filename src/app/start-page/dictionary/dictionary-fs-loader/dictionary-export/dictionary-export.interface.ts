@@ -1,4 +1,4 @@
-import { dictionary } from '../../../data/dictionary/dictionary.model';
+import { dictionary } from '../../../../data/dictionary/dictionary.model';
 
 /**
  * Interface defining the contract for export formats.

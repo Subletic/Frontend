@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DictionaryFsLoaderComponent } from './dictionary-fs-loader.component';
 import { ToastrService } from 'ngx-toastr';
-import { transcription_config } from '../../data/dictionary/transcription_config.module';
-import { dictionary } from '../../data/dictionary/dictionary.model';
+import { transcription_config } from '../../../data/dictionary/transcription_config.module';
+import { dictionary } from '../../../data/dictionary/dictionary.model';
 
 describe('DictionaryFsLoaderComponent', () => {
   let component: DictionaryFsLoaderComponent;

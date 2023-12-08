@@ -1,5 +1,5 @@
 import { ExportFormat } from './dictionary-export.interface';
-import { dictionary } from '../../../data/dictionary/dictionary.model';
+import { dictionary } from '../../../../data/dictionary/dictionary.model';
 
 /**
  * Class for exporting data in JSON format.

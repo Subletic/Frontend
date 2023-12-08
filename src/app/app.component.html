@@ -1,9 +1,7 @@
 <div *ngIf="showDictionary; else mainContent" class="dictionaryWrapper">
-  <app-dictionary-editor></app-dictionary-editor>
-  <app-start-config></app-start-config>
-  <button class="continue-button" (click)="continueToEditor()">
-    Weiter zum Livestream-Editor
-  </button>
+  <app-start-page
+    (showDictionary)="handleShowDictionary($event)"
+  ></app-start-page>
 </div>
 <ng-template #mainContent>
   <app-text-sheet *ngIf="!showDictionary"></app-text-sheet>
