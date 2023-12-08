@@ -10,6 +10,7 @@ import {
 import { WordToken } from '../../data/wordToken/wordToken.model';
 import { SpeechBubble } from '../../data/speechBubble/speechBubble.model';
 import { Node } from '../../data/linkedList/node.model';
+import { timeout } from 'rxjs';
 
 /**
  * The TextBoxComponent represents a component that handles the SpeechBubble data.
@@ -231,18 +232,21 @@ export class SpeechbubbleComponent implements AfterViewInit {
     const TEXT_NODE = SPAN.firstChild;
     const range = document.createRange();
 
-
     if (!TEXT_NODE) return;
-    range.setStart(TEXT_NODE, position);
-    range.collapse(true);
-
-    const selection = window.getSelection();
-    if (!selection) return;
-    selection.removeAllRanges();
-    selection.addRange(range);
-
     TEXT_NODE.textContent = word.word;
+
+    setTimeout(() => {
+      range.setStart(TEXT_NODE, position);
+      range.collapse(true);
+
+      const selection = window.getSelection();
+      if (!selection) return;
+      selection.removeAllRanges();
+      selection.addRange(range);
+    }, 2);
+
   }
+
 
   /**
    * Prints info about a certain textbox when its hovered over.
