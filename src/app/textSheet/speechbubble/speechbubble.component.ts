@@ -30,7 +30,7 @@ export class SpeechbubbleComponent implements AfterViewInit {
   @ViewChild('textboxContainer', { static: true })
   textboxContainerRef!: ElementRef;
 
-  constructor(private cdr: ChangeDetectorRef) { }
+  constructor(public cdr: ChangeDetectorRef) { }
 
   /**
    * After Init of View, generates the Words from the data structure
@@ -237,8 +237,9 @@ export class SpeechbubbleComponent implements AfterViewInit {
     range.collapse(true);
 
     const selection = window.getSelection();
-    selection?.removeAllRanges();
-    selection?.addRange(range);
+    if (!selection) return;
+    selection.removeAllRanges();
+    selection.addRange(range);
 
     TEXT_NODE.textContent = word.word;
   }

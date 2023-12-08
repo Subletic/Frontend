@@ -1,9 +1,10 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { SpeechbubbleComponent } from './speechbubble.component';
 import { SpeechBubble } from '../../data/speechBubble/speechBubble.model';
 import { WordToken } from '../../data/wordToken/wordToken.model';
 import { LinkedList } from '../..//data/linkedList/linkedList.model';
 import { ChangeDetectorRef } from '@angular/core';
+import { WordComponent } from './word/word.component';
 
 describe('SpeechbubbleComponent', () => {
   let component: SpeechbubbleComponent;
@@ -12,7 +13,8 @@ describe('SpeechbubbleComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [SpeechbubbleComponent],
+      declarations: [SpeechbubbleComponent, WordComponent],
+      providers: [ChangeDetectorRef],
     }).compileComponents();
   });
 
@@ -60,46 +62,229 @@ describe('SpeechbubbleComponent', () => {
     expect(NOT_FOUND_WORD).toBeNull();
   });
 
-  /*
-  Gibt es die Funktion aktuell noch? Sollte so sein, wahrscheinlich in Word umlagern?
 
-  it('should add an empty word if the word list is empty in ngAfterViewInit', () => {
-    const component = new SpeechbubbleComponent();
-    component.textboxContainerRef = {
-      nativeElement: document.createElement('div'),
-    };
-    component.textboxRef = { nativeElement: document.createElement('div') };
-    component.speechBubble = new SpeechBubble(1, 1, 1, new LinkedList<WordToken>, 0);
+  it('should update word highlight styles based on FontWeight', () => {
+    // Create a mock data structure with sample fontWeight values
+    const words = new LinkedList<WordToken>();
+    words.add(new WordToken('Hello', 0.9, 1, 2, 1));
+    words.add(new WordToken('world,', 0.8, 2, 4, 1));
+    words.add(new WordToken('how', 0.7, 4, 6, 1));
+    words.add(new WordToken('are', 0.6, 6, 8, 1));
+    words.add(new WordToken('you?', 0.5, 8, 10, 1));
 
-    component.ngAfterViewInit();
+    const SPEECHBUBBLE = new SpeechBubble(1, 0, 10, words, 0);
 
-    expect(component.speechBubble.words.size()).toBe(1);
+    component.speechBubble = SPEECHBUBBLE;
+    fixture.detectChanges();
+
+    if (component.speechBubble.words.head?.next) {
+      component.speechBubble.words.head.next.data.fontWeight = 'bold';
+    }
+
+    const mockSpan1 = document.createElement('span');
+    mockSpan1.id = '0_0';
+    mockSpan1.style.fontWeight = 'normal';
+
+    const mockSpan2 = document.createElement('span');
+    mockSpan2.id = '0_1';
+    mockSpan2.style.fontWeight = 'normal';
+
+    component.textboxRef.nativeElement.appendChild(mockSpan1);
+    component.textboxRef.nativeElement.appendChild(mockSpan2);
+
+    component.updateWordHighlight();
+
+    expect(mockSpan1.style.fontWeight).toBe('normal');
+
+    expect(mockSpan2.style.fontWeight).toBe('bold');
   });
-  */
 
-  /*
-  Von der Idee her okay, in word umlagern dann
+  //ab hier neu
 
-  it('should add the mouseover event listener to the textbox in ngAfterViewInit', () => {
-    const component = new SpeechbubbleComponent();
-    component.textboxContainerRef = {
-      nativeElement: document.createElement('div'),
-    };
-    const MOCK_TEXTBOX = document.createElement('div');
-    component.textboxRef = { nativeElement: MOCK_TEXTBOX };
-    component.speechBubble = new SpeechBubble(1, 1, 1, new LinkedList<WordToken>, 0);
+  it('should logInfoAboutTextbox on mousevent', () => {
+    spyOn(component, 'logInfoAboutTextbox');
 
-    spyOn(MOCK_TEXTBOX, 'addEventListener');
+    const MOUSE_EVENT = new MouseEvent('mouseover');
+    component.textboxRef.nativeElement.dispatchEvent(MOUSE_EVENT);
 
-    component.ngAfterViewInit();
-
-    expect(MOCK_TEXTBOX.addEventListener).toHaveBeenCalledWith(
-      'mouseover',
-      jasmine.any(Function),
-    );
+    expect(component.logInfoAboutTextbox).toHaveBeenCalledWith(MOUSE_EVENT);
   });
-  */
 
+  it('should detectChanges on keyup', () => {
+    spyOn(component.cdr, 'detectChanges');
+
+    const KEYUP_EVENT = new KeyboardEvent('keyup', { key: 't' });
+    component.textboxRef.nativeElement.dispatchEvent(KEYUP_EVENT);
+
+    expect(component.cdr.detectChanges).toHaveBeenCalledWith();
+  });
+
+  it('should return an array of WordToken nodes', () => {
+    const word1 = new WordToken('Hello', 1, 1, 1, 1);
+    const word2 = new WordToken('World', 1, 1, 1, 1);
+
+    component.speechBubble.words.add(word1);
+    component.speechBubble.words.add(word2);
+
+    const wordsArray = component.getWordsArray();
+    expect(wordsArray.length).toBe(3);
+
+    // Eine Stelle weiter, weil das erste Wort ein leeres ist
+    expect(wordsArray[1].data).toEqual(word1);
+    expect(wordsArray[2].data).toEqual(word2);
+  });
+
+  it('should update the word data when onWordUpdate is called', () => {
+    const originalWord = new WordToken('Hello', 1, 1, 1, 1);
+    component.speechBubble.words.add(originalWord);
+
+    const updatedWord = new WordToken('Hellop', 1, 1, 1, 1);
+    component.onWordUpdate(updatedWord, 1);
+
+    if (!component.speechBubble.words.head) return;
+    const updatedWordCopy = component.speechBubble.words.head.next;
+    if (updatedWordCopy)
+      expect(updatedWordCopy.data).toEqual(updatedWord);
+  });
+
+  it('should not update any word when onWordUpdate is called with an invalid ID', () => {
+
+    spyOn(component.cdr, 'detectChanges');
+    const originalWord = new WordToken('Hello', 1, 1, 1, 1);
+    component.speechBubble.words.add(originalWord);
+
+    const updatedWord = new WordToken('Hellop', 1, 1, 1, 1);
+    component.onWordUpdate(updatedWord, 2);
+
+    expect(component.cdr.detectChanges).not.toHaveBeenCalledWith();
+  });
+
+  it('should remove the word when onDeleteSelfCall is called with a valid ID', () => {
+    spyOn(component.cdr, 'detectChanges');
+    const originalWord = new WordToken('Hello', 1, 1, 1, 1);
+    component.speechBubble.words.add(originalWord);
+
+    component.onDeleteSelfCall(1);
+
+    expect(component.speechBubble.words.head).not.toBeNull();
+    expect(component.cdr.detectChanges).toHaveBeenCalled();
+  });
+
+  it('should not remove any word when onDeleteSelfCall is called with an invalid ID', () => {
+    spyOn(component.cdr, 'detectChanges');
+    const originalWord = new WordToken('Hello', 1, 1, 1, 1);
+    component.speechBubble.words.add(originalWord);
+
+    component.onDeleteSelfCall(2);
+
+    expect(component.speechBubble.words.head).not.toBeNull();
+    expect(component.cdr.detectChanges).not.toHaveBeenCalled();
+  });
+
+  it('should add a new word after the emitter when newWordAfter is called', () => {
+    spyOn(component.cdr, 'detectChanges');
+    const originalWord = new WordToken('Hello', 1, 1, 1, 1);
+    component.speechBubble.words.add(originalWord);
+
+    component.newWordAfter('World', 1);
+
+    if (!component.speechBubble.words.head || !component.speechBubble.words.head.next || !component.speechBubble.words.head.next.next) return;
+    const newWordAfter = component.speechBubble.words.head.next.next.data;
+
+    expect(newWordAfter.word).toBe('World');
+    expect(component.cdr.detectChanges).toHaveBeenCalled();
+  });
+
+  it('should not add a new word when newWordAfter is called with an invalid ID', () => {
+    spyOn(component.cdr, 'detectChanges');
+    const originalWord = new WordToken('Hello', 1, 1, 1, 1);
+    component.speechBubble.words.add(originalWord);
+
+    component.newWordAfter('World', 2);
+
+    expect(component.speechBubble.words.head).not.toBeNull();
+    expect(component.cdr.detectChanges).not.toHaveBeenCalled();
+  });
+
+  it('should combine words when combineWords is called with a valid ID', () => {
+    const word1 = new WordToken('Hello', 1, 1, 1, 1);
+    const word2 = new WordToken('World', 1, 1, 1, 1);
+    component.speechBubble.words.add(word1);
+    component.speechBubble.words.add(word2);
+
+    component.combineWords(2);
+
+    if (!component.speechBubble.words.head || !component.speechBubble.words.head.next) return;
+    const combinedWord = component.speechBubble.words.head.next.data;
+
+    expect(combinedWord.word).toBe('HelloWorld');
+  });
+
+  it('should not combine words when combineWords is called with an invalid ID', () => {
+    spyOn(component.cdr, 'detectChanges');
+    const word1 = new WordToken('Hello', 1, 1, 1, 1);
+    const word2 = new WordToken('World', 1, 1, 1, 1);
+    component.speechBubble.words.add(word1);
+    component.speechBubble.words.add(word2);
+
+    component.combineWords(3);
+
+    if (!component.speechBubble.words.head || !component.speechBubble.words.head.next) return;
+    const wordAfterCombine = component.speechBubble.words.head.next.data;
+
+    expect(wordAfterCombine.word).toBe('Hello');
+    expect(component.cdr.detectChanges).not.toHaveBeenCalled();
+  });
+
+  it('should not combine words when combineWords is called with emitter being the head', () => {
+    spyOn(component.cdr, 'detectChanges');
+    const HEAD = component.speechBubble.words.head;
+    component.combineWords(0);
+    expect(component.speechBubble.words.head).toBe(HEAD);
+  });
+
+  it('should focus on the span when focusSpan is called', () => {
+
+    const word1 = new WordToken('Hello', 1, 1, 1, 1);
+    component.speechBubble.words.add(word1);
+    component.cdr.detectChanges();
+
+    const firstSpan = document.getElementById('0_1');
+    if (!firstSpan) return;
+
+    if (component.speechBubble.words.head)
+      component.focusSpan(word1);
+
+    const focusedElement = document.activeElement?.id;
+
+    expect(focusedElement).toEqual(firstSpan.id);
+  });
+
+  it('should set the cursor position within a span element', async () => {
+    const word = new WordToken('Test', 1, 1, 1, 1);
+    component.speechBubble.words.add(word);
+    component.cdr.detectChanges();
+
+    //await fixture.whenStable();
+
+    if (!component.speechBubble.words.head || !component.speechBubble.words.head.next) return;
+    const spanId = `${component.speechBubble.id}_${component.speechBubble.words.head.next.id}`;
+    const span = document.getElementById(spanId);
+
+    component.setCursorPosition(word, 2);
+
+    const textNode = span?.firstChild;
+    const selection = window.getSelection();
+
+    if (selection && textNode) {
+      expect(textNode.textContent).toBe('Test');
+      expect(selection.anchorNode).toBe(textNode);
+    } else {
+      fail('selection or textNode is not defined');
+    }
+  });
+
+  //wieder ältere Tests aus text-box
   it('should log the information about the hovered word in logInfoAboutTextbox', () => {
     const component = new SpeechbubbleComponent(cdr);
     component.speechBubble = new SpeechBubble(
@@ -144,376 +329,4 @@ describe('SpeechbubbleComponent', () => {
       EMPTY_WORD,
     );
   });
-
-  describe('findWordById', () => {
-    it('should return null if word is not found', () => {
-      expect(component.speechBubble.words.getDataById(9999)).toBeNull();
-    });
-  });
-  /*relevante Tests, sollte mit in Word übernommen werden, gab es so aber auch weiter unten schon?
-  describe('handleBackspacePressAtStart', () => {
-    it('should delete word if in full selection', () => {
-      const selectedSpan = document.getElementById('span');
-      if (!selectedSpan) return;
-      selectedSpan.textContent = 'test';
-      const EVENT = new KeyboardEvent('keydown', { key: 'Backspace' });
-      component.handleBackspacePressAtStart(selectedSpan, 'test', true, '1', EVENT);
-      expect(component.speechBubble.words.head).toBeNull();
-    });
-    it('should merge with previous word if exists', () => {
-      const selectedSpan = document.getElementById('span');
-      if (!selectedSpan) return;
-      selectedSpan.textContent = 'test';
-      const prevSpan = document.createElement('span');
-      prevSpan.textContent = 'prev';
-      const EVENT = new KeyboardEvent('keydown', { key: 'Backspace' });
-      component.handleBackspacePressAtStart(selectedSpan, 'test', false, '1', EVENT);
-      if (component.speechBubble.words.head && component.speechBubble.words.head.next) {
-        expect(component.speechBubble.words.head.data.word).toEqual('prevtest');
-      }
-    });
-    */
 });
-
-/*
-Auslagern in word, was man davon noch benuzten kann...
-
-describe('handleSpacePress', () => {
-  it('should split word on space press', () => {
-    const selectedSpan = document.createElement('span');
-    selectedSpan.textContent = 'test';
-    const EVENT = new KeyboardEvent('keydown', { code: 'Space' });
-    component.handleSpacePress(selectedSpan, 'test', 2, '1', EVENT);
-    if (component.speechBubble.words.head && component.speechBubble.words.head.next) {
-      expect(component.speechBubble.words.head.data.word).toEqual('te');
-      expect(component.speechBubble.words.head.next.data.word).toEqual('st');
-    }
-  });
-  it('should not split word if cursor is at start', () => {
-    const selectedSpan = document.createElement('span');
-    selectedSpan.textContent = 'test';
-    const EVENT = new KeyboardEvent('keydown', { code: 'Space' });
-    component.handleSpacePress(selectedSpan, 'test', 0, '1', EVENT);
-    if (component.speechBubble.words.head && component.speechBubble.words.head.next) {
-      expect(component.speechBubble.words.head.data.word).toEqual('');
-      expect(component.speechBubble.words.head.next.data.word).toEqual('test');
-    }
-  });
-});
- 
-
-it('should not add an empty word if textbox.words.head is null', () => {
-  const textbox = component.speechBubble;
-  textbox.words.head = null;
-  spyOn(textbox.words, 'add');
-
-  component.ngAfterViewInit();
-
-  expect(textbox.words.add).toHaveBeenCalledWith(jasmine.any(Object));
-});
-*/
-
-/*
-  evtl unnötig, denke nicht, dass das übernommen werden muss
- 
-  it('should not handle space press if currentText or cursorPosition is null', () => {
-    const SELECTED_SPAN = document.createElement('span');
-    const CURRENT_TEXT = null;
-    const CURSOR_POSITION = 5;
-    const SPAN_ID = '123';
-    const EVENT = new KeyboardEvent('keydown', { code: 'Space' });
-    spyOn(component.speechBubble.words, 'getDataById');
- 
-    component.handleSpacePress(SELECTED_SPAN, CURRENT_TEXT, CURSOR_POSITION, SPAN_ID, EVENT);
- 
-    expect(component.speechBubble.words.getDataById).not.toHaveBeenCalled();
-  });
-
-
-});
-*/
-
-/* 
-describe('SpeechbubbleComponent', () => {
-  let component: SpeechbubbleComponent;
-  let selectedSpan: HTMLElement;
-  let currentText: string;
-  let prevSpan: HTMLSpanElement;
-  let event: KeyboardEvent;
-  let cdr: ChangeDetectorRef;
-
-  beforeEach(() => {
-    component = new SpeechbubbleComponent(cdr);
-    component.speechBubble = new SpeechBubble(1, 1, 1, new LinkedList<WordToken>, 0);
-    component.speechBubble.words = new LinkedList();
-    selectedSpan = document.createElement('span');
-    currentText = 'Word';
-    prevSpan = document.createElement('span');
-    event = new KeyboardEvent('keydown');
-  });
-
-  relevante Tests, sollte mit übernommen werden in word
-
-
-  it('should merge with previous word when word is in full selection', () => {
-    selectedSpan.textContent = currentText;
-    selectedSpan.id = '0_1';
-    const CURRENT_WORD = new WordToken(currentText, 1, 1, 1, 1);
-    const PREV_WORD = new WordToken('Previous', 1, 1, 1, 1);
-    component.speechBubble.words.add(PREV_WORD);
-    component.speechBubble.words.add(CURRENT_WORD);
-
-    component.isInFullSelectionDeletion(selectedSpan, '0_1', event);
-
-    expect(component.speechBubble.words.size()).toBe(1);
-    expect(component.speechBubble.words.head?.data).toBe(PREV_WORD);
-    expect(component.speechBubble.words.tail?.data).toBe(PREV_WORD);
-    expect(prevSpan.getAttribute('id')).toBeNull();
-    expect(selectedSpan.parentNode).toBeNull();
-  });
-
-  it('should merge with previous word when previous word exists', () => {
-    selectedSpan.textContent = currentText;
-    selectedSpan.id = '2';
-    const CURRENT_WORD = new WordToken(currentText, 1, 1, 1, 1);
-    const PREV_WORD = new WordToken('Previous', 1, 1, 1, 1);
-    component.speechBubble.words.add(PREV_WORD);
-    component.speechBubble.words.add(CURRENT_WORD);
-    spyOn(component.speechBubble.words, 'getDataById').and.returnValues(PREV_WORD, CURRENT_WORD);
-
-    component.mergeWithPreviousWord(selectedSpan, currentText, prevSpan, event);
-
-    expect(component.speechBubble.words.size()).toBe(2);
-    expect(component.speechBubble.words.head?.data).toBe(PREV_WORD);
-    expect(component.speechBubble.words.tail?.data).toBe(CURRENT_WORD);
-    expect(prevSpan.getAttribute('id')).toBeNull();
-    expect(event.defaultPrevented).toBeFalse();
-  });
- 
-});
- */
-
-describe('SpeechbubbleComponent', () => {
-  let component: SpeechbubbleComponent;
-  let fixture: ComponentFixture<SpeechbubbleComponent>;
-
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [SpeechbubbleComponent],
-    }).compileComponents();
-  });
-
-  beforeEach(() => {
-    fixture = TestBed.createComponent(SpeechbubbleComponent);
-    component = fixture.componentInstance;
-    component.speechBubble = new SpeechBubble(0, 0, 0, new LinkedList(), 0);
-    fixture.detectChanges();
-  });
-
-  /*
-  Weitere Tests für handle space press
-
-  it('should handle Space press', () => {
-    const words = new LinkedList<WordToken>();
-    words.add(new WordToken('Hello', 0.9, 1, 2, 1));
-    words.add(new WordToken('world,', 0.8, 2, 4, 1));
-    words.add(new WordToken('how', 0.7, 4, 6, 1));
-    words.add(new WordToken('are', 0.6, 6, 8, 1));
-    words.add(new WordToken('you?', 0.5, 8, 10, 1));
-
-    const SPEECHBUBBLE = new SpeechBubble(1, 0, 10, words);
-
-    component.speechBubble = SPEECHBUBBLE;
-    fixture.detectChanges();
-
-    component.ngAfterViewInit();
-
-    const EVENT = new KeyboardEvent('keydown', { key: ' ' });
-
-    const SELECTED_SPAN = fixture.nativeElement.querySelector('span');
-    const CURRENT_TEXT = 'Hello';
-    const CURSOR_POSITION = 2;
-    const SPAN_ID = '0';
-
-    component.handleSpacePress(
-      SELECTED_SPAN,
-      CURRENT_TEXT,
-      CURSOR_POSITION,
-      SPAN_ID,
-      EVENT,
-    );
-
-    expect(SELECTED_SPAN.textContent).toBe('He');
-  });
-  
-
-  it('should handle Space press with "" before', () => {
-    const words = new LinkedList<WordToken>();
-    words.add(new WordToken('Hello', 0.9, 1, 2, 1));
-    words.add(new WordToken('world,', 0.8, 2, 4, 1));
-    words.add(new WordToken('how', 0.7, 4, 6, 1));
-    words.add(new WordToken('are', 0.6, 6, 8, 1));
-    words.add(new WordToken('you?', 0.5, 8, 10, 1));
-
-    const SPEECHBUBBLE = new SpeechBubble(1, 0, 10, words, 0);
-
-    component.speechBubble = SPEECHBUBBLE;
-    fixture.detectChanges();
-
-    component.ngAfterViewInit();
-
-    const EVENT = new KeyboardEvent('keydown', { key: ' ' });
-
-    const SELECTED_SPAN = fixture.nativeElement.querySelector('span');
-    const CURRENT_TEXT = 'Hello';
-    const CURSOR_POSITION = 0;
-    const SPAN_ID = '0_0';
-
-    component.handleSpacePress(
-      SELECTED_SPAN,
-      CURRENT_TEXT,
-      CURSOR_POSITION,
-      SPAN_ID,
-      EVENT,
-    );
-
-    expect(SELECTED_SPAN.textContent).toBe('Hello');
-  });
-*/
-
-  /* failen
-  
-    it('should handle full selection', () => {
-  
-      const words = new LinkedList<WordToken>();
-      words.add(new WordToken('Hello', 0.9, 1, 2, 1));
-      words.add(new WordToken('world,', 0.8, 2, 4, 1));
-      words.add(new WordToken('how', 0.7, 4, 6, 1));
-      words.add(new WordToken('are', 0.6, 6, 8, 1));
-      words.add(new WordToken('you?', 0.5, 8, 10, 1));
-  
-      const SPEECHBUBBLE = new SpeechBubble(1, 0, 10, words, 0);
-  
-      component.speechBubble = SPEECHBUBBLE;
-      fixture.detectChanges();
-  
-      component.ngAfterViewInit();
-  
-      const EVENT = new KeyboardEvent('keydown', { key: ' ' });
-  
-      const SELECTED_SPAN = fixture.nativeElement.querySelector('span');
-      const CURRENT_TEXT = 'Hello';
-      const SPAN_ID = '0_0';
-  
-      component.handleBackspacePressAtStart(SELECTED_SPAN, CURRENT_TEXT, true, SPAN_ID, EVENT);
-      if (component.speechBubble.words.head) {
-        expect(component.speechBubble.words.head.data.word).toBe('world,');
-      }
-    });
-  
-    it('should handle merge with following from handleBackspace', () => {
-  
-      const words = new LinkedList<WordToken>();
-      words.add(new WordToken('Hello', 0.9, 1, 2, 1));
-      words.add(new WordToken('world,', 0.8, 2, 4, 1));
-      words.add(new WordToken('how', 0.7, 4, 6, 1));
-      words.add(new WordToken('are', 0.6, 6, 8, 1));
-      words.add(new WordToken('you?', 0.5, 8, 10, 1));
-  
-      const SPEECHBUBBLE = new SpeechBubble(1, 0, 10, words, 0);
-  
-      component.speechBubble = SPEECHBUBBLE;
-      fixture.detectChanges();
-  
-      component.ngAfterViewInit();
-  
-      const EVENT = new KeyboardEvent('keydown', { key: ' ' });
-  
-      const SELECTED_SPAN = document.getElementById('0_0');
-      const CURRENT_TEXT = 'Hello';
-      const SPAN_ID = '0_0';
-  
-      if (SELECTED_SPAN) {
-        component.handleBackspacePressAtStart(SELECTED_SPAN, CURRENT_TEXT, false, SPAN_ID, EVENT);
-        if (component.speechBubble.words.head) {
-          expect(component.speechBubble.words.head.data.word).toBe('Helloworld,');
-        }
-      }
-    });
-   
-
-  it('should handle merge with previous from handleBackspace', () => {
-    const words = new LinkedList<WordToken>();
-    words.add(new WordToken('Hello', 0.9, 1, 2, 1));
-    words.add(new WordToken('world,', 0.8, 2, 4, 1));
-    words.add(new WordToken('how', 0.7, 4, 6, 1));
-    words.add(new WordToken('are', 0.6, 6, 8, 1));
-    words.add(new WordToken('you?', 0.5, 8, 10, 1));
-
-    const SPEECHBUBBLE = new SpeechBubble(1, 0, 10, words, 0);
-
-    component.speechBubble = SPEECHBUBBLE;
-    fixture.detectChanges();
-
-    component.ngAfterViewInit();
-
-    const EVENT = new KeyboardEvent('keydown', { key: ' ' });
-
-    const SELECTED_SPAN = document.getElementById('0_1');
-    const CURRENT_TEXT = 'world,';
-    const SPAN_ID = '0_1';
-
-    if (SELECTED_SPAN) {
-      component.handleBackspacePressAtStart(
-        SELECTED_SPAN,
-        CURRENT_TEXT,
-        false,
-        SPAN_ID,
-        EVENT,
-      );
-    }
-    if (component.speechBubble.words.head) {
-      expect(component.speechBubble.words.head.data.word).toBe('Helloworld,');
-    }
-  });
- */
-
-  it('should update word highlight styles based on FontWeight', () => {
-    // Create a mock data structure with sample fontWeight values
-    const words = new LinkedList<WordToken>();
-    words.add(new WordToken('Hello', 0.9, 1, 2, 1));
-    words.add(new WordToken('world,', 0.8, 2, 4, 1));
-    words.add(new WordToken('how', 0.7, 4, 6, 1));
-    words.add(new WordToken('are', 0.6, 6, 8, 1));
-    words.add(new WordToken('you?', 0.5, 8, 10, 1));
-
-    const SPEECHBUBBLE = new SpeechBubble(1, 0, 10, words, 0);
-
-    component.speechBubble = SPEECHBUBBLE;
-    fixture.detectChanges();
-
-    if (component.speechBubble.words.head?.next) {
-      component.speechBubble.words.head.next.data.fontWeight = 'bold';
-    }
-
-    const mockSpan1 = document.createElement('span');
-    mockSpan1.id = '0_0';
-    mockSpan1.style.fontWeight = 'normal';
-
-    const mockSpan2 = document.createElement('span');
-    mockSpan2.id = '0_1';
-    mockSpan2.style.fontWeight = 'normal';
-
-    component.textboxRef.nativeElement.appendChild(mockSpan1);
-    component.textboxRef.nativeElement.appendChild(mockSpan2);
-
-    component.updateWordHighlight();
-
-    expect(mockSpan1.style.fontWeight).toBe('normal');
-
-    expect(mockSpan2.style.fontWeight).toBe('bold');
-  });
-});
-
-
-

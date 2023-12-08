@@ -258,8 +258,6 @@ describe('WordComponent', () => {
         spyOn(component.newWordAfter, 'emit');
         component.handleKeydownEvent(event);
 
-        const EXPECTED_WORD = new WordToken('Te', 1, 1, 1, 1);
-
         expect(component.dataUpdate.emit).not.toHaveBeenCalled;
         expect(component.newWordAfter.emit).not.toHaveBeenCalled;
     });

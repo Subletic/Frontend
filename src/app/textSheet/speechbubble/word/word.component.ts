@@ -96,11 +96,6 @@ export class WordComponent implements OnInit, AfterViewInit {
     this.word.word = WORD_BEFORE_CURSOR;
     this.word.confidence = 1;
 
-    console.log("HUH?");
-    console.log(this.word);
-    console.log(this.id);
-    console.log(WORD_AFTER_CURSOR);
-
     this.dataUpdate.emit({ changedWord: this.word, idOfEmitter: this.id });
     this.newWordAfter.emit({
       wordAfter: WORD_AFTER_CURSOR,
