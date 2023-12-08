@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { dictionary } from '../../data/dictionary/dictionary.model';
+import { dictionary } from '../../../data/dictionary/dictionary.model';
 import { ToastrService } from 'ngx-toastr';
-import { ConfigurationService } from '../../service/configuration.service';
-import { DictionaryError } from '../../data/error/DictionaryError';
+import { ConfigurationService } from '../../../service/configuration.service';
+import { DictionaryError } from '../../../data/error/DictionaryError';
 
 /**
  * Dictionary Filesystem Loader Component
@@ -150,7 +150,6 @@ export class DictionaryFsLoaderComponent {
   }
 
   getUpdatedDictionary(): dictionary {
-    const DICTIONARY = this.configurationService.getDictionary();
-    return DICTIONARY;
+    return this.configurationService.getDictionary();
   }
 }

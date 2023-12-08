@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ConfigurationService } from '../service/configuration.service';
+import { ConfigurationService } from '../../service/configuration.service';
 
 /**
  * Component containing the configuration interface of the software.
