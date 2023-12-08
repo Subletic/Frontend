@@ -6,7 +6,7 @@ import { ConfigurationService } from '../service/configuration.service';
 @Component({
   selector: 'app-start-page',
   templateUrl: './start-page.component.html',
-  styleUrls: ['./start-page.component.scss'],
+  styleUrls: ['./start-page.component.scss']
 })
 export class StartPageComponent {
   @Output() showDictionary = new EventEmitter<boolean>();
@@ -18,8 +18,9 @@ export class StartPageComponent {
    */
   constructor(
     private configurationService: ConfigurationService,
-    private toastr: ToastrService,
-  ) {}
+    private toastr: ToastrService
+  ) {
+  }
 
   /**
    * Callback function for exiting the configuration screen.
@@ -30,12 +31,12 @@ export class StartPageComponent {
     } catch (e) {
       if (e instanceof DictionaryError) {
         this.toastr.error(e.message, 'Fehler');
-      } else {
-        this.toastr.error(
-          'Konfiguration ist nicht gültig. Bitte überprüfen Sie Ihre Eingaben.',
-          'Fehler',
-        );
+        return;
       }
+      this.toastr.error(
+        'Konfiguration ist nicht gültig. Bitte überprüfen Sie Ihre Eingaben.',
+        'Fehler'
+      );
     }
 
     this.showDictionary.emit(false);
