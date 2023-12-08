@@ -61,7 +61,7 @@ export class WordComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    if (CURSOR_POSITION === 0 && event.key === 'Backspace') {
+    if (CURSOR_POSITION === 0 && event.code === 'Backspace') {
       this.handleBackspacePressAtStart(IS_IN_FULL_SELECTION);
       return;
     }
@@ -89,10 +89,17 @@ export class WordComponent implements OnInit, AfterViewInit {
     const WORD_AFTER_CURSOR =
       this.selfRef.nativeElement.textContent.substring(cursorPosition);
 
+    console.log("SOWEIT");
+
     if (WORD_BEFORE_CURSOR.trim() == '') return;
 
     this.word.word = WORD_BEFORE_CURSOR;
     this.word.confidence = 1;
+
+    console.log("HUH?");
+    console.log(this.word);
+    console.log(this.id);
+    console.log(WORD_AFTER_CURSOR);
 
     this.dataUpdate.emit({ changedWord: this.word, idOfEmitter: this.id });
     this.newWordAfter.emit({
@@ -128,7 +135,7 @@ export class WordComponent implements OnInit, AfterViewInit {
   /**
    * Sets event listeners for the textbox to enable methods that use input data.
    */
-  private setEventListeners(): void {
+  public setEventListeners(): void {
     this.selfRef.nativeElement.addEventListener(
       'keydown',
       (event: KeyboardEvent) => {

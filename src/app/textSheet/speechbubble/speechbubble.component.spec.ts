@@ -23,9 +23,20 @@ describe('SpeechbubbleComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('should create SpeechbubbleComponent', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should initialize speechBubble property', () => {
+    expect(component.speechBubble).toBeDefined();
+  });
+
+  it('should remove empty objects when removeEmptyObjects is called', () => {
+    component.speechBubble.words.add(new WordToken('', 1, 1, 1, 1));
+    component.removeEmptyObjects();
+    expect(component.speechBubble.words.size()).toBe(0);
+  });
+
 
   it('should find a word by its ID', () => {
     const speechBubble = new SpeechBubble(
@@ -503,3 +514,6 @@ describe('SpeechbubbleComponent', () => {
     expect(mockSpan2.style.fontWeight).toBe('bold');
   });
 });
+
+
+
