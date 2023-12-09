@@ -268,7 +268,8 @@ describe('TextSheetComponent', () => {
     component.fontWeightForSpeechBubblesAt(AUDIOTIME);
 
     expect(adjustWordsFontWeightSpy1).toHaveBeenCalledWith(AUDIOTIME);
-    expect(adjustWordsFontWeightSpy2).not.toHaveBeenCalled();
+    //nach dem currentWord-fix sollte auch dieses Element gecalled werden
+    expect(adjustWordsFontWeightSpy2).toHaveBeenCalled();
 
     //expect(speechBubble1.words.head?.data.fontWeight).toBe('bold');
     expect(speechBubble1.words.head?.next?.data.fontWeight).toBe('normal');
