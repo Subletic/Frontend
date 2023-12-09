@@ -63,7 +63,7 @@ export class AudioHandlerComponent implements OnInit {
    */
   public initAudioContexts(bufferLengthInMinutes: number): void {
     const BASE_SAMPLE_RATE = 48000;
-    const SPEED_MULTIPLIERS = [0.5, 0.7, 0.9, 1, 1.1, 1.3, 1.5];
+    const SPEED_MULTIPLIERS = [0.7, 0.8, 0.9, 1, 1.1, 1.2, 1.3];
 
     // Setup all audio contexts
     for (const multiplier of SPEED_MULTIPLIERS) {
