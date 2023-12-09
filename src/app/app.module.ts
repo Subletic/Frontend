@@ -20,15 +20,16 @@ import { SliderPopupComponent } from './sound-box/slider-popup/slider-popup.comp
 import { SpeedPopupComponent } from './sound-box/speed-popup/speed-popup.component';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatDividerModule } from '@angular/material/divider';
-import { DictionaryFsLoaderComponent } from './dictionary/dictionary-fs-loader/dictionary-fs-loader.component';
+import { DictionaryFsLoaderComponent } from './start-page/dictionary/dictionary-fs-loader/dictionary-fs-loader.component';
 import { ToastrModule } from 'ngx-toastr';
 
-import { DictionaryEditorComponent } from './dictionary/dictionary-editor/dictionary-editor.component';
-import { DictionaryRowComponent } from './dictionary/dictionary-row/dictionary-row.component';
-import { NgOptimizedImage } from '@angular/common';
 import { WordComponent } from './textSheet/speechbubble/word/word.component';
-import { ExportPopupComponent } from './dictionary/dictionary-fs-loader/export-popup/export-popup.component';
-import { StartConfigComponent } from './start-config/start-config.component';
+import { DictionaryEditorComponent } from './start-page/dictionary/dictionary-editor/dictionary-editor.component';
+import { DictionaryRowComponent } from './start-page/dictionary/dictionary-row/dictionary-row.component';
+import { ExportPopupComponent } from './start-page/dictionary/dictionary-fs-loader/export-popup/export-popup.component';
+import { NgOptimizedImage } from '@angular/common';
+import { StartConfigComponent } from './start-page/start-config/start-config.component';
+import { StartPageComponent } from './start-page/start-page.component';
 
 @NgModule({
   declarations: [
@@ -46,6 +47,7 @@ import { StartConfigComponent } from './start-config/start-config.component';
     WordComponent,
     ExportPopupComponent,
     StartConfigComponent,
+    StartPageComponent,
   ],
   imports: [
     BrowserModule,
@@ -64,4 +66,4 @@ import { StartConfigComponent } from './start-config/start-config.component';
   providers: [],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }

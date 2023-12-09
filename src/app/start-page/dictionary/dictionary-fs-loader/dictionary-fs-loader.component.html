@@ -3,14 +3,14 @@
 
   <input
     type="file"
-    id="file-input"
+    class="file-input"
     accept="application/json"
     (change)="handleFileUpload($event)"
     #fileUpload
   />
   <button class="sort-button" (click)="fileUpload.click()">
     <img
-      ngSrc="assets/import.svg"
+      ngSrc="../../../../assets/import.svg"
       alt="Import Symbol"
       class="sort-button-image"
       height="28"
@@ -20,10 +20,10 @@
 
   <div class="text">Export</div>
 
-  <input type="file" id="file-input" />
+  <input type="file" class="file-input" />
   <button class="sort-button" (click)="openExportPopup()">
     <img
-      ngSrc="assets/export.svg"
+      ngSrc="../../../../assets/export.svg"
       alt="Export Symbol"
       class="sort-button-image export-icon"
       height="28"
