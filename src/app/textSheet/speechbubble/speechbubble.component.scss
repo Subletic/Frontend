@@ -14,11 +14,15 @@
   user-select: text;
 }
 
-.textbox span {
-  display: inline;
-  user-select: none;
+.textbox div {
+  float: left;
+  margin-right: 5px;
 }
 
-.textbox span::after {
+.test {
+  overflow: none;
+}
+
+.textbox div::after {
   content: ' ';
 }
