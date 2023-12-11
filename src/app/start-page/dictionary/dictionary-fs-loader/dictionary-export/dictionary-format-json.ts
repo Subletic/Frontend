@@ -1,4 +1,4 @@
-import { ExportFormat } from './dictionary-export.interface';
+import { FormatHandler } from './dictionary-format-handler.interface';
 import { dictionary } from '../../../../data/dictionary/dictionary.model';
 
 /**
@@ -6,7 +6,7 @@ import { dictionary } from '../../../../data/dictionary/dictionary.model';
  * @class
  * @implements {ExportFormat}
  */
-export class JsonExport implements ExportFormat {
+export class JsonFormat implements FormatHandler {
   download(fileName: string, dictionary: dictionary): void {
     const DICTIONARY_STRING = JSON.stringify(dictionary, null, 2);
 

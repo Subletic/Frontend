@@ -1,4 +1,4 @@
-import { ExportFormat } from './dictionary-export.interface';
+import { FormatHandler } from './dictionary-format-handler.interface';
 import { dictionary } from '../../../../data/dictionary/dictionary.model';
 
 /**
@@ -6,7 +6,7 @@ import { dictionary } from '../../../../data/dictionary/dictionary.model';
  * @class
  * @implements {ExportFormat}
  */
-export class CsvExport implements ExportFormat {
+export class CsvFormat implements FormatHandler {
   download(fileName: string, dictionary: dictionary): void {
     const CSV_CONTENT = this.convertDictionaryToCsv(dictionary);
     const BLOB = new Blob([CSV_CONTENT], { type: 'text/csv' });

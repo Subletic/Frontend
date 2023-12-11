@@ -1,7 +1,7 @@
 import { Component, Output, EventEmitter } from '@angular/core';
-import { ExportFormat } from '../dictionary-export/dictionary-export.interface';
-import { JsonExport } from '../dictionary-export/dictionary-export-json';
-import { CsvExport } from '../dictionary-export/dictionary-export-csv';
+import { FormatHandler } from '../dictionary-export/dictionary-format-handler.interface';
+import { JsonFormat } from '../dictionary-export/dictionary-format-json';
+import { CsvFormat } from '../dictionary-export/dictionary-format-csv';
 import { DictionaryFsLoaderComponent } from '../dictionary-fs-loader.component';
 
 /**
@@ -17,7 +17,7 @@ export class ExportPopupComponent {
   @Output() closed = new EventEmitter<void>();
   public exportFileName = '';
 
-  constructor(private dictionaryFsLoader: DictionaryFsLoaderComponent) {}
+  constructor(private dictionaryFsLoader: DictionaryFsLoaderComponent) { }
 
   /**
    * Closes the export popup.
@@ -32,7 +32,7 @@ export class ExportPopupComponent {
    */
   public handleDictionaryDownloadJson(): void {
     const DICTIONARY = this.dictionaryFsLoader.getUpdatedDictionary();
-    const exportFormat: ExportFormat = new JsonExport();
+    const exportFormat: FormatHandler = new JsonFormat();
     exportFormat.download(this.exportFileName, DICTIONARY);
   }
 
@@ -42,7 +42,7 @@ export class ExportPopupComponent {
    */
   public handleDictionaryDownloadCsv(): void {
     const DICTIONARY = this.dictionaryFsLoader.getUpdatedDictionary();
-    const exportFormat: ExportFormat = new CsvExport();
+    const exportFormat: FormatHandler = new CsvFormat();
     exportFormat.download(this.exportFileName, DICTIONARY);
   }
 

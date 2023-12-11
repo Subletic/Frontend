@@ -4,7 +4,7 @@ import { dictionary } from '../../../../data/dictionary/dictionary.model';
  * Interface defining the contract for export formats.
  * @interface
  */
-export interface ExportFormat {
+export interface FormatHandler {
   /**
    * Downloads data in a specific file format.
    * @param {string} fileName - The name of the file to download.
