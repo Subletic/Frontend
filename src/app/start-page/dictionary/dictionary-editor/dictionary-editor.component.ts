@@ -26,8 +26,14 @@ export class DictionaryEditorComponent implements OnInit {
 
   ngOnInit(): void {
     this.configurationService.dictionaryUpdated.subscribe(
-      (updatedDictionary) => {
+      (updatedDictionary: dictionary) => {
         this.dictionary = updatedDictionary;
+      },
+    );
+
+    this.configurationService.newDictionaryUploaded.subscribe(
+      (uploadedDictionary: dictionary) => {
+        this.dictionary.mergeWithDictionary(uploadedDictionary);
       },
     );
   }
