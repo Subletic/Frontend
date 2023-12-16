@@ -25,7 +25,7 @@ describe('SpeedPopupComponent', () => {
 
   it('should emit the selected speed when a button is clicked', () => {
     spyOn(component.speedChange, 'emit');
-    const SPEED = 0.5;
+    const SPEED = 0.7;
     buttons[0].click();
     expect(component.speedChange.emit).toHaveBeenCalledWith(SPEED);
     expect(component.speedValue).toBe(SPEED);

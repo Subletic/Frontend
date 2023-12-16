@@ -2,17 +2,17 @@
   <div class="speed-container">
     <button
       class="speed-button"
-      (click)="emitNewSpeed(0.5)"
-      [class.currentValue]="speedValue === 0.5"
-    >
-      0.5
-    </button>
-    <button
-      class="speed-button"
       (click)="emitNewSpeed(0.7)"
       [class.currentValue]="speedValue === 0.7"
     >
       0.7
+    </button>
+    <button
+      class="speed-button"
+      (click)="emitNewSpeed(0.8)"
+      [class.currentValue]="speedValue === 0.8"
+    >
+      0.8
     </button>
     <button
       class="speed-button"
@@ -37,17 +37,17 @@
     </button>
     <button
       class="speed-button"
+      (click)="emitNewSpeed(1.2)"
+      [class.currentValue]="speedValue === 1.2"
+    >
+      1.2
+    </button>
+    <button
+      class="speed-button"
       (click)="emitNewSpeed(1.3)"
       [class.currentValue]="speedValue === 1.3"
     >
       1.3
-    </button>
-    <button
-      class="speed-button"
-      (click)="emitNewSpeed(1.5)"
-      [class.currentValue]="speedValue === 1.5"
-    >
-      1.5
     </button>
   </div>
   <div class="speed-triangle"></div>
