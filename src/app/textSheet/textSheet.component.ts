@@ -245,7 +245,9 @@ export class TextSheetComponent implements OnInit {
     while (current) {
       if (this.currentAudioTimeInSpeechbubbleTime(current.data, audioTime)) {
         current.data.adjustWordsFontWeight(audioTime);
+        // to prevent currentWord being stuck
         current.prev?.data.adjustWordsFontWeight(audioTime);
+        current.next?.data.adjustWordsFontWeight(audioTime);
       }
       current = current.next;
     }
