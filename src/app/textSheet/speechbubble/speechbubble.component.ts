@@ -30,7 +30,7 @@ export class SpeechbubbleComponent implements AfterViewInit {
   @ViewChild('textboxContainer', { static: true })
   textboxContainerRef!: ElementRef;
 
-  constructor(public cdr: ChangeDetectorRef) { }
+  constructor(public cdr: ChangeDetectorRef) {}
 
   /**
    * After Init of View, generates the Words from the data structure

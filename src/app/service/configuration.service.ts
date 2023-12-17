@@ -6,6 +6,7 @@ import { additional_vocab } from '../data/dictionary/additionalVocab.model';
 import { environment } from '../../environments/environment.prod';
 import { Config } from '../data/config/config.model';
 import { DictionaryError } from '../data/error/DictionaryError';
+import { BackendProviderService } from './backend-provider.service';
 
 /**
  * Service to provide the dictionary to the components.
@@ -21,9 +22,8 @@ export class ConfigurationService {
   /**
    * Initializes the dictionary with default values.
    */
-  constructor() {
+  constructor(private backendProviderService: BackendProviderService) {
     const DEFAULT_DICTIONARY = this.generateDefaultDictionary();
-
     this.currentDictionary = DEFAULT_DICTIONARY;
     this.delayLengthInMinutes = 2;
     this.dictionaryUpdated.next(DEFAULT_DICTIONARY);
@@ -124,16 +124,6 @@ export class ConfigurationService {
       this.delayLengthInMinutes,
     );
 
-    fetch(environment.BACKEND_URL + '/api/Configuration/upload', {
-      method: 'POST',
-      body: JSON.stringify(CONFIG),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    }).then((response) => {
-      console.log(response);
-      if (response.ok) return;
-      console.error('Error while uploading configuration to backend.');
-    });
+    this.backendProviderService.uploadConfiguration(CONFIG);
   }
 }
