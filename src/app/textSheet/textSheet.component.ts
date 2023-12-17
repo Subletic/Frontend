@@ -7,6 +7,7 @@ import { SignalRService } from '../service/signalR.service';
 import { environment } from '../../environments/environment.prod';
 import { SpeechBubbleChain } from '../data/speechBubbleChain/speechBubbleChain.module';
 import { AudioService } from '../service/audio.service';
+import { ConsoleHideService } from '../service/consoleHide.service';
 
 /**
  * The TextSheetComponent represents a component that handles the speech bubbles in a text sheet.
@@ -27,12 +28,15 @@ export class TextSheetComponent implements OnInit {
   private readTimeInSeconds = 0;
 
   constructor(
+    private consoleHideService: ConsoleHideService,
     private signalRService: SignalRService,
     private audioService: AudioService,
   ) {
     this.audioService.variable$.subscribe((value) => {
       this.readTimeInSeconds = value / 1000;
     });
+
+    this.consoleHideService.disableConsoleTextSheet();
   }
 
   ngOnInit(): void {

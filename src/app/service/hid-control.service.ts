@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { ConsoleHideService } from './consoleHide.service';
 
 interface HIDDeviceDetails extends HIDDeviceFilter {
   inputOffset: number;
@@ -36,7 +37,9 @@ export class HidControlService {
   /**
    * Does an initial check for WebHID support, issues one error at the start if WebHID is unsupported in this environment.
    */
-  constructor() {
+  constructor(private consoleHideService: ConsoleHideService) {
+    this.consoleHideService.disableConsoleHid();
+    
     if (!this.isSupportedWebHID()) {
       console.error(
         'WebHID is not supported in this browser, you cannot make use of external control devices.',

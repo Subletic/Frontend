@@ -3,6 +3,7 @@ import * as signalR from '@microsoft/signalr';
 import { Subject } from 'rxjs';
 import { environment } from '../../environments/environment.prod';
 import { SpeechBubbleExport } from '../data/speechBubble/speechBubbleExport.model';
+import { ConsoleHideService } from './consoleHide.service';
 
 @Injectable({
   providedIn: 'root',
@@ -16,7 +17,7 @@ export class SignalRService {
 
   public receivedAudioStream: Subject<Int16Array> = new Subject<Int16Array>();
 
-  constructor() {
+  constructor(private consoleHideService: ConsoleHideService) {
     this.hubConnection = new signalR.HubConnectionBuilder()
       .withUrl(environment.BACKEND_URL + '/communicationHub') // Specify the SignalR endpoint URL
       .build();
@@ -36,6 +37,8 @@ export class SignalRService {
     this.hubConnection.on('deleteBubble', (id) => {
       this.oldBubbledeleted.next(id);
     });
+
+    this.consoleHideService.disableConsoleSignalR();
   }
 
   private initStreamConnection(): void {
