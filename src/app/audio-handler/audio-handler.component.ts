@@ -57,6 +57,18 @@ export class AudioHandlerComponent implements OnInit {
   ) {}
 
   /**
+   * Initializes SignalR stream connection.
+   */
+  ngOnInit(): void {
+    // Subscribe to the received audio stream event from SignalRService
+    this.signalRService.receivedAudioStream.subscribe((newChunk) => {
+      this.handleAudioData(newChunk);
+    });
+
+    this.audioService.updateVariable(this.readTimeInMilliseconds);
+  }
+
+  /**
    * Initializes all audio contexts for different playback speeds.
    * @param bufferLengthInMinutes
    */
@@ -103,13 +115,17 @@ export class AudioHandlerComponent implements OnInit {
           bufferLengthInSeconds: bufferLengthInMinutes * 60,
         });
         newAudioBufferNode.port.onmessage = (event) => {
-          if (event.data.type === 'workletState') {
-            this.replaceAudioContext(event.data.workletState);
-          } else if (event.data.type === 'newReadTime') {
-            this.readTimeInMilliseconds = event.data.readTime;
-            this.audioService.updateVariable(this.readTimeInMilliseconds);
-          } else {
-            console.error('Unknown message type: ' + event.data.type);
+          switch (event.data.type) {
+            case 'workletState':
+              this.replaceAudioContext(event.data.workletState);
+              break;
+            case 'newReadTime': {
+              this.readTimeInMilliseconds = event.data.readTime;
+              this.audioService.updateVariable(this.readTimeInMilliseconds);
+              break;
+            }
+            default:
+              console.error('Unknown message type: ' + event.data.type);
           }
         };
         this.audioBuffers.push(newAudioBufferNode);
@@ -128,31 +144,19 @@ export class AudioHandlerComponent implements OnInit {
   }
 
   /**
-   * Initializes SignalR stream connection.
-   */
-  ngOnInit(): void {
-    // Subscribe to the received audio stream event from SignalRService
-    this.signalRService.receivedAudioStream.subscribe((newChunk) => {
-      this.handleAudioData(newChunk);
-    });
-
-    this.audioService.updateVariable(this.readTimeInMilliseconds);
-  }
-
-  /**
    * Resumes audio playback and starts the source node if not started.
    */
   public async togglePlayback(): Promise<boolean> {
-    if (!this.audioPlaying) {
-      await this.audioContext.resume();
-      this.audioPlaying = true;
-      this.audioBufferNode?.port.postMessage({ type: 'play' });
-      return true;
-    } else {
+    if (this.audioPlaying) {
       await this.audioContext.suspend();
       this.audioPlaying = false;
       this.audioBufferNode?.port.postMessage({ type: 'pause' });
       return false;
+    } else {
+      await this.audioContext.resume();
+      this.audioPlaying = true;
+      this.audioBufferNode?.port.postMessage({ type: 'play' });
+      return true;
     }
   }
 
@@ -285,14 +289,6 @@ export class AudioHandlerComponent implements OnInit {
    */
   public setSkipSeconds(seconds: number): void {
     this.skipSeconds = seconds;
-  }
-
-  /**
-   * Returns the current status of the audio playback.
-   * @returns {boolean} True if audio is currently playing, false otherwise.
-   */
-  public getIsAudioPlaying(): boolean {
-    return this.audioPlaying;
   }
 
   /**

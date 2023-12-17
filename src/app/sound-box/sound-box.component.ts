@@ -44,19 +44,19 @@ export class SoundBoxComponent {
   ) {
     hidControlService.configureDevices(
       () => {
-        this.playButton();
+        this.handlePlayButtonPress();
       },
       () => {
-        this.skipForwardButton();
+        this.handleSkipForwardButtonPress();
       },
       () => {
-        this.skipBackwardButton();
+        this.handleSkipBackwardButtonPress();
       },
     );
   }
 
   /**
-   * Closes Popups if click outside of popup occurs.
+   * Closes Popups if click outside popup occurs.
    *
    * @param event - Any click event triggered by user.
    */
@@ -83,23 +83,49 @@ export class SoundBoxComponent {
   @HostListener('document:keydown', ['$event'])
   public handleKeyboardEvent(event: KeyboardEvent): void {
     if (event.ctrlKey && event.altKey) {
-      if (event.key === 'd') {
-        this.audioHandler
-          .togglePlayback()
-          .then((audioPlaying) => (this.isAudioPlaying = audioPlaying));
-        event.preventDefault();
-      } else if (event.key === 'y') {
-        this.audioHandler.skipBackward();
-        event.preventDefault();
-        this.isKeyDown = true;
-        this.buttonImage2Src = 'assets/backOnClick.svg';
-      } else if (event.key === 'w') {
-        this.audioHandler.skipForward();
-        event.preventDefault();
-        this.isKeyDown = true;
-        this.buttonImage3Src = 'assets/forwardOnClick.svg';
+      switch (event.key) {
+        case 'd':
+          this.handleHotkeyPlay(event);
+          break;
+        case 'y':
+          this.handleHotkeySkipBackward(event);
+          break;
+        case 'w':
+          this.handleHotkeySkipForward(event);
+          break;
       }
     }
+  }
+
+  /**
+   * Handles the play/pause shortcut.
+   * @param event Key event triggered by user.
+   */
+  private handleHotkeyPlay(event: KeyboardEvent): void {
+    this.handlePlayButtonPress();
+    event.preventDefault();
+  }
+
+  /**
+   * Handles the skip backward shortcut.
+   * @param event Key event triggered by user.
+   */
+  private handleHotkeySkipBackward(event: KeyboardEvent): void {
+    this.handleSkipBackwardButtonPress();
+    event.preventDefault();
+    this.isKeyDown = true;
+    this.buttonImage2Src = 'assets/backOnClick.svg';
+  }
+
+  /**
+   * Handles the skip forward shortcut.
+   * @param event Key event triggered by user.
+   */
+  private handleHotkeySkipForward(event: KeyboardEvent): void {
+    this.handleSkipForwardButtonPress();
+    event.preventDefault();
+    this.isKeyDown = true;
+    this.buttonImage3Src = 'assets/forwardOnClick.svg';
   }
 
   /**
@@ -120,7 +146,7 @@ export class SoundBoxComponent {
    * Handles playButton press. Calls playOrStopAudio() in audiohandler and
    * switches isAudioPlaying for Icon-Change
    */
-  public playButton(): void {
+  public handlePlayButtonPress(): void {
     this.audioHandler
       .togglePlayback()
       .then((audioPlaying) => (this.isAudioPlaying = audioPlaying));
@@ -129,14 +155,14 @@ export class SoundBoxComponent {
   /**
    * Calls skipBackward() function in audioHandler.
    */
-  public skipBackwardButton(): void {
+  public handleSkipBackwardButtonPress(): void {
     this.audioHandler.skipBackward();
   }
 
   /**
    * Calls skipForward() function in audioHandler.
    */
-  public skipForwardButton(): void {
+  public handleSkipForwardButtonPress(): void {
     this.audioHandler.skipForward();
   }
 
