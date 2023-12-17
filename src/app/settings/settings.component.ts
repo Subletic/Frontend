@@ -1,17 +1,17 @@
 ﻿import {
-  Component,
-  ViewEncapsulation,
-  ElementRef,
-  Input,
-  Output,
-  OnInit,
-  OnDestroy,
-  EventEmitter,
-  ViewChild,
   AfterViewInit,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
-import { SettingsService } from './settings.service';
-import { environment } from '../../environments/environment.prod';
+import {SettingsService} from './settings.service';
+import {BackendProviderService} from '../service/backend-provider.service';
 
 /**
  * The SettingsComponent represents a settings modal that allows users to configure certain options.
@@ -40,6 +40,7 @@ export class SettingsComponent implements OnInit, OnDestroy, AfterViewInit {
 
   constructor(
     private settingsService: SettingsService,
+    private backendProviderService: BackendProviderService,
     private el: ElementRef<HTMLElement>,
   ) {
     this.element = el.nativeElement;
@@ -141,22 +142,8 @@ export class SettingsComponent implements OnInit, OnDestroy, AfterViewInit {
    */
   callBackendReload(): void {
     const MILLISECONDS_BEFORE_RELOADING_PAGE = 2000;
-
-    fetch(environment.BACKEND_URL + '/api/restart', {
-      method: 'POST',
-    })
-      .then((response) => {
-        if (response.ok) {
-          console.log('Called for restart');
-          setTimeout(() => {
-            window.location.reload();
-          }, MILLISECONDS_BEFORE_RELOADING_PAGE);
-        } else {
-          console.error('Error with calling restart');
-        }
-      })
-      .catch((error) => {
-        console.error('Error with calling restart:', error);
-      });
+    this.backendProviderService.callBackendReload(
+      MILLISECONDS_BEFORE_RELOADING_PAGE,
+    );
   }
 }

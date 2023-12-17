@@ -4,10 +4,10 @@ import { SpeechBubbleExport } from '../data/speechBubble/speechBubbleExport.mode
 import { LinkedList } from '../data/linkedList/linkedList.model';
 import { WordExport } from '../data/wordToken/wordExport.model';
 import { SignalRService } from '../service/signalR.service';
-import { environment } from '../../environments/environment.prod';
 import { SpeechBubbleChain } from '../data/speechBubbleChain/speechBubbleChain.module';
 import { AudioService } from '../service/audio.service';
 import { ConsoleHideService } from '../service/consoleHide.service';
+import {BackendProviderService} from '../service/backend-provider.service';
 
 /**
  * The TextSheetComponent represents a component that handles the speech bubbles in a text sheet.
@@ -30,6 +30,7 @@ export class TextSheetComponent implements OnInit {
   constructor(
     private consoleHideService: ConsoleHideService,
     private signalRService: SignalRService,
+    private backendProviderService: BackendProviderService,
     private audioService: AudioService,
   ) {
     this.audioService.variable$.subscribe((value) => {
@@ -170,29 +171,8 @@ export class TextSheetComponent implements OnInit {
    * @param speechBubbleExportList - An array of SpeechBubbleExport objects representing the speech bubbles to be exported.
    */
   public exportToJson(speechBubbleExportList: SpeechBubbleExport[]): void {
-    const SPEECHBUBBLE_CHAIN = new SpeechBubbleChain(speechBubbleExportList);
-    const JSON_DATA = SPEECHBUBBLE_CHAIN.toJSON();
-
-    fetch(environment.BACKEND_URL + '/api/speechbubble/update', {
-      method: 'POST',
-      body: JSON.stringify(JSON_DATA),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then((response) => {
-        if (response.ok) {
-          console.log('Aktualisierte SpeechBubble wurde erfolgreich gesendet');
-        } else {
-          console.error('Fehler beim Senden der aktualisierten SpeechBubble');
-        }
-      })
-      .catch((error) => {
-        console.error(
-          'Fehler beim Senden der aktualisierten SpeechBubble:',
-          error,
-        );
-      });
+    const SPEECH_BUBBLE_CHAIN = new SpeechBubbleChain(speechBubbleExportList);
+    this.backendProviderService.updateSpeechBubbles(SPEECH_BUBBLE_CHAIN);
   }
 
   /**
