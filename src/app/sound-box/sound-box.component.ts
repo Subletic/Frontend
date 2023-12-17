@@ -84,8 +84,9 @@ export class SoundBoxComponent {
   public handleKeyboardEvent(event: KeyboardEvent): void {
     if (event.ctrlKey && event.altKey) {
       if (event.key === 'd') {
-        this.audioHandler.togglePlayback();
-        this.isAudioPlaying = this.audioHandler.getIsAudioPlaying();
+        this.audioHandler
+          .togglePlayback()
+          .then((audioPlaying) => (this.isAudioPlaying = audioPlaying));
         event.preventDefault();
       } else if (event.key === 'y') {
         this.audioHandler.skipBackward();
@@ -120,8 +121,9 @@ export class SoundBoxComponent {
    * switches isAudioPlaying for Icon-Change
    */
   public playButton(): void {
-    this.audioHandler.togglePlayback();
-    this.isAudioPlaying = this.audioHandler.getIsAudioPlaying();
+    this.audioHandler
+      .togglePlayback()
+      .then((audioPlaying) => (this.isAudioPlaying = audioPlaying));
   }
 
   /**
