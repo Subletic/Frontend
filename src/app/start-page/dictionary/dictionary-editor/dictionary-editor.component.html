@@ -7,6 +7,10 @@
   <app-dictionary-fs-loader></app-dictionary-fs-loader>
 
   <div class="sort">
+    <button (click)="goToPreviousChange()" [disabled]="!hasPrev">Zurück</button>
+
+    <button (click)="goToNextChange()" [disabled]="!hasNext">Vor</button>
+
     <button class="sort-button" (click)="sortAlphabeticallyCall()">
       <img
         [src]="alphabeticBoolean ? 'assets/Z-A.svg' : 'assets/A-Z.svg'"

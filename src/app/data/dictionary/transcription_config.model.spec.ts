@@ -12,7 +12,9 @@ describe('transcription_config', () => {
       new transcription_config('en', additionalVocabArray);
     };
 
-    expect(createTranscriptionConfig).toThrowError('additional_vocab array cannot exceed 1000 elements.');
+    expect(createTranscriptionConfig).toThrowError(
+      'additional_vocab array cannot exceed 1000 elements.',
+    );
   });
 
   it('should not throw an error if additional_vocab array has 1000 or fewer elements', () => {
