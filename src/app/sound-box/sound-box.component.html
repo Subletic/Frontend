@@ -7,7 +7,7 @@
     <!-- Play Button  -->
     <button
       class="play-button mover"
-      (click)="playButton()"
+      (click)="handlePlayButtonPress()"
       title="Wiedergabe (Ctrl+Space)"
     >
       <img
@@ -32,7 +32,7 @@
     <!-- Move back Button -->
     <button
       class="sound-button-1 mover"
-      (click)="skipBackwardButton()"
+      (click)="handleSkipBackwardButtonPress()"
       title="Zurückspulen (Ctrl+R)"
     >
       <img
@@ -52,7 +52,7 @@
     <!-- Move forward Button -->
     <button
       class="sound-button-1 mover"
-      (click)="skipForwardButton()"
+      (click)="handleSkipForwardButtonPress()"
       title="Vorspulen (Ctrl+Return)"
     >
       <img

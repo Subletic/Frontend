@@ -6,6 +6,7 @@ import { SignalRService } from '../service/signalR.service';
 import { LinkedList } from '../data/linkedList/linkedList.model';
 import { SpeechBubbleChain } from '../data/speechBubbleChain/speechBubbleChain.module';
 import { AudioService } from '../service/audio.service';
+import { BackendProviderService } from '../service/backend-provider.service';
 
 describe('LinkedList', () => {
   let linkedList: LinkedList<SpeechBubble>;
@@ -69,11 +70,17 @@ describe('TextSheetComponent', () => {
   let component: TextSheetComponent;
   let signalRService: SignalRService;
   let audioService: AudioService;
+  let backendProviderService: BackendProviderService;
 
   beforeEach(() => {
     signalRService = new SignalRService();
     audioService = new AudioService();
-    component = new TextSheetComponent(signalRService, audioService);
+    backendProviderService = new BackendProviderService();
+    component = new TextSheetComponent(
+      signalRService,
+      backendProviderService,
+      audioService,
+    );
     component.speechBubbles = new LinkedList<SpeechBubble>();
   });
 
@@ -268,7 +275,8 @@ describe('TextSheetComponent', () => {
     component.fontWeightForSpeechBubblesAt(AUDIOTIME);
 
     expect(adjustWordsFontWeightSpy1).toHaveBeenCalledWith(AUDIOTIME);
-    expect(adjustWordsFontWeightSpy2).not.toHaveBeenCalled();
+    //nach dem currentWord-fix sollte auch dieses Element gecalled werden
+    expect(adjustWordsFontWeightSpy2).toHaveBeenCalled();
 
     //expect(speechBubble1.words.head?.data.fontWeight).toBe('bold');
     expect(speechBubble1.words.head?.next?.data.fontWeight).toBe('normal');

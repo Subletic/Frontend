@@ -2,11 +2,12 @@ import { ConfigurationService } from './configuration.service';
 import { dictionary } from '../data/dictionary/dictionary.model';
 import { transcription_config } from '../data/dictionary/transcription_config.module';
 import { DictionaryError } from '../data/error/DictionaryError';
+import { BackendProviderService } from './backend-provider.service';
 
 describe('ConfigurationService', () => {
   let service: ConfigurationService;
   beforeEach(() => {
-    service = new ConfigurationService();
+    service = new ConfigurationService(new BackendProviderService());
   });
 
   it('should update dictionary correctly', () => {
