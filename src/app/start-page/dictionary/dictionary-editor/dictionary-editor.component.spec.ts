@@ -105,4 +105,63 @@ describe('DictionaryEditorComponent', () => {
 
     expect(component.dictionary).toEqual(UPDATED_DICTIONARY);
   });
+
+  it('should navigate to the previous change and update hasPrev', () => {
+    const initialState = new dictionary({
+      language: 'de',
+      additional_vocab: [{ content: 'initial', sounds_like: [''] }],
+    });
+    const newState = new dictionary({
+      language: 'de',
+      additional_vocab: [{ content: 'new', sounds_like: [''] }],
+    });
+
+    // Set initial and new states
+    dictionaryService.updateDictionary(initialState);
+    dictionaryService.updateDictionary(newState);
+
+    // Ensure initial state is the current state
+    expect(component.dictionary).toEqual(newState);
+
+    // Navigate to the previous state
+    component.goToPreviousChange();
+
+    // Ensure dictionary is updated to the initial state
+    expect(component.dictionary).toEqual(initialState);
+
+    // Ensure hasPrev and hasNext are updated correctly
+    expect(component.hasPrev).toBeTrue();
+    expect(component.hasNext).toBeTrue();
+  });
+
+  it('should navigate to the next change and update hasNext', () => {
+    const initialState = new dictionary({
+      language: 'de',
+      additional_vocab: [{ content: 'initial', sounds_like: [''] }],
+    });
+    const newState = new dictionary({
+      language: 'de',
+      additional_vocab: [{ content: 'new', sounds_like: [''] }],
+    });
+
+    // Set initial and new states
+    dictionaryService.updateDictionary(initialState);
+    dictionaryService.updateDictionary(newState);
+
+    // Navigate to the previous state
+    component.goToPreviousChange();
+
+    // Ensure initial state is the current state
+    expect(component.dictionary).toEqual(initialState);
+
+    // Navigate to the next state
+    component.goToNextChange();
+
+    // Ensure dictionary is updated to the new state
+    expect(component.dictionary).toEqual(newState);
+
+    // Ensure hasPrev and hasNext are updated correctly
+    expect(component.hasPrev).toBeTrue();
+    expect(component.hasNext).toBeFalse();
+  });
 });

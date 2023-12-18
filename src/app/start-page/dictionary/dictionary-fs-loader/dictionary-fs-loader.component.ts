@@ -45,7 +45,7 @@ export class DictionaryFsLoaderComponent {
       return;
     }
 
-    this.configurationService.updateDictionary(DICTIONARY);
+    this.configurationService.newDictionaryUpload(DICTIONARY);
   }
 
   /**

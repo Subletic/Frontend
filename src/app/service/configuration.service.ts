@@ -16,6 +16,7 @@ import { BackendProviderService } from './backend-provider.service';
 })
 export class ConfigurationService {
   public dictionaryUpdated: Subject<dictionary> = new Subject<dictionary>();
+  public newDictionaryUploaded: Subject<dictionary> = new Subject<dictionary>();
   public currentDictionary: dictionary;
   public delayLengthInMinutes: number;
 
@@ -51,6 +52,11 @@ export class ConfigurationService {
   public updateDictionary(dictionary: dictionary): void {
     this.currentDictionary = dictionary;
     this.dictionaryUpdated.next(dictionary);
+  }
+
+  public newDictionaryUpload(dictionary: dictionary): void {
+    //Hier dann durch Logik ersetzen, die CSV/JSON Upload unterscheidet oder in eigene Methoden auslagern
+    this.newDictionaryUploaded.next(dictionary);
   }
 
   /**
