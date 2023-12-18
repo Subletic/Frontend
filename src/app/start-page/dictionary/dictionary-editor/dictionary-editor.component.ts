@@ -45,7 +45,7 @@ export class DictionaryEditorComponent implements OnInit {
     this.configurationService.newDictionaryUploaded.subscribe(
       (uploadedDictionary: dictionary) => {
         this.dictionary.mergeWithDictionary(uploadedDictionary);
-        this.addToLatestChanges();
+        this.configurationService.updateDictionary(this.dictionary);
       },
     );
   }
@@ -54,7 +54,7 @@ export class DictionaryEditorComponent implements OnInit {
    * Adds the current state of the dictionary to the list of latest changes.
    * Limits the list to a maximum number of saved changes.
    */
-  private addToLatestChanges(): void {
+  addToLatestChanges(): void {
     //New Objects with values of dictionary (would be a pointer without this procedure)
     const dictionaryZustand = new dictionary({
       language: 'de',
@@ -82,7 +82,7 @@ export class DictionaryEditorComponent implements OnInit {
     const DICTIONARY_NODE = this.latestChangesList.getNodeByData(
       this.dictionary,
     );
-    if (!(DICTIONARY_NODE && DICTIONARY_NODE.prev)) return;
+    if (!DICTIONARY_NODE || !DICTIONARY_NODE.prev) return;
 
     this.configurationService.updateDictionary(DICTIONARY_NODE.prev.data);
     if (!this.latestChangesList.tail) return;
@@ -100,7 +100,7 @@ export class DictionaryEditorComponent implements OnInit {
     const DICTIONARY_NODE = this.latestChangesList.getNodeByData(
       this.dictionary,
     );
-    if (!(DICTIONARY_NODE && DICTIONARY_NODE.next)) return;
+    if (!DICTIONARY_NODE || !DICTIONARY_NODE.next) return;
 
     this.configurationService.updateDictionary(DICTIONARY_NODE.next.data);
     if (!this.latestChangesList.tail) return;
@@ -145,7 +145,6 @@ export class DictionaryEditorComponent implements OnInit {
       this.dictionary.transcription_config.additional_vocab.splice(index, 1);
     }
     this.configurationService.updateDictionary(this.dictionary);
-    //this.addToLatestChanges(this.dictionary);
   }
 
   /**
@@ -153,7 +152,6 @@ export class DictionaryEditorComponent implements OnInit {
    */
   onChangedRow(): void {
     this.configurationService.updateDictionary(this.dictionary);
-    //this.addToLatestChanges(this.dictionary);
   }
 
   /**
@@ -169,7 +167,6 @@ export class DictionaryEditorComponent implements OnInit {
       this.alphabeticBoolean = true;
     }
     this.configurationService.updateDictionary(this.dictionary);
-    //this.addToLatestChanges(this.dictionary);
   }
 
   /**

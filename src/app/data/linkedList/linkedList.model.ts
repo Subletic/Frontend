@@ -213,9 +213,8 @@ export class LinkedList<T> {
     let current = this.head;
 
     while (current) {
-      if (JSON.stringify(current.data) === JSON.stringify(data)) {
-        return current;
-      }
+      if (JSON.stringify(current.data) === JSON.stringify(data)) return current;
+
       current = current.next;
     }
 
