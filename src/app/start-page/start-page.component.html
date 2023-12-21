@@ -1,7 +1,8 @@
 <div>
   <app-dictionary-editor></app-dictionary-editor>
   <app-start-config></app-start-config>
-  <button class="continue-button" (click)="continueToEditor()">
+  <button class="continue-button" (click)="openContinuePopup()">
     Weiter zum Livestream-Editor
   </button>
+  <app-continue-popup *ngIf="isContinuePopupOpen" (closed)="closeContinuePopup()"></app-continue-popup>
 </div>

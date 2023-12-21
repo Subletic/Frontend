@@ -10,6 +10,7 @@ import { ConfigurationService } from '../service/configuration.service';
 })
 export class StartPageComponent {
   @Output() showDictionary = new EventEmitter<boolean>();
+  isContinuePopupOpen = false;
 
   /**
    * Initializes the configuration service.
@@ -19,7 +20,7 @@ export class StartPageComponent {
   constructor(
     private configurationService: ConfigurationService,
     private toastr: ToastrService,
-  ) {}
+  ) { }
 
   /**
    * Callback function for exiting the configuration screen.
@@ -41,4 +42,13 @@ export class StartPageComponent {
     this.showDictionary.emit(false);
     this.configurationService.postConfigurationToBackend();
   }
+
+  openContinuePopup() {
+    this.isContinuePopupOpen = true;
+  }
+
+  closeContinuePopup() {
+    this.isContinuePopupOpen = false;
+  }
+
 }
