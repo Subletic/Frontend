@@ -18,7 +18,7 @@ import {
   styleUrls: ['./slider-popup.component.scss'],
 })
 export class SliderPopupComponent implements OnInit, AfterViewInit {
-  //Volume is value between -1 and 1, volume100 between -100 and 100 for slider capability
+  // Volume is value between -1 and 1, volume100 between -100 and 100 for slider capability
   @Input() volume = 0;
   private volume100 = 0;
 

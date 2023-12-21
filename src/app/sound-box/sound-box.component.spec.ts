@@ -251,7 +251,7 @@ describe('SoundBoxComponent', () => {
     expect(RESULT).toBe(SETTINGS_SERVICE);
   });
 
-  //Sollte Eigentlich keinen Fehler werfen und hat es ursprünglich auch nicht? Die anderen 2 funktionieren ja auch
+  // Sollte Eigentlich keinen Fehler werfen und hat es ursprünglich auch nicht? Die anderen 2 funktionieren ja auch
   /*
   it('should handle the keyboard events for playOrStopAudioEvent', () => {
     const component = new SoundBoxComponent(new SettingsService());

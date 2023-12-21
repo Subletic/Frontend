@@ -18,7 +18,7 @@ import {BackendProviderService} from '../service/backend-provider.service';
   styleUrls: ['./textSheet.component.scss'],
 })
 export class TextSheetComponent implements OnInit {
-  //Attribute holding all showcased linkedList of Instance SpeechBubble
+  // Attribute holding all showcased linkedList of Instance SpeechBubble
   speechBubbles: LinkedList<SpeechBubble> = new LinkedList<SpeechBubble>();
 
   timeSinceFocusOutList: Map<number, number> = new Map<number, number>();

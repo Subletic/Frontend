@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SpeechbubbleComponent } from './speechbubble.component';
 import { SpeechBubble } from '../../data/speechBubble/speechBubble.model';
 import { WordToken } from '../../data/wordToken/wordToken.model';
-import { LinkedList } from '../..//data/linkedList/linkedList.model';
+import { LinkedList } from '../../data/linkedList/linkedList.model';
 import { ChangeDetectorRef } from '@angular/core';
 import { WordComponent } from './word/word.component';
 
@@ -97,7 +97,7 @@ describe('SpeechbubbleComponent', () => {
     expect(mockSpan2.style.fontWeight).toBe('bold');
   });
 
-  //ab hier neu
+  // ab hier neu
 
   it('should logInfoAboutTextbox on mousevent', () => {
     spyOn(component, 'logInfoAboutTextbox');
@@ -267,7 +267,7 @@ describe('SpeechbubbleComponent', () => {
     expect(focusedElement).toEqual(firstSpan.id);
   });
 
-  //Dieser Test muss überarbeitet werden: Er erkennt die Funktionen auf window.getSelection() nicht
+  // Dieser Test muss überarbeitet werden: Er erkennt die Funktionen auf window.getSelection() nicht
   /*
   it('should set the cursor position within a span element', async () => {
     const word = new WordToken('Test', 1, 1, 1, 1);
@@ -293,7 +293,7 @@ describe('SpeechbubbleComponent', () => {
   });
   */
 
-  //wieder ältere Tests aus text-box
+  // wieder ältere Tests aus text-box
   it('should log the information about the hovered word in logInfoAboutTextbox', () => {
     const component = new SpeechbubbleComponent(cdr);
     component.speechBubble = new SpeechBubble(

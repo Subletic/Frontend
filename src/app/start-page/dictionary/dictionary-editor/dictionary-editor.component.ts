@@ -55,7 +55,7 @@ export class DictionaryEditorComponent implements OnInit {
    * Limits the list to a maximum number of saved changes.
    */
   addToLatestChanges(): void {
-    //New Objects with values of dictionary (would be a pointer without this procedure)
+    // New Objects with values of dictionary (would be a pointer without this procedure)
     const dictionaryZustand = new dictionary({
       language: 'de',
       additional_vocab: [{ content: '', sounds_like: [''] }],
@@ -130,7 +130,7 @@ export class DictionaryEditorComponent implements OnInit {
       sounds_like: [''],
     });
     this.configurationService.updateDictionary(this.dictionary);
-    //this.addToLatestChanges(this.dictionary);
+    // this.addToLatestChanges(this.dictionary);
   }
 
   /**
@@ -174,7 +174,7 @@ export class DictionaryEditorComponent implements OnInit {
    * Intended for users that do not yet know the function of the dictionary-process.
    */
   callHelp(): void {
-    //Should call help window later
+    // Should call help window later
     console.log('Help is called!');
   }
 }

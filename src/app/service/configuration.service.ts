@@ -55,7 +55,7 @@ export class ConfigurationService {
   }
 
   public newDictionaryUpload(dictionary: dictionary): void {
-    //Hier dann durch Logik ersetzen, die CSV/JSON Upload unterscheidet oder in eigene Methoden auslagern
+    // Hier dann durch Logik ersetzen, die CSV/JSON Upload unterscheidet oder in eigene Methoden auslagern
     this.newDictionaryUploaded.next(dictionary);
   }
 

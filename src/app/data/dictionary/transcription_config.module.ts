@@ -10,7 +10,7 @@ export class transcription_config {
   additional_vocab: additional_vocab[];
 
   constructor(language: string, additional_vocab: additional_vocab[]) {
-    //aus docs.speechmatics/../custom dictionary: "You can specify up to 1000 words or phrases (per job) in your Custom Dictionary"
+    // aus docs.speechmatics/../custom dictionary: "You can specify up to 1000 words or phrases (per job) in your Custom Dictionary"
     if (additional_vocab.length > 1000) {
       throw new Error('additional_vocab array cannot exceed 1000 elements.');
     }

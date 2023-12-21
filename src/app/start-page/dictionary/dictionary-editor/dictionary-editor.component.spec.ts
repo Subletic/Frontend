@@ -72,7 +72,7 @@ describe('DictionaryEditorComponent', () => {
     };
     component.dictionary.transcription_config.additional_vocab.push(row1, row2);
 
-    //Nullwert am Anfang beachten!
+    // Nullwert am Anfang beachten!
     component.sortAlphabeticallyCall();
     expect(
       component.dictionary.transcription_config.additional_vocab[1].content,
