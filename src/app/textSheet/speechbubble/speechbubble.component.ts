@@ -100,8 +100,7 @@ export class SpeechbubbleComponent implements AfterViewInit {
       const EXPECTED_SPAN = this.speechBubble.id + '_' + current.id.toString();
       const wordSpan = document.getElementById(EXPECTED_SPAN);
       if (!wordSpan) return;
-      wordSpan.style.fontWeight =
-        current.data.fontWeight === 'bold' ? 'bold' : 'normal';
+      wordSpan.style.fontWeight = current.data.fontWeight === 'bold' ? 'bold' : 'normal';
 
       current = current.next;
     }

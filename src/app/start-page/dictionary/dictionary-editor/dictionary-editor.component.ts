@@ -35,19 +35,15 @@ export class DictionaryEditorComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.configurationService.dictionaryUpdated.subscribe(
-      (updatedDictionary: dictionary) => {
-        this.dictionary = updatedDictionary;
-        this.addToLatestChanges();
-      },
-    );
+    this.configurationService.dictionaryUpdated.subscribe((updatedDictionary: dictionary) => {
+      this.dictionary = updatedDictionary;
+      this.addToLatestChanges();
+    });
 
-    this.configurationService.newDictionaryUploaded.subscribe(
-      (uploadedDictionary: dictionary) => {
-        this.dictionary.mergeWithDictionary(uploadedDictionary);
-        this.configurationService.updateDictionary(this.dictionary);
-      },
-    );
+    this.configurationService.newDictionaryUploaded.subscribe((uploadedDictionary: dictionary) => {
+      this.dictionary.mergeWithDictionary(uploadedDictionary);
+      this.configurationService.updateDictionary(this.dictionary);
+    });
   }
 
   /**
@@ -79,9 +75,7 @@ export class DictionaryEditorComponent implements OnInit {
    * Updates the dictionary with the previous state and removes the corresponding entry from the list.
    */
   goToPreviousChange(): void {
-    const DICTIONARY_NODE = this.latestChangesList.getNodeByData(
-      this.dictionary,
-    );
+    const DICTIONARY_NODE = this.latestChangesList.getNodeByData(this.dictionary);
     if (!DICTIONARY_NODE || !DICTIONARY_NODE.prev) return;
 
     this.configurationService.updateDictionary(DICTIONARY_NODE.prev.data);
@@ -97,9 +91,7 @@ export class DictionaryEditorComponent implements OnInit {
    * Updates the dictionary with the next state and removes the corresponding entry from the list.
    */
   goToNextChange(): void {
-    const DICTIONARY_NODE = this.latestChangesList.getNodeByData(
-      this.dictionary,
-    );
+    const DICTIONARY_NODE = this.latestChangesList.getNodeByData(this.dictionary);
     if (!DICTIONARY_NODE || !DICTIONARY_NODE.next) return;
 
     this.configurationService.updateDictionary(DICTIONARY_NODE.next.data);
@@ -114,9 +106,7 @@ export class DictionaryEditorComponent implements OnInit {
    * Updates the status of the previous and next buttons based on the current state in the list of latest changes.
    */
   private updateHasPrevAndNext(): void {
-    const DICTIONARY_NODE = this.latestChangesList.getNodeByData(
-      this.dictionary,
-    );
+    const DICTIONARY_NODE = this.latestChangesList.getNodeByData(this.dictionary);
     this.hasPrev = !!(DICTIONARY_NODE && DICTIONARY_NODE.prev);
     this.hasNext = !!(DICTIONARY_NODE && DICTIONARY_NODE.next);
   }
@@ -139,8 +129,7 @@ export class DictionaryEditorComponent implements OnInit {
    * @param row - Row to be deleted.
    */
   onDeleteRow(row: additional_vocab): void {
-    const index =
-      this.dictionary.transcription_config.additional_vocab.indexOf(row);
+    const index = this.dictionary.transcription_config.additional_vocab.indexOf(row);
     if (index !== -1) {
       this.dictionary.transcription_config.additional_vocab.splice(index, 1);
     }

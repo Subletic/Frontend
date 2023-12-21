@@ -68,9 +68,7 @@ describe('SoundBoxComponent', () => {
   it('should call skipBackward on skipBackwardButton click', () => {
     spyOn(component.audioHandler, 'skipBackward');
 
-    const skipBackwardButton = fixture.debugElement.query(
-      By.css('.sound-button-1'),
-    );
+    const skipBackwardButton = fixture.debugElement.query(By.css('.sound-button-1'));
     skipBackwardButton.triggerEventHandler('click', null);
     fixture.detectChanges();
 
@@ -80,9 +78,7 @@ describe('SoundBoxComponent', () => {
   it('should call skipForward on skipForwardButton click', () => {
     spyOn(component.audioHandler, 'skipForward');
 
-    const skipForwardButton = fixture.debugElement.query(
-      By.css('.sound-button-1:nth-child(3)'),
-    );
+    const skipForwardButton = fixture.debugElement.query(By.css('.sound-button-1:nth-child(3)'));
     skipForwardButton.triggerEventHandler('click', null);
     fixture.detectChanges();
 
@@ -129,12 +125,8 @@ describe('SoundBoxComponent', () => {
     mockClickedElement.appendChild(MOCK_SOUNDBUTTON_ELEMENT);
     mockClickedElement.appendChild(MOCK_SPEEDBUTTON_ELEMENT);
     spyOnProperty(MOCK_EVENT, 'target').and.returnValue(mockClickedElement);
-    spyOn(component.soundButton.nativeElement, 'contains').and.returnValue(
-      false,
-    );
-    spyOn(component.speedButton.nativeElement, 'contains').and.returnValue(
-      false,
-    );
+    spyOn(component.soundButton.nativeElement, 'contains').and.returnValue(false);
+    spyOn(component.speedButton.nativeElement, 'contains').and.returnValue(false);
     spyOn(component, 'closePopoverAudio');
     spyOn(component, 'closePopoverSpeed');
 
@@ -149,10 +141,7 @@ describe('SoundBoxComponent', () => {
   it('should close the speed popover', () => {
     const SETTINGS_SERVICE = new SettingsService();
     const HID_DEVICES_SERVICE = new HidControlService();
-    const component = new SoundBoxComponent(
-      SETTINGS_SERVICE,
-      HID_DEVICES_SERVICE,
-    );
+    const component = new SoundBoxComponent(SETTINGS_SERVICE, HID_DEVICES_SERVICE);
     component.isSpeedPopoverOpen = true;
 
     component.closePopoverSpeed();
@@ -163,10 +152,7 @@ describe('SoundBoxComponent', () => {
   it('should toggle the speed popover', () => {
     const SETTINGS_SERVICE = new SettingsService();
     const HID_DEVICES_SERVICE = new HidControlService();
-    const component = new SoundBoxComponent(
-      SETTINGS_SERVICE,
-      HID_DEVICES_SERVICE,
-    );
+    const component = new SoundBoxComponent(SETTINGS_SERVICE, HID_DEVICES_SERVICE);
     component.isSpeedPopoverOpen = false;
 
     component.switchSpeedPopover();
@@ -179,10 +165,7 @@ describe('SoundBoxComponent', () => {
   });
 
   it('should open the specified modal', () => {
-    const component = new SoundBoxComponent(
-      new SettingsService(),
-      new HidControlService(),
-    );
+    const component = new SoundBoxComponent(new SettingsService(), new HidControlService());
     const settingsService = jasmine.createSpyObj('SettingsService', ['open']);
     component.setSettingsService(settingsService);
 
@@ -193,10 +176,7 @@ describe('SoundBoxComponent', () => {
   });
 
   it('should close the specified modal', () => {
-    const component = new SoundBoxComponent(
-      new SettingsService(),
-      new HidControlService(),
-    );
+    const component = new SoundBoxComponent(new SettingsService(), new HidControlService());
     const settingsService = jasmine.createSpyObj('SettingsService', ['close']);
     component.setSettingsService(settingsService);
 
@@ -207,13 +187,8 @@ describe('SoundBoxComponent', () => {
   });
 
   it('should set the skip seconds in the audio handler', () => {
-    const component = new SoundBoxComponent(
-      new SettingsService(),
-      new HidControlService(),
-    );
-    const audioHandler = jasmine.createSpyObj('AudioHandlerComponent', [
-      'setSkipSeconds',
-    ]);
+    const component = new SoundBoxComponent(new SettingsService(), new HidControlService());
+    const audioHandler = jasmine.createSpyObj('AudioHandlerComponent', ['setSkipSeconds']);
     component.audioHandler = audioHandler;
 
     const SECONDS = 10;
@@ -223,13 +198,8 @@ describe('SoundBoxComponent', () => {
   });
 
   it('should set the playback speed in the audio handler', () => {
-    const component = new SoundBoxComponent(
-      new SettingsService(),
-      new HidControlService(),
-    );
-    const audioHandler = jasmine.createSpyObj('AudioHandlerComponent', [
-      'setPlaybackSpeed',
-    ]);
+    const component = new SoundBoxComponent(new SettingsService(), new HidControlService());
+    const audioHandler = jasmine.createSpyObj('AudioHandlerComponent', ['setPlaybackSpeed']);
     component.audioHandler = audioHandler;
 
     const SPEED = 1.5;
@@ -241,10 +211,7 @@ describe('SoundBoxComponent', () => {
   it('should return the SettingsService element', () => {
     const SETTINGS_SERVICE = new SettingsService();
     const HID_DEVICES_SERVICE = new HidControlService();
-    const component = new SoundBoxComponent(
-      SETTINGS_SERVICE,
-      HID_DEVICES_SERVICE,
-    );
+    const component = new SoundBoxComponent(SETTINGS_SERVICE, HID_DEVICES_SERVICE);
 
     const RESULT = component.getSettingsService();
 
@@ -266,10 +233,7 @@ describe('SoundBoxComponent', () => {
   */
 
   it('should handle the keyboard events for skipBackwardEvent', () => {
-    const component = new SoundBoxComponent(
-      new SettingsService(),
-      new HidControlService(),
-    );
+    const component = new SoundBoxComponent(new SettingsService(), new HidControlService());
     const audioHandler = jasmine.createSpyObj('AudioHandlerComponent', [
       'playOrStopAudio',
       'skipBackward',
@@ -288,10 +252,7 @@ describe('SoundBoxComponent', () => {
   });
 
   it('should handle the keyboard events for skipForwardEvent', () => {
-    const component = new SoundBoxComponent(
-      new SettingsService(),
-      new HidControlService(),
-    );
+    const component = new SoundBoxComponent(new SettingsService(), new HidControlService());
     const audioHandler = jasmine.createSpyObj('AudioHandlerComponent', [
       'playOrStopAudio',
       'skipBackward',

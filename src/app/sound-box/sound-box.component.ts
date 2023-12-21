@@ -63,10 +63,8 @@ export class SoundBoxComponent {
   @HostListener('document:click', ['$event'])
   public onDocumentMouseDown(event: MouseEvent): void {
     const CLICKED_ELEMENT = event.target as HTMLElement;
-    const IS_INSIDE_SOUNDBUTTON =
-      this.soundButton.nativeElement.contains(CLICKED_ELEMENT);
-    const IS_INSIDE_SPEEDBUTTON =
-      this.speedButton.nativeElement.contains(CLICKED_ELEMENT);
+    const IS_INSIDE_SOUNDBUTTON = this.soundButton.nativeElement.contains(CLICKED_ELEMENT);
+    const IS_INSIDE_SPEEDBUTTON = this.speedButton.nativeElement.contains(CLICKED_ELEMENT);
     if (!IS_INSIDE_SOUNDBUTTON) {
       this.closePopoverAudio();
     }
@@ -147,9 +145,7 @@ export class SoundBoxComponent {
    * switches isAudioPlaying for Icon-Change
    */
   public handlePlayButtonPress(): void {
-    this.audioHandler
-      .togglePlayback()
-      .then((audioPlaying) => (this.isAudioPlaying = audioPlaying));
+    this.audioHandler.togglePlayback().then((audioPlaying) => (this.isAudioPlaying = audioPlaying));
   }
 
   /**

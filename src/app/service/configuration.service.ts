@@ -37,10 +37,7 @@ export class ConfigurationService {
   private generateDefaultDictionary(): dictionary {
     const LANGUAGE = 'de';
     const ADDITIONAL_VOCAB: additional_vocab[] = [];
-    const TRANSCRIPTION_CONFIG = new transcription_config(
-      LANGUAGE,
-      ADDITIONAL_VOCAB,
-    );
+    const TRANSCRIPTION_CONFIG = new transcription_config(LANGUAGE, ADDITIONAL_VOCAB);
 
     return new dictionary(TRANSCRIPTION_CONFIG);
   }
@@ -86,9 +83,7 @@ export class ConfigurationService {
    * @throws DictionaryError if the configuration is invalid
    */
   public isConfigValid(): void {
-    const VALID_BUFFER_LENGTHS = [
-      0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 6, 7, 8, 9, 10,
-    ];
+    const VALID_BUFFER_LENGTHS = [0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 6, 7, 8, 9, 10];
     if (
       !VALID_BUFFER_LENGTHS.includes(this.delayLengthInMinutes) ||
       isNaN(this.delayLengthInMinutes)
@@ -96,22 +91,13 @@ export class ConfigurationService {
       throw new DictionaryError('Ungültige Buffer Länge!');
     }
 
-    if (
-      this.currentDictionary.transcription_config.additional_vocab.length > 1000
-    ) {
-      throw new DictionaryError(
-        'Maximale SoundsLike Anzahl überschritten (1000)!',
-      );
+    if (this.currentDictionary.transcription_config.additional_vocab.length > 1000) {
+      throw new DictionaryError('Maximale SoundsLike Anzahl überschritten (1000)!');
     }
 
     // Check if sounds like exists for empty word
-    for (const word of this.currentDictionary.transcription_config
-      .additional_vocab) {
-      if (
-        !word.content &&
-        word.sounds_like != null &&
-        word.sounds_like.length > 0
-      ) {
+    for (const word of this.currentDictionary.transcription_config.additional_vocab) {
+      if (!word.content && word.sounds_like != null && word.sounds_like.length > 0) {
         throw new DictionaryError('SoundsLike Angaben fehlerhaft!');
       }
     }

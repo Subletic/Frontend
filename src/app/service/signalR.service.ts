@@ -9,9 +9,7 @@ import { SpeechBubbleExport } from '../data/speechBubble/speechBubbleExport.mode
 })
 export class SignalRService {
   private hubConnection: signalR.HubConnection;
-  public newBubbleReceived: Subject<SpeechBubbleExport[]> = new Subject<
-    SpeechBubbleExport[]
-  >();
+  public newBubbleReceived: Subject<SpeechBubbleExport[]> = new Subject<SpeechBubbleExport[]>();
   public oldBubbledeleted: Subject<number> = new Subject<number>();
 
   public receivedAudioStream: Subject<Int16Array> = new Subject<Int16Array>();

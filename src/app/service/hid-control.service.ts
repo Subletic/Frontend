@@ -74,9 +74,7 @@ export class HidControlService {
   private async checkForDevices(): Promise<void> {
     // get permitted devices we care about
     const alreadyAllowedDevices: HIDDevice[] = await this.findAllowedDevices();
-    console.log(
-      `We have been granted access to ${alreadyAllowedDevices.length} devices`,
-    );
+    console.log(`We have been granted access to ${alreadyAllowedDevices.length} devices`);
 
     // find out what devices we have yet to be granted permission to
     const unhandledDevices: HIDDeviceFilter[] = this.HID_DEVICES.filter(
@@ -125,8 +123,7 @@ export class HidControlService {
         const meaningsSet: string[] = [];
         if ((value & REWIND_BIT) == REWIND_BIT) meaningsSet.push('rewind');
         if ((value & PLAY_BIT) == PLAY_BIT) meaningsSet.push('play');
-        if ((value & FASTFORWARD_BIT) == FASTFORWARD_BIT)
-          meaningsSet.push('fast-forward');
+        if ((value & FASTFORWARD_BIT) == FASTFORWARD_BIT) meaningsSet.push('fast-forward');
         valueMeaning = meaningsSet.toString();
       }
       console.log(`pedal says: ${value} (meaning: ${valueMeaning}`);

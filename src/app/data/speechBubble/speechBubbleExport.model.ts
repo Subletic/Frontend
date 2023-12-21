@@ -40,9 +40,7 @@ export class SpeechBubbleExport {
       Speaker: this.speaker,
       StartTime: this.startTime,
       EndTime: this.endTime,
-      SpeechBubbleContent: this.speechBubbleContent.map((wordExport) =>
-        wordExport.toJSON(),
-      ),
+      SpeechBubbleContent: this.speechBubbleContent.map((wordExport) => wordExport.toJSON()),
     };
   }
 
@@ -57,12 +55,6 @@ export class SpeechBubbleExport {
       words.add(element.toWordToken());
     });
 
-    return new SpeechBubble(
-      this.speaker,
-      this.startTime,
-      this.endTime,
-      words,
-      this.id,
-    );
+    return new SpeechBubble(this.speaker, this.startTime, this.endTime, words, this.id);
   }
 }

@@ -52,9 +52,7 @@ export class SliderPopupComponent implements OnInit, AfterViewInit {
         e.style.setProperty('--value', e.value);
         e.style.setProperty('--min', e.min === '' ? MIN_SLIDER_VOLUME : e.min);
         e.style.setProperty('--max', e.max === '' ? MAX_SLIDER_VOLUME : e.max);
-        e.addEventListener('input', () =>
-          e.style.setProperty('--value', e.value),
-        );
+        e.addEventListener('input', () => e.style.setProperty('--value', e.value));
       });
   }
 

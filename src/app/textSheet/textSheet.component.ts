@@ -1,12 +1,12 @@
-import {Component, OnInit} from '@angular/core';
-import {SpeechBubble} from '../data/speechBubble/speechBubble.model';
-import {SpeechBubbleExport} from '../data/speechBubble/speechBubbleExport.model';
-import {LinkedList} from '../data/linkedList/linkedList.model';
-import {WordExport} from '../data/wordToken/wordExport.model';
-import {SignalRService} from '../service/signalR.service';
-import {SpeechBubbleChain} from '../data/speechBubbleChain/speechBubbleChain.module';
-import {AudioService} from '../service/audio.service';
-import {BackendProviderService} from '../service/backend-provider.service';
+import { Component, OnInit } from '@angular/core';
+import { SpeechBubble } from '../data/speechBubble/speechBubble.model';
+import { SpeechBubbleExport } from '../data/speechBubble/speechBubbleExport.model';
+import { LinkedList } from '../data/linkedList/linkedList.model';
+import { WordExport } from '../data/wordToken/wordExport.model';
+import { SignalRService } from '../service/signalR.service';
+import { SpeechBubbleChain } from '../data/speechBubbleChain/speechBubbleChain.module';
+import { AudioService } from '../service/audio.service';
+import { BackendProviderService } from '../service/backend-provider.service';
 
 /**
  * The TextSheetComponent represents a component that handles the speech bubbles in a text sheet.
@@ -37,11 +37,9 @@ export class TextSheetComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.signalRService.newBubbleReceived.subscribe(
-      (SpeechBubbleExportList) => {
-        this.importfromJson(SpeechBubbleExportList);
-      },
-    );
+    this.signalRService.newBubbleReceived.subscribe((SpeechBubbleExportList) => {
+      this.importfromJson(SpeechBubbleExportList);
+    });
 
     this.signalRService.oldBubbledeleted.subscribe((id) => {
       this.deleteSpeechBubble(id);
