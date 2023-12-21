@@ -18,7 +18,7 @@ import { BackendProviderService } from '../service/backend-provider.service';
   styleUrls: ['./textSheet.component.scss'],
 })
 export class TextSheetComponent implements OnInit {
-  //Attribute holding all showcased linkedList of Instance SpeechBubble
+  // Attribute holding all showcased linkedList of Instance SpeechBubble
   speechBubbles: LinkedList<SpeechBubble> = new LinkedList<SpeechBubble>();
 
   timeSinceFocusOutList: Map<number, number> = new Map<number, number>();
@@ -37,13 +37,11 @@ export class TextSheetComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.signalRService.newBubbleReceived.subscribe(
-      (SpeechBubbleExportList) => {
-        this.importfromJson(SpeechBubbleExportList);
-      },
-    );
+    this.signalRService.newBubbleReceived.subscribe((SpeechBubbleExportList) => {
+      this.importfromJson(SpeechBubbleExportList);
+    });
 
-    this.signalRService.oldBubbleDeleted.subscribe((id) => {
+    this.signalRService.oldBubbledeleted.subscribe((id) => {
       this.deleteSpeechBubble(id);
     });
 

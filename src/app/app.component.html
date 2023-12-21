@@ -1,7 +1,5 @@
 <div *ngIf="showDictionary; else mainContent" class="dictionaryWrapper">
-  <app-start-page
-    (showDictionary)="handleShowDictionary($event)"
-  ></app-start-page>
+  <app-start-page (showDictionary)="handleShowDictionary($event)"></app-start-page>
 </div>
 <ng-template #mainContent>
   <app-text-sheet *ngIf="!showDictionary"></app-text-sheet>

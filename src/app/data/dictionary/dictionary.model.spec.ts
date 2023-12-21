@@ -5,11 +5,7 @@ import { dictionary } from './dictionary.model';
 describe('Dictionary', () => {
   it('should generate the expected JSON format', () => {
     const additionalVocab1 = new additional_vocab('financial crisis');
-    const additionalVocab2 = new additional_vocab('gnocchi', [
-      'nyohki',
-      'nokey',
-      'nochi',
-    ]);
+    const additionalVocab2 = new additional_vocab('gnocchi', ['nyohki', 'nokey', 'nochi']);
     const additionalVocab3 = new additional_vocab('CEO', ['C.E.O.']);
 
     const transcriptionConfig = new transcription_config('en', [
@@ -44,11 +40,7 @@ describe('Dictionary', () => {
   it('should merge two dictionaries correctly', () => {
     // Create the first dictionary
     const additionalVocab1 = new additional_vocab('financial crisis');
-    const additionalVocab2 = new additional_vocab('gnocchi', [
-      'nyohki',
-      'nokey',
-      'nochi',
-    ]);
+    const additionalVocab2 = new additional_vocab('gnocchi', ['nyohki', 'nokey', 'nochi']);
     const additionalVocab3 = new additional_vocab('CEO', ['C.E.O.']);
     const transcriptionConfig1 = new transcription_config('en', [
       additionalVocab1,
@@ -86,8 +78,6 @@ describe('Dictionary', () => {
 
     const CREATED_MERGED_JSON_FORMAT = JSON.stringify(dictionary1);
 
-    expect(JSON.parse(CREATED_MERGED_JSON_FORMAT)).toEqual(
-      EXPECTED_MERGED_JSON_FORMAT,
-    );
+    expect(JSON.parse(CREATED_MERGED_JSON_FORMAT)).toEqual(EXPECTED_MERGED_JSON_FORMAT);
   });
 });

@@ -68,8 +68,7 @@ export class DictionaryFsLoaderComponent {
           this.displayDictionarySuccessToast();
           resolve(dictionary);
         } catch (e) {
-          if (e instanceof DictionaryError)
-            this.displayDictionaryErrorToast(e.message);
+          if (e instanceof DictionaryError) this.displayDictionaryErrorToast(e.message);
           else this.displayDictionaryErrorToast();
           console.log(e);
           resolve(null);
@@ -93,17 +92,13 @@ export class DictionaryFsLoaderComponent {
 
     // Check if additional vocab is valid
     const ADDITIONAL_VOCAB = dictionary.transcription_config.additional_vocab;
-    if (!ADDITIONAL_VOCAB)
-      throw new DictionaryError('Kein SoundsLike angegeben!');
+    if (!ADDITIONAL_VOCAB) throw new DictionaryError('Kein SoundsLike angegeben!');
 
     if (ADDITIONAL_VOCAB.length > 1000)
-      throw new DictionaryError(
-        'Maximale SoundsLike Anzahl überschritten (1000)!',
-      );
+      throw new DictionaryError('Maximale SoundsLike Anzahl überschritten (1000)!');
 
     for (let i = 0; i < ADDITIONAL_VOCAB.length; i++) {
-      if (!ADDITIONAL_VOCAB[i].content)
-        throw new DictionaryError('SoundsLike Angaben fehlerhaft!');
+      if (!ADDITIONAL_VOCAB[i].content) throw new DictionaryError('SoundsLike Angaben fehlerhaft!');
     }
   }
 
@@ -136,9 +131,7 @@ export class DictionaryFsLoaderComponent {
    * Used for Button styling.
    */
   public getBackgroundColor(): string {
-    return getComputedStyle(document.documentElement).getPropertyValue(
-      '--color-main-blue',
-    );
+    return getComputedStyle(document.documentElement).getPropertyValue('--color-main-blue');
   }
 
   openExportPopup() {

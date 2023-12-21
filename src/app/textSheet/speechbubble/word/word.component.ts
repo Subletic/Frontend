@@ -32,11 +32,13 @@ export class WordComponent implements OnInit, AfterViewInit {
     idOfEmitter: number;
   }> = new EventEmitter<{ wordAfter: string; idOfEmitter: number }>();
 
-  @Output() addSelfToPrevWord: EventEmitter<{ idOfEmitter: number }> =
-    new EventEmitter<{ idOfEmitter: number }>();
+  @Output() addSelfToPrevWord: EventEmitter<{ idOfEmitter: number }> = new EventEmitter<{
+    idOfEmitter: number;
+  }>();
 
-  @Output() deleteSelf: EventEmitter<{ idOfEmitter: number }> =
-    new EventEmitter<{ idOfEmitter: number }>();
+  @Output() deleteSelf: EventEmitter<{ idOfEmitter: number }> = new EventEmitter<{
+    idOfEmitter: number;
+  }>();
 
   @ViewChild('self', { static: true }) selfRef!: ElementRef;
 
@@ -53,8 +55,7 @@ export class WordComponent implements OnInit, AfterViewInit {
     const SELECTED_SPAN = event.target as HTMLElement;
     const CURRENT_TEXT = SELECTED_SPAN.textContent;
     const CURSOR_POSITION = window.getSelection()?.getRangeAt(0)?.startOffset;
-    const IS_IN_FULL_SELECTION =
-      window.getSelection()?.toString().length === CURRENT_TEXT?.length;
+    const IS_IN_FULL_SELECTION = window.getSelection()?.toString().length === CURRENT_TEXT?.length;
 
     if (event.code === 'Space') {
       this.handleSpacePress(SELECTED_SPAN, CURSOR_POSITION, event);
@@ -82,12 +83,8 @@ export class WordComponent implements OnInit, AfterViewInit {
     cursorPosition: number | undefined,
     event: KeyboardEvent,
   ): void {
-    const WORD_BEFORE_CURSOR = this.selfRef.nativeElement.textContent.substring(
-      0,
-      cursorPosition,
-    );
-    const WORD_AFTER_CURSOR =
-      this.selfRef.nativeElement.textContent.substring(cursorPosition);
+    const WORD_BEFORE_CURSOR = this.selfRef.nativeElement.textContent.substring(0, cursorPosition);
+    const WORD_AFTER_CURSOR = this.selfRef.nativeElement.textContent.substring(cursorPosition);
 
     console.log('SOWEIT');
 
@@ -131,12 +128,9 @@ export class WordComponent implements OnInit, AfterViewInit {
    * Sets event listeners for the textbox to enable methods that use input data.
    */
   public setEventListeners(): void {
-    this.selfRef.nativeElement.addEventListener(
-      'keydown',
-      (event: KeyboardEvent) => {
-        this.handleKeydownEvent(event);
-      },
-    );
+    this.selfRef.nativeElement.addEventListener('keydown', (event: KeyboardEvent) => {
+      this.handleKeydownEvent(event);
+    });
 
     /**
      * The keydown function doesn't cover the latest change of the .textContent

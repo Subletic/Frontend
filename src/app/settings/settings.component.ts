@@ -20,10 +20,7 @@ import { BackendProviderService } from '../service/backend-provider.service';
 @Component({
   selector: 'app-settings',
   templateUrl: 'settings.component.html',
-  styleUrls: [
-    'settings.component.scss',
-    '../sound-box/slider-popup/slider-popup.component.scss',
-  ],
+  styleUrls: ['settings.component.scss', '../sound-box/slider-popup/slider-popup.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
 export class SettingsComponent implements OnInit, OnDestroy, AfterViewInit {
@@ -60,10 +57,7 @@ export class SettingsComponent implements OnInit, OnDestroy, AfterViewInit {
 
     // Close the modal when clicking on the background
     this.element.addEventListener('click', (el: MouseEvent) => {
-      if (
-        el.target instanceof HTMLElement &&
-        el.target.className === 'settings'
-      ) {
+      if (el.target instanceof HTMLElement && el.target.className === 'settings') {
         this.cancel();
       }
     });
@@ -73,8 +67,7 @@ export class SettingsComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.secondsSlider.nativeElement.value =
-      this.updatedAudioSkipSeconds.toString();
+    this.secondsSlider.nativeElement.value = this.updatedAudioSkipSeconds.toString();
     this.setupSlider();
   }
 
@@ -124,17 +117,13 @@ export class SettingsComponent implements OnInit, OnDestroy, AfterViewInit {
         e.style.setProperty('--value', e.value);
         e.style.setProperty('--min', e.min === '' ? MIN_SKIP_SECONDS : e.min);
         e.style.setProperty('--max', e.max === '' ? MAX_SKIP_SECONDS : e.max);
-        e.addEventListener('input', () =>
-          e.style.setProperty('--value', e.value),
-        );
+        e.addEventListener('input', () => e.style.setProperty('--value', e.value));
       });
   }
 
   // Get the background color defined in the CSS variable "--color-main-blue"
   getBackgroundColor(): string {
-    return getComputedStyle(document.documentElement).getPropertyValue(
-      '--color-main-blue',
-    );
+    return getComputedStyle(document.documentElement).getPropertyValue('--color-main-blue');
   }
 
   /** Calls reload request to backend, then reloads webpage after 2 seconds
@@ -142,8 +131,6 @@ export class SettingsComponent implements OnInit, OnDestroy, AfterViewInit {
    */
   callBackendReload(): void {
     const MILLISECONDS_BEFORE_RELOADING_PAGE = 2000;
-    this.backendProviderService.callBackendReload(
-      MILLISECONDS_BEFORE_RELOADING_PAGE,
-    );
+    this.backendProviderService.callBackendReload(MILLISECONDS_BEFORE_RELOADING_PAGE);
   }
 }

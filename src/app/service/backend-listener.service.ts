@@ -9,10 +9,8 @@ import { SpeechBubbleExport } from '../data/speechBubble/speechBubbleExport.mode
 })
 export class backendListener {
   private hubConnection: signalR.HubConnection;
-  public newBubbleReceived: Subject<SpeechBubbleExport[]> = new Subject<
-    SpeechBubbleExport[]
-  >();
-  public oldBubbleDeleted: Subject<number> = new Subject<number>();
+  public newBubbleReceived: Subject<SpeechBubbleExport[]> = new Subject<SpeechBubbleExport[]>();
+  public oldBubbledeleted: Subject<number> = new Subject<number>();
 
   public receivedAudioStream: Subject<Int16Array> = new Subject<Int16Array>();
 
@@ -34,7 +32,7 @@ export class backendListener {
     });
 
     this.hubConnection.on('deleteBubble', (id) => {
-      this.oldBubbleDeleted.next(id);
+      this.oldBubbledeleted.next(id);
     });
   }
 
