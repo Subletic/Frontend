@@ -10,8 +10,8 @@
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import {SettingsService} from './settings.service';
-import {BackendProviderService} from '../service/backend-provider.service';
+import { SettingsService } from './settings.service';
+import { BackendProviderService } from '../service/backend-provider.service';
 
 /**
  * The SettingsComponent represents a settings modal that allows users to configure certain options.

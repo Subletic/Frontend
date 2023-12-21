@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { SignalRService } from '../service/signalR.service';
+import { backendListener } from '../service/backend-listener.service';
 import { AudioService } from '../service/audio.service';
 
 /**
@@ -48,11 +48,11 @@ export class AudioHandlerComponent implements OnInit {
 
   /**
    * Gets the reference to required Services.
-   * @param signalRService - The SignalRService to get the reference to.
+   * @param backendListener - The SignalRService to get the reference to.
    * @param audioService - The AudioService to get the reference to.
    */
   constructor(
-    private signalRService: SignalRService,
+    private backendListener: backendListener,
     private audioService: AudioService,
   ) {}
 
@@ -61,7 +61,7 @@ export class AudioHandlerComponent implements OnInit {
    */
   ngOnInit(): void {
     // Subscribe to the received audio stream event from SignalRService
-    this.signalRService.receivedAudioStream.subscribe((newChunk) => {
+    this.backendListener.receivedAudioStream.subscribe((newChunk) => {
       this.handleAudioData(newChunk);
     });
 
