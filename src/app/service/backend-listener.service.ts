@@ -7,7 +7,7 @@ import { SpeechBubbleExport } from '../data/speechBubble/speechBubbleExport.mode
 @Injectable({
   providedIn: 'root',
 })
-export class SignalRService {
+export class backendListener {
   private hubConnection: signalR.HubConnection;
   public newBubbleReceived: Subject<SpeechBubbleExport[]> = new Subject<SpeechBubbleExport[]>();
   public oldBubbledeleted: Subject<number> = new Subject<number>();
@@ -23,7 +23,7 @@ export class SignalRService {
       .start()
       .then(() => {
         console.log('SignalR connected.');
-        this.initStreamConnection();
+        this.subscribeToAudioStream();
       })
       .catch((err) => console.error('SignalR connection error: ', err));
 
@@ -36,7 +36,7 @@ export class SignalRService {
     });
   }
 
-  private initStreamConnection(): void {
+  private subscribeToAudioStream(): void {
     this.hubConnection.stream('ReceiveAudioStream').subscribe({
       next: (data: Int16Array) => {
         this.receivedAudioStream.next(data);

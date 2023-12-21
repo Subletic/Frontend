@@ -2,7 +2,7 @@ import { SpeechBubble } from '../data/speechBubble/speechBubble.model';
 import { SpeechBubbleExport } from '../data/speechBubble/speechBubbleExport.model';
 import { WordToken } from '../data/wordToken/wordToken.model';
 import { TextSheetComponent } from './textSheet.component';
-import { SignalRService } from '../service/signalR.service';
+import { backendListener } from '../service/backend-listener.service';
 import { LinkedList } from '../data/linkedList/linkedList.model';
 import { SpeechBubbleChain } from '../data/speechBubbleChain/speechBubbleChain.module';
 import { AudioService } from '../service/audio.service';
@@ -68,12 +68,12 @@ describe('LinkedList', () => {
 
 describe('TextSheetComponent', () => {
   let component: TextSheetComponent;
-  let signalRService: SignalRService;
+  let signalRService: backendListener;
   let audioService: AudioService;
   let backendProviderService: BackendProviderService;
 
   beforeEach(() => {
-    signalRService = new SignalRService();
+    signalRService = new backendListener();
     audioService = new AudioService();
     backendProviderService = new BackendProviderService();
     component = new TextSheetComponent(signalRService, backendProviderService, audioService);

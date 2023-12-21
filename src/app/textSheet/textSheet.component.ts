@@ -3,7 +3,7 @@ import { SpeechBubble } from '../data/speechBubble/speechBubble.model';
 import { SpeechBubbleExport } from '../data/speechBubble/speechBubbleExport.model';
 import { LinkedList } from '../data/linkedList/linkedList.model';
 import { WordExport } from '../data/wordToken/wordExport.model';
-import { SignalRService } from '../service/signalR.service';
+import { backendListener } from '../service/backend-listener.service';
 import { SpeechBubbleChain } from '../data/speechBubbleChain/speechBubbleChain.module';
 import { AudioService } from '../service/audio.service';
 import { BackendProviderService } from '../service/backend-provider.service';
@@ -27,7 +27,7 @@ export class TextSheetComponent implements OnInit {
   private readTimeInSeconds = 0;
 
   constructor(
-    private signalRService: SignalRService,
+    private signalRService: backendListener,
     private backendProviderService: BackendProviderService,
     private audioService: AudioService,
   ) {
