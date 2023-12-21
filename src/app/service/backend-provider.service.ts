@@ -45,10 +45,7 @@ export class BackendProviderService {
         }
       })
       .catch((error) => {
-        console.error(
-          'Fehler beim Senden der aktualisierten SpeechBubble:',
-          error,
-        );
+        console.error('Fehler beim Senden der aktualisierten SpeechBubble:', error);
       });
   }
 
