@@ -15,7 +15,7 @@ export class backendListener {
 
   public receivedAudioStream: Subject<Int16Array> = new Subject<Int16Array>();
 
-  constructor(private consoleHideService: ConsoleHideService) {
+  constructor() {
     this.hubConnection = new signalR.HubConnectionBuilder()
       .withUrl(environment.BACKEND_URL + '/communicationHub') // Specify the SignalR endpoint URL
       .build();
@@ -36,7 +36,6 @@ export class backendListener {
       this.oldBubbledeleted.next(id);
     });
 
-    this.consoleHideService.disableConsoleSignalR();
   }
 
   private subscribeToAudioStream(): void {

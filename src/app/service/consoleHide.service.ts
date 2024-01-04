@@ -14,7 +14,7 @@ export class ConsoleHideService {
     }
 
     disableConsoleSignalR(): void { 
-        if (!environment.production == true) {
+        if (!environment.production == false) {
             console.log = function (): void { };
         }
     }
