@@ -55,16 +55,12 @@ export class ExportPopupComponent {
     const downloadButtons = document.querySelectorAll(
       '.download-button',
     ) as NodeListOf<HTMLButtonElement>;
-    const inputField = document.getElementById(
-      'fileNameInput',
-    ) as HTMLInputElement;
+    const inputField = document.getElementById('fileNameInput') as HTMLInputElement;
     const inputValue = inputField.value;
 
     const SPECIALCHARACTERS = ['/', '\\', ':', '*', '?', '"', '<', '>', '|'];
 
-    const containsSpecialCharacter = SPECIALCHARACTERS.some((char) =>
-      inputValue.includes(char),
-    );
+    const containsSpecialCharacter = SPECIALCHARACTERS.some((char) => inputValue.includes(char));
 
     if (containsSpecialCharacter) {
       inputField.style.border = '1px solid red';

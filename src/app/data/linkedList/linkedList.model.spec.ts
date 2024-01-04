@@ -80,9 +80,7 @@ describe('LinkedList', () => {
       },
     ];
 
-    const LIST_TO_JSON = linkedList.toJSON((data: WordToken) =>
-      data.getExport(),
-    );
+    const LIST_TO_JSON = linkedList.toJSON((data: WordToken) => data.getExport());
 
     expect(LIST_TO_JSON).toEqual(JSON.stringify(EXPECTED_JSON));
   });

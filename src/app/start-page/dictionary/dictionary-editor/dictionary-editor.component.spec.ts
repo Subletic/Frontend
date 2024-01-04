@@ -37,28 +37,26 @@ describe('DictionaryEditorComponent', () => {
   });
 
   it('should add a new row to the dictionary', () => {
-    const initialRows =
-      component.dictionary.transcription_config.additional_vocab.length;
+    const initialRows = component.dictionary.transcription_config.additional_vocab.length;
 
     component.addRow();
 
-    expect(
-      component.dictionary.transcription_config.additional_vocab.length,
-    ).toEqual(initialRows + 1);
+    expect(component.dictionary.transcription_config.additional_vocab.length).toEqual(
+      initialRows + 1,
+    );
   });
 
   it('should delete a row from the dictionary', () => {
     const row: additional_vocab = { content: 'test', sounds_like: ['test'] };
     component.dictionary.transcription_config.additional_vocab.push(row);
 
-    const initialRows =
-      component.dictionary.transcription_config.additional_vocab.length;
+    const initialRows = component.dictionary.transcription_config.additional_vocab.length;
 
     component.onDeleteRow(row);
 
-    expect(
-      component.dictionary.transcription_config.additional_vocab.length,
-    ).toEqual(initialRows - 1);
+    expect(component.dictionary.transcription_config.additional_vocab.length).toEqual(
+      initialRows - 1,
+    );
   });
 
   it('should sort alphabetically and reverse alphabetically', () => {
@@ -72,16 +70,12 @@ describe('DictionaryEditorComponent', () => {
     };
     component.dictionary.transcription_config.additional_vocab.push(row1, row2);
 
-    //Nullwert am Anfang beachten!
+    // Nullwert am Anfang beachten!
     component.sortAlphabeticallyCall();
-    expect(
-      component.dictionary.transcription_config.additional_vocab[1].content,
-    ).toBe('apple');
+    expect(component.dictionary.transcription_config.additional_vocab[1].content).toBe('apple');
 
     component.sortAlphabeticallyCall();
-    expect(
-      component.dictionary.transcription_config.additional_vocab[0].content,
-    ).toBe('banana');
+    expect(component.dictionary.transcription_config.additional_vocab[0].content).toBe('banana');
   });
 
   it('should update dictionary when service emits update', () => {

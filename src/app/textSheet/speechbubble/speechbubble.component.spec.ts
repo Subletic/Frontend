@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SpeechbubbleComponent } from './speechbubble.component';
 import { SpeechBubble } from '../../data/speechBubble/speechBubble.model';
 import { WordToken } from '../../data/wordToken/wordToken.model';
-import { LinkedList } from '../..//data/linkedList/linkedList.model';
+import { LinkedList } from '../../data/linkedList/linkedList.model';
 import { ChangeDetectorRef } from '@angular/core';
 import { WordComponent } from './word/word.component';
 
@@ -40,13 +40,7 @@ describe('SpeechbubbleComponent', () => {
   });
 
   it('should find a word by its ID', () => {
-    const speechBubble = new SpeechBubble(
-      0,
-      0,
-      0,
-      new LinkedList<WordToken>(),
-      0,
-    );
+    const speechBubble = new SpeechBubble(0, 0, 0, new LinkedList<WordToken>(), 0);
     speechBubble.words = new LinkedList<WordToken>();
     const WORD_1 = new WordToken('Hello', 1, 1, 1, 1);
     const WORD_2 = new WordToken('World', 2, 1, 1, 1);
@@ -97,7 +91,7 @@ describe('SpeechbubbleComponent', () => {
     expect(mockSpan2.style.fontWeight).toBe('bold');
   });
 
-  //ab hier neu
+  // ab hier neu
 
   it('should logInfoAboutTextbox on mousevent', () => {
     spyOn(component, 'logInfoAboutTextbox');
@@ -215,11 +209,7 @@ describe('SpeechbubbleComponent', () => {
 
     component.combineWords(2);
 
-    if (
-      !component.speechBubble.words.head ||
-      !component.speechBubble.words.head.next
-    )
-      return;
+    if (!component.speechBubble.words.head || !component.speechBubble.words.head.next) return;
     const combinedWord = component.speechBubble.words.head.next.data;
 
     expect(combinedWord.word).toBe('HelloWorld');
@@ -234,11 +224,7 @@ describe('SpeechbubbleComponent', () => {
 
     component.combineWords(3);
 
-    if (
-      !component.speechBubble.words.head ||
-      !component.speechBubble.words.head.next
-    )
-      return;
+    if (!component.speechBubble.words.head || !component.speechBubble.words.head.next) return;
     const wordAfterCombine = component.speechBubble.words.head.next.data;
 
     expect(wordAfterCombine.word).toBe('Hello');
@@ -267,7 +253,7 @@ describe('SpeechbubbleComponent', () => {
     expect(focusedElement).toEqual(firstSpan.id);
   });
 
-  //Dieser Test muss überarbeitet werden: Er erkennt die Funktionen auf window.getSelection() nicht
+  // Dieser Test muss überarbeitet werden: Er erkennt die Funktionen auf window.getSelection() nicht
   /*
   it('should set the cursor position within a span element', async () => {
     const word = new WordToken('Test', 1, 1, 1, 1);
@@ -293,16 +279,10 @@ describe('SpeechbubbleComponent', () => {
   });
   */
 
-  //wieder ältere Tests aus text-box
+  // wieder ältere Tests aus text-box
   it('should log the information about the hovered word in logInfoAboutTextbox', () => {
     const component = new SpeechbubbleComponent(cdr);
-    component.speechBubble = new SpeechBubble(
-      1,
-      1,
-      1,
-      new LinkedList<WordToken>(),
-      0,
-    );
+    component.speechBubble = new SpeechBubble(1, 1, 1, new LinkedList<WordToken>(), 0);
     component.speechBubble.words.add(new WordToken('Hello', 1, 1, 1, 1));
     component.speechBubble.words.add(new WordToken('World', 2, 1, 1, 1));
 
@@ -317,14 +297,8 @@ describe('SpeechbubbleComponent', () => {
     component.logInfoAboutTextbox(MOCK_EVENT);
 
     expect(console.log).toHaveBeenCalledWith('Word: Hello, ID: 1');
-    expect(console.log).toHaveBeenCalledWith(
-      'Current Word: ',
-      jasmine.any(WordToken),
-    );
-    expect(console.log).toHaveBeenCalledWith(
-      'Print Text:',
-      jasmine.any(String),
-    );
+    expect(console.log).toHaveBeenCalledWith('Current Word: ', jasmine.any(WordToken));
+    expect(console.log).toHaveBeenCalledWith('Print Text:', jasmine.any(String));
   });
 
   it('should remove empty objects from the word list', () => {
@@ -334,8 +308,6 @@ describe('SpeechbubbleComponent', () => {
 
     component.removeEmptyObjects();
 
-    expect(component.speechBubble.words.remove).toHaveBeenCalledWith(
-      EMPTY_WORD,
-    );
+    expect(component.speechBubble.words.remove).toHaveBeenCalledWith(EMPTY_WORD);
   });
 });

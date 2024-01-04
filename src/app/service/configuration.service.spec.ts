@@ -40,35 +40,25 @@ describe('ConfigurationService', () => {
 
   it('should validate configuration correctly when valid', () => {
     service.updateDelayLength(5);
-    service.updateDictionary(
-      new dictionary(new transcription_config('en', [])),
-    );
+    service.updateDictionary(new dictionary(new transcription_config('en', [])));
 
-    expect(() => service.isConfigValid()).not.toThrowMatching(
-      (e) => e instanceof Error,
-    );
+    expect(() => service.isConfigValid()).not.toThrowMatching((e) => e instanceof Error);
   });
 
   it('should validate configuration correctly when invalid', () => {
     service.updateDelayLength(0);
     service.updateDictionary(new dictionary(new transcription_config('', [])));
 
-    expect(() => service.isConfigValid()).toThrowMatching(
-      (e) => e instanceof DictionaryError,
-    );
+    expect(() => service.isConfigValid()).toThrowMatching((e) => e instanceof DictionaryError);
   });
 
   it('should validate configuration correctly when empty word with sounds_like', () => {
     service.updateDelayLength(1);
     service.updateDictionary(
-      new dictionary(
-        new transcription_config('', [{ content: '', sounds_like: ['test'] }]),
-      ),
+      new dictionary(new transcription_config('', [{ content: '', sounds_like: ['test'] }])),
     );
 
-    expect(() => service.isConfigValid()).toThrowMatching(
-      (e) => e instanceof DictionaryError,
-    );
+    expect(() => service.isConfigValid()).toThrowMatching((e) => e instanceof DictionaryError);
   });
 
   it('should post configuration to backend', () => {

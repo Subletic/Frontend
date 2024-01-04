@@ -32,9 +32,7 @@ describe('DictionaryRowComponent', () => {
     const contentDiv = document.createElement('div');
     contentDiv.textContent = 'Test Content';
 
-    spyOnProperty(contentChangeEvent, 'target', 'get').and.returnValue(
-      contentDiv,
-    );
+    spyOnProperty(contentChangeEvent, 'target', 'get').and.returnValue(contentDiv);
 
     component.onContentChange('content', contentChangeEvent);
     expect(component.rowData.content).toBe('Test Content');
