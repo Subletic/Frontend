@@ -7,6 +7,7 @@ import { Component, Output, EventEmitter } from '@angular/core';
 })
 export class ContinuePopupComponent {
   @Output() closed = new EventEmitter<void>();
+  @Output() continue = new EventEmitter<boolean>();
 
   /**
    * Closes the export popup.
@@ -16,7 +17,7 @@ export class ContinuePopupComponent {
   }
 
   continueToEditor() {
-    console.log("To be continued...");
+    this.continue.emit();
   }
 
 }
