@@ -204,6 +204,24 @@ export class LinkedList<T> {
   }
 
   /**
+   * Retrieves the Node belonging to a specific data element within the linked list.
+   *
+   * @param data - The data element for which the Node is requested.
+   * @returns The Node of the specified data element, or null if not found.
+   */
+  public getNodeByData(data: T): Node<T> | null {
+    let current = this.head;
+
+    while (current) {
+      if (JSON.stringify(current.data) === JSON.stringify(data)) return current;
+
+      current = current.next;
+    }
+
+    return null;
+  }
+
+  /**
    * Finds data in the linkedList by the ID of its Node.
    * @param {number} id - The ID of the word to find.
    * @returns {T|null} - The found data or null if not found.

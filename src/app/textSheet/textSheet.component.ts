@@ -3,11 +3,12 @@ import { SpeechBubble } from '../data/speechBubble/speechBubble.model';
 import { SpeechBubbleExport } from '../data/speechBubble/speechBubbleExport.model';
 import { LinkedList } from '../data/linkedList/linkedList.model';
 import { WordExport } from '../data/wordToken/wordExport.model';
-import { SignalRService } from '../service/signalR.service';
 import { SpeechBubbleChain } from '../data/speechBubbleChain/speechBubbleChain.module';
 import { AudioService } from '../service/audio.service';
 import { ConsoleHideService } from '../service/consoleHide.service';
 import {BackendProviderService} from '../service/backend-provider.service';
+import { backendListener } from '../service/backend-listener.service';
+
 
 /**
  * The TextSheetComponent represents a component that handles the speech bubbles in a text sheet.
@@ -19,7 +20,7 @@ import {BackendProviderService} from '../service/backend-provider.service';
   styleUrls: ['./textSheet.component.scss'],
 })
 export class TextSheetComponent implements OnInit {
-  //Attribute holding all showcased linkedList of Instance SpeechBubble
+  // Attribute holding all showcased linkedList of Instance SpeechBubble
   speechBubbles: LinkedList<SpeechBubble> = new LinkedList<SpeechBubble>();
 
   timeSinceFocusOutList: Map<number, number> = new Map<number, number>();
@@ -29,7 +30,7 @@ export class TextSheetComponent implements OnInit {
 
   constructor(
     private consoleHideService: ConsoleHideService,
-    private signalRService: SignalRService,
+    private signalRService: backendListener,
     private backendProviderService: BackendProviderService,
     private audioService: AudioService,
   ) {
@@ -41,11 +42,9 @@ export class TextSheetComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.signalRService.newBubbleReceived.subscribe(
-      (SpeechBubbleExportList) => {
-        this.importfromJson(SpeechBubbleExportList);
-      },
-    );
+    this.signalRService.newBubbleReceived.subscribe((SpeechBubbleExportList) => {
+      this.importfromJson(SpeechBubbleExportList);
+    });
 
     this.signalRService.oldBubbledeleted.subscribe((id) => {
       this.deleteSpeechBubble(id);

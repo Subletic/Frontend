@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { SignalRService } from '../service/signalR.service';
+import { backendListener } from '../service/backend-listener.service';
 import { AudioService } from '../service/audio.service';
 
 /**
@@ -48,11 +48,11 @@ export class AudioHandlerComponent implements OnInit {
 
   /**
    * Gets the reference to required Services.
-   * @param signalRService - The SignalRService to get the reference to.
+   * @param backendListener - The SignalRService to get the reference to.
    * @param audioService - The AudioService to get the reference to.
    */
   constructor(
-    private signalRService: SignalRService,
+    private backendListener: backendListener,
     private audioService: AudioService,
   ) {}
 
@@ -61,7 +61,7 @@ export class AudioHandlerComponent implements OnInit {
    */
   ngOnInit(): void {
     // Subscribe to the received audio stream event from SignalRService
-    this.signalRService.receivedAudioStream.subscribe((newChunk) => {
+    this.backendListener.receivedAudioStream.subscribe((newChunk) => {
       this.handleAudioData(newChunk);
     });
 
@@ -78,11 +78,7 @@ export class AudioHandlerComponent implements OnInit {
 
     // Setup all audio contexts
     for (const multiplier of SPEED_MULTIPLIERS) {
-      this.initNewAudioContext(
-        BASE_SAMPLE_RATE,
-        multiplier,
-        bufferLengthInMinutes,
-      );
+      this.initNewAudioContext(BASE_SAMPLE_RATE, multiplier, bufferLengthInMinutes);
     }
   }
 
@@ -106,10 +102,7 @@ export class AudioHandlerComponent implements OnInit {
         console.error('Error loading worklet: ' + err);
       })
       .then(() => {
-        const newAudioBufferNode = new AudioWorkletNode(
-          audioContext,
-          'circular-buffer-worklet',
-        );
+        const newAudioBufferNode = new AudioWorkletNode(audioContext, 'circular-buffer-worklet');
         newAudioBufferNode.port.postMessage({
           type: 'setBufferLength',
           bufferLengthInSeconds: bufferLengthInMinutes * 60,
@@ -174,8 +167,7 @@ export class AudioHandlerComponent implements OnInit {
     }
 
     const WORKLET_FRAME_SIZE = 128;
-    const ITERATIONS_NEEDED_FOR_FULL_SECOND =
-      convertedAudioData.length / WORKLET_FRAME_SIZE;
+    const ITERATIONS_NEEDED_FOR_FULL_SECOND = convertedAudioData.length / WORKLET_FRAME_SIZE;
 
     for (let i = 0; i < ITERATIONS_NEEDED_FOR_FULL_SECOND; i++) {
       this.audioBufferNode?.port.postMessage({
@@ -249,10 +241,7 @@ export class AudioHandlerComponent implements OnInit {
     );
 
     if (!this.gainNode) return;
-    this.gainNode.gain.setValueAtTime(
-      this.volume,
-      this.audioContext.currentTime,
-    );
+    this.gainNode.gain.setValueAtTime(this.volume, this.audioContext.currentTime);
   }
 
   /**
@@ -270,9 +259,7 @@ export class AudioHandlerComponent implements OnInit {
     newMin: number,
     newMax: number,
   ): number {
-    return (
-      ((value - origMin) * (newMax - newMin)) / (origMax - origMin) + newMin
-    );
+    return ((value - origMin) * (newMax - newMin)) / (origMax - origMin) + newMin;
   }
 
   /**
@@ -310,8 +297,7 @@ export class AudioHandlerComponent implements OnInit {
       workletState: workletState,
     });
 
-    if (this.audioPlaying)
-      this.audioBufferNode?.port.postMessage({ type: 'play' });
+    if (this.audioPlaying) this.audioBufferNode?.port.postMessage({ type: 'play' });
 
     this.connectGainNode();
   }
@@ -321,14 +307,12 @@ export class AudioHandlerComponent implements OnInit {
    */
   private setContextAndNode(): void {
     this.audioContext =
-      this.audioContexts.find(
-        (audioContext) => audioContext.sampleRate === this.sampleRate,
-      ) ?? this.audioContexts[3];
+      this.audioContexts.find((audioContext) => audioContext.sampleRate === this.sampleRate) ??
+      this.audioContexts[3];
 
     this.audioBufferNode =
-      this.audioBuffers.find(
-        (audioBuffer) => audioBuffer.context.sampleRate === this.sampleRate,
-      ) ?? this.audioBuffers[3];
+      this.audioBuffers.find((audioBuffer) => audioBuffer.context.sampleRate === this.sampleRate) ??
+      this.audioBuffers[3];
   }
 
   /**
@@ -336,10 +320,7 @@ export class AudioHandlerComponent implements OnInit {
    */
   private connectGainNode(): void {
     this.gainNode = this.audioContext.createGain();
-    this.gainNode.gain.setValueAtTime(
-      this.volume,
-      this.audioContext.currentTime,
-    );
+    this.gainNode.gain.setValueAtTime(this.volume, this.audioContext.currentTime);
     this.audioBufferNode?.connect(this.gainNode);
     this.gainNode.connect(this.audioContext.destination);
   }

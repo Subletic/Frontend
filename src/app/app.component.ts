@@ -16,14 +16,11 @@ export class AppComponent {
 
   private soundBox: SoundBoxComponent | undefined;
 
-  @ViewChild('soundBox', { static: false }) set content(
-    content: SoundBoxComponent,
-  ) {
+  @ViewChild('soundBox', { static: false }) set content(content: SoundBoxComponent) {
     if (content) {
       // initially setter gets called with undefined
       this.soundBox = content;
-      const bufferLengthInMinutes =
-        this.configurationService.getBufferLengthInMinutes();
+      const bufferLengthInMinutes = this.configurationService.getBufferLengthInMinutes();
       this.soundBox?.initAudioContexts(bufferLengthInMinutes);
     }
   }

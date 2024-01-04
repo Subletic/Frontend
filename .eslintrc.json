@@ -30,6 +30,17 @@
             "prefix": "app",
             "style": "kebab-case"
           }
+        ],
+        "spaced-comment": [
+          "error",
+          "always",
+          {
+            "block": {
+              "exceptions": [
+                "*"
+              ]
+            }
+          }
         ]
       }
     },

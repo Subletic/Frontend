@@ -45,12 +45,6 @@ export class WordExport {
    * Returns a new WordToken similiar to this word export instance.
    */
   public toWordToken(): WordToken {
-    return new WordToken(
-      this.word,
-      this.confidence,
-      this.startTime,
-      this.endTime,
-      this.speaker,
-    );
+    return new WordToken(this.word, this.confidence, this.startTime, this.endTime, this.speaker);
   }
 }

@@ -75,9 +75,7 @@ describe('DictionaryFsLoaderComponent', () => {
 
     await component.handleFileUpload(MOCK_EVENT);
 
-    expect(component.displayDictionaryErrorToast).toHaveBeenCalledWith(
-      'Keine Sprache angegeben!',
-    );
+    expect(component.displayDictionaryErrorToast).toHaveBeenCalledWith('Keine Sprache angegeben!');
   });
 
   it('should accept a JSON file containing empty additional vocab', async () => {
@@ -191,13 +189,9 @@ describe('DictionaryFsLoaderComponent', () => {
 
     const DICTIONARY = new dictionary(transcriptionConfig);
 
-    const MOCK_FILE = new File(
-      [JSON.stringify(DICTIONARY)],
-      'invalidjson.json',
-      {
-        type: 'application/json',
-      },
-    );
+    const MOCK_FILE = new File([JSON.stringify(DICTIONARY)], 'invalidjson.json', {
+      type: 'application/json',
+    });
     const MOCK_EVENT = {
       target: {
         files: [MOCK_FILE],

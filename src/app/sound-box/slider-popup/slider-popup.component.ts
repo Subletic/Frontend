@@ -18,7 +18,7 @@ import {
   styleUrls: ['./slider-popup.component.scss'],
 })
 export class SliderPopupComponent implements OnInit, AfterViewInit {
-  //Volume is value between -1 and 1, volume100 between -100 and 100 for slider capability
+  // Volume is value between -1 and 1, volume100 between -100 and 100 for slider capability
   @Input() volume = 0;
   private volume100 = 0;
 
@@ -52,9 +52,7 @@ export class SliderPopupComponent implements OnInit, AfterViewInit {
         e.style.setProperty('--value', e.value);
         e.style.setProperty('--min', e.min === '' ? MIN_SLIDER_VOLUME : e.min);
         e.style.setProperty('--max', e.max === '' ? MAX_SLIDER_VOLUME : e.max);
-        e.addEventListener('input', () =>
-          e.style.setProperty('--value', e.value),
-        );
+        e.addEventListener('input', () => e.style.setProperty('--value', e.value));
       });
   }
 

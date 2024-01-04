@@ -37,28 +37,26 @@ describe('DictionaryEditorComponent', () => {
   });
 
   it('should add a new row to the dictionary', () => {
-    const initialRows =
-      component.dictionary.transcription_config.additional_vocab.length;
+    const initialRows = component.dictionary.transcription_config.additional_vocab.length;
 
     component.addRow();
 
-    expect(
-      component.dictionary.transcription_config.additional_vocab.length,
-    ).toEqual(initialRows + 1);
+    expect(component.dictionary.transcription_config.additional_vocab.length).toEqual(
+      initialRows + 1,
+    );
   });
 
   it('should delete a row from the dictionary', () => {
     const row: additional_vocab = { content: 'test', sounds_like: ['test'] };
     component.dictionary.transcription_config.additional_vocab.push(row);
 
-    const initialRows =
-      component.dictionary.transcription_config.additional_vocab.length;
+    const initialRows = component.dictionary.transcription_config.additional_vocab.length;
 
     component.onDeleteRow(row);
 
-    expect(
-      component.dictionary.transcription_config.additional_vocab.length,
-    ).toEqual(initialRows - 1);
+    expect(component.dictionary.transcription_config.additional_vocab.length).toEqual(
+      initialRows - 1,
+    );
   });
 
   it('should sort alphabetically and reverse alphabetically', () => {
@@ -72,16 +70,12 @@ describe('DictionaryEditorComponent', () => {
     };
     component.dictionary.transcription_config.additional_vocab.push(row1, row2);
 
-    //Nullwert am Anfang beachten!
+    // Nullwert am Anfang beachten!
     component.sortAlphabeticallyCall();
-    expect(
-      component.dictionary.transcription_config.additional_vocab[1].content,
-    ).toBe('apple');
+    expect(component.dictionary.transcription_config.additional_vocab[1].content).toBe('apple');
 
     component.sortAlphabeticallyCall();
-    expect(
-      component.dictionary.transcription_config.additional_vocab[0].content,
-    ).toBe('banana');
+    expect(component.dictionary.transcription_config.additional_vocab[0].content).toBe('banana');
   });
 
   it('should update dictionary when service emits update', () => {
@@ -104,5 +98,64 @@ describe('DictionaryEditorComponent', () => {
     dictionaryService.updateDictionary(UPDATED_DICTIONARY);
 
     expect(component.dictionary).toEqual(UPDATED_DICTIONARY);
+  });
+
+  it('should navigate to the previous change and update hasPrev', () => {
+    const initialState = new dictionary({
+      language: 'de',
+      additional_vocab: [{ content: 'initial', sounds_like: [''] }],
+    });
+    const newState = new dictionary({
+      language: 'de',
+      additional_vocab: [{ content: 'new', sounds_like: [''] }],
+    });
+
+    // Set initial and new states
+    dictionaryService.updateDictionary(initialState);
+    dictionaryService.updateDictionary(newState);
+
+    // Ensure initial state is the current state
+    expect(component.dictionary).toEqual(newState);
+
+    // Navigate to the previous state
+    component.goToPreviousChange();
+
+    // Ensure dictionary is updated to the initial state
+    expect(component.dictionary).toEqual(initialState);
+
+    // Ensure hasPrev and hasNext are updated correctly
+    expect(component.hasPrev).toBeTrue();
+    expect(component.hasNext).toBeTrue();
+  });
+
+  it('should navigate to the next change and update hasNext', () => {
+    const initialState = new dictionary({
+      language: 'de',
+      additional_vocab: [{ content: 'initial', sounds_like: [''] }],
+    });
+    const newState = new dictionary({
+      language: 'de',
+      additional_vocab: [{ content: 'new', sounds_like: [''] }],
+    });
+
+    // Set initial and new states
+    dictionaryService.updateDictionary(initialState);
+    dictionaryService.updateDictionary(newState);
+
+    // Navigate to the previous state
+    component.goToPreviousChange();
+
+    // Ensure initial state is the current state
+    expect(component.dictionary).toEqual(initialState);
+
+    // Navigate to the next state
+    component.goToNextChange();
+
+    // Ensure dictionary is updated to the new state
+    expect(component.dictionary).toEqual(newState);
+
+    // Ensure hasPrev and hasNext are updated correctly
+    expect(component.hasPrev).toBeTrue();
+    expect(component.hasNext).toBeFalse();
   });
 });

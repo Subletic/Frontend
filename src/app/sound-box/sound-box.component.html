@@ -1,8 +1,6 @@
 <app-audio-handler #audioHandler></app-audio-handler>
 
-<div
-  class="sound-container fixed-bottom d-flex align-items-center justify-content-start"
->
+<div class="sound-container fixed-bottom d-flex align-items-center justify-content-start">
   <div class="soundbar-button-container">
     <!-- Play Button  -->
     <button
@@ -20,11 +18,7 @@
             ? (buttonImage.src = 'assets/pauseOnClick.svg')
             : (buttonImage.src = 'assets/playOnClick.svg')
         "
-        (mouseup)="
-          buttonImage.src = isAudioPlaying
-            ? 'assets/pause.svg'
-            : 'assets/play.svg'
-        "
+        (mouseup)="buttonImage.src = isAudioPlaying ? 'assets/pause.svg' : 'assets/play.svg'"
         #buttonImage
       />
     </button>
@@ -159,7 +153,4 @@
   </div>
 </div>
 
-<app-settings
-  id="settings"
-  (secondsChange)="onSecondsChange($event)"
-></app-settings>
+<app-settings id="settings" (secondsChange)="onSecondsChange($event)"></app-settings>
