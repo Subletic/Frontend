@@ -60,6 +60,31 @@ header {
   padding-right: 3%;
 
   font-size: var(--font-size-dictionary-normal-text);
+
+  &:hover {
+    transform: scale(1.1);
+  }
+}
+
+.history-button {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  height: 50px;
+  width: 50px;
+  margin: 5px;
+
+  border: 2px solid;
+  border-color: white;
+
+  border-radius: 10px;
+  font-size: 16px;
+  background-color: var(--white);
+
+  &:hover {
+    transform: scale(1.1);
+  }
+
 }
 
 .sort-button-image {
@@ -72,7 +97,7 @@ header {
   outline: none;
   cursor: pointer;
   border: none;
-  background: var(--container-background-color);
+  //background: var(--container-background-color);
   width: 30px;
   margin-top: 2.2px;
 }

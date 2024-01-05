@@ -7,26 +7,28 @@
   <app-dictionary-fs-loader></app-dictionary-fs-loader>
 
   <div class="sort">
-    <button (click)="goToPreviousChange()" [disabled]="!hasPrev">Zurück</button>
+    <button class="history-button" (click)="goToPreviousChange()" [disabled]="!hasPrev">
+      <img ngSrc="../../../../assets/undo.svg" alt="Rückgängig Symbol" height="30" width="30" draggable="false"
+        (mousedown)="undoImage.src = 'assets/undo_onclick.svg'" (mouseup)="undoImage.src = 'assets/undo.svg'"
+        #undoImage />
+    </button>
 
-    <button (click)="goToNextChange()" [disabled]="!hasNext">Vor</button>
+    <button class="history-button" (click)=" goToNextChange()" [disabled]="!hasNext">
+      <img ngSrc="../../../../assets/redo.svg" alt="Wiederholen Symbol" height="30" width="30" draggable="false"
+        (mousedown)="redoImage.src = 'assets/redo_onclick.svg'" (mouseup)="redoImage.src = 'assets/redo.svg'"
+        #redoImage />
+    </button>
 
     <button class="sort-button" (click)="sortAlphabeticallyCall()">
-      <img
-        [src]="alphabeticBoolean ? 'assets/Z-A.svg' : 'assets/A-Z.svg'"
-        alt="Button Image"
-        class="sort-button-image"
-      />
+      <img [src]="alphabeticBoolean ? 'assets/Z-A.svg' : 'assets/A-Z.svg'" alt="Button Image" class="sort-button-image"
+        draggable="false" />
     </button>
   </div>
 
   <div class="table">
     <div *ngFor="let vocab of dictionary.transcription_config.additional_vocab">
-      <app-dictionary-row
-        [rowData]="vocab"
-        (deleteRow)="onDeleteRow(vocab)"
-        (changedRow)="onChangedRow()"
-      ></app-dictionary-row>
+      <app-dictionary-row [rowData]="vocab" (deleteRow)="onDeleteRow(vocab)"
+        (changedRow)="onChangedRow()"></app-dictionary-row>
     </div>
   </div>
 
