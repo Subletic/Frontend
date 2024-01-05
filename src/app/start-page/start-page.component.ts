@@ -10,6 +10,7 @@ import { ConfigurationService } from '../service/configuration.service';
 })
 export class StartPageComponent {
   @Output() showDictionary = new EventEmitter<boolean>();
+  isContinuePopupOpen = false;
 
   /**
    * Initializes the configuration service.
@@ -40,5 +41,13 @@ export class StartPageComponent {
 
     this.showDictionary.emit(false);
     this.configurationService.postConfigurationToBackend();
+  }
+
+  openContinuePopup() {
+    this.isContinuePopupOpen = true;
+  }
+
+  closeContinuePopup() {
+    this.isContinuePopupOpen = false;
   }
 }
