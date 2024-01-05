@@ -8,7 +8,7 @@ describe('ContinuePopupComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ContinuePopupComponent]
+      declarations: [ContinuePopupComponent],
     });
     fixture = TestBed.createComponent(ContinuePopupComponent);
     component = fixture.componentInstance;

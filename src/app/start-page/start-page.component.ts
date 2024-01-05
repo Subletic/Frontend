@@ -20,7 +20,7 @@ export class StartPageComponent {
   constructor(
     private configurationService: ConfigurationService,
     private toastr: ToastrService,
-  ) { }
+  ) {}
 
   /**
    * Callback function for exiting the configuration screen.
@@ -50,5 +50,4 @@ export class StartPageComponent {
   closeContinuePopup() {
     this.isContinuePopupOpen = false;
   }
-
 }

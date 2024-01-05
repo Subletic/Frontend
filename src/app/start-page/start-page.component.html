@@ -4,6 +4,9 @@
   <button class="continue-button" (click)="openContinuePopup()">
     Weiter zum Livestream-Editor
   </button>
-  <app-continue-popup *ngIf="isContinuePopupOpen" (closed)="closeContinuePopup()"
-    (continue)="continueToEditor()"></app-continue-popup>
+  <app-continue-popup
+    *ngIf="isContinuePopupOpen"
+    (closed)="closeContinuePopup()"
+    (continue)="continueToEditor()"
+  ></app-continue-popup>
 </div>
