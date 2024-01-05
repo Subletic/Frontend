@@ -10,9 +10,7 @@ import { ConfigurationService } from 'src/app/service/configuration.service';
 @Component({
   selector: 'app-dictionary-editor',
   templateUrl: './dictionary-editor.component.html',
-  styleUrls: [
-    './dictionary-editor.component.scss'
-  ],
+  styleUrls: ['./dictionary-editor.component.scss'],
 })
 export class DictionaryEditorComponent implements OnInit {
   dictionary: dictionary;

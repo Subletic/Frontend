@@ -10,7 +10,6 @@
 
 .table {
   background-color: transparent;
-
 }
 
 header {
@@ -87,17 +86,6 @@ header {
   font-size: var(--font-size-dictionary-normal-text);
 }
 
-
-
-
-
-
-
-
-
-
-
-
 .row-container {
   border-radius: 10px;
   overflow: hidden;
@@ -108,10 +96,7 @@ header {
   flex-wrap: wrap;
 
   align-items: center;
-
-
   padding-left: 1.9%;
-
   margin-right: 43.44px;
 }
 
@@ -120,33 +105,23 @@ header {
 }
 
 .title-box {
-
   display: flex;
   flex-direction: column;
 
-  //color: var(--color-main-blue);
   font-size: var(--font-size-dictionary-normal-text);
   font-weight: 500;
 
-  //padding-left: 1.9%;
   align-items: center;
 }
 
-
 .sort-button {
-  transform: scale(0.8);
-
-
   background-color: transparent;
   border-radius: 10px;
   border: none;
   color: white;
 
-
   font-size: var(--font-size-dictionary-normal-text);
 }
-
-
 
 .word-column,
 .sounds-like-column {

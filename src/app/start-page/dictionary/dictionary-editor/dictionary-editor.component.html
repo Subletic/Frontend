@@ -7,13 +7,11 @@
   <app-dictionary-fs-loader></app-dictionary-fs-loader>
 
   <div class="sort">
-    <!--
     <button (click)="clearDictionary()">Clear</button>
 
     <button (click)="goToPreviousChange()" [disabled]="!hasPrev">Zurück</button>
 
     <button (click)="goToNextChange()" [disabled]="!hasNext">Vor</button>
-    
 
     <button class="sort-button" (click)="sortAlphabeticallyCall()">
       <img
@@ -22,37 +20,17 @@
         class="sort-button-image"
       />
     </button>
-    -->
   </div>
 
-
-  
   <div class="table">
-
-    
     <div class="row-container">
       <div class="column-container">
-        
-        <div class="title-box">
-          Benutzerdefiniertes Wort
-        </div>
+        <div class="title-box">Benutzerdefiniertes Wort</div>
       </div>
 
-      
-      <button class="sort-button" (click)="sortAlphabeticallyCall()">
-        <img
-          [src]="alphabeticBoolean ? 'assets/Z-A.svg' : 'assets/A-Z.svg'"
-          alt="Button Image"
-          class="sort-button-image"
-        />
-      </button>
-
       <div class="column-container">
-        <div class="title-box">
-          Klangähnliche Wörter
-        </div>
-    </div>
-
+        <div class="title-box">Klangähnliche Wörter</div>
+      </div>
     </div>
 
     <div *ngFor="let vocab of dictionary.transcription_config.additional_vocab">
