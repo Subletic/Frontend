@@ -10,6 +10,7 @@
 
 .table {
   background-color: transparent;
+
 }
 
 header {
@@ -50,18 +51,6 @@ header {
   justify-content: flex-end;
 }
 
-.sort-button {
-  background-color: transparent;
-  border-radius: 10px;
-  cursor: pointer;
-  border: none;
-  color: white;
-
-  padding-right: 3%;
-
-  font-size: var(--font-size-dictionary-normal-text);
-}
-
 .sort-button-image {
   display: flex;
   align-items: center;
@@ -96,4 +85,70 @@ header {
   width: 20%;
 
   font-size: var(--font-size-dictionary-normal-text);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+.row-container {
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 10px;
+
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+
+  align-items: center;
+
+
+  padding-left: 1.9%;
+
+  margin-right: 43.44px;
+}
+
+.column-container {
+  flex: 1;
+}
+
+.title-box {
+
+  display: flex;
+  flex-direction: column;
+
+  //color: var(--color-main-blue);
+  font-size: var(--font-size-dictionary-normal-text);
+  font-weight: 500;
+
+  //padding-left: 1.9%;
+  align-items: center;
+}
+
+
+.sort-button {
+  transform: scale(0.8);
+
+
+  background-color: transparent;
+  border-radius: 10px;
+  border: none;
+  color: white;
+
+
+  font-size: var(--font-size-dictionary-normal-text);
+}
+
+
+
+.word-column,
+.sounds-like-column {
+  padding: 10px;
 }

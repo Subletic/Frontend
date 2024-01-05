@@ -10,7 +10,9 @@ import { ConfigurationService } from 'src/app/service/configuration.service';
 @Component({
   selector: 'app-dictionary-editor',
   templateUrl: './dictionary-editor.component.html',
-  styleUrls: ['./dictionary-editor.component.scss'],
+  styleUrls: [
+    './dictionary-editor.component.scss'
+  ],
 })
 export class DictionaryEditorComponent implements OnInit {
   dictionary: dictionary;
@@ -61,7 +63,7 @@ export class DictionaryEditorComponent implements OnInit {
     );
     this.latestChangesList.add(dictionaryZustand);
 
-    const SAVED_CHANGES_SIZE = 50;
+    const SAVED_CHANGES_SIZE = 200;
     if (this.latestChangesList.size() > SAVED_CHANGES_SIZE) {
       if (!this.latestChangesList.head) return;
       this.latestChangesList.remove(this.latestChangesList.head.data);
@@ -120,7 +122,6 @@ export class DictionaryEditorComponent implements OnInit {
       sounds_like: [''],
     });
     this.configurationService.updateDictionary(this.dictionary);
-    // this.addToLatestChanges(this.dictionary);
   }
 
   /**
@@ -165,5 +166,22 @@ export class DictionaryEditorComponent implements OnInit {
   callHelp(): void {
     // Should call help window later
     console.log('Help is called!');
+  }
+
+  /**
+   * Clears dictionary of all entries and sets it back to the original state with one empty row.
+   * For the getNodeByData Function to work, there should be no duplicate entries, therefore all
+   * entities of empty dictionarys are deleted in the latestChangesList.
+   */
+  clearDictionary(): void {
+    const EMPTY_DICTIONARY = new dictionary({
+      language: 'de',
+      additional_vocab: [{ content: '', sounds_like: [''] }],
+    });
+    this.latestChangesList.removeAllDeepEqualObjects(EMPTY_DICTIONARY);
+
+    this.dictionary = EMPTY_DICTIONARY;
+    this.configurationService.updateDictionary(EMPTY_DICTIONARY);
+    this.cdr.detectChanges();
   }
 }
