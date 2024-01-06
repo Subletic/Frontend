@@ -9,7 +9,7 @@
   justify-content: center;
   align-items: center;
 
-  z-index: 1001;
+  z-index: 1004;
 }
 
 .export-popup {
@@ -94,12 +94,12 @@ input {
   font-size: 16px;
   background-color: var(--white);
 
-  &:hover {
+  &:not(:disabled):hover {
     border-color: rgb(165, 165, 165);
     background-color: rgb(230, 230, 230);
   }
 
-  &:active {
+  &:not(:disabled):active {
     border-color: var(--color-main-blue);
     background-color: rgb(230, 230, 230);
   }
