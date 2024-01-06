@@ -30,6 +30,7 @@ import { ExportPopupComponent } from './start-page/dictionary/dictionary-fs-load
 import { NgOptimizedImage } from '@angular/common';
 import { StartConfigComponent } from './start-page/start-config/start-config.component';
 import { StartPageComponent } from './start-page/start-page.component';
+import { ContinuePopupComponent } from './start-page/continue-popup/continue-popup.component';
 
 @NgModule({
   declarations: [
@@ -48,6 +49,7 @@ import { StartPageComponent } from './start-page/start-page.component';
     ExportPopupComponent,
     StartConfigComponent,
     StartPageComponent,
+    ContinuePopupComponent,
   ],
   imports: [
     BrowserModule,
@@ -66,4 +68,4 @@ import { StartPageComponent } from './start-page/start-page.component';
   providers: [],
   bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

@@ -69,13 +69,7 @@ export class WordToken {
    * Returns an WordExport Objekt similiar to this Instance of WordToken
    */
   public getExport(): WordExport {
-    return new WordExport(
-      this.word,
-      this.confidence,
-      this.startTime,
-      this.endTime,
-      this.speaker,
-    );
+    return new WordExport(this.word, this.confidence, this.startTime, this.endTime, this.speaker);
   }
 
   /**
@@ -98,9 +92,7 @@ export class WordToken {
    * @param audioTime - Time stamp to compare own time slot with.
    */
   public adjustFontWeight(audioTime: number) {
-    this.fontWeight = this.currentAudioTimeOnWord(audioTime)
-      ? 'bold'
-      : 'normal';
+    this.fontWeight = this.currentAudioTimeOnWord(audioTime) ? 'bold' : 'normal';
   }
 
   /**

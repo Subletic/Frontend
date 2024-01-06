@@ -3,10 +3,10 @@ import { SpeechBubble } from '../data/speechBubble/speechBubble.model';
 import { SpeechBubbleExport } from '../data/speechBubble/speechBubbleExport.model';
 import { LinkedList } from '../data/linkedList/linkedList.model';
 import { WordExport } from '../data/wordToken/wordExport.model';
-import { SignalRService } from '../service/signalR.service';
-import { environment } from '../../environments/environment.prod';
+import { backendListener } from '../service/backend-listener.service';
 import { SpeechBubbleChain } from '../data/speechBubbleChain/speechBubbleChain.module';
 import { AudioService } from '../service/audio.service';
+import { BackendProviderService } from '../service/backend-provider.service';
 
 /**
  * The TextSheetComponent represents a component that handles the speech bubbles in a text sheet.
@@ -18,7 +18,7 @@ import { AudioService } from '../service/audio.service';
   styleUrls: ['./textSheet.component.scss'],
 })
 export class TextSheetComponent implements OnInit {
-  //Attribute holding all showcased linkedList of Instance SpeechBubble
+  // Attribute holding all showcased linkedList of Instance SpeechBubble
   speechBubbles: LinkedList<SpeechBubble> = new LinkedList<SpeechBubble>();
 
   timeSinceFocusOutList: Map<number, number> = new Map<number, number>();
@@ -27,7 +27,8 @@ export class TextSheetComponent implements OnInit {
   private readTimeInSeconds = 0;
 
   constructor(
-    private signalRService: SignalRService,
+    private signalRService: backendListener,
+    private backendProviderService: BackendProviderService,
     private audioService: AudioService,
   ) {
     this.audioService.variable$.subscribe((value) => {
@@ -36,11 +37,9 @@ export class TextSheetComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.signalRService.newBubbleReceived.subscribe(
-      (SpeechBubbleExportList) => {
-        this.importfromJson(SpeechBubbleExportList);
-      },
-    );
+    this.signalRService.newBubbleReceived.subscribe((SpeechBubbleExportList) => {
+      this.importfromJson(SpeechBubbleExportList);
+    });
 
     this.signalRService.oldBubbledeleted.subscribe((id) => {
       this.deleteSpeechBubble(id);
@@ -166,29 +165,8 @@ export class TextSheetComponent implements OnInit {
    * @param speechBubbleExportList - An array of SpeechBubbleExport objects representing the speech bubbles to be exported.
    */
   public exportToJson(speechBubbleExportList: SpeechBubbleExport[]): void {
-    const SPEECHBUBBLE_CHAIN = new SpeechBubbleChain(speechBubbleExportList);
-    const JSON_DATA = SPEECHBUBBLE_CHAIN.toJSON();
-
-    fetch(environment.BACKEND_URL + '/api/speechbubble/update', {
-      method: 'POST',
-      body: JSON.stringify(JSON_DATA),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then((response) => {
-        if (response.ok) {
-          console.log('Aktualisierte SpeechBubble wurde erfolgreich gesendet');
-        } else {
-          console.error('Fehler beim Senden der aktualisierten SpeechBubble');
-        }
-      })
-      .catch((error) => {
-        console.error(
-          'Fehler beim Senden der aktualisierten SpeechBubble:',
-          error,
-        );
-      });
+    const SPEECH_BUBBLE_CHAIN = new SpeechBubbleChain(speechBubbleExportList);
+    this.backendProviderService.updateSpeechBubbles(SPEECH_BUBBLE_CHAIN);
   }
 
   /**
@@ -245,7 +223,9 @@ export class TextSheetComponent implements OnInit {
     while (current) {
       if (this.currentAudioTimeInSpeechbubbleTime(current.data, audioTime)) {
         current.data.adjustWordsFontWeight(audioTime);
+        // to prevent currentWord being stuck
         current.prev?.data.adjustWordsFontWeight(audioTime);
+        current.next?.data.adjustWordsFontWeight(audioTime);
       }
       current = current.next;
     }

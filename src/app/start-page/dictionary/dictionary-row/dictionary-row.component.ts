@@ -1,10 +1,4 @@
-import {
-  AfterViewInit,
-  Component,
-  Input,
-  EventEmitter,
-  Output,
-} from '@angular/core';
+import { AfterViewInit, Component, Input, EventEmitter, Output } from '@angular/core';
 import { additional_vocab } from 'src/app/data/dictionary/additionalVocab.model';
 
 /**
@@ -50,17 +44,10 @@ export class DictionaryRowComponent implements AfterViewInit {
     const CONTENT = TARGET.textContent;
 
     if (property === 'sounds_like') {
-      this.rowData[property] = CONTENT?.split(',').map((value: string) =>
-        value.trim(),
-      );
+      this.rowData[property] = CONTENT?.split(',').map((value: string) => value.trim());
     } else {
       if (!CONTENT) return;
       this.rowData[property] = CONTENT;
-    }
-
-    if (!this.rowData.sounds_like) return;
-    for (let i = 0; i < this.rowData.sounds_like.length; i++) {
-      console.log(this.rowData.sounds_like[i]);
     }
 
     this.changedRow.emit();

@@ -31,8 +31,5 @@
     />
   </button>
 
-  <app-export-popup
-    *ngIf="isExportPopupOpen"
-    (closed)="closeExportPopup()"
-  ></app-export-popup>
+  <app-export-popup *ngIf="isExportPopupOpen" (closed)="closeExportPopup()"></app-export-popup>
 </div>

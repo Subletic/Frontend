@@ -32,15 +32,11 @@ export class CsvHandler implements DictionaryFileFormatHandler {
   private convertDictionaryToCsv(dictionary: dictionary): string {
     const rows: string[] = [];
 
-    const dataRows = dictionary.transcription_config.additional_vocab.map(
-      (vocabItem) => {
-        const content = vocabItem.content || '';
-        const soundsLike = vocabItem.sounds_like
-          ? vocabItem.sounds_like.join(';')
-          : '';
-        return [content, soundsLike].join(';');
-      },
-    );
+    const dataRows = dictionary.transcription_config.additional_vocab.map((vocabItem) => {
+      const content = vocabItem.content || '';
+      const soundsLike = vocabItem.sounds_like ? vocabItem.sounds_like.join(';') : '';
+      return [content, soundsLike].join(';');
+    });
 
     rows.push('Content;SoundsLike');
     rows.push(...dataRows);

@@ -30,7 +30,7 @@ export class SpeechbubbleComponent implements AfterViewInit {
   @ViewChild('textboxContainer', { static: true })
   textboxContainerRef!: ElementRef;
 
-  constructor(public cdr: ChangeDetectorRef) { }
+  constructor(public cdr: ChangeDetectorRef) {}
 
   /**
    * After Init of View, generates the Words from the data structure
@@ -100,8 +100,7 @@ export class SpeechbubbleComponent implements AfterViewInit {
       const EXPECTED_SPAN = this.speechBubble.id + '_' + current.id.toString();
       const wordSpan = document.getElementById(EXPECTED_SPAN);
       if (!wordSpan) return;
-      wordSpan.style.fontWeight =
-        current.data.fontWeight === 'bold' ? 'bold' : 'normal';
+      wordSpan.style.fontWeight = current.data.fontWeight === 'bold' ? 'bold' : 'normal';
 
       current = current.next;
     }
@@ -206,7 +205,7 @@ export class SpeechbubbleComponent implements AfterViewInit {
     if (!SPAN) return;
     SPAN.focus();
 
-    //SPAN.textContent = word.word.trim();
+    // SPAN.textContent = word.word.trim();
   }
 
   /**

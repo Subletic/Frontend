@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { SignalRService } from '../service/signalR.service';
+import { backendListener } from '../service/backend-listener.service';
 import { AudioService } from '../service/audio.service';
-import * as Tone from 'tone';
 
 /**
  * The WorkletState interface represents the state of the AudioWorklet.
@@ -49,13 +48,25 @@ export class AudioHandlerComponent implements OnInit {
 
   /**
    * Gets the reference to required Services.
-   * @param signalRService - The SignalRService to get the reference to.
+   * @param backendListener - The SignalRService to get the reference to.
    * @param audioService - The AudioService to get the reference to.
    */
   constructor(
-    private signalRService: SignalRService,
+    private backendListener: backendListener,
     private audioService: AudioService,
   ) {}
+
+  /**
+   * Initializes SignalR stream connection.
+   */
+  ngOnInit(): void {
+    // Subscribe to the received audio stream event from SignalRService
+    this.backendListener.receivedAudioStream.subscribe((newChunk) => {
+      this.handleAudioData(newChunk);
+    });
+
+    this.audioService.updateVariable(this.readTimeInMilliseconds);
+  }
 
   /**
    * Initializes all audio contexts for different playback speeds.
@@ -67,11 +78,7 @@ export class AudioHandlerComponent implements OnInit {
 
     // Setup all audio contexts
     for (const multiplier of SPEED_MULTIPLIERS) {
-      this.initNewAudioContext(
-        BASE_SAMPLE_RATE,
-        multiplier,
-        bufferLengthInMinutes,
-      );
+      this.initNewAudioContext(BASE_SAMPLE_RATE, multiplier, bufferLengthInMinutes);
     }
   }
 
@@ -95,22 +102,23 @@ export class AudioHandlerComponent implements OnInit {
         console.error('Error loading worklet: ' + err);
       })
       .then(() => {
-        const newAudioBufferNode = new AudioWorkletNode(
-          audioContext,
-          'circular-buffer-worklet',
-        );
+        const newAudioBufferNode = new AudioWorkletNode(audioContext, 'circular-buffer-worklet');
         newAudioBufferNode.port.postMessage({
           type: 'setBufferLength',
           bufferLengthInSeconds: bufferLengthInMinutes * 60,
         });
         newAudioBufferNode.port.onmessage = (event) => {
-          if (event.data.type === 'workletState') {
-            this.replaceAudioContext(event.data.workletState);
-          } else if (event.data.type === 'newReadTime') {
-            this.readTimeInMilliseconds = event.data.readTime;
-            this.audioService.updateVariable(this.readTimeInMilliseconds);
-          } else {
-            console.error('Unknown message type: ' + event.data.type);
+          switch (event.data.type) {
+            case 'workletState':
+              this.replaceAudioContext(event.data.workletState);
+              break;
+            case 'newReadTime': {
+              this.readTimeInMilliseconds = event.data.readTime;
+              this.audioService.updateVariable(this.readTimeInMilliseconds);
+              break;
+            }
+            default:
+              console.error('Unknown message type: ' + event.data.type);
           }
         };
         this.audioBuffers.push(newAudioBufferNode);
@@ -120,48 +128,28 @@ export class AudioHandlerComponent implements OnInit {
           this.audioBufferNode = newAudioBufferNode;
           this.audioContext = audioContext;
 
-          Tone.setContext(this.audioContext);
-
           this.gainNode = this.audioContext.createGain();
           this.audioBufferNode.connect(this.gainNode);
-
-          const pitchShiftNode = new Tone.PitchShift();
-          pitchShiftNode.channelCount = 1;
-          pitchShiftNode.pitch = 0;
-
-          Tone.connect(this.gainNode, pitchShiftNode);
-          Tone.connect(pitchShiftNode, this.audioContext.destination);
+          this.gainNode.connect(this.audioContext.destination);
         }
       });
     this.audioContexts.push(audioContext);
   }
 
   /**
-   * Initializes SignalR stream connection.
-   */
-  ngOnInit(): void {
-    // Subscribe to the received audio stream event from SignalRService
-    this.signalRService.receivedAudioStream.subscribe((newChunk) => {
-      this.handleAudioData(newChunk);
-    });
-
-    this.audioService.updateVariable(this.readTimeInMilliseconds);
-  }
-
-  /**
    * Resumes audio playback and starts the source node if not started.
    */
-  public togglePlayback(): void {
-    if (!this.audioPlaying) {
-      this.audioContext.resume().then(() => {
-        this.audioPlaying = true;
-        this.audioBufferNode?.port.postMessage({ type: 'play' });
-      });
+  public async togglePlayback(): Promise<boolean> {
+    if (this.audioPlaying) {
+      await this.audioContext.suspend();
+      this.audioPlaying = false;
+      this.audioBufferNode?.port.postMessage({ type: 'pause' });
+      return false;
     } else {
-      this.audioContext.suspend().then(() => {
-        this.audioPlaying = false;
-        this.audioBufferNode?.port.postMessage({ type: 'pause' });
-      });
+      await this.audioContext.resume();
+      this.audioPlaying = true;
+      this.audioBufferNode?.port.postMessage({ type: 'play' });
+      return true;
     }
   }
 
@@ -179,8 +167,7 @@ export class AudioHandlerComponent implements OnInit {
     }
 
     const WORKLET_FRAME_SIZE = 128;
-    const ITERATIONS_NEEDED_FOR_FULL_SECOND =
-      convertedAudioData.length / WORKLET_FRAME_SIZE;
+    const ITERATIONS_NEEDED_FOR_FULL_SECOND = convertedAudioData.length / WORKLET_FRAME_SIZE;
 
     for (let i = 0; i < ITERATIONS_NEEDED_FOR_FULL_SECOND; i++) {
       this.audioBufferNode?.port.postMessage({
@@ -254,10 +241,7 @@ export class AudioHandlerComponent implements OnInit {
     );
 
     if (!this.gainNode) return;
-    this.gainNode.gain.setValueAtTime(
-      this.volume,
-      this.audioContext.currentTime,
-    );
+    this.gainNode.gain.setValueAtTime(this.volume, this.audioContext.currentTime);
   }
 
   /**
@@ -275,9 +259,7 @@ export class AudioHandlerComponent implements OnInit {
     newMin: number,
     newMax: number,
   ): number {
-    return (
-      ((value - origMin) * (newMax - newMin)) / (origMax - origMin) + newMin
-    );
+    return ((value - origMin) * (newMax - newMin)) / (origMax - origMin) + newMin;
   }
 
   /**
@@ -297,14 +279,6 @@ export class AudioHandlerComponent implements OnInit {
   }
 
   /**
-   * Returns the current status of the audio playback.
-   * @returns {boolean} True if audio is currently playing, false otherwise.
-   */
-  public getIsAudioPlaying(): boolean {
-    return this.audioPlaying;
-  }
-
-  /**
    * Replaces the currently running AudioContext with a new one.
    * Workaround for changing the playback speed of the audio worklet by changing the sample rate of the audio context.
    * @param workletState - The state of the AudioWorklet to be replaced.
@@ -315,41 +289,39 @@ export class AudioHandlerComponent implements OnInit {
     this.audioBufferNode?.disconnect();
     this.gainNode.disconnect();
 
-    // Find correct context/node
-    this.audioContext =
-      this.audioContexts.find(
-        (audioContext) => audioContext.sampleRate === this.sampleRate,
-      ) ?? this.audioContexts[3];
+    this.setContextAndNode();
 
-    this.audioBufferNode =
-      this.audioBuffers.find(
-        (audioBuffer) => audioBuffer.context.sampleRate === this.sampleRate,
-      ) ?? this.audioBuffers[3];
-
-    // Restore old worklet state
+    // Send Message to restore old playback state
     this.audioBufferNode?.port.postMessage({
       type: 'setWorkletState',
       workletState: workletState,
     });
-    this.audioBufferNode?.port.postMessage({ type: 'play' });
 
-    // Connect nodes
-    Tone.setContext(this.audioContext);
+    if (this.audioPlaying) this.audioBufferNode?.port.postMessage({ type: 'play' });
 
-    const pitchShiftNode = new Tone.PitchShift();
-    pitchShiftNode.channelCount = 1;
-    pitchShiftNode.pitch = 0;
+    this.connectGainNode();
+  }
 
+  /**
+   * Selects the correct audio context and audio buffer node based on the current sample rate.
+   */
+  private setContextAndNode(): void {
+    this.audioContext =
+      this.audioContexts.find((audioContext) => audioContext.sampleRate === this.sampleRate) ??
+      this.audioContexts[3];
+
+    this.audioBufferNode =
+      this.audioBuffers.find((audioBuffer) => audioBuffer.context.sampleRate === this.sampleRate) ??
+      this.audioBuffers[3];
+  }
+
+  /**
+   * Creates and connects a new gain node to the audio context.
+   */
+  private connectGainNode(): void {
     this.gainNode = this.audioContext.createGain();
-    this.gainNode.gain.setValueAtTime(
-      this.volume,
-      this.audioContext.currentTime,
-    );
+    this.gainNode.gain.setValueAtTime(this.volume, this.audioContext.currentTime);
     this.audioBufferNode?.connect(this.gainNode);
-
-    if (this.audioBufferNode == undefined) return;
-
-    Tone.connect(this.gainNode, pitchShiftNode);
-    Tone.connect(pitchShiftNode, this.audioContext.destination);
+    this.gainNode.connect(this.audioContext.destination);
   }
 }

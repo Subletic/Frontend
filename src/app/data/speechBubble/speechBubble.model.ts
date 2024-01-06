@@ -83,13 +83,7 @@ export class SpeechBubble {
    * Returns an SpeechBubblExport Object for this instance of a speechbubble.
    */
   public getExport(): SpeechBubbleExport {
-    return new SpeechBubbleExport(
-      this.id,
-      this.speaker,
-      this.begin,
-      this.end,
-      this.toList(),
-    );
+    return new SpeechBubbleExport(this.id, this.speaker, this.begin, this.end, this.toList());
   }
 
   /**
