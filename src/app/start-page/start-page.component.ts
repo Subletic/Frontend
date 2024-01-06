@@ -1,7 +1,8 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { DictionaryError } from '../data/error/DictionaryError';
 import { ConfigurationService } from '../service/configuration.service';
+import { DictionaryEditorComponent } from './dictionary/dictionary-editor/dictionary-editor.component';
 
 @Component({
   selector: 'app-start-page',
@@ -11,6 +12,9 @@ import { ConfigurationService } from '../service/configuration.service';
 export class StartPageComponent {
   @Output() showDictionary = new EventEmitter<boolean>();
   isContinuePopupOpen = false;
+
+  @ViewChild(DictionaryEditorComponent, { static: false })
+  editorComponent!: DictionaryEditorComponent;
 
   /**
    * Initializes the configuration service.
@@ -26,6 +30,15 @@ export class StartPageComponent {
    * Callback function for exiting the configuration screen.
    */
   public continueToEditor(): void {
+    if (!this.editorComponent) return;
+    if (this.editorComponent.wordcount > 1000) {
+      this.toastr.error(
+        'Die Anzahl der Wörter im Dictionary überschreitet 1000. Bitte reduzieren Sie die Anzahl der Wörter.',
+        'Warnung',
+      );
+      return;
+    }
+
     try {
       this.configurationService.isConfigValid();
     } catch (e) {
