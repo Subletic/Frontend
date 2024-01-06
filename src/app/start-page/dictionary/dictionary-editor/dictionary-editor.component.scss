@@ -43,13 +43,6 @@ header {
   margin-left: 1%;
 }
 
-.sort {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-end;
-}
-
 .sort-button {
   background-color: transparent;
   border-radius: 10px;
@@ -57,9 +50,11 @@ header {
   border: none;
   color: white;
 
-  padding-right: 3%;
-
   font-size: var(--font-size-dictionary-normal-text);
+
+  &:hover {
+    transform: scale(0.8);
+  }
 }
 
 .sort-button-image {
@@ -72,9 +67,46 @@ header {
   outline: none;
   cursor: pointer;
   border: none;
-  background: var(--container-background-color);
+  //background: var(--container-background-color);
   width: 30px;
   margin-top: 2.2px;
+}
+
+.history {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin-top: 60px;
+  margin-right: 2.9%;
+
+  position: sticky;
+  top: 15px;
+
+  z-index: 1002;
+}
+
+.history-button {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  height: 50px;
+  width: 50px;
+
+  border: 2px solid;
+  border-color: white;
+
+  border-radius: 10px;
+  font-size: 16px;
+  background-color: white;
+
+  &:not(:disabled):hover {
+    transform: scale(1.1);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+  }
 }
 
 .table-action {
@@ -104,4 +136,56 @@ header {
 
 .wordcount {
   font-size: var(--font-size-dictionary-normal-text);
+}
+
+.row-container {
+  border-radius: 10px;
+  margin-bottom: 10px;
+
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+
+  align-items: center;
+  padding-left: 1.9%;
+  margin-right: 43.44px;
+}
+
+.column-container {
+  flex: 1;
+}
+
+.title-box {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+
+  font-size: var(--font-size-dictionary-normal-text);
+  font-weight: 500;
+
+  justify-content: center;
+  align-items: center;
+}
+
+.sort-button {
+  background-color: transparent;
+  border-radius: 10px;
+  border: none;
+  color: white;
+
+  position: absolute;
+  left: 0;
+
+  font-size: var(--font-size-dictionary-normal-text);
+  transform: scale(0.75);
+}
+
+.word-column,
+.sounds-like-column {
+  padding: 10px;
+}
+
+.caption-left {
+  position: absolute;
+  margin-right: 10px;
 }
