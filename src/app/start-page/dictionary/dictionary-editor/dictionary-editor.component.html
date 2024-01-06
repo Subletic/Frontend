@@ -7,6 +7,9 @@
   <app-dictionary-fs-loader></app-dictionary-fs-loader>
 
   <div class="sort">
+
+    <button class="history-button" (click)="clearDictionary()">Clear</button>
+
     <button class="history-button" (click)="goToPreviousChange()" [disabled]="!hasPrev">
       <img ngSrc="../../../../assets/undo.svg" alt="Rückgängig Symbol" height="30" width="30" draggable="false"
         (mousedown)="undoImage.src = 'assets/undo_onclick.svg'" (mouseup)="undoImage.src = 'assets/undo.svg'"
@@ -26,6 +29,16 @@
   </div>
 
   <div class="table">
+    <div class="row-container">
+      <div class="column-container">
+        <div class="title-box">Benutzerdefiniertes Wort</div>
+      </div>
+
+      <div class="column-container">
+        <div class="title-box">Klangähnliche Wörter</div>
+      </div>
+    </div>
+
     <div *ngFor="let vocab of dictionary.transcription_config.additional_vocab">
       <app-dictionary-row [rowData]="vocab" (deleteRow)="onDeleteRow(vocab)"
         (changedRow)="onChangedRow()"></app-dictionary-row>
