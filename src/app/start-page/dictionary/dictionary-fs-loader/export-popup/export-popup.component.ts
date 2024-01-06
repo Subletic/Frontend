@@ -1,7 +1,7 @@
 import { Component, Output, EventEmitter } from '@angular/core';
-import { FormatHandler } from '../dictionary-export/dictionary-format-handler.interface';
-import { JsonFormat } from '../dictionary-export/dictionary-format-json';
-import { CsvFormat } from '../dictionary-export/dictionary-format-csv';
+import { DictionaryFileFormatHandler } from '../dictionary-export/dictionary-format-handler.interface';
+import { JsonHandler } from '../dictionary-export/dictionary-format-json';
+import { CsvHandler } from '../dictionary-export/dictionary-format-csv';
 import { DictionaryFsLoaderComponent } from '../dictionary-fs-loader.component';
 
 /**
@@ -32,8 +32,8 @@ export class ExportPopupComponent {
    */
   public handleDictionaryDownloadJson(): void {
     const DICTIONARY = this.dictionaryFsLoader.getUpdatedDictionary();
-    const exportFormat: FormatHandler = new JsonFormat();
-    exportFormat.download(this.exportFileName, DICTIONARY);
+    const formatHandler: DictionaryFileFormatHandler = new JsonHandler();
+    formatHandler.downloadDictionary(this.exportFileName, DICTIONARY);
   }
 
   /**
@@ -42,8 +42,8 @@ export class ExportPopupComponent {
    */
   public handleDictionaryDownloadCsv(): void {
     const DICTIONARY = this.dictionaryFsLoader.getUpdatedDictionary();
-    const exportFormat: FormatHandler = new CsvFormat();
-    exportFormat.download(this.exportFileName, DICTIONARY);
+    const exportFormat: DictionaryFileFormatHandler = new CsvHandler();
+    exportFormat.downloadDictionary(this.exportFileName, DICTIONARY);
   }
 
   /**

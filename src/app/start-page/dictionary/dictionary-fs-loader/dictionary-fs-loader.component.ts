@@ -24,7 +24,7 @@ export class DictionaryFsLoaderComponent {
   public constructor(
     private configurationService: ConfigurationService,
     private toastr: ToastrService,
-  ) {}
+  ) { }
 
   /**
    * Called when the user uploads a file.

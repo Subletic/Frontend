@@ -1,13 +1,13 @@
-import { FormatHandler } from './dictionary-format-handler.interface';
+import { DictionaryFileFormatHandler } from './dictionary-format-handler.interface';
 import { dictionary } from '../../../../data/dictionary/dictionary.model';
 
 /**
- * Class for exporting data in CSV format.
+ * Class for exporting/importing data in CSV format.
  * @class
- * @implements {ExportFormat}
+ * @implements {DictionaryFileFormatHandler}
  */
-export class CsvFormat implements FormatHandler {
-  download(fileName: string, dictionary: dictionary): void {
+export class CsvHandler implements DictionaryFileFormatHandler {
+  public downloadDictionary(fileName: string, dictionary: dictionary): void {
     const CSV_CONTENT = this.convertDictionaryToCsv(dictionary);
     const BLOB = new Blob([CSV_CONTENT], { type: 'text/csv' });
 
@@ -18,10 +18,11 @@ export class CsvFormat implements FormatHandler {
 
     URL.revokeObjectURL(link.href);
   }
-
-  upload(): void {
+  /*
+  public uploadDictionary(file: File): Promise<dictionary | null> {
     return;
   }
+  */
 
   /**
    * Converts the dictionary to a CSV-formatted string.
