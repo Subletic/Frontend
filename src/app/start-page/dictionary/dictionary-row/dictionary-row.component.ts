@@ -50,11 +50,6 @@ export class DictionaryRowComponent implements AfterViewInit {
       this.rowData[property] = CONTENT;
     }
 
-    if (!this.rowData.sounds_like) return;
-    for (let i = 0; i < this.rowData.sounds_like.length; i++) {
-      console.log(this.rowData.sounds_like[i]);
-    }
-
     this.changedRow.emit();
   }
 
