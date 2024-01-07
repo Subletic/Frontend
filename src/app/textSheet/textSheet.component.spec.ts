@@ -75,12 +75,11 @@ describe('TextSheetComponent', () => {
   let backendProviderService: BackendProviderService;
 
   beforeEach(() => {
-    signalRService = new backendListener();
+    signalRService = new backendListener(consoleHideService);
     audioService = new AudioService();
     consoleHideService = new ConsoleHideService();
-    backendProviderService = new BackendProviderService();
+    backendProviderService = new BackendProviderService(consoleHideService);
     component = new TextSheetComponent(
-      consoleHideService,
       signalRService,
       backendProviderService,
       audioService,

@@ -5,7 +5,6 @@ import { LinkedList } from '../data/linkedList/linkedList.model';
 import { WordExport } from '../data/wordToken/wordExport.model';
 import { SpeechBubbleChain } from '../data/speechBubbleChain/speechBubbleChain.module';
 import { AudioService } from '../service/audio.service';
-import { ConsoleHideService } from '../service/consoleHide.service';
 import {BackendProviderService} from '../service/backend-provider.service';
 import { backendListener } from '../service/backend-listener.service';
 
@@ -29,7 +28,6 @@ export class TextSheetComponent implements OnInit {
   private readTimeInSeconds = 0;
 
   constructor(
-    private consoleHideService: ConsoleHideService,
     private signalRService: backendListener,
     private backendProviderService: BackendProviderService,
     private audioService: AudioService,
@@ -37,8 +35,6 @@ export class TextSheetComponent implements OnInit {
     this.audioService.variable$.subscribe((value) => {
       this.readTimeInSeconds = value / 1000;
     });
-
-    this.consoleHideService.disableConsoleTextSheet();
   }
 
   ngOnInit(): void {

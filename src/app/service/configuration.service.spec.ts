@@ -3,11 +3,13 @@ import { dictionary } from '../data/dictionary/dictionary.model';
 import { transcription_config } from '../data/dictionary/transcription_config.module';
 import { DictionaryError } from '../data/error/DictionaryError';
 import { BackendProviderService } from './backend-provider.service';
+import { ConsoleHideService } from './consoleHide.service';
 
 describe('ConfigurationService', () => {
   let service: ConfigurationService;
+  let consoleHideService: ConsoleHideService;
   beforeEach(() => {
-    service = new ConfigurationService(new BackendProviderService());
+    service = new ConfigurationService(new BackendProviderService(consoleHideService));
   });
 
   it('should update dictionary correctly', () => {

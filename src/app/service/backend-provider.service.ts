@@ -2,11 +2,15 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment.prod';
 import { Config } from '../data/config/config.model';
 import { SpeechBubbleChain } from '../data/speechBubbleChain/speechBubbleChain.module';
+import { ConsoleHideService } from './consoleHide.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class BackendProviderService {
+
+  constructor(private consoleHideService: ConsoleHideService) {}
+
   /**
    * Uploads the user configuration to the backend.
    * @param config User config including dictionary and delay length.
@@ -39,7 +43,7 @@ export class BackendProviderService {
     })
       .then((response) => {
         if (response.ok) {
-          console.log('Aktualisierte SpeechBubble wurde erfolgreich gesendet');
+          this.consoleHideService.backendProviderLog('Aktualisierte SpeechBubble wurde erfolgreich gesendet');
         } else {
           console.error('Fehler beim Senden der aktualisierten SpeechBubble');
         }
@@ -59,7 +63,7 @@ export class BackendProviderService {
     })
       .then((response) => {
         if (response.ok) {
-          console.log('Called for restart');
+          this.consoleHideService.backendProviderLog('Called for restart');
           setTimeout(() => {
             window.location.reload();
           }, timeBeforeReload);

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { backendListener } from '../service/backend-listener.service';
 import { AudioService } from '../service/audio.service';
+import { ConsoleHideService } from '../service/consoleHide.service';
 
 /**
  * The WorkletState interface represents the state of the AudioWorklet.
@@ -54,6 +55,7 @@ export class AudioHandlerComponent implements OnInit {
   constructor(
     private backendListener: backendListener,
     private audioService: AudioService,
+    private consoleHideService: ConsoleHideService,
   ) {}
 
   /**
@@ -198,7 +200,7 @@ export class AudioHandlerComponent implements OnInit {
   private setPitchModifier(playbackRate: number): void {
     // Formula to convert playback rate to pitch modifier
     this.pitchModifier = Math.round(-12 * Math.log2(playbackRate));
-    console.log('Pitch modifier: ' + this.pitchModifier);
+    this.consoleHideService.audioLog('Pitch modifier: ' + this.pitchModifier);
   }
 
   /**

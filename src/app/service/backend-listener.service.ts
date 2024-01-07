@@ -15,7 +15,7 @@ export class backendListener {
 
   public receivedAudioStream: Subject<Int16Array> = new Subject<Int16Array>();
 
-  constructor() {
+  constructor(private consoleHideService: ConsoleHideService) {
     this.hubConnection = new signalR.HubConnectionBuilder()
       .withUrl(environment.BACKEND_URL + '/communicationHub') // Specify the SignalR endpoint URL
       .build();
@@ -23,7 +23,7 @@ export class backendListener {
     this.hubConnection
       .start()
       .then(() => {
-        console.log('SignalR connected.');
+        this.consoleHideService.backendListenerLog('SignalR connected.');
         this.subscribeToAudioStream();
       })
       .catch((err) => console.error('SignalR connection error: ', err));
@@ -44,7 +44,7 @@ export class backendListener {
         this.receivedAudioStream.next(data);
       },
       complete: () => {
-        console.log('Stream completed');
+        this.consoleHideService.backendListenerLog('Stream completed');
       },
       error: (err) => {
         console.log(err);
