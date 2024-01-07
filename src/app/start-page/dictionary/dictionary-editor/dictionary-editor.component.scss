@@ -8,10 +8,6 @@
   flex-direction: column;
 }
 
-.table {
-  background-color: transparent;
-}
-
 header {
   display: flex;
   flex-direction: row;
@@ -103,10 +99,10 @@ header {
   &:not(:disabled):hover {
     transform: scale(1.1);
   }
+}
 
-  &:disabled {
-    opacity: 0.6;
-  }
+.history-button:disabled img {
+  opacity: 0.6;
 }
 
 .table-action {
@@ -130,8 +126,14 @@ header {
   font-size: var(--font-size-dictionary-normal-text);
 }
 
+.table {
+  background-color: transparent;
+  position: relative;
+}
+
 .row-container {
   border-radius: 10px;
+  overflow: hidden;
   margin-bottom: 10px;
 
   display: flex;
@@ -149,13 +151,11 @@ header {
 
 .title-box {
   display: flex;
-  flex-direction: row;
-  position: relative;
+  flex-direction: column;
 
   font-size: var(--font-size-dictionary-normal-text);
   font-weight: 500;
 
-  justify-content: center;
   align-items: center;
 }
 
@@ -165,11 +165,21 @@ header {
   border: none;
   color: white;
 
-  position: absolute;
   left: 0;
 
+  transform: scale(0.8);
+
   font-size: var(--font-size-dictionary-normal-text);
-  transform: scale(0.75);
+}
+
+.wordcount {
+  font-size: var(--font-size-dictionary-delete-button-text);
+
+  align-self: flex-end;
+}
+
+.over-limit {
+  color: red;
 }
 
 .word-column,
@@ -177,7 +187,16 @@ header {
   padding: 10px;
 }
 
-.caption-left {
+.row-container:first-child {
   position: absolute;
-  margin-right: 10px;
+  top: -18px;
+  left: 0;
+  right: 0;
+  z-index: 1000; /* Stellen Sie sicher, dass es über anderen Elementen liegt */
+}
+
+@media (max-width: 1440px) {
+  .row-container:first-child {
+    position: relative;
+  }
 }
