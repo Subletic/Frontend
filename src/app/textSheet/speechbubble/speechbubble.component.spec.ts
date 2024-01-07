@@ -12,7 +12,6 @@ describe('SpeechbubbleComponent', () => {
   let component: SpeechbubbleComponent;
   let fixture: ComponentFixture<SpeechbubbleComponent>;
   let cdr: ChangeDetectorRef;
-  let consoleHideService: ConsoleHideService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -284,7 +283,7 @@ describe('SpeechbubbleComponent', () => {
 
   // wieder ältere Tests aus text-box
   it('should log the information about the hovered word in logInfoAboutTextbox', () => {
-    const consoleHideService = new ConsoleHideService;
+    const consoleHideService = new ConsoleHideService();
     const component = new SpeechbubbleComponent(cdr, consoleHideService);
     component.speechBubble = new SpeechBubble(1, 1, 1, new LinkedList<WordToken>(), 0);
     component.speechBubble.words.add(new WordToken('Hello', 1, 1, 1, 1));
@@ -302,7 +301,7 @@ describe('SpeechbubbleComponent', () => {
 
     expect(consoleHideService.speechbubbleLog).toHaveBeenCalledWith('Word: Hello, ID: 1');
     expect(consoleHideService.speechbubbleLog).toHaveBeenCalledWith('Current Word: '+ jasmine.any(WordToken));
-    expect(consoleHideService.speechbubbleLog).toHaveBeenCalledWith('Print Text:'+ jasmine.any(String));
+    expect(consoleHideService.speechbubbleLog).toHaveBeenCalledWith('Print Text:[Hello, World]');
   });
 
   it('should remove empty objects from the word list', () => {
