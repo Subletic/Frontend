@@ -6,7 +6,6 @@ import { LinkedList } from '../../data/linkedList/linkedList.model';
 import { ChangeDetectorRef } from '@angular/core';
 import { WordComponent } from './word/word.component';
 import { ConsoleHideService } from 'src/app/service/consoleHide.service';
-import { Cons } from 'rxjs';
 
 describe('SpeechbubbleComponent', () => {
   let component: SpeechbubbleComponent;

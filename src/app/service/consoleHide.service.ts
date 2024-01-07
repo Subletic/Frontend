@@ -1,5 +1,4 @@
 import { Injectable } from "@angular/core";
-import { WordToken } from "../data/wordToken/wordToken.model";
 
 
 @Injectable({ 
