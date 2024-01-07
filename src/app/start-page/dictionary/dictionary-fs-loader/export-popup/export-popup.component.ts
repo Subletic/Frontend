@@ -32,8 +32,8 @@ export class ExportPopupComponent {
    */
   public handleDictionaryDownloadJson(): void {
     const DICTIONARY = this.dictionaryFsLoader.getUpdatedDictionary();
-    const formatHandler: DictionaryFileFormatHandler = new JsonHandler();
-    formatHandler.downloadDictionary(this.exportFileName, DICTIONARY);
+    const exportFormat: DictionaryFileFormatHandler = new JsonHandler();
+    exportFormat.downloadDictionary(this.exportFileName, DICTIONARY);
   }
 
   /**
@@ -48,8 +48,7 @@ export class ExportPopupComponent {
 
   /**
    * Checks if the input field contains special characters and updates the UI accordingly.
-   *
-   * @returns {boolean} True if the input contains special characters, otherwise false.
+   * @returns True if the input contains special characters, otherwise false.
    */
   public checkForSpecialCharacters(): boolean {
     const downloadButtons = document.querySelectorAll(

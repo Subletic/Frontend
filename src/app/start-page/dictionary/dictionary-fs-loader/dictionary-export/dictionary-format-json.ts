@@ -20,37 +20,7 @@ export class JsonHandler implements DictionaryFileFormatHandler {
     URL.revokeObjectURL(link.href);
   }
 
-  /**
-   * Reads a JSON file and posts its content to the configurationService.
-   * If the file is not a valid JSON file, null is returned.
-   * @param file JSON file to read
-   * 
-  public uploadDictionary(file: File): Promise<dictionary | null> {
-    const fileReader = new FileReader();
-    fileReader.readAsText(file, 'UTF-8');
-    return new Promise((resolve) => {
-      fileReader.onload = () => {
-        try {
-          const dictionary = JSON.parse(fileReader.result as string);
-          this.dictionaryFsLoader.validateDictionary(dictionary);
-          if (dictionary == null) {
-            resolve(null);
-            return;
-          }
-          this.dictionaryFsLoader.displayDictionarySuccessToast();
-          resolve(dictionary);
-        } catch (e) {
-          if (e instanceof DictionaryError)
-            this.dictionaryFsLoader.displayDictionaryErrorToast(e.message);
-          else this.dictionaryFsLoader.displayDictionaryErrorToast();
-          console.log(e);
-          resolve(null);
-        }
-      };
-      fileReader.onerror = () => {
-        resolve(null);
-      };
-    });
+  public convertToDictionary(jsonDictionary: string): dictionary {
+    return JSON.parse(jsonDictionary);
   }
-  */
 }

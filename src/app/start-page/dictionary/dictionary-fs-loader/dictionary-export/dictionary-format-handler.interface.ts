@@ -13,10 +13,5 @@ export interface DictionaryFileFormatHandler {
    */
   downloadDictionary(fileName: string, dictionary: dictionary): void;
 
-  /**
-   * Uploads data in a specific file format.
-   * @returns {void}
-   
-  uploadDictionary(file: File): Promise<dictionary | null>;
-  */
+  convertToDictionary(stringifiedDictionary: string): dictionary;
 }

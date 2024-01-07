@@ -1,5 +1,7 @@
 import { DictionaryFileFormatHandler } from './dictionary-format-handler.interface';
 import { dictionary } from '../../../../data/dictionary/dictionary.model';
+import { additional_vocab } from '../../../../data/dictionary/additionalVocab.model';
+import { transcription_config } from '../../../../data/dictionary/transcription_config.module';
 
 /**
  * Class for exporting/importing data in CSV format.
@@ -18,11 +20,32 @@ export class CsvHandler implements DictionaryFileFormatHandler {
 
     URL.revokeObjectURL(link.href);
   }
-  /*
-  public uploadDictionary(file: File): Promise<dictionary | null> {
-    return;
+
+  /**
+   * Converts a CSV-formatted string to a dictionary object.
+   * @param csvContent CSV-formatted string of the dictionary
+   * @returns Converted dictionary object
+   */
+  public convertToDictionary(csvDictionary: string): dictionary {
+    const rows = csvDictionary.split('\n');
+    const additionalVocab: additional_vocab[] = [];
+
+    for (let i = 1; i < rows.length; i++) {
+      const row = rows[i].split(';');
+      const content = row[0];
+      const soundsLike = row.slice(1);
+
+      const filteredSoundsLike = soundsLike.filter(s => s.trim() !== '');
+
+      const vocabItem = new additional_vocab(content, filteredSoundsLike);
+      additionalVocab.push(vocabItem);
+    }
+
+    const transcriptionConfig = new transcription_config('de', additionalVocab);
+    const convertedDictionary = new dictionary(transcriptionConfig);
+
+    return convertedDictionary;
   }
-  */
 
   /**
    * Converts the dictionary to a CSV-formatted string.
@@ -32,14 +55,14 @@ export class CsvHandler implements DictionaryFileFormatHandler {
   private convertDictionaryToCsv(dictionary: dictionary): string {
     const rows: string[] = [];
 
-    const dataRows = dictionary.transcription_config.additional_vocab.map((vocabItem) => {
+    const row = dictionary.transcription_config.additional_vocab.map((vocabItem) => {
       const content = vocabItem.content || '';
       const soundsLike = vocabItem.sounds_like ? vocabItem.sounds_like.join(';') : '';
       return [content, soundsLike].join(';');
     });
 
     rows.push('Content;SoundsLike');
-    rows.push(...dataRows);
+    rows.push(...row);
 
     return rows.join('\n');
   }
