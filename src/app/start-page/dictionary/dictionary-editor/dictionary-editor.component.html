@@ -7,48 +7,81 @@
   <app-dictionary-fs-loader></app-dictionary-fs-loader>
 
   <div class="history">
-    <button class="history-button" (click)="goToPreviousChange()" [disabled]="!hasPrev" title="Rückgängig"
+    <button
+      class="history-button"
+      (click)="goToPreviousChange()"
+      [disabled]="!hasPrev"
+      title="Rückgängig"
       (mousedown)="undoImage.src = '../../../../assets/undo_onclick.svg'"
       (mouseup)="undoImage.src = '../../../../assets/undo.svg'"
-      (mouseleave)="undoImage.src = '../../../../assets/undo.svg'">
-      <img ngSrc="../../../../assets/undo.svg" alt="Rückgängig Symbol" height="30" width="30" draggable="false"
-        #undoImage />
+      (mouseleave)="undoImage.src = '../../../../assets/undo.svg'"
+    >
+      <img
+        ngSrc="../../../../assets/undo.svg"
+        alt="Rückgängig Symbol"
+        height="30"
+        width="30"
+        draggable="false"
+        #undoImage
+      />
     </button>
 
-    <button class="history-button" (click)=" goToNextChange()" [disabled]="!hasNext" title="Wiederholen"
-      (mousedown)="redoImage.src = 'assets/redo_onclick.svg'" (mouseup)="redoImage.src = 'assets/redo.svg'"
-      (mouseleave)="redoImage.src = '../../../../assets/redo.svg'">
-      <img ngSrc="../../../../assets/redo.svg" alt="Wiederholen Symbol" height="30" width="30" draggable="false"
-        #redoImage />
+    <button
+      class="history-button"
+      (click)="goToNextChange()"
+      [disabled]="!hasNext"
+      title="Wiederholen"
+      (mousedown)="redoImage.src = 'assets/redo_onclick.svg'"
+      (mouseup)="redoImage.src = 'assets/redo.svg'"
+      (mouseleave)="redoImage.src = '../../../../assets/redo.svg'"
+    >
+      <img
+        ngSrc="../../../../assets/redo.svg"
+        alt="Wiederholen Symbol"
+        height="30"
+        width="30"
+        draggable="false"
+        #redoImage
+      />
     </button>
 
-    <button class="history-button" (click)="clearDictionary()" title="Alle Zeilen löschen"
-      (mousedown)="deleteImage.src = 'assets/delete_onclick.svg'" (mouseup)="deleteImage.src = 'assets/delete.svg'"
+    <button
+      class="history-button"
+      (click)="clearDictionary()"
+      title="Alle Zeilen löschen"
+      (mousedown)="deleteImage.src = 'assets/delete_onclick.svg'"
+      (mouseup)="deleteImage.src = 'assets/delete.svg'"
       (mouseleave)="deleteImage.src = '../../../../assets/delete.svg'"
-      (mouseenter)="deleteImage.src = 'assets/delete_hover.svg'">
-      <img ngSrc="../../../../assets/delete.svg" alt="Löschen Symbol" height="30" width="30" draggable="false"
-        #deleteImage />
+      (mouseenter)="deleteImage.src = 'assets/delete_hover.svg'"
+    >
+      <img
+        ngSrc="../../../../assets/delete.svg"
+        alt="Löschen Symbol"
+        height="30"
+        width="30"
+        draggable="false"
+        #deleteImage
+      />
     </button>
   </div>
 
-
   <div class="table">
-
-      <div class="row-container">
-        <div class="column-container">
-          <button class="sort-button" (click)="sortAlphabeticallyCall()">
-            <img [src]="alphabeticBoolean ? 'assets/Z-A.svg' : 'assets/A-Z.svg'" alt="Button Image"
-              class="sort-button-image" draggable="false" />
-          </button>
-        </div>
-        <div class="column-container">
-          <div [class.over-limit]="wordcount > 1000" class="wordcount">{{ wordcount }}/1000</div>
-        </div>
-
-          
+    <div class="row-container">
+      <div class="column-container">
+        <button class="sort-button" (click)="sortAlphabeticallyCall()">
+          <img
+            [src]="alphabeticBoolean ? 'assets/Z-A.svg' : 'assets/A-Z.svg'"
+            alt="Button Image"
+            class="sort-button-image"
+            draggable="false"
+          />
+        </button>
       </div>
-
-
+      <div class="column-container"></div>
+      <div>
+        <div [class.over-limit]="wordcount > 1000" class="wordcount">{{ wordcount }}/1000</div>
+      </div>
+    </div>
 
     <div class="row-container">
       <div class="column-container">
@@ -60,12 +93,12 @@
       </div>
     </div>
 
-    
-
-
     <div *ngFor="let vocab of dictionary.transcription_config.additional_vocab">
-      <app-dictionary-row [rowData]="vocab" (deleteRow)="onDeleteRow(vocab)"
-        (changedRow)="onChangedRow()"></app-dictionary-row>
+      <app-dictionary-row
+        [rowData]="vocab"
+        (deleteRow)="onDeleteRow(vocab)"
+        (changedRow)="onChangedRow()"
+      ></app-dictionary-row>
     </div>
   </div>
 
