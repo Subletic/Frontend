@@ -4,6 +4,8 @@ import { dictionary } from 'src/app/data/dictionary/dictionary.model';
 import { LinkedList } from 'src/app/data/linkedList/linkedList.model';
 import { ConfigurationService } from 'src/app/service/configuration.service';
 
+import { ToastrService } from 'ngx-toastr';
+
 /**
  * Components represents the dictionary-editor as a whole.
  */
@@ -19,9 +21,12 @@ export class DictionaryEditorComponent implements OnInit {
   hasPrev: boolean;
   hasNext: boolean;
 
+  wordcount: number;
+
   constructor(
     private configurationService: ConfigurationService,
     public cdr: ChangeDetectorRef,
+    private toastr: ToastrService,
   ) {
     this.dictionary = new dictionary({
       language: 'de',
@@ -32,18 +37,35 @@ export class DictionaryEditorComponent implements OnInit {
     this.alphabeticBoolean = true;
     this.hasPrev = false;
     this.hasNext = false;
+    this.wordcount = 0;
+    this.updateWordCount();
   }
 
   ngOnInit(): void {
     this.configurationService.dictionaryUpdated.subscribe((updatedDictionary: dictionary) => {
       this.dictionary = updatedDictionary;
       this.addToLatestChanges();
+      this.updateWordCount();
     });
 
     this.configurationService.newDictionaryUploaded.subscribe((uploadedDictionary: dictionary) => {
       this.dictionary.mergeWithDictionary(uploadedDictionary);
       this.configurationService.updateDictionary(this.dictionary);
     });
+  }
+
+  /**
+   *
+   */
+  updateWordCount(): void {
+    this.wordcount = this.dictionary.transcription_config.additional_vocab.length;
+
+    if (this.wordcount > 1000) {
+      this.toastr.warning(
+        'Achtung: Die maximale Anzahl von 1000 Wörtern wurde überschritten.',
+        'Fehler',
+      );
+    }
   }
 
   /**

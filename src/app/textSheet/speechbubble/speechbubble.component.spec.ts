@@ -5,6 +5,7 @@ import { WordToken } from '../../data/wordToken/wordToken.model';
 import { LinkedList } from '../../data/linkedList/linkedList.model';
 import { ChangeDetectorRef } from '@angular/core';
 import { WordComponent } from './word/word.component';
+import { ConsoleHideService } from 'src/app/service/consoleHide.service';
 
 describe('SpeechbubbleComponent', () => {
   let component: SpeechbubbleComponent;
@@ -281,12 +282,13 @@ describe('SpeechbubbleComponent', () => {
 
   // wieder ältere Tests aus text-box
   it('should log the information about the hovered word in logInfoAboutTextbox', () => {
-    const component = new SpeechbubbleComponent(cdr);
+    const consoleHideService = new ConsoleHideService();
+    const component = new SpeechbubbleComponent(cdr, consoleHideService);
     component.speechBubble = new SpeechBubble(1, 1, 1, new LinkedList<WordToken>(), 0);
     component.speechBubble.words.add(new WordToken('Hello', 1, 1, 1, 1));
     component.speechBubble.words.add(new WordToken('World', 2, 1, 1, 1));
 
-    spyOn(console, 'log');
+    spyOn(consoleHideService, 'speechbubbleLog');
 
     const MOCK_EVENT = new MouseEvent('mouseover');
     const mockTarget = document.createElement('span');
@@ -296,9 +298,9 @@ describe('SpeechbubbleComponent', () => {
 
     component.logInfoAboutTextbox(MOCK_EVENT);
 
-    expect(console.log).toHaveBeenCalledWith('Word: Hello, ID: 1');
-    expect(console.log).toHaveBeenCalledWith('Current Word: ', jasmine.any(WordToken));
-    expect(console.log).toHaveBeenCalledWith('Print Text:', jasmine.any(String));
+    expect(consoleHideService.speechbubbleLog).toHaveBeenCalledWith('Word: Hello, ID: 1');
+    expect(consoleHideService.speechbubbleLog).toHaveBeenCalledWith('Current Word: '+ jasmine.any(WordToken));
+    expect(consoleHideService.speechbubbleLog).toHaveBeenCalledWith('Print Text:[Hello, World]');
   });
 
   it('should remove empty objects from the word list', () => {

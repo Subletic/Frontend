@@ -6,6 +6,7 @@ import { backendListener } from '../service/backend-listener.service';
 import { LinkedList } from '../data/linkedList/linkedList.model';
 import { SpeechBubbleChain } from '../data/speechBubbleChain/speechBubbleChain.module';
 import { AudioService } from '../service/audio.service';
+import { ConsoleHideService } from '../service/consoleHide.service';
 import { BackendProviderService } from '../service/backend-provider.service';
 
 describe('LinkedList', () => {
@@ -70,13 +71,19 @@ describe('TextSheetComponent', () => {
   let component: TextSheetComponent;
   let signalRService: backendListener;
   let audioService: AudioService;
+  let consoleHideService: ConsoleHideService;
   let backendProviderService: BackendProviderService;
 
   beforeEach(() => {
-    signalRService = new backendListener();
+    signalRService = new backendListener(consoleHideService);
     audioService = new AudioService();
-    backendProviderService = new BackendProviderService();
-    component = new TextSheetComponent(signalRService, backendProviderService, audioService);
+    consoleHideService = new ConsoleHideService();
+    backendProviderService = new BackendProviderService(consoleHideService);
+    component = new TextSheetComponent(
+      signalRService,
+      backendProviderService,
+      audioService,
+    );
     component.speechBubbles = new LinkedList<SpeechBubble>();
   });
 

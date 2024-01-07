@@ -7,13 +7,14 @@ import { Subscription } from 'rxjs';
 import { transcription_config } from 'src/app/data/dictionary/transcription_config.module';
 import { DictionaryFsLoaderComponent } from '../dictionary-fs-loader/dictionary-fs-loader.component';
 
-import { ToastrModule } from 'ngx-toastr';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { DictionaryRowComponent } from '../dictionary-row/dictionary-row.component';
 
 describe('DictionaryEditorComponent', () => {
   let component: DictionaryEditorComponent;
   let fixture: ComponentFixture<DictionaryEditorComponent>;
   let dictionaryService: ConfigurationService;
+  let toastrService: ToastrService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -23,11 +24,12 @@ describe('DictionaryEditorComponent', () => {
         DictionaryRowComponent,
       ],
       imports: [ToastrModule.forRoot()],
-      providers: [ConfigurationService],
+      providers: [ConfigurationService, ToastrService],
     });
 
     fixture = TestBed.createComponent(DictionaryEditorComponent);
     component = fixture.componentInstance;
+    toastrService = TestBed.inject(ToastrService);
     dictionaryService = TestBed.inject(ConfigurationService);
     fixture.detectChanges();
   });
@@ -157,5 +159,42 @@ describe('DictionaryEditorComponent', () => {
     // Ensure hasPrev and hasNext are updated correctly
     expect(component.hasPrev).toBeTrue();
     expect(component.hasNext).toBeFalse();
+  });
+
+  it('should update word count and show warning if count is over 1000', () => {
+    // Arrange
+    component.dictionary.transcription_config.additional_vocab = Array(1001).fill({
+      content: 'test',
+      sounds_like: ['test'],
+    });
+
+    spyOn(toastrService, 'warning');
+
+    // Act
+    component.updateWordCount();
+
+    // Assert
+    expect(component.wordcount).toBe(1001);
+    expect(toastrService.warning).toHaveBeenCalledWith(
+      'Achtung: Die maximale Anzahl von 1000 Wörtern wurde überschritten.',
+      'Fehler',
+    );
+  });
+
+  it('should update word count without warning if count is 1000 or less', () => {
+    // Arrange
+    component.dictionary.transcription_config.additional_vocab = Array(1000).fill({
+      content: 'test',
+      sounds_like: ['test'],
+    });
+
+    spyOn(toastrService, 'warning');
+
+    // Act
+    component.updateWordCount();
+
+    // Assert
+    expect(component.wordcount).toBe(1000);
+    expect(toastrService.warning).not.toHaveBeenCalled();
   });
 });
