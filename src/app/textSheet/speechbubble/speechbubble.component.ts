@@ -10,6 +10,7 @@ import {
 import { WordToken } from '../../data/wordToken/wordToken.model';
 import { SpeechBubble } from '../../data/speechBubble/speechBubble.model';
 import { Node } from '../../data/linkedList/node.model';
+import { ConsoleHideService } from 'src/app/service/consoleHide.service';
 
 /**
  * The TextBoxComponent represents a component that handles the SpeechBubble data.
@@ -30,8 +31,10 @@ export class SpeechbubbleComponent implements AfterViewInit {
   @ViewChild('textboxContainer', { static: true })
   textboxContainerRef!: ElementRef;
 
-  constructor(public cdr: ChangeDetectorRef) {}
-
+  constructor(
+    public cdr: ChangeDetectorRef,
+    public consoleHideService: ConsoleHideService,
+    ) {}
   /**
    * After Init of View, generates the Words from the data structure
    * inside the textbox. Adds event listeners to the textbox and generates
@@ -252,8 +255,9 @@ export class SpeechbubbleComponent implements AfterViewInit {
     const ID = Number(ID_PART[1]);
     const CURRENT_WORD = this.speechBubble.words.getDataById(ID);
 
-    console.log('Word: ' + HOVERED_WORD + ', ID: ' + ID);
-    console.log('Current Word: ', CURRENT_WORD);
-    console.log('Print Text:', this.speechBubble.printText());
+    
+    this.consoleHideService.speechbubbleLog('Word: ' + HOVERED_WORD + ', ID: ' + ID);
+    this.consoleHideService.speechbubbleLog('Current Word: '+ CURRENT_WORD);
+    this.consoleHideService.speechbubbleLog('Print Text:'+ this.speechBubble.printText());
   }
 }
