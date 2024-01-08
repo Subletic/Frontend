@@ -1,13 +1,13 @@
-import { ExportFormat } from './dictionary-export.interface';
+import { DictionaryFileFormatHandler } from './dictionary-format-handler.interface';
 import { dictionary } from '../../../../data/dictionary/dictionary.model';
 
 /**
- * Class for exporting data in JSON format.
+ * Class for exporting/importing data in JSON format.
  * @class
- * @implements {ExportFormat}
+ * @implements {DictionaryFileFormatHandler}
  */
-export class JsonExport implements ExportFormat {
-  download(fileName: string, dictionary: dictionary): void {
+export class JsonHandler implements DictionaryFileFormatHandler {
+  public downloadDictionary(fileName: string, dictionary: dictionary): void {
     const DICTIONARY_STRING = JSON.stringify(dictionary, null, 2);
 
     const BLOB = new Blob([DICTIONARY_STRING], { type: 'application/json' });
@@ -19,7 +19,7 @@ export class JsonExport implements ExportFormat {
     URL.revokeObjectURL(link.href);
   }
 
-  upload(): void {
-    return;
+  public convertToDictionary(jsonDictionary: string): dictionary {
+    return JSON.parse(jsonDictionary);
   }
 }

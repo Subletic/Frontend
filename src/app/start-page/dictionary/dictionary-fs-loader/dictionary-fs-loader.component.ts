@@ -3,7 +3,8 @@ import { dictionary } from '../../../data/dictionary/dictionary.model';
 import { ToastrService } from 'ngx-toastr';
 import { ConfigurationService } from '../../../service/configuration.service';
 import { DictionaryError } from '../../../data/error/DictionaryError';
-
+import { CsvHandler } from './dictionary-export/dictionary-format-csv';
+import { JsonHandler } from './dictionary-export/dictionary-format-json';
 /**
  * Dictionary Filesystem Loader Component
  * This component provides import/export buttons for the dictionary.
@@ -39,33 +40,52 @@ export class DictionaryFsLoaderComponent {
     }
 
     const file: File = INPUT.files[0];
-    const DICTIONARY = await this.loadDictionaryFromFile(file);
 
-    if (DICTIONARY == null) {
-      return;
+    // Check file extension to determine the file type
+    const fileExtension = file.name.split('.').pop()?.toLowerCase();
+
+    const DICTIONARY = await this.loadDictionaryFromFile(file, fileExtension);
+
+    if (DICTIONARY != null) {
+      this.configurationService.newDictionaryUpload(DICTIONARY);
     }
-
-    this.configurationService.newDictionaryUpload(DICTIONARY);
   }
 
   /**
-   * Reads a JSON file and posts its content to the configurationService.
-   * If the file is not a valid JSON file, null is returned.
-   * @param file JSON file to read
+   * Loads a dictionary from a file and performs format-specific handling.
+   * @param file - The file to load.
+   * @param format - The file format (e.g., 'json' or 'csv').
    */
-  private loadDictionaryFromFile(file: File): Promise<dictionary | null> {
+  private loadDictionaryFromFile(
+    file: File,
+    format: string | undefined,
+  ): Promise<dictionary | null> {
     const fileReader = new FileReader();
     fileReader.readAsText(file, 'UTF-8');
     return new Promise((resolve) => {
       fileReader.onload = () => {
         try {
-          const dictionary = JSON.parse(fileReader.result as string);
+          const fileString = fileReader.result as string;
+          let formatHandler;
+          switch (format) {
+            case 'csv':
+              formatHandler = new CsvHandler();
+              break;
+            case 'json':
+              formatHandler = new JsonHandler();
+              break;
+            default:
+              throw new DictionaryError(
+                'Unsupported file format. Please select a JSON or CSV file.',
+              );
+          }
+          const dictionary = formatHandler.convertToDictionary(fileString);
           this.validateDictionary(dictionary);
+          this.displayDictionarySuccessToast();
           if (dictionary == null) {
             resolve(null);
             return;
           }
-          this.displayDictionarySuccessToast();
           resolve(dictionary);
         } catch (e) {
           if (e instanceof DictionaryError) this.displayDictionaryErrorToast(e.message);
@@ -95,10 +115,24 @@ export class DictionaryFsLoaderComponent {
     if (!ADDITIONAL_VOCAB) throw new DictionaryError('Kein SoundsLike angegeben!');
 
     if (ADDITIONAL_VOCAB.length > 1000)
-      throw new DictionaryError('Maximale SoundsLike Anzahl überschritten (1000)!');
+      throw new DictionaryError('Maximale Anzahl überschritten (1000)!');
 
     for (let i = 0; i < ADDITIONAL_VOCAB.length; i++) {
-      if (!ADDITIONAL_VOCAB[i].content) throw new DictionaryError('SoundsLike Angaben fehlerhaft!');
+      const vocabItem = ADDITIONAL_VOCAB[i];
+
+      // Check if content is provided and not empty or just whitespace
+      if (!vocabItem.content || vocabItem.content.trim() === '')
+        throw new DictionaryError('Content Angaben fehlerhaft!');
+
+      // Check if sounds_like is provided and not empty
+      const soundsLike = vocabItem.sounds_like;
+      if (
+        !soundsLike ||
+        !Array.isArray(soundsLike) ||
+        soundsLike.length === 0 ||
+        soundsLike.some((s) => s.trim() === '')
+      )
+        throw new DictionaryError('SoundsLike Angaben fehlerhaft!');
     }
   }
 
@@ -134,15 +168,25 @@ export class DictionaryFsLoaderComponent {
     return getComputedStyle(document.documentElement).getPropertyValue('--color-main-blue');
   }
 
-  openExportPopup() {
+  /**
+   * Opens the export popup.
+   */
+  public openExportPopup() {
     this.isExportPopupOpen = true;
   }
 
-  closeExportPopup() {
+  /**
+   * Closes the export popup.
+   */
+  public closeExportPopup() {
     this.isExportPopupOpen = false;
   }
 
-  getUpdatedDictionary(): dictionary {
+  /**
+   * Retrieves the latest version of the dictionary from the configuration service.
+   * @returns The updated dictionary.
+   */
+  public getUpdatedDictionary(): dictionary {
     return this.configurationService.getDictionary();
   }
 }

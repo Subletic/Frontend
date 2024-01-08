@@ -5,9 +5,8 @@ import { LinkedList } from '../data/linkedList/linkedList.model';
 import { WordExport } from '../data/wordToken/wordExport.model';
 import { SpeechBubbleChain } from '../data/speechBubbleChain/speechBubbleChain.module';
 import { AudioService } from '../service/audio.service';
-import {BackendProviderService} from '../service/backend-provider.service';
+import { BackendProviderService } from '../service/backend-provider.service';
 import { backendListener } from '../service/backend-listener.service';
-
 
 /**
  * The TextSheetComponent represents a component that handles the speech bubbles in a text sheet.

@@ -79,11 +79,7 @@ describe('TextSheetComponent', () => {
     audioService = new AudioService();
     consoleHideService = new ConsoleHideService();
     backendProviderService = new BackendProviderService(consoleHideService);
-    component = new TextSheetComponent(
-      signalRService,
-      backendProviderService,
-      audioService,
-    );
+    component = new TextSheetComponent(signalRService, backendProviderService, audioService);
     component.speechBubbles = new LinkedList<SpeechBubble>();
   });
 

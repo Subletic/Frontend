@@ -1,7 +1,7 @@
 import { Component, Output, EventEmitter } from '@angular/core';
-import { ExportFormat } from '../dictionary-export/dictionary-export.interface';
-import { JsonExport } from '../dictionary-export/dictionary-export-json';
-import { CsvExport } from '../dictionary-export/dictionary-export-csv';
+import { DictionaryFileFormatHandler } from '../dictionary-export/dictionary-format-handler.interface';
+import { JsonHandler } from '../dictionary-export/dictionary-format-json';
+import { CsvHandler } from '../dictionary-export/dictionary-format-csv';
 import { DictionaryFsLoaderComponent } from '../dictionary-fs-loader.component';
 
 /**
@@ -17,7 +17,7 @@ export class ExportPopupComponent {
   @Output() closed = new EventEmitter<void>();
   public exportFileName = '';
 
-  constructor(private dictionaryFsLoader: DictionaryFsLoaderComponent) {}
+  constructor(private dictionaryFsLoader: DictionaryFsLoaderComponent) { }
 
   /**
    * Closes the export popup.
@@ -32,8 +32,8 @@ export class ExportPopupComponent {
    */
   public handleDictionaryDownloadJson(): void {
     const DICTIONARY = this.dictionaryFsLoader.getUpdatedDictionary();
-    const exportFormat: ExportFormat = new JsonExport();
-    exportFormat.download(this.exportFileName, DICTIONARY);
+    const exportFormat: DictionaryFileFormatHandler = new JsonHandler();
+    exportFormat.downloadDictionary(this.exportFileName, DICTIONARY);
   }
 
   /**
@@ -42,14 +42,13 @@ export class ExportPopupComponent {
    */
   public handleDictionaryDownloadCsv(): void {
     const DICTIONARY = this.dictionaryFsLoader.getUpdatedDictionary();
-    const exportFormat: ExportFormat = new CsvExport();
-    exportFormat.download(this.exportFileName, DICTIONARY);
+    const exportFormat: DictionaryFileFormatHandler = new CsvHandler();
+    exportFormat.downloadDictionary(this.exportFileName, DICTIONARY);
   }
 
   /**
    * Checks if the input field contains special characters and updates the UI accordingly.
-   *
-   * @returns {boolean} True if the input contains special characters, otherwise false.
+   * @returns True if the input contains special characters, otherwise false.
    */
   public checkForSpecialCharacters(): boolean {
     const downloadButtons = document.querySelectorAll(
