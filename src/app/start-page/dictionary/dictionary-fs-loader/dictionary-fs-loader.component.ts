@@ -109,18 +109,18 @@ export class DictionaryFsLoaderComponent {
     if (!ADDITIONAL_VOCAB) throw new DictionaryError('Kein SoundsLike angegeben!');
 
     if (ADDITIONAL_VOCAB.length > 1000)
-      throw new DictionaryError('Maximale SoundsLike Anzahl überschritten (1000)!');
+      throw new DictionaryError('Maximale Anzahl überschritten (1000)!');
 
     for (let i = 0; i < ADDITIONAL_VOCAB.length; i++) {
       const vocabItem = ADDITIONAL_VOCAB[i];
 
       // Check if content is provided and not empty or just whitespace
       if (!vocabItem.content || vocabItem.content.trim() === '')
-        throw new DictionaryError('SoundsLike Angaben fehlerhaft!');
+        throw new DictionaryError('Content Angaben fehlerhaft!');
 
       // Check if sounds_like is provided and not empty
       const soundsLike = vocabItem.sounds_like;
-      if (!soundsLike || !Array.isArray(soundsLike) || soundsLike.length === 0)
+      if (!soundsLike || !Array.isArray(soundsLike) || soundsLike.length === 0 || soundsLike.some(s => s.trim() === ''))
         throw new DictionaryError('SoundsLike Angaben fehlerhaft!');
     }
   }
@@ -160,14 +160,14 @@ export class DictionaryFsLoaderComponent {
   /**
    * Opens the export popup.
    */
-  openExportPopup() {
+  public openExportPopup() {
     this.isExportPopupOpen = true;
   }
 
   /**
    * Closes the export popup.
    */
-  closeExportPopup() {
+  public closeExportPopup() {
     this.isExportPopupOpen = false;
   }
 
@@ -175,7 +175,7 @@ export class DictionaryFsLoaderComponent {
    * Retrieves the latest version of the dictionary from the configuration service.
    * @returns The updated dictionary.
    */
-  getUpdatedDictionary(): dictionary {
+  public getUpdatedDictionary(): dictionary {
     return this.configurationService.getDictionary();
   }
 }

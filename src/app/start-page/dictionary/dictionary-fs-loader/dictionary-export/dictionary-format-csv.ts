@@ -30,8 +30,13 @@ export class CsvHandler implements DictionaryFileFormatHandler {
     const rows = csvDictionary.split('\n');
     const additionalVocab: additional_vocab[] = [];
 
-    for (let i = 1; i < rows.length; i++) {
+    for (let i = 0; i < rows.length; i++) {
       const row = rows[i].split(';');
+
+      if (i === 0 && row[0].toLowerCase() === 'content' && row[1].toLowerCase().replace(/\s/g, '') === 'soundslike') {
+        continue;
+      }
+
       const content = row[0];
       const soundsLike = row.slice(1);
 
