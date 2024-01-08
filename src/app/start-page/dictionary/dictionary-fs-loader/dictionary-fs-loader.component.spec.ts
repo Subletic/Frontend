@@ -43,9 +43,7 @@ describe('DictionaryFsLoaderComponent', () => {
 
   it('should accept a valid CSV file', async () => {
     const VALID_CSV_AS_STRING =
-      'Content;SoundsLike\n' +
-      'gnocchi;nyohki;nokey;nochi\n' +
-      'CEO;C.E.O.';
+      'Content;SoundsLike\n' + 'gnocchi;nyohki;nokey;nochi\n' + 'CEO;C.E.O.';
     const MOCK_FILE = new File([VALID_CSV_AS_STRING], 'validcsv.csv', {
       type: 'text/csv',
     });
@@ -81,8 +79,7 @@ describe('DictionaryFsLoaderComponent', () => {
   });
 
   it('should not accept an invalid CSV file', async () => {
-    const INVALID_CSV_AS_STRING =
-      '';
+    const INVALID_CSV_AS_STRING = '';
     const MOCK_FILE = new File([INVALID_CSV_AS_STRING], 'invalidcsv.csv', {
       type: 'text/csv',
     });
@@ -180,10 +177,7 @@ describe('DictionaryFsLoaderComponent', () => {
   });
 
   it('should not accept a CSV file with empty sounds like', async () => {
-    const INVALID_CSV_AS_STRING =
-      'Content;SoundsLike\n' +
-      'gnocchi;\n' +
-      'CEO;C.E.O.';
+    const INVALID_CSV_AS_STRING = 'Content;SoundsLike\n' + 'gnocchi;\n' + 'CEO;C.E.O.';
     const MOCK_FILE = new File([INVALID_CSV_AS_STRING], 'invalidcsv.csv', {
       type: 'text/csv',
     });
@@ -263,10 +257,7 @@ describe('DictionaryFsLoaderComponent', () => {
   });
 
   it('should not accept a CSV file with empty content', async () => {
-    const INVALID_CSV_AS_STRING =
-      'Content;SoundsLike\n' +
-      ';gnocchi\n' +
-      'CEO;C.E.O.';
+    const INVALID_CSV_AS_STRING = 'Content;SoundsLike\n' + ';gnocchi\n' + 'CEO;C.E.O.';
     const MOCK_FILE = new File([INVALID_CSV_AS_STRING], 'invalidcsv.csv', {
       type: 'text/csv',
     });
@@ -338,5 +329,4 @@ describe('DictionaryFsLoaderComponent', () => {
     component.closeExportPopup();
     expect(component.isExportPopupOpen).toBe(false);
   });
-
 });

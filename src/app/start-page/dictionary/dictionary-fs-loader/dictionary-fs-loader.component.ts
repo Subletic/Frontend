@@ -25,7 +25,7 @@ export class DictionaryFsLoaderComponent {
   public constructor(
     private configurationService: ConfigurationService,
     private toastr: ToastrService,
-  ) { }
+  ) {}
 
   /**
    * Called when the user uploads a file.
@@ -49,7 +49,6 @@ export class DictionaryFsLoaderComponent {
     if (DICTIONARY != null) {
       this.configurationService.newDictionaryUpload(DICTIONARY);
     }
-
   }
 
   /**
@@ -57,7 +56,10 @@ export class DictionaryFsLoaderComponent {
    * @param file - The file to load.
    * @param format - The file format (e.g., 'json' or 'csv').
    */
-  private loadDictionaryFromFile(file: File, format: string | undefined): Promise<dictionary | null> {
+  private loadDictionaryFromFile(
+    file: File,
+    format: string | undefined,
+  ): Promise<dictionary | null> {
     const fileReader = new FileReader();
     fileReader.readAsText(file, 'UTF-8');
     return new Promise((resolve) => {
@@ -66,12 +68,16 @@ export class DictionaryFsLoaderComponent {
           const fileString = fileReader.result as string;
           let formatHandler;
           switch (format) {
-            case "csv":
-              formatHandler = new CsvHandler(); break;
-            case "json":
-              formatHandler = new JsonHandler(); break;
+            case 'csv':
+              formatHandler = new CsvHandler();
+              break;
+            case 'json':
+              formatHandler = new JsonHandler();
+              break;
             default:
-              throw new DictionaryError('Unsupported file format. Please select a JSON or CSV file.');
+              throw new DictionaryError(
+                'Unsupported file format. Please select a JSON or CSV file.',
+              );
           }
           const dictionary = formatHandler.convertToDictionary(fileString);
           this.validateDictionary(dictionary);
@@ -120,7 +126,12 @@ export class DictionaryFsLoaderComponent {
 
       // Check if sounds_like is provided and not empty
       const soundsLike = vocabItem.sounds_like;
-      if (!soundsLike || !Array.isArray(soundsLike) || soundsLike.length === 0 || soundsLike.some(s => s.trim() === ''))
+      if (
+        !soundsLike ||
+        !Array.isArray(soundsLike) ||
+        soundsLike.length === 0 ||
+        soundsLike.some((s) => s.trim() === '')
+      )
         throw new DictionaryError('SoundsLike Angaben fehlerhaft!');
     }
   }

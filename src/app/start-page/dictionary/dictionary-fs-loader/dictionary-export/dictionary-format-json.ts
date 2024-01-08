@@ -7,7 +7,6 @@ import { dictionary } from '../../../../data/dictionary/dictionary.model';
  * @implements {DictionaryFileFormatHandler}
  */
 export class JsonHandler implements DictionaryFileFormatHandler {
-
   public downloadDictionary(fileName: string, dictionary: dictionary): void {
     const DICTIONARY_STRING = JSON.stringify(dictionary, null, 2);
 

@@ -33,14 +33,18 @@ export class CsvHandler implements DictionaryFileFormatHandler {
     for (let i = 0; i < rows.length; i++) {
       const row = rows[i].split(';');
 
-      if (i === 0 && row[0].toLowerCase() === 'content' && row[1].toLowerCase().replace(/\s/g, '') === 'soundslike') {
+      if (
+        i === 0 &&
+        row[0].toLowerCase() === 'content' &&
+        row[1].toLowerCase().replace(/\s/g, '') === 'soundslike'
+      ) {
         continue;
       }
 
       const content = row[0];
       const soundsLike = row.slice(1);
 
-      const filteredSoundsLike = soundsLike.filter(s => s.trim() !== '');
+      const filteredSoundsLike = soundsLike.filter((s) => s.trim() !== '');
 
       const vocabItem = new additional_vocab(content, filteredSoundsLike);
       additionalVocab.push(vocabItem);
