@@ -27,11 +27,15 @@ export class CsvHandler implements DictionaryFileFormatHandler {
    * @returns Converted dictionary object
    */
   public convertToDictionary(csvDictionary: string): dictionary {
-    const rows = csvDictionary.split('\n');
+    const rows = csvDictionary.split('\r');
     const additionalVocab: additional_vocab[] = [];
 
     for (let i = 0; i < rows.length; i++) {
       const row = rows[i].split(';');
+
+      if (row[0].trim() === '') {
+        continue;
+      }
 
       if (
         i === 0 &&
@@ -73,6 +77,6 @@ export class CsvHandler implements DictionaryFileFormatHandler {
     rows.push('Content;SoundsLike');
     rows.push(...row);
 
-    return rows.join('\n');
+    return rows.join('\r');
   }
 }
