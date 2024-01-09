@@ -13,5 +13,10 @@ export interface DictionaryFileFormatHandler {
    */
   downloadDictionary(fileName: string, dictionary: dictionary): void;
 
+  /**
+   * Converts a string representation of a dictionary in a specific format to a dictionary object.
+   * @param {string} stringifiedDictionary - The stringified dictionary data to be converted.
+   * @returns {dictionary} - The converted dictionary object.
+   */
   convertToDictionary(stringifiedDictionary: string): dictionary;
 }

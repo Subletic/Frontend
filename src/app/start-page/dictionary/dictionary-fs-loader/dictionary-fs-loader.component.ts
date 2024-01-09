@@ -25,7 +25,7 @@ export class DictionaryFsLoaderComponent {
   public constructor(
     private configurationService: ConfigurationService,
     private toastr: ToastrService,
-  ) {}
+  ) { }
 
   /**
    * Called when the user uploads a file.
@@ -48,6 +48,8 @@ export class DictionaryFsLoaderComponent {
 
     if (DICTIONARY != null) {
       this.configurationService.newDictionaryUpload(DICTIONARY);
+
+      this.displayDictionarySuccessToast();
     }
   }
 
@@ -81,7 +83,6 @@ export class DictionaryFsLoaderComponent {
           }
           const dictionary = formatHandler.convertToDictionary(fileString);
           this.validateDictionary(dictionary);
-          this.displayDictionarySuccessToast();
           if (dictionary == null) {
             resolve(null);
             return;
@@ -101,7 +102,7 @@ export class DictionaryFsLoaderComponent {
   }
 
   /**
-   * Validates the file structure of the provided json.
+   * Validates the file structure of the provided dictionary.
    * @param dictionary Dictionary to validate
    * @throws DictionaryError if the dictionary is invalid
    */

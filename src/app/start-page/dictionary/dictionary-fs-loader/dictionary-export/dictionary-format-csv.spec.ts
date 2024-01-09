@@ -40,7 +40,7 @@ describe('CsvHandler', () => {
 
   it('should convert a CSV-formatted string to a dictionary object', () => {
     const VALID_CSV_AS_STRING =
-      'Content;SoundsLike\n' + 'gnocchi;nokki;gnotchi\n' + 'Baum;Raum;Saum';
+      'Content;SoundsLike\r' + 'gnocchi;nokki;gnotchi\r' + 'Baum;Raum;Saum';
     const vocab1 = new additional_vocab('gnocchi', ['nokki', 'gnotchi']);
     const vocab2 = new additional_vocab('Baum', ['Raum', 'Saum']);
     const config = new transcription_config('de', [vocab1, vocab2]);
