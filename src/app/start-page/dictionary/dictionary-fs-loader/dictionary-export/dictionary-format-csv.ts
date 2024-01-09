@@ -33,7 +33,7 @@ export class CsvHandler implements DictionaryFileFormatHandler {
     for (let i = 0; i < rows.length; i++) {
       const row = rows[i].split(';');
 
-      if (row[0].trim() === '') {
+      if (row.every((element) => element.trim() === '')) {
         continue;
       }
 
