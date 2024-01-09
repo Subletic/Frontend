@@ -21,9 +21,7 @@ export class SpeechBubbleChain {
    */
   toJSON() {
     return {
-      SpeechbubbleChain: this.SpeechbubbleChain.map((speechBubble) =>
-        speechBubble.toJSON(),
-      ),
+      SpeechbubbleChain: this.SpeechbubbleChain.map((speechBubble) => speechBubble.toJSON()),
     };
   }
 }

@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { ConsoleHideService } from './consoleHide.service';
 
 interface HIDDeviceDetails extends HIDDeviceFilter {
   inputOffset: number;
@@ -36,7 +37,7 @@ export class HidControlService {
   /**
    * Does an initial check for WebHID support, issues one error at the start if WebHID is unsupported in this environment.
    */
-  constructor() {
+  constructor(private consoleHideService: ConsoleHideService) {
     if (!this.isSupportedWebHID()) {
       console.error(
         'WebHID is not supported in this browser, you cannot make use of external control devices.',
@@ -74,9 +75,7 @@ export class HidControlService {
   private async checkForDevices(): Promise<void> {
     // get permitted devices we care about
     const alreadyAllowedDevices: HIDDevice[] = await this.findAllowedDevices();
-    console.log(
-      `We have been granted access to ${alreadyAllowedDevices.length} devices`,
-    );
+    this.consoleHideService.hidLog(`We have been granted access to ${alreadyAllowedDevices.length} devices`);
 
     // find out what devices we have yet to be granted permission to
     const unhandledDevices: HIDDeviceFilter[] = this.HID_DEVICES.filter(
@@ -87,7 +86,7 @@ export class HidControlService {
             potentialDevice.productId === allowedDevice.productId,
         ) === undefined,
     );
-    console.log(
+    this.consoleHideService.hidLog(
       `Of those device(s), we don't yet have permissions to access ${unhandledDevices.length} of them`,
     );
     if (unhandledDevices.length === 0) return;
@@ -125,11 +124,10 @@ export class HidControlService {
         const meaningsSet: string[] = [];
         if ((value & REWIND_BIT) == REWIND_BIT) meaningsSet.push('rewind');
         if ((value & PLAY_BIT) == PLAY_BIT) meaningsSet.push('play');
-        if ((value & FASTFORWARD_BIT) == FASTFORWARD_BIT)
-          meaningsSet.push('fast-forward');
+        if ((value & FASTFORWARD_BIT) == FASTFORWARD_BIT) meaningsSet.push('fast-forward');
         valueMeaning = meaningsSet.toString();
       }
-      console.log(`pedal says: ${value} (meaning: ${valueMeaning}`);
+      this.consoleHideService.hidLog(`pedal says: ${value} (meaning: ${valueMeaning}`);
 
       // decide what to do, based on current & last button states
       switch (value) {
@@ -194,8 +192,8 @@ export class HidControlService {
     await this.checkForDevices();
 
     const allowedDevices: HIDDevice[] = await this.findAllowedDevices();
-    console.log('Currently allowed devices:');
-    console.log(allowedDevices);
+    this.consoleHideService.hidLog('Currently allowed devices:');
+    this.consoleHideService.hidData(allowedDevices);
 
     allowedDevices.forEach(async (allowedDevice) => {
       try {

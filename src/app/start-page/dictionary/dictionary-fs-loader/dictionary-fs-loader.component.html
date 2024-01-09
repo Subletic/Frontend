@@ -1,0 +1,37 @@
+<div class="interact">
+  <div class="text">Import</div>
+
+  <input
+    type="file"
+    class="file-input"
+    accept="application/json"
+    (change)="handleFileUpload($event)"
+    #fileUpload
+  />
+  <button class="sort-button" (click)="fileUpload.click()">
+    <img
+      ngSrc="../../../../assets/import.svg"
+      alt="Import Symbol"
+      class="sort-button-image"
+      height="28"
+      width="28"
+      draggable="false"
+    />
+  </button>
+
+  <div class="text">Export</div>
+
+  <input type="file" class="file-input" />
+  <button class="sort-button" (click)="openExportPopup()">
+    <img
+      ngSrc="../../../../assets/export.svg"
+      alt="Export Symbol"
+      class="sort-button-image export-icon"
+      height="28"
+      width="28"
+      draggable="false"
+    />
+  </button>
+
+  <app-export-popup *ngIf="isExportPopupOpen" (closed)="closeExportPopup()"></app-export-popup>
+</div>

@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 
 import { SoundBoxComponent } from './sound-box/sound-box.component';
-import { TextBoxComponent } from './text-box/text-box.component';
+import { SpeechbubbleComponent } from './textSheet/speechbubble/speechbubble.component';
 import { TextSheetComponent } from './textSheet/textSheet.component';
 import { AudioHandlerComponent } from './audio-handler/audio-handler.component';
 import { SettingsComponent } from './settings/settings.component';
@@ -20,21 +20,24 @@ import { SliderPopupComponent } from './sound-box/slider-popup/slider-popup.comp
 import { SpeedPopupComponent } from './sound-box/speed-popup/speed-popup.component';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatDividerModule } from '@angular/material/divider';
-import { DictionaryFsLoaderComponent } from './dictionary/dictionary-fs-loader/dictionary-fs-loader.component';
+import { DictionaryFsLoaderComponent } from './start-page/dictionary/dictionary-fs-loader/dictionary-fs-loader.component';
 import { ToastrModule } from 'ngx-toastr';
 
-import { DictionaryEditorComponent } from './dictionary/dictionary-editor/dictionary-editor.component';
-import { DictionaryRowComponent } from './dictionary/dictionary-row/dictionary-row.component';
-import { ExportPopupComponent } from './dictionary/dictionary-fs-loader/export-popup/export-popup.component';
+import { WordComponent } from './textSheet/speechbubble/word/word.component';
+import { DictionaryEditorComponent } from './start-page/dictionary/dictionary-editor/dictionary-editor.component';
+import { DictionaryRowComponent } from './start-page/dictionary/dictionary-row/dictionary-row.component';
+import { ExportPopupComponent } from './start-page/dictionary/dictionary-fs-loader/export-popup/export-popup.component';
 import { NgOptimizedImage } from '@angular/common';
-import { StartConfigComponent } from './start-config/start-config.component';
+import { StartConfigComponent } from './start-page/start-config/start-config.component';
+import { StartPageComponent } from './start-page/start-page.component';
+import { ContinuePopupComponent } from './start-page/continue-popup/continue-popup.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     SoundBoxComponent,
     TextSheetComponent,
-    TextBoxComponent,
+    SpeechbubbleComponent,
     AudioHandlerComponent,
     SettingsComponent,
     SliderPopupComponent,
@@ -42,8 +45,11 @@ import { StartConfigComponent } from './start-config/start-config.component';
     DictionaryEditorComponent,
     DictionaryRowComponent,
     DictionaryFsLoaderComponent,
+    WordComponent,
     ExportPopupComponent,
     StartConfigComponent,
+    StartPageComponent,
+    ContinuePopupComponent,
   ],
   imports: [
     BrowserModule,

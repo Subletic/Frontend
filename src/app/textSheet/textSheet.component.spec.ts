@@ -2,10 +2,12 @@ import { SpeechBubble } from '../data/speechBubble/speechBubble.model';
 import { SpeechBubbleExport } from '../data/speechBubble/speechBubbleExport.model';
 import { WordToken } from '../data/wordToken/wordToken.model';
 import { TextSheetComponent } from './textSheet.component';
-import { SignalRService } from '../service/signalR.service';
+import { backendListener } from '../service/backend-listener.service';
 import { LinkedList } from '../data/linkedList/linkedList.model';
 import { SpeechBubbleChain } from '../data/speechBubbleChain/speechBubbleChain.module';
 import { AudioService } from '../service/audio.service';
+import { ConsoleHideService } from '../service/consoleHide.service';
+import { BackendProviderService } from '../service/backend-provider.service';
 
 describe('LinkedList', () => {
   let linkedList: LinkedList<SpeechBubble>;
@@ -67,13 +69,17 @@ describe('LinkedList', () => {
 
 describe('TextSheetComponent', () => {
   let component: TextSheetComponent;
-  let signalRService: SignalRService;
+  let signalRService: backendListener;
   let audioService: AudioService;
+  let consoleHideService: ConsoleHideService;
+  let backendProviderService: BackendProviderService;
 
   beforeEach(() => {
-    signalRService = new SignalRService();
+    signalRService = new backendListener(consoleHideService);
     audioService = new AudioService();
-    component = new TextSheetComponent(signalRService, audioService);
+    consoleHideService = new ConsoleHideService();
+    backendProviderService = new BackendProviderService(consoleHideService);
+    component = new TextSheetComponent(signalRService, backendProviderService, audioService);
     component.speechBubbles = new LinkedList<SpeechBubble>();
   });
 
@@ -106,12 +112,8 @@ describe('TextSheetComponent', () => {
     component.speechBubbles.add(TEST_SPEECHBUBBLE_1);
     component.speechBubbles.add(TEST_SPEECHBUBBLE_2);
 
-    const SPEECHBUBBLE_WITH_ID_1 = component.getSpeechBubbleById(
-      TEST_SPEECHBUBBLE_1.id,
-    );
-    const SPEECHBUBBLE_WITH_ID_2 = component.getSpeechBubbleById(
-      TEST_SPEECHBUBBLE_2.id,
-    );
+    const SPEECHBUBBLE_WITH_ID_1 = component.getSpeechBubbleById(TEST_SPEECHBUBBLE_1.id);
+    const SPEECHBUBBLE_WITH_ID_2 = component.getSpeechBubbleById(TEST_SPEECHBUBBLE_2.id);
     const SPEECHBUBBLE_WITH_ID_999 = component.getSpeechBubbleById(999); // Non-existent id
 
     expect(SPEECHBUBBLE_WITH_ID_1).toBe(TEST_SPEECHBUBBLE_1);
@@ -127,9 +129,7 @@ describe('TextSheetComponent', () => {
 
     component.callExportToJson(TEST_SPEECHBUBBLE.id);
 
-    expect(component.exportToJson).toHaveBeenCalledWith([
-      TEST_SPEECHBUBBLE.getExport(),
-    ]);
+    expect(component.exportToJson).toHaveBeenCalledWith([TEST_SPEECHBUBBLE.getExport()]);
   });
 
   it('should retrieve an array of all speech bubbles', () => {
@@ -160,9 +160,7 @@ describe('TextSheetComponent', () => {
     spyOn(component, 'getSpeechBubbleById').and.returnValue(undefined);
     const SPEECHBUBBLE_DTO_NULL: SpeechBubbleExport[] = [];
     component.importfromJson(SPEECHBUBBLE_DTO_NULL);
-    expect(console.error).toHaveBeenCalledWith(
-      'Invalid speechBubbleChain object.',
-    );
+    expect(console.error).toHaveBeenCalledWith('Invalid speechBubbleChain object.');
   });
 
   it('should return early if speechBubble is falsy', () => {
@@ -218,20 +216,8 @@ describe('TextSheetComponent', () => {
   });
 
   it('should adjust word font weight for speech bubbles at the given audio time', () => {
-    const speechBubble1 = new SpeechBubble(
-      1,
-      0,
-      6,
-      new LinkedList<WordToken>(),
-      0,
-    );
-    const speechBubble2 = new SpeechBubble(
-      2,
-      6.01,
-      12,
-      new LinkedList<WordToken>(),
-      1,
-    );
+    const speechBubble1 = new SpeechBubble(1, 0, 6, new LinkedList<WordToken>(), 0);
+    const speechBubble2 = new SpeechBubble(2, 6.01, 12, new LinkedList<WordToken>(), 1);
     const WORD_1 = new WordToken('Hallo', 1, 0, 2, 1);
     const WORD_2 = new WordToken('an', 1, 2.01, 4, 1);
     const WORD_3 = new WordToken('Welt', 1, 4.01, 6, 1);
@@ -256,25 +242,18 @@ describe('TextSheetComponent', () => {
 
     const AUDIOTIME = 1.5;
 
-    const adjustWordsFontWeightSpy1 = spyOn(
-      speechBubble1,
-      'adjustWordsFontWeight',
-    );
-    const adjustWordsFontWeightSpy2 = spyOn(
-      speechBubble2,
-      'adjustWordsFontWeight',
-    );
+    const adjustWordsFontWeightSpy1 = spyOn(speechBubble1, 'adjustWordsFontWeight');
+    const adjustWordsFontWeightSpy2 = spyOn(speechBubble2, 'adjustWordsFontWeight');
 
     component.fontWeightForSpeechBubblesAt(AUDIOTIME);
 
     expect(adjustWordsFontWeightSpy1).toHaveBeenCalledWith(AUDIOTIME);
-    expect(adjustWordsFontWeightSpy2).not.toHaveBeenCalled();
+    // nach dem currentWord-fix sollte auch dieses Element gecalled werden
+    expect(adjustWordsFontWeightSpy2).toHaveBeenCalled();
 
-    //expect(speechBubble1.words.head?.data.fontWeight).toBe('bold');
+    // expect(speechBubble1.words.head?.data.fontWeight).toBe('bold');
     expect(speechBubble1.words.head?.next?.data.fontWeight).toBe('normal');
-    expect(speechBubble1.words.head?.next?.next?.data.fontWeight).toBe(
-      'normal',
-    );
+    expect(speechBubble1.words.head?.next?.next?.data.fontWeight).toBe('normal');
     expect(speechBubble2.words.head?.data.fontWeight).toBe('normal');
     expect(speechBubble2.words.head?.next?.data.fontWeight).toBe('normal');
   });

@@ -62,8 +62,7 @@
   height: 0;
   border-style: solid;
   border-width: 10px 10px 0 0;
-  border-color: var(--textsheet-background-color) transparent transparent
-    transparent;
+  border-color: var(--textsheet-background-color) transparent transparent transparent;
 }
 
 /// Code not generated on a website, but slightly improved by us
@@ -122,8 +121,7 @@ input[type='range'].styled-slider:active::-webkit-slider-runnable-track {
 
 input[type='range'].styled-slider.slider-progress::-webkit-slider-runnable-track {
   background:
-    linear-gradient(var(--color-main-blue), var(--color-main-blue)) 0 /
-      var(--sx) 100% no-repeat,
+    linear-gradient(var(--color-main-blue), var(--color-main-blue)) 0 / var(--sx) 100% no-repeat,
     var(--textsheet-background-color);
 }
 
@@ -163,8 +161,7 @@ input[type='range'].styled-slider:active::-moz-range-track {
 
 input[type='range'].styled-slider.slider-progress::-moz-range-track {
   background:
-    linear-gradient(var(--color-main-blue), var(--color-main-blue)) 0 /
-      var(--sx) 100% no-repeat,
+    linear-gradient(var(--color-main-blue), var(--color-main-blue)) 0 / var(--sx) 100% no-repeat,
     var(--textsheet-background-color);
 }
 

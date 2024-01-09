@@ -46,6 +46,7 @@
     "@angular-eslint/template-parser": "16.0.2",
     "@angular/cli": "~16.0.1",
     "@angular/compiler-cli": "^16.0.0",
+    "@stylistic/eslint-plugin": "^1.5.1",
     "@types/jasmine": "~4.3.0",
     "@types/jquery": "^3.5.16",
     "@types/w3c-web-hid": "^1.0.6",
