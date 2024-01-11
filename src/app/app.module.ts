@@ -31,6 +31,7 @@ import { NgOptimizedImage } from '@angular/common';
 import { StartConfigComponent } from './start-page/start-config/start-config.component';
 import { StartPageComponent } from './start-page/start-page.component';
 import { ContinuePopupComponent } from './start-page/continue-popup/continue-popup.component';
+import { HotkeyMenueComponent } from './hotkey-menue/hotkey-menue.component';
 
 @NgModule({
   declarations: [
@@ -50,6 +51,7 @@ import { ContinuePopupComponent } from './start-page/continue-popup/continue-pop
     StartConfigComponent,
     StartPageComponent,
     ContinuePopupComponent,
+    HotkeyMenueComponent,
   ],
   imports: [
     BrowserModule,

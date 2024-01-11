@@ -1,0 +1,110 @@
+.burgermenu {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.menuebutton {
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    background-color: transparent;
+
+    :hover {
+        transform: scale(1.05);
+    }
+}
+
+.additionalButtons {
+    margin-right: 4px;
+}
+
+.menuebutton,
+.additionalButtons button {
+    border: none;
+    cursor: pointer;
+
+    font-size: 16px;
+    background-color: transparent;
+
+    :hover {
+        transform: scale(1.05);
+    }
+}
+
+.additionalButtons button {
+
+    margin-left: 4px;
+}
+
+.keybinding-container {
+    display: flex;
+    flex-direction: column;
+    margin: 5px 0px 5px 10px;
+    height: 520px;
+    width: 470px;
+    padding-right: 20px;
+    overflow: auto;
+
+    p {
+        font-size: 18px;
+    }
+}
+
+.key-grid {
+    display: grid;
+    grid-template-columns: 4;
+    justify-items: center; //oder start
+    align-items: center;
+
+    gap: 18px 10px;
+    margin: 0px 0px 18px 15px;
+}
+
+.key1,
+.key2,
+.key3,
+.switch {
+    text-align: center;
+    font-size: 16px;
+    color: white;
+
+    padding: 13px;
+    border-radius: 20%;
+    background-color: var(color-main-blue);
+}
+
+.action {
+    grid-column: 1 / 1;
+    padding-right: 15px;
+    width: 170px;
+}
+
+.key1 {
+    grid-column: 2 / 2;
+}
+
+.key2 {
+    grid-column: 3 / 3;
+}
+
+.key3 {
+    grid-column: 4 / 4;
+}
+
+.describ {
+    grid-column: 3 / 3;
+    margin: 5px;
+    align-items: center;
+}
+
+.switch {
+    grid-column: 1 / 1;
+}
+
+.footSwitchImage {
+    width: 35px;
+    margin-top: 8px;
+}
