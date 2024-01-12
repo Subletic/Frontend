@@ -1,9 +1,16 @@
 .burgermenu {
+    display: flex;
+    align-items: center;
     position: absolute;
     top: 10px;
     right: 10px;
-    display: flex;
-    align-items: center;
+    border-radius: 35px;
+    border: 2px solid transparent;
+}
+
+.burgermenu.clicked {
+    border: 2px solid var(--color-main-blue);
+    background-color: white;
 }
 
 .menuebutton {
@@ -18,25 +25,23 @@
 }
 
 .additionalButtons {
-    margin-right: 4px;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
 }
 
 .menuebutton,
-.additionalButtons button {
+.button {
+    display: flex;
+    justify-content: center;
     border: none;
     cursor: pointer;
-
-    font-size: 16px;
+    padding: 4px 6px;
     background-color: transparent;
 
     :hover {
         transform: scale(1.05);
     }
-}
-
-.additionalButtons button {
-
-    margin-left: 4px;
 }
 
 .keybinding-container {
@@ -73,7 +78,7 @@
 
     padding: 13px;
     border-radius: 20%;
-    background-color: var(color-main-blue);
+    background-color: var(--color-main-blue);
 }
 
 .action {
