@@ -129,9 +129,7 @@ export class DictionaryFsLoaderComponent {
       const soundsLike = vocabItem.sounds_like;
       if (
         !soundsLike ||
-        !Array.isArray(soundsLike) ||
-        soundsLike.length === 0 ||
-        soundsLike.some((s) => s.trim() === '')
+        !Array.isArray(soundsLike)
       )
         throw new DictionaryError('SoundsLike Angaben fehlerhaft!');
     }
