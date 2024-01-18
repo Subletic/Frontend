@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, HostListener } from '@angular/core';
 import { additional_vocab } from 'src/app/data/dictionary/additionalVocab.model';
 import { dictionary } from 'src/app/data/dictionary/dictionary.model';
 import { ConfigurationService } from 'src/app/service/configuration.service';
@@ -103,7 +103,9 @@ export class DictionaryEditorComponent implements OnInit {
     const DICTIONARY_NODE = this.latestChangesList[this.indexInLatestChangesList - 1];
     this.configurationService.updateDictionary(DICTIONARY_NODE);
     this.latestChangesList.pop();
+    //remove effect of index++ from updateDictionary
     this.indexInLatestChangesList--;
+    //go to previous change
     this.indexInLatestChangesList--;
     this.cdr.detectChanges();
     this.updateHasPrevAndNext();
@@ -198,4 +200,25 @@ export class DictionaryEditorComponent implements OnInit {
     this.configurationService.updateDictionary(EMPTY_DICTIONARY);
     this.cdr.detectChanges();
   }
+
+  /**
+   * Shortcuts for play/pause, skipBack and skipForwards.
+   *
+   * @param event - Any key event triggered by user.
+  */
+    @HostListener('document:keydown', ['$event'])
+    public handleKeyboardEvent(event: KeyboardEvent): void {
+      if (event.ctrlKey) {
+        switch (event.key) {
+          case 'z':
+            this.goToPreviousChange();
+            break;
+          case 'y':
+            this.goToNextChange();
+            break;
+        }
+      }
+    }
+    
+
 }
