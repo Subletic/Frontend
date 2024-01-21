@@ -1,0 +1,18 @@
+<div class="faq-page">
+    <div class="faq-button">
+        <button 
+            (click)="toggleFaq()">
+
+            <img 
+            src="assets/faq.svg"
+            (mousedown)="buttonImage1.src = 'assets/faqOnClick.svg'"
+            (mouseup)="buttonImage1.src= 'assets/faq.svg'"
+            #buttonImage1
+            />
+        </button>
+    </div>
+    <div class="faq">
+        <app-faq [showFaq]="showFaq">
+        </app-faq>
+    </div>
+</div>
