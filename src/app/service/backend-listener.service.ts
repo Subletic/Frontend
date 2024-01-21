@@ -4,18 +4,22 @@ import { Subject } from 'rxjs';
 import { environment } from '../../environments/environment.prod';
 import { SpeechBubbleExport } from '../data/speechBubble/speechBubbleExport.model';
 import { ConsoleHideService } from './consoleHide.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Injectable({
   providedIn: 'root',
 })
-export class backendListener {
+export class BackendListenerService {
   private hubConnection: signalR.HubConnection;
   public newBubbleReceived: Subject<SpeechBubbleExport[]> = new Subject<SpeechBubbleExport[]>();
-  public oldBubbledeleted: Subject<number> = new Subject<number>();
-
+  public oldBubbleDeleted: Subject<number> = new Subject<number>();
+  public clearBubbles: Subject<void> = new Subject<void>();
   public receivedAudioStream: Subject<Int16Array> = new Subject<Int16Array>();
 
-  constructor(private consoleHideService: ConsoleHideService) {
+  constructor(
+    private consoleHideService: ConsoleHideService,
+    private toastr: ToastrService,
+  ) {
     this.hubConnection = new signalR.HubConnectionBuilder()
       .withUrl(environment.BACKEND_URL + '/communicationHub') // Specify the SignalR endpoint URL
       .build();
@@ -33,9 +37,12 @@ export class backendListener {
     });
 
     this.hubConnection.on('deleteBubble', (id) => {
-      this.oldBubbledeleted.next(id);
+      this.oldBubbleDeleted.next(id);
     });
 
+    this.hubConnection.on('abortTranscription', (reason: string) => {
+      this.abortTranscription(reason);
+    });
   }
 
   private subscribeToAudioStream(): void {
@@ -50,5 +57,15 @@ export class backendListener {
         console.log(err);
       },
     });
+  }
+
+  private abortTranscription(reason: string): void {
+    this.consoleHideService.backendListenerLog('Transcription aborted: ' + reason);
+    this.toastr.error('Die Seite wird in kürze neu geladen.', '', { timeOut: 10000 });
+    this.toastr.error(reason, 'Transkription abgebrochen', { timeOut: 10000 });
+    this.clearBubbles.next();
+    setTimeout(() => {
+      window.location.reload();
+    }, 10000);
   }
 }
