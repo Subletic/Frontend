@@ -6,6 +6,9 @@ import { SpeechBubbleExport } from '../data/speechBubble/speechBubbleExport.mode
 import { ConsoleHideService } from './consoleHide.service';
 import { ToastrService } from 'ngx-toastr';
 
+/**
+ * Service used for listening to RPC calls from the backend.
+ */
 @Injectable({
   providedIn: 'root',
 })
@@ -16,6 +19,11 @@ export class BackendListenerService {
   public clearBubbles: Subject<void> = new Subject<void>();
   public receivedAudioStream: Subject<Int16Array> = new Subject<Int16Array>();
 
+  /**
+   * Initializes the SignalR connection and subscribes to the RPC calls.
+   * @param consoleHideService ConsoleHideService
+   * @param toastr ToastrService
+   */
   constructor(
     private consoleHideService: ConsoleHideService,
     private toastr: ToastrService,
@@ -45,6 +53,10 @@ export class BackendListenerService {
     });
   }
 
+  /**
+   * Subscribes to the audio stream.
+   * Audio data is expected in a Int16Array format.
+   */
   private subscribeToAudioStream(): void {
     this.hubConnection.stream('ReceiveAudioStream').subscribe({
       next: (data: Int16Array) => {
@@ -59,6 +71,10 @@ export class BackendListenerService {
     });
   }
 
+  /**
+   * Aborts the transcription and reloads the page.
+   * @param reason Reason for aborting the transcription.
+   */
   private abortTranscription(reason: string): void {
     this.consoleHideService.backendListenerLog('Transcription aborted: ' + reason);
     this.toastr.error('Die Seite wird in kürze neu geladen.', '', { timeOut: 10000 });
