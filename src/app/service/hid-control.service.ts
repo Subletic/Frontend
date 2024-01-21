@@ -75,7 +75,9 @@ export class HidControlService {
   private async checkForDevices(): Promise<void> {
     // get permitted devices we care about
     const alreadyAllowedDevices: HIDDevice[] = await this.findAllowedDevices();
-    this.consoleHideService.hidLog(`We have been granted access to ${alreadyAllowedDevices.length} devices`);
+    this.consoleHideService.hidLog(
+      `We have been granted access to ${alreadyAllowedDevices.length} devices`,
+    );
 
     // find out what devices we have yet to be granted permission to
     const unhandledDevices: HIDDeviceFilter[] = this.HID_DEVICES.filter(

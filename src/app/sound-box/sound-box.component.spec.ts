@@ -169,7 +169,10 @@ describe('SoundBoxComponent', () => {
 
   it('should open the specified modal', () => {
     const consoleHideService = new ConsoleHideService();
-    const component = new SoundBoxComponent(new SettingsService(), new HidControlService(consoleHideService));
+    const component = new SoundBoxComponent(
+      new SettingsService(),
+      new HidControlService(consoleHideService),
+    );
     const settingsService = jasmine.createSpyObj('SettingsService', ['open']);
     component.setSettingsService(settingsService);
 
@@ -181,7 +184,10 @@ describe('SoundBoxComponent', () => {
 
   it('should close the specified modal', () => {
     const consoleHideService = new ConsoleHideService();
-    const component = new SoundBoxComponent(new SettingsService(), new HidControlService(consoleHideService));
+    const component = new SoundBoxComponent(
+      new SettingsService(),
+      new HidControlService(consoleHideService),
+    );
     const settingsService = jasmine.createSpyObj('SettingsService', ['close']);
     component.setSettingsService(settingsService);
 
@@ -193,7 +199,10 @@ describe('SoundBoxComponent', () => {
 
   it('should set the skip seconds in the audio handler', () => {
     const consoleHideService = new ConsoleHideService();
-    const component = new SoundBoxComponent(new SettingsService(), new HidControlService(consoleHideService));
+    const component = new SoundBoxComponent(
+      new SettingsService(),
+      new HidControlService(consoleHideService),
+    );
     const audioHandler = jasmine.createSpyObj('AudioHandlerComponent', ['setSkipSeconds']);
     component.audioHandler = audioHandler;
 
@@ -205,7 +214,10 @@ describe('SoundBoxComponent', () => {
 
   it('should set the playback speed in the audio handler', () => {
     const consoleHideService = new ConsoleHideService();
-    const component = new SoundBoxComponent(new SettingsService(), new HidControlService(consoleHideService));
+    const component = new SoundBoxComponent(
+      new SettingsService(),
+      new HidControlService(consoleHideService),
+    );
     const audioHandler = jasmine.createSpyObj('AudioHandlerComponent', ['setPlaybackSpeed']);
     component.audioHandler = audioHandler;
 
@@ -242,7 +254,10 @@ describe('SoundBoxComponent', () => {
 
   it('should handle the keyboard events for skipBackwardEvent', () => {
     const consoleHideService = new ConsoleHideService();
-    const component = new SoundBoxComponent(new SettingsService(), new HidControlService(consoleHideService));
+    const component = new SoundBoxComponent(
+      new SettingsService(),
+      new HidControlService(consoleHideService),
+    );
     const audioHandler = jasmine.createSpyObj('AudioHandlerComponent', [
       'playOrStopAudio',
       'skipBackward',
@@ -262,7 +277,10 @@ describe('SoundBoxComponent', () => {
 
   it('should handle the keyboard events for skipForwardEvent', () => {
     const consoleHideService = new ConsoleHideService();
-    const component = new SoundBoxComponent(new SettingsService(), new HidControlService(consoleHideService));
+    const component = new SoundBoxComponent(
+      new SettingsService(),
+      new HidControlService(consoleHideService),
+    );
     const audioHandler = jasmine.createSpyObj('AudioHandlerComponent', [
       'playOrStopAudio',
       'skipBackward',
