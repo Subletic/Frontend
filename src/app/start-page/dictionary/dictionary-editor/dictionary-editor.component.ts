@@ -97,16 +97,14 @@ export class DictionaryEditorComponent implements OnInit {
   /**
    * Navigates to the previous change in the list of latest changes.
    * Updates the dictionary with the previous state and removes the corresponding entry from the list.
-   * The index is decremented twice for readablity: 1) for the pop 2) for going to the previous change.
+   * The index is decremented twice: 1) for the pop 2) for going to the previous change.
    */
   goToPreviousChange(): void {
     const DICTIONARY_NODE = this.latestChangesList[this.indexInLatestChangesList - 1];
     this.configurationService.updateDictionary(DICTIONARY_NODE);
     this.latestChangesList.pop();
-    //remove effect of index++ from updateDictionary
-    this.indexInLatestChangesList--;
-    //go to previous change
-    this.indexInLatestChangesList--;
+    // remove effect of index++ from updateDictionary AND set to previous entry 
+    this.indexInLatestChangesList -= 2;
     this.cdr.detectChanges();
     this.updateHasPrevAndNext();
   }
