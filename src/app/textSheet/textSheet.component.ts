@@ -28,6 +28,7 @@ export class TextSheetComponent implements OnInit {
   private readTimeInSeconds = 0;
 
   @ViewChild(HotkeyMenueComponent, { static: true }) hotkeyMenueComponent!: HotkeyMenueComponent;
+  // Boolean variable to track whether any of the burger menu buttons is pressed
   isButtonPressed = false;
 
   constructor(
@@ -62,11 +63,17 @@ export class TextSheetComponent implements OnInit {
     });
   }
 
+  /**
+   * Adds the 'isButtonPressed' class to the middle container.
+   */
   private addIsButtonPressedClass(): void {
     const middleContainer = document.querySelector('.middle-container');
     middleContainer?.classList.add('isButtonPressed');
   }
 
+  /**
+   * Removes the 'isButtonPressed' class from the middle container.
+   */
   private removeIsButtonPressedClass(): void {
     const middleContainer = document.querySelector('.middle-container');
     middleContainer?.classList.remove('isButtonPressed');
