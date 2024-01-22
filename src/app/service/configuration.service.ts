@@ -105,6 +105,9 @@ export class ConfigurationService {
     // Check if language provided
     if (!this.currentDictionary.transcription_config.language)
       throw new DictionaryError('Keine Sprache angegeben!');
+
+    if (this.currentDictionary.transcription_config.language != 'de')
+      throw new DictionaryError('Sprache muss als "de" festgelegt sein!');
   }
 
   /**
