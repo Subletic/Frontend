@@ -25,7 +25,7 @@ export class DictionaryFsLoaderComponent {
   public constructor(
     private configurationService: ConfigurationService,
     private toastr: ToastrService,
-  ) { }
+  ) {}
 
   /**
    * Called when the user uploads a file.
@@ -127,10 +127,7 @@ export class DictionaryFsLoaderComponent {
 
       // Check if sounds_like is provided and not empty
       const soundsLike = vocabItem.sounds_like;
-      if (
-        !soundsLike ||
-        !Array.isArray(soundsLike)
-      )
+      if (!soundsLike || !Array.isArray(soundsLike))
         throw new DictionaryError('SoundsLike Angaben fehlerhaft!');
     }
   }
