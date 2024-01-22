@@ -8,7 +8,7 @@ describe('HotkeyMenueComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [HotkeyMenueComponent]
+      declarations: [HotkeyMenueComponent],
     });
     fixture = TestBed.createComponent(HotkeyMenueComponent);
     component = fixture.componentInstance;

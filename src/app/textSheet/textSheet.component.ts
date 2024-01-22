@@ -61,8 +61,6 @@ export class TextSheetComponent implements OnInit {
         this.removeIsButtonPressedClass();
       }
     });
-
-
   }
 
   private addIsButtonPressedClass(): void {
@@ -271,7 +269,9 @@ export class TextSheetComponent implements OnInit {
   }
 
   public irgendEineMethode(): void {
-    const isButtonPressed = this.hotkeyMenueComponent ? this.hotkeyMenueComponent.isButtonPressed : false;
+    const isButtonPressed = this.hotkeyMenueComponent
+      ? this.hotkeyMenueComponent.isButtonPressed
+      : false;
     console.log('Ist einer der Buttons aktiv? ', isButtonPressed);
   }
 }

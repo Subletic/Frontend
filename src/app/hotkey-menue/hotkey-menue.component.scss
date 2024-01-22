@@ -1,129 +1,129 @@
 .burgermenu {
-    display: flex;
-    align-items: center;
-    position: absolute;
-    top: 2px;
-    right: 2px;
-    border-radius: 35px;
-    border: 2px solid transparent;
+  display: flex;
+  align-items: center;
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  border-radius: 35px;
+  border: 2px solid transparent;
 }
 
 .burgermenu.clicked {
-    border: 2px solid var(--color-main-blue);
-    background-color: white;
+  border: 2px solid var(--color-main-blue);
+  background-color: white;
 }
 
 .menuebutton {
-    font-size: 16px;
-    border: none;
-    cursor: pointer;
-    background-color: transparent;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  background-color: transparent;
 
-    :hover {
-        transform: scale(1.05);
-    }
+  :hover {
+    transform: scale(1.05);
+  }
 }
 
 .additionalButtons {
-    display: flex;
-    align-items: center;
-    flex-direction: row;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
 }
 
 .menuebutton,
 .button {
-    display: flex;
-    justify-content: center;
-    border: none;
-    cursor: pointer;
-    padding: 4px 6px;
-    background-color: transparent;
+  display: flex;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  padding: 4px 6px;
+  background-color: transparent;
 
-    :hover {
-        transform: scale(1.05);
-    }
+  :hover {
+    transform: scale(1.05);
+  }
 }
 
 .button-overview {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    position: absolute;
-    top: 70px;
-    right: 10px;
-    width: 400px;
-    height: 80%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  position: absolute;
+  top: 70px;
+  right: 10px;
+  width: 400px;
+  height: 80%;
 
-    background-color: white;
-    border-radius: 12px;
+  background-color: white;
+  border-radius: 12px;
 }
 
 .keybinding-container {
-    display: flex;
-    flex-direction: column;
-    margin: 10px 5px 10px 20px;
-    height: auto;
-    width: 90%;
-    padding-right: 20px;
-    overflow: auto;
+  display: flex;
+  flex-direction: column;
+  margin: 10px 5px 10px 20px;
+  height: auto;
+  width: 90%;
+  padding-right: 20px;
+  overflow: auto;
 
-    p {
-        font-size: 18px;
-    }
+  p {
+    font-size: 18px;
+  }
 }
 
 .key-grid {
-    display: grid;
-    grid-template-columns: 4;
-    justify-items: center; //oder start
-    align-items: center;
+  display: grid;
+  grid-template-columns: 4;
+  justify-items: center; //oder start
+  align-items: center;
 
-    gap: 18px 5px;
-    margin: 0px 0px 18px 15px;
+  gap: 18px 5px;
+  margin: 0px 0px 18px 15px;
 }
 
 .key1,
 .key2,
 .key3,
 .switch {
-    text-align: center;
-    font-size: 16px;
-    color: white;
+  text-align: center;
+  font-size: 16px;
+  color: white;
 
-    padding: 13px;
-    border-radius: 20%;
-    background-color: var(--color-main-blue);
+  padding: 13px;
+  border-radius: 20%;
+  background-color: var(--color-main-blue);
 }
 
 .action {
-    grid-column: 1 / 1;
-    padding-right: 15px;
-    width: 170px;
+  grid-column: 1 / 1;
+  padding-right: 15px;
+  width: 170px;
 }
 
 .key1 {
-    grid-column: 2 / 2;
+  grid-column: 2 / 2;
 }
 
 .key2 {
-    grid-column: 3 / 3;
+  grid-column: 3 / 3;
 }
 
 .key3 {
-    grid-column: 4 / 4;
+  grid-column: 4 / 4;
 }
 
 .describ {
-    grid-column: 3 / 3;
-    margin: 5px;
-    align-items: center;
+  grid-column: 3 / 3;
+  margin: 5px;
+  align-items: center;
 }
 
 .switch {
-    grid-column: 1 / 1;
+  grid-column: 1 / 1;
 }
 
 .footSwitchImage {
-    width: 35px;
-    margin-top: 8px;
+  width: 35px;
+  margin-top: 8px;
 }

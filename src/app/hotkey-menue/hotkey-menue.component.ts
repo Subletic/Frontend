@@ -6,7 +6,7 @@ import { Component, ElementRef, EventEmitter, Output, ViewChild } from '@angular
 @Component({
   selector: 'app-hotkey-menue',
   templateUrl: './hotkey-menue.component.html',
-  styleUrls: ['./hotkey-menue.component.scss']
+  styleUrls: ['./hotkey-menue.component.scss'],
 })
 export class HotkeyMenueComponent {
   @ViewChild('menuImage', { static: false }) menuImage: ElementRef;
@@ -29,23 +29,23 @@ export class HotkeyMenueComponent {
   private buttonImages: {
     [key: string]: { normal: string; clicked: string };
   } = {
-      menu: {
-        normal: 'assets/burgermenu.svg',
-        clicked: 'assets/burgermenu_onclick.svg',
-      },
-      foot: {
-        normal: 'assets/footButton.svg',
-        clicked: 'assets/footButton_onclick.svg',
-      },
-      hand: {
-        normal: 'assets/handButton.svg',
-        clicked: 'assets/handButton_onclick.svg',
-      },
-      hotkey: {
-        normal: 'assets/hotkeyButton.svg',
-        clicked: 'assets/hotkeyButton_onclick.svg',
-      },
-    };
+    menu: {
+      normal: 'assets/burgermenu.svg',
+      clicked: 'assets/burgermenu_onclick.svg',
+    },
+    foot: {
+      normal: 'assets/footButton.svg',
+      clicked: 'assets/footButton_onclick.svg',
+    },
+    hand: {
+      normal: 'assets/handButton.svg',
+      clicked: 'assets/handButton_onclick.svg',
+    },
+    hotkey: {
+      normal: 'assets/hotkeyButton.svg',
+      clicked: 'assets/hotkeyButton_onclick.svg',
+    },
+  };
 
   constructor() {
     this.menuImage = {} as ElementRef;
@@ -59,10 +59,10 @@ export class HotkeyMenueComponent {
    * @param {string} buttonType - Type of the button ('menu', 'hotkey', 'foot', 'hand').
    */
   public updateButtonState(buttonType: string): void {
-    this.menuButtonPressed = (buttonType === 'menu') ? !this.menuButtonPressed : true;
-    this.hotkeyButtonPressed = (buttonType === 'hotkey') ? !this.hotkeyButtonPressed : false;
-    this.footButtonPressed = (buttonType === 'foot') ? !this.footButtonPressed : false;
-    this.handButtonPressed = (buttonType === 'hand') ? !this.handButtonPressed : false;
+    this.menuButtonPressed = buttonType === 'menu' ? !this.menuButtonPressed : true;
+    this.hotkeyButtonPressed = buttonType === 'hotkey' ? !this.hotkeyButtonPressed : false;
+    this.footButtonPressed = buttonType === 'foot' ? !this.footButtonPressed : false;
+    this.handButtonPressed = buttonType === 'hand' ? !this.handButtonPressed : false;
 
     this.buttonStateChanged.emit(this.isButtonPressed);
   }
