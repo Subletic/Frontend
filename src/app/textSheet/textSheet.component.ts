@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { SpeechBubble } from '../data/speechBubble/speechBubble.model';
 import { SpeechBubbleExport } from '../data/speechBubble/speechBubbleExport.model';
 import { LinkedList } from '../data/linkedList/linkedList.model';
@@ -7,6 +7,7 @@ import { SpeechBubbleChain } from '../data/speechBubbleChain/speechBubbleChain.m
 import { AudioService } from '../service/audio.service';
 import { BackendProviderService } from '../service/backend-provider.service';
 import { backendListener } from '../service/backend-listener.service';
+import { HotkeyMenueComponent } from '../hotkey-menue/hotkey-menue.component';
 
 /**
  * The TextSheetComponent represents a component that handles the speech bubbles in a text sheet.
@@ -25,6 +26,9 @@ export class TextSheetComponent implements OnInit {
   intervalList: ReturnType<typeof setInterval>[] = [];
 
   private readTimeInSeconds = 0;
+
+  @ViewChild(HotkeyMenueComponent, { static: true }) hotkeyMenueComponent!: HotkeyMenueComponent;
+  isButtonPressed = false;
 
   constructor(
     private signalRService: backendListener,
@@ -46,6 +50,29 @@ export class TextSheetComponent implements OnInit {
     });
 
     this.simulateAudioTime();
+
+    this.hotkeyMenueComponent.buttonStateChanged.subscribe((newState: boolean) => {
+      this.isButtonPressed = newState;
+      console.log('Button State changed to:', newState);
+
+      if (this.isButtonPressed) {
+        this.addIsButtonPressedClass();
+      } else {
+        this.removeIsButtonPressedClass();
+      }
+    });
+
+
+  }
+
+  private addIsButtonPressedClass(): void {
+    const middleContainer = document.querySelector('.middle-container');
+    middleContainer?.classList.add('isButtonPressed');
+  }
+
+  private removeIsButtonPressedClass(): void {
+    const middleContainer = document.querySelector('.middle-container');
+    middleContainer?.classList.remove('isButtonPressed');
   }
 
   /**
@@ -241,5 +268,10 @@ export class TextSheetComponent implements OnInit {
     audioTime: number,
   ): boolean {
     return SpeechBubble.begin <= audioTime && SpeechBubble.end >= audioTime;
+  }
+
+  public irgendEineMethode(): void {
+    const isButtonPressed = this.hotkeyMenueComponent ? this.hotkeyMenueComponent.isButtonPressed : false;
+    console.log('Ist einer der Buttons aktiv? ', isButtonPressed);
   }
 }

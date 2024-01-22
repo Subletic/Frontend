@@ -60,6 +60,27 @@
   background: var(--color-grey-onclick);
 }
 
+
+
+@media (max-width: 1800px) {
+  .middle-container.isButtonPressed {
+    margin-left: 100px;
+  }
+}
+
+@media (max-width: 1500px) {
+  .middle-container.isButtonPressed {
+    margin-left: 50px;
+  }
+}
+
+@media (max-width: 1500px) {
+  .middle-container.isButtonPressed {
+    margin-left: 20px;
+  }
+}
+
+
 @media (max-width: 768px) {
   .middle-container {
     height: auto;
@@ -69,5 +90,9 @@
 
   .middle-container h1 {
     font-size: 18px;
+  }
+
+  .middle-container.isButtonPressed {
+    margin-left: 10px;
   }
 }

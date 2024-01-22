@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Output, ViewChild } from '@angular/core';
 
 /**
  * Component representing the hotkey menu.
@@ -13,6 +13,7 @@ export class HotkeyMenueComponent {
   @ViewChild('footImage', { static: false }) footImage: ElementRef;
   @ViewChild('handImage', { static: false }) handImage: ElementRef;
   @ViewChild('hotkeyImage', { static: false }) hotkeyImage: ElementRef;
+  @Output() buttonStateChanged = new EventEmitter<boolean>();
 
   /**
    * Booleans indicating whether the buttons are pressed.
@@ -62,6 +63,8 @@ export class HotkeyMenueComponent {
     this.hotkeyButtonPressed = buttonType === 'hotkey' ? !this.hotkeyButtonPressed : false;
     this.footButtonPressed = buttonType === 'foot' ? !this.footButtonPressed : false;
     this.handButtonPressed = buttonType === 'hand' ? !this.handButtonPressed : false;
+
+    this.buttonStateChanged.emit(this.isButtonPressed);
   }
 
   /**
@@ -98,5 +101,12 @@ export class HotkeyMenueComponent {
       default:
         break;
     }
+  }
+
+  /**
+   * Gibt true zurück, wenn einer der Buttons (hotkey, foot, hand) aktiv ist.
+   */
+  public get isButtonPressed(): boolean {
+    return this.hotkeyButtonPressed || this.footButtonPressed || this.handButtonPressed;
   }
 }
