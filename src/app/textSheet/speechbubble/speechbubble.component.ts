@@ -34,7 +34,7 @@ export class SpeechbubbleComponent implements AfterViewInit {
   constructor(
     public cdr: ChangeDetectorRef,
     public consoleHideService: ConsoleHideService,
-    ) {}
+  ) {}
   /**
    * After Init of View, generates the Words from the data structure
    * inside the textbox. Adds event listeners to the textbox and generates
@@ -255,9 +255,8 @@ export class SpeechbubbleComponent implements AfterViewInit {
     const ID = Number(ID_PART[1]);
     const CURRENT_WORD = this.speechBubble.words.getDataById(ID);
 
-    
     this.consoleHideService.speechbubbleLog('Word: ' + HOVERED_WORD + ', ID: ' + ID);
-    this.consoleHideService.speechbubbleLog('Current Word: '+ CURRENT_WORD);
-    this.consoleHideService.speechbubbleLog('Print Text:'+ this.speechBubble.printText());
+    this.consoleHideService.speechbubbleLog('Current Word: ' + CURRENT_WORD);
+    this.consoleHideService.speechbubbleLog('Print Text:' + this.speechBubble.printText());
   }
 }

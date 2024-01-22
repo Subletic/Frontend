@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { backendListener } from '../service/backend-listener.service';
+import { BackendListenerService } from '../service/backend-listener.service';
 import { AudioService } from '../service/audio.service';
 import { ConsoleHideService } from '../service/consoleHide.service';
 
@@ -53,7 +53,7 @@ export class AudioHandlerComponent implements OnInit {
    * @param audioService - The AudioService to get the reference to.
    */
   constructor(
-    private backendListener: backendListener,
+    private backendListener: BackendListenerService,
     private audioService: AudioService,
     private consoleHideService: ConsoleHideService,
   ) {}

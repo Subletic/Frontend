@@ -8,7 +8,6 @@ import { ConsoleHideService } from './consoleHide.service';
   providedIn: 'root',
 })
 export class BackendProviderService {
-
   constructor(private consoleHideService: ConsoleHideService) {}
 
   /**
@@ -43,7 +42,9 @@ export class BackendProviderService {
     })
       .then((response) => {
         if (response.ok) {
-          this.consoleHideService.backendProviderLog('Aktualisierte SpeechBubble wurde erfolgreich gesendet');
+          this.consoleHideService.backendProviderLog(
+            'Aktualisierte SpeechBubble wurde erfolgreich gesendet',
+          );
         } else {
           console.error('Fehler beim Senden der aktualisierten SpeechBubble');
         }
