@@ -7,7 +7,6 @@ import { SpeechBubbleChain } from '../data/speechBubbleChain/speechBubbleChain.m
 import { AudioService } from '../service/audio.service';
 import { BackendProviderService } from '../service/backend-provider.service';
 import { BackendListenerService } from '../service/backend-listener.service';
-import { ToastrService } from 'ngx-toastr';
 
 /**
  * The TextSheetComponent represents a component that handles the speech bubbles in a text sheet.
