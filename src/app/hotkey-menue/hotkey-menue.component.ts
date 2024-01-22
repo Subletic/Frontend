@@ -29,23 +29,23 @@ export class HotkeyMenueComponent {
   private buttonImages: {
     [key: string]: { normal: string; clicked: string };
   } = {
-    menu: {
-      normal: 'assets/burgermenu.svg',
-      clicked: 'assets/burgermenu_onclick.svg',
-    },
-    foot: {
-      normal: 'assets/footButton.svg',
-      clicked: 'assets/footButton_onclick.svg',
-    },
-    hand: {
-      normal: 'assets/handButton.svg',
-      clicked: 'assets/handButton_onclick.svg',
-    },
-    hotkey: {
-      normal: 'assets/hotkeyButton.svg',
-      clicked: 'assets/hotkeyButton_onclick.svg',
-    },
-  };
+      menu: {
+        normal: 'assets/burgermenu.svg',
+        clicked: 'assets/burgermenu_onclick.svg',
+      },
+      foot: {
+        normal: 'assets/footButton.svg',
+        clicked: 'assets/footButton_onclick.svg',
+      },
+      hand: {
+        normal: 'assets/handButton.svg',
+        clicked: 'assets/handButton_onclick.svg',
+      },
+      hotkey: {
+        normal: 'assets/hotkeyButton.svg',
+        clicked: 'assets/hotkeyButton_onclick.svg',
+      },
+    };
 
   constructor() {
     this.menuImage = {} as ElementRef;
@@ -104,7 +104,7 @@ export class HotkeyMenueComponent {
   }
 
   /**
-   * Gibt true zurück, wenn einer der Buttons (hotkey, foot, hand) aktiv ist.
+   * returns true when one of the Buttons hotkeyButton, footButton or handButton was pressed
    */
   public get isButtonPressed(): boolean {
     return this.hotkeyButtonPressed || this.footButtonPressed || this.handButtonPressed;
