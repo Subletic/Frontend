@@ -48,8 +48,8 @@ export class BackendListenerService {
       this.oldBubbleDeleted.next(id);
     });
 
-    this.hubConnection.on('abortTranscription', (reason: string) => {
-      this.abortTranscription(reason);
+    this.hubConnection.on('abortCorrection', (reason: string) => {
+      this.abortCorrection(reason);
     });
   }
 
@@ -72,13 +72,13 @@ export class BackendListenerService {
   }
 
   /**
-   * Aborts the transcription and reloads the page.
-   * @param reason Reason for aborting the transcription.
+   * Aborts the correction and reloads the page.
+   * @param reason Reason for aborting the correction.
    */
-  private abortTranscription(reason: string): void {
-    this.consoleHideService.backendListenerLog('Transcription aborted: ' + reason);
+  private abortCorrection(reason: string): void {
+    this.consoleHideService.backendListenerLog('Correction aborted: ' + reason);
     this.toastr.error('Die Seite wird in kürze neu geladen.', '', { timeOut: 10000 });
-    this.toastr.error(reason, 'Transkription abgebrochen', { timeOut: 10000 });
+    this.toastr.error(reason, 'Korrektion abgebrochen', { timeOut: 10000 });
     this.clearBubbles.next();
     setTimeout(() => {
       window.location.reload();
