@@ -59,10 +59,10 @@ export class HotkeyMenueComponent {
    * @param {string} buttonType - Type of the button ('menu', 'hotkey', 'foot', 'hand').
    */
   public updateButtonState(buttonType: string): void {
-    this.menuButtonPressed = buttonType === 'menu' ? !this.menuButtonPressed : true;
-    this.hotkeyButtonPressed = buttonType === 'hotkey' ? !this.hotkeyButtonPressed : false;
-    this.footButtonPressed = buttonType === 'foot' ? !this.footButtonPressed : false;
-    this.handButtonPressed = buttonType === 'hand' ? !this.handButtonPressed : false;
+    this.menuButtonPressed = (buttonType === 'menu') ? !this.menuButtonPressed : true;
+    this.hotkeyButtonPressed = (buttonType === 'hotkey') ? !this.hotkeyButtonPressed : false;
+    this.footButtonPressed = (buttonType === 'foot') ? !this.footButtonPressed : false;
+    this.handButtonPressed = (buttonType === 'hand') ? !this.handButtonPressed : false;
 
     this.buttonStateChanged.emit(this.isButtonPressed);
   }
