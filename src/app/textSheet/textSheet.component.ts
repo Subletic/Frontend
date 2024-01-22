@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { SpeechBubble } from '../data/speechBubble/speechBubble.model';
 import { SpeechBubbleExport } from '../data/speechBubble/speechBubbleExport.model';
 import { LinkedList } from '../data/linkedList/linkedList.model';
@@ -6,6 +6,7 @@ import { WordExport } from '../data/wordToken/wordExport.model';
 import { SpeechBubbleChain } from '../data/speechBubbleChain/speechBubbleChain.module';
 import { AudioService } from '../service/audio.service';
 import { BackendProviderService } from '../service/backend-provider.service';
+import { HotkeyMenueComponent } from '../hotkey-menue/hotkey-menue.component';
 import { BackendListenerService } from '../service/backend-listener.service';
 
 /**
@@ -24,6 +25,10 @@ export class TextSheetComponent implements OnInit {
   public intervalList: ReturnType<typeof setInterval>[] = [];
 
   private readTimeInSeconds = 0;
+
+  @ViewChild(HotkeyMenueComponent, { static: true }) hotkeyMenueComponent!: HotkeyMenueComponent;
+  // Boolean variable to track whether any of the burger menu buttons is pressed
+  isButtonPressed = false;
 
   constructor(
     private backendListenerService: BackendListenerService,
@@ -49,6 +54,32 @@ export class TextSheetComponent implements OnInit {
     });
 
     this.simulateAudioTime();
+
+    this.hotkeyMenueComponent.buttonStateChanged.subscribe((newState: boolean) => {
+      this.isButtonPressed = newState;
+
+      if (this.isButtonPressed) {
+        this.addIsButtonPressedClass();
+      } else {
+        this.removeIsButtonPressedClass();
+      }
+    });
+  }
+
+  /**
+   * Adds the 'isButtonPressed' class to the middle container.
+   */
+  private addIsButtonPressedClass(): void {
+    const middleContainer = document.querySelector('.middle-container');
+    middleContainer?.classList.add('isButtonPressed');
+  }
+
+  /**
+   * Removes the 'isButtonPressed' class from the middle container.
+   */
+  private removeIsButtonPressedClass(): void {
+    const middleContainer = document.querySelector('.middle-container');
+    middleContainer?.classList.remove('isButtonPressed');
   }
 
   /**

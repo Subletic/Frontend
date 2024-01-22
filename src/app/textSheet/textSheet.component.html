@@ -1,4 +1,4 @@
-<div class="middle-container">
+<div class="middle-container" [class.isButtonPressed]="isButtonPressed">
   <div *ngFor="let speechBubble of getSpeechBubblesArray()" class="innerBoxes">
     <app-speechbubble
       [speechBubble]="speechBubble"
@@ -7,3 +7,5 @@
     ></app-speechbubble>
   </div>
 </div>
+
+<app-hotkey-menue></app-hotkey-menue>
