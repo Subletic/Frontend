@@ -52,6 +52,20 @@ export class StartPageComponent {
       );
     }
 
+    // merge with itslef to: 1) ensure language is DE; 2) merge identical words 'soundslike' into one word entity 
+    const DICTIONARY_COPY =  this.editorComponent.dictionary;
+    this.editorComponent.dictionary.mergeWithDictionary(DICTIONARY_COPY)
+    
+    if (this.editorComponent.dictionary.transcription_config.language != 'de') {
+      this.toastr.error(
+        'Die Sprache des Dictionaries muss Deutsch sein. Die Sprache wurde jetzt automatisch auf Deutsch gesetzt.',
+        'Fehler',
+        );
+        this.editorComponent.dictionary.transcription_config.language = 'de';
+        this.closeContinuePopup();
+        return;
+    }
+
     this.showDictionary.emit(false);
     this.configurationService.postConfigurationToBackend();
   }

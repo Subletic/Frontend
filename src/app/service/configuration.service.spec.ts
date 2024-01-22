@@ -42,7 +42,7 @@ describe('ConfigurationService', () => {
 
   it('should validate configuration correctly when valid', () => {
     service.updateDelayLength(5);
-    service.updateDictionary(new dictionary(new transcription_config('en', [])));
+    service.updateDictionary(new dictionary(new transcription_config('de', [])));
 
     expect(() => service.isConfigValid()).not.toThrowMatching((e) => e instanceof Error);
   });

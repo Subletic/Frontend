@@ -17,7 +17,7 @@ export class ExportPopupComponent {
   @Output() closed = new EventEmitter<void>();
   public exportFileName = '';
 
-  constructor(private dictionaryFsLoader: DictionaryFsLoaderComponent) { }
+  constructor(private dictionaryFsLoader: DictionaryFsLoaderComponent) {}
 
   /**
    * Closes the export popup.

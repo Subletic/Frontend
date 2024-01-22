@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { SpeechBubble } from '../data/speechBubble/speechBubble.model';
 import { SpeechBubbleExport } from '../data/speechBubble/speechBubbleExport.model';
 import { LinkedList } from '../data/linkedList/linkedList.model';
@@ -6,7 +6,8 @@ import { WordExport } from '../data/wordToken/wordExport.model';
 import { SpeechBubbleChain } from '../data/speechBubbleChain/speechBubbleChain.module';
 import { AudioService } from '../service/audio.service';
 import { BackendProviderService } from '../service/backend-provider.service';
-import { backendListener } from '../service/backend-listener.service';
+import { HotkeyMenueComponent } from '../hotkey-menue/hotkey-menue.component';
+import { BackendListenerService } from '../service/backend-listener.service';
 
 /**
  * The TextSheetComponent represents a component that handles the speech bubbles in a text sheet.
@@ -19,15 +20,18 @@ import { backendListener } from '../service/backend-listener.service';
 })
 export class TextSheetComponent implements OnInit {
   // Attribute holding all showcased linkedList of Instance SpeechBubble
-  speechBubbles: LinkedList<SpeechBubble> = new LinkedList<SpeechBubble>();
-
-  timeSinceFocusOutList: Map<number, number> = new Map<number, number>();
-  intervalList: ReturnType<typeof setInterval>[] = [];
+  public speechBubbles: LinkedList<SpeechBubble> = new LinkedList<SpeechBubble>();
+  public timeSinceFocusOutList: Map<number, number> = new Map<number, number>();
+  public intervalList: ReturnType<typeof setInterval>[] = [];
 
   private readTimeInSeconds = 0;
 
+  @ViewChild(HotkeyMenueComponent, { static: true }) hotkeyMenueComponent!: HotkeyMenueComponent;
+  // Boolean variable to track whether any of the burger menu buttons is pressed
+  isButtonPressed = false;
+
   constructor(
-    private signalRService: backendListener,
+    private backendListenerService: BackendListenerService,
     private backendProviderService: BackendProviderService,
     private audioService: AudioService,
   ) {
@@ -37,15 +41,45 @@ export class TextSheetComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.signalRService.newBubbleReceived.subscribe((SpeechBubbleExportList) => {
+    this.backendListenerService.newBubbleReceived.subscribe((SpeechBubbleExportList) => {
       this.importfromJson(SpeechBubbleExportList);
     });
 
-    this.signalRService.oldBubbledeleted.subscribe((id) => {
+    this.backendListenerService.oldBubbleDeleted.subscribe((id) => {
       this.deleteSpeechBubble(id);
     });
 
+    this.backendListenerService.clearBubbles.subscribe(() => {
+      this.speechBubbles = new LinkedList<SpeechBubble>();
+    });
+
     this.simulateAudioTime();
+
+    this.hotkeyMenueComponent.buttonStateChanged.subscribe((newState: boolean) => {
+      this.isButtonPressed = newState;
+
+      if (this.isButtonPressed) {
+        this.addIsButtonPressedClass();
+      } else {
+        this.removeIsButtonPressedClass();
+      }
+    });
+  }
+
+  /**
+   * Adds the 'isButtonPressed' class to the middle container.
+   */
+  private addIsButtonPressedClass(): void {
+    const middleContainer = document.querySelector('.middle-container');
+    middleContainer?.classList.add('isButtonPressed');
+  }
+
+  /**
+   * Removes the 'isButtonPressed' class from the middle container.
+   */
+  private removeIsButtonPressedClass(): void {
+    const middleContainer = document.querySelector('.middle-container');
+    middleContainer?.classList.remove('isButtonPressed');
   }
 
   /**

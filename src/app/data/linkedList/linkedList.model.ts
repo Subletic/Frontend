@@ -85,34 +85,6 @@ export class LinkedList<T> {
   }
 
   /**
-   * Removes all nodes equal to an input data object from the linkedList. Nodes for removal are compared by deep equality (no pointers).
-   *
-   * @param data - The data attribute which should be searched for for deletion
-   */
-  public removeAllDeepEqualObjects(data: T): void {
-    let current = this.head;
-
-    while (current) {
-      if (JSON.stringify(current.data) === JSON.stringify(data)) {
-        if (current === this.head) {
-          this.head = current.next;
-        }
-        if (current === this.tail) {
-          this.tail = current.prev;
-        }
-        if (current.prev) {
-          current.prev.next = current.next;
-        }
-        if (current.next) {
-          current.next.prev = current.prev;
-        }
-      }
-      current = current.next;
-    }
-    return;
-  }
-
-  /**
    * Inserts a new node after a specified node in the linked list.
    * @param {T} newData - The data for the new node to insert.
    * @param {T} prevWord - The data of the node after which the new node should be inserted.
@@ -228,24 +200,6 @@ export class LinkedList<T> {
       }
       current = current.next;
     }
-    return null;
-  }
-
-  /**
-   * Retrieves the Node belonging to a specific data element within the linked list.
-   *
-   * @param data - The data element for which the Node is requested.
-   * @returns The Node of the specified data element, or null if not found.
-   */
-  public getNodeByData(data: T): Node<T> | null {
-    let current = this.head;
-
-    while (current) {
-      if (JSON.stringify(current.data) === JSON.stringify(data)) return current;
-
-      current = current.next;
-    }
-
     return null;
   }
 

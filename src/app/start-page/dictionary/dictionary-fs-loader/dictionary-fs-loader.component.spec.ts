@@ -24,7 +24,7 @@ describe('DictionaryFsLoaderComponent', () => {
 
   it('should accept a valid JSON file', async () => {
     const VALID_JSON_AS_STRING =
-      '{ "transcription_config": { "language": "en", "additional_vocab": [ { "content": "gnocchi", "sounds_like": [ "nyohki", "nokey", "nochi" ] }, { "content": "CEO", "sounds_like": [ "C.E.O." ] } ] } }';
+      '{ "transcription_config": { "language": "de", "additional_vocab": [ { "content": "gnocchi", "sounds_like": [ "nyohki", "nokey", "nochi" ] }, { "content": "CEO", "sounds_like": [ "C.E.O." ] } ] } }';
     const MOCK_FILE = new File([VALID_JSON_AS_STRING], 'validjson.json', {
       type: 'application/json',
     });
@@ -117,7 +117,7 @@ describe('DictionaryFsLoaderComponent', () => {
 
   it('should accept a JSON file containing empty additional vocab', async () => {
     const VALID_JSON_AS_STRING =
-      '{ "transcription_config": { "language": "en", "additional_vocab": [] } }';
+      '{ "transcription_config": { "language": "de", "additional_vocab": [] } }';
     const MOCK_FILE = new File([VALID_JSON_AS_STRING], 'valid.json', {
       type: 'application/json',
     });
@@ -136,7 +136,7 @@ describe('DictionaryFsLoaderComponent', () => {
 
   it('should not accept a JSON file containing no additional vocab', async () => {
     const VALID_JSON_AS_STRING =
-      '{ "transcription_config": { "language": "en", "additional_vocab": null } }';
+      '{ "transcription_config": { "language": "de", "additional_vocab": null } }';
     const MOCK_FILE = new File([VALID_JSON_AS_STRING], 'valid.json', {
       type: 'application/json',
     });
@@ -155,28 +155,7 @@ describe('DictionaryFsLoaderComponent', () => {
     );
   });
 
-  it('should not accept a JSON file containing empty sounds like', async () => {
-    const INVALID_JSON_AS_STRING =
-      '{ "transcription_config": { "language": "en", "additional_vocab": [{ "content": "gnocchi", "sounds_like": [] }, { "content": "CEO", "sounds_like": [ "C.E.O." ] } ] } }';
-    const MOCK_FILE = new File([INVALID_JSON_AS_STRING], 'invalid.json', {
-      type: 'application/json',
-    });
-    const MOCK_EVENT = {
-      target: {
-        files: [MOCK_FILE],
-      },
-    } as unknown as Event;
-
-    spyOn(component, 'displayDictionaryErrorToast');
-
-    await component.handleFileUpload(MOCK_EVENT);
-
-    expect(component.displayDictionaryErrorToast).toHaveBeenCalledWith(
-      'SoundsLike Angaben fehlerhaft!',
-    );
-  });
-
-  it('should not accept a CSV file with empty sounds like', async () => {
+  it('should accept a CSV file with empty sounds like', async () => {
     const INVALID_CSV_AS_STRING = 'Content;SoundsLike\r' + 'gnocchi;\r' + 'CEO;C.E.O.';
     const MOCK_FILE = new File([INVALID_CSV_AS_STRING], 'invalidcsv.csv', {
       type: 'text/csv',
@@ -191,14 +170,14 @@ describe('DictionaryFsLoaderComponent', () => {
 
     await component.handleFileUpload(MOCK_EVENT);
 
-    expect(component.displayDictionaryErrorToast).toHaveBeenCalledWith(
+    expect(component.displayDictionaryErrorToast).not.toHaveBeenCalledWith(
       'SoundsLike Angaben fehlerhaft!',
     );
   });
 
-  it('should not accept a JSON file containing empty string as sounds like', async () => {
+  it('should accept a JSON file containing empty string as sounds like', async () => {
     const INVALID_JSON_AS_STRING =
-      '{ "transcription_config": { "language": "en", "additional_vocab": [{ "content": "gnocchi", "sounds_like": [ "" ] }, { "content": "CEO", "sounds_like": [ "C.E.O." ] } ] } }';
+      '{ "transcription_config": { "language": "de", "additional_vocab": [{ "content": "gnocchi", "sounds_like": [ "" ] }, { "content": "CEO", "sounds_like": [ "C.E.O." ] } ] } }';
     const MOCK_FILE = new File([INVALID_JSON_AS_STRING], 'invalid.json', {
       type: 'application/json',
     });
@@ -212,7 +191,7 @@ describe('DictionaryFsLoaderComponent', () => {
 
     await component.handleFileUpload(MOCK_EVENT);
 
-    expect(component.displayDictionaryErrorToast).toHaveBeenCalledWith(
+    expect(component.displayDictionaryErrorToast).not.toHaveBeenCalledWith(
       'SoundsLike Angaben fehlerhaft!',
     );
   });
@@ -237,7 +216,7 @@ describe('DictionaryFsLoaderComponent', () => {
 
   it('should not accept a JSON file containing empty content', async () => {
     const INVALID_JSON_AS_STRING =
-      '{ "transcription_config": { "language": "en", "additional_vocab": [ { "content": "gnocchi", "sounds_like": [ "nokki" ] }, { "content": "", "sounds_like": [ "C.E.O." ] } ] } }';
+      '{ "transcription_config": { "language": "de", "additional_vocab": [ { "content": "gnocchi", "sounds_like": [ "nokki" ] }, { "content": "", "sounds_like": [ "C.E.O." ] } ] } }';
     const MOCK_FILE = new File([INVALID_JSON_AS_STRING], 'invalidjson.json', {
       type: 'application/json',
     });

@@ -8,7 +8,7 @@ describe('Dictionary', () => {
     const additionalVocab2 = new additional_vocab('gnocchi', ['nyohki', 'nokey', 'nochi']);
     const additionalVocab3 = new additional_vocab('CEO', ['C.E.O.']);
 
-    const transcriptionConfig = new transcription_config('en', [
+    const transcriptionConfig = new transcription_config('de', [
       additionalVocab1,
       additionalVocab2,
       additionalVocab3,
@@ -18,7 +18,7 @@ describe('Dictionary', () => {
 
     const EXPECTED_JSON_FORMAT_BY_SPEECHMATICS = {
       transcription_config: {
-        language: 'en',
+        language: 'de',
         additional_vocab: [
           { content: 'financial crisis' },
           {
@@ -42,7 +42,7 @@ describe('Dictionary', () => {
     const additionalVocab1 = new additional_vocab('financial crisis');
     const additionalVocab2 = new additional_vocab('gnocchi', ['nyohki', 'nokey', 'nochi']);
     const additionalVocab3 = new additional_vocab('CEO', ['C.E.O.']);
-    const transcriptionConfig1 = new transcription_config('en', [
+    const transcriptionConfig1 = new transcription_config('de', [
       additionalVocab1,
       additionalVocab2,
       additionalVocab3,
@@ -52,7 +52,7 @@ describe('Dictionary', () => {
     // Create the second dictionary
     const additionalVocab4 = new additional_vocab('gnocchi', ['new_sound']);
     const additionalVocab5 = new additional_vocab('team', ['T.E.A.M.']);
-    const transcriptionConfig2 = new transcription_config('en', [
+    const transcriptionConfig2 = new transcription_config('de', [
       additionalVocab4,
       additionalVocab5,
     ]);
@@ -63,7 +63,7 @@ describe('Dictionary', () => {
     // Verify the merged result
     const EXPECTED_MERGED_JSON_FORMAT = {
       transcription_config: {
-        language: 'en',
+        language: 'de',
         additional_vocab: [
           { content: 'financial crisis' },
           {
