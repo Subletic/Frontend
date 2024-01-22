@@ -273,11 +273,4 @@ export class TextSheetComponent implements OnInit {
   ): boolean {
     return SpeechBubble.begin <= audioTime && SpeechBubble.end >= audioTime;
   }
-
-  public irgendEineMethode(): void {
-    const isButtonPressed = this.hotkeyMenueComponent
-      ? this.hotkeyMenueComponent.isButtonPressed
-      : false;
-    console.log('Ist einer der Buttons aktiv? ', isButtonPressed);
-  }
 }
