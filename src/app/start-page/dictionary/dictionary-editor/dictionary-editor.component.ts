@@ -200,7 +200,7 @@ export class DictionaryEditorComponent implements OnInit {
   }
 
   /**
-   * Shortcuts for play/pause, skipBack and skipForwards.
+   * Shortcuts for going back and forth in the latestChangesList.
    *
    * @param event - Any key event triggered by user.
   */
