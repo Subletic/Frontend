@@ -53,7 +53,6 @@ export class TextSheetComponent implements OnInit {
 
     this.hotkeyMenueComponent.buttonStateChanged.subscribe((newState: boolean) => {
       this.isButtonPressed = newState;
-      console.log('Button State changed to:', newState);
 
       if (this.isButtonPressed) {
         this.addIsButtonPressedClass();
