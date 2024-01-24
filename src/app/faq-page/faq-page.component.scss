@@ -1,12 +1,24 @@
 .faq {
     position: fixed;
-    top: 1%;
-    left: 20%;
-    transform: translateX(-50%);
+    top: 10px;
+    left: -20px;
+    max-width: 1500px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+
+    min-height: 99%;
+    max-height: 99%;
+
+    margin-left: Auto;
+    margin-right: 80px;
+
+    z-index: 1010;
 }
 
 .faq-button {
     position: fixed;
-    top: 10%;
-    left: 98%;
+    top: 80px;
+    right: 15px;
+    border: none;
+    outline: none;
 }

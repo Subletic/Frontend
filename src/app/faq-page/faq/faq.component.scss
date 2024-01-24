@@ -1,13 +1,5 @@
 .faq-site {
-    width: 270%;
-    max-width: 270%;
-    overflow-y: scroll;
-    overflow-x: hidden;
-
-    min-height: 95.65%;
-    max-height: 95.65%;
-
-    margin-left: Auto;
+    margin-left: 40px;
     margin-right: Auto;
 
     background-color: #ffffff;
@@ -39,7 +31,8 @@ mat-accordion {
 }
 
 mat-expansion-panel-header {
-    height: 100px;
+    min-height: 100px;
+    max-height: 150px;
 }
 
 mat-panel-title {
@@ -48,8 +41,8 @@ mat-panel-title {
 }
 
 mat-expansion-panel {
-    width: 100%;
-    margin-bottom: 16px;
+    width: 80%;
+    margin-bottom: 18px;
 }
 
 p {

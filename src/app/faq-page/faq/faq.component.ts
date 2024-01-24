@@ -6,5 +6,9 @@ import { Component, Input } from '@angular/core';
   styleUrls: ['./faq.component.scss']
 })
 export class FaqComponent {
-  @Input() showFaq: boolean = false;
+  @Input() showFaq!: boolean;
+
+  emitFaq(): void {
+    this.showFaq = false;
+  }
 }

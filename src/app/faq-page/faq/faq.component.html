@@ -4,6 +4,17 @@
     </header>
     
     <mat-accordion>
+
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    Kann das Wörterbuch nach der Festlegung weiterverwendet werden?
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <p>
+                Nein, das Wörterbuch dient zur Unterstützung der Worterkennung in der Audio.
+            </p>
+        </mat-expansion-panel>
         
         <mat-expansion-panel>
             <mat-expansion-panel-header>
@@ -16,7 +27,6 @@
             </p>
         </mat-expansion-panel>
     
-        
         <mat-expansion-panel>
                 <mat-expansion-panel-header>
                     <mat-panel-title>
@@ -39,42 +49,122 @@
             </p>
         </mat-expansion-panel>
         
-
         <mat-expansion-panel>
                 <mat-expansion-panel-header>
                     <mat-panel-title>
-                        Wie installiere ich Angular CLI?
+                        Was passiert wenn man mehrere Wörterbücher hinzufügt,
+                        in welchen gleiche Wörter vorkommen?
                     </mat-panel-title>
                 </mat-expansion-panel-header>
             <p>
-                Du kannst Angular CLI mit dem Befehl "npm install -g @angular/cli" installieren.
+                Wenn gleiche Wörter in verschiedenen Wörterbüchern vorkommen,
+                werden diese zu einem zusammengefügt indem ihre klangähnlichen Wörter zusammengefasst werden.
             </p>
         </mat-expansion-panel>
 
         <mat-expansion-panel>
             <mat-expansion-panel-header>
                 <mat-panel-title>
-                    Wie installiere ich Angular CLI?
+                    Lassen sich die Einträge im Worterbuch in irgendeiner Weise sortieren?
                 </mat-panel-title>
             </mat-expansion-panel-header>
             <p>
-                Du kannst Angular CLI mit dem Befehl "npm install -g @angular/cli" installieren.
+                Das gesamte Worterbuch lässt sich, durch den "A-Z Button mit ↑",
+                nach Alphabet oder nach umgekehrten Alphabet sortieren.
             </p>
         </mat-expansion-panel>
 
         <mat-expansion-panel>
             <mat-expansion-panel-header>
                 <mat-panel-title>
-                    Wie installiere ich Angular CLI?
+                    Wo kann man die Datei beim Export abspeichern?
                 </mat-panel-title>
             </mat-expansion-panel-header>
             <p>
-                Du kannst Angular CLI mit dem Befehl "npm install -g @angular/cli" installieren.
+                Wenn man der Datei einen Namen gegeben hat und sich für ein Exportformat entschieden hat
+                und dieses anklickt öffnet sich der Explorer und man kann selber entscheiden wo man die Datei abspeichert.
             </p>
         </mat-expansion-panel>
-    
-    
-    
+
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    Was lässt sich mit der Konfiguration der Bufferlänge verändern?
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <p>
+                Die Bufferlänge legt fest wie lange die Audio im Frontend gehalten wird
+                und in ihr hin und her gesprungen werden kann.
+            </p>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    Gibt es zusätzliche Hardware, die man für die Bedienung der Software verwenden kann?
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <p>
+                Es ist möglich einen Fuß- und einen Handschalter mit der Software zu verbinden.
+            </p>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    Muss man beim Anschließen der Hardware etwas beachten?
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <p>
+                Beide Schalter werden einfach über ein USB-Kabel an den eigenen Rechner angeschlossen
+                und auf der Hauptseite können sie über ein Pop Fenster die erkannte Hardware verbinden.
+            </p>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    Können den einzeln Tasten der Schalter neu belegt werden?
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <p>
+                Nein, die einzeln Tasten haben eine vorgeschriebe Funktion und diese können nicht geändert werden .
+            </p>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    Können Audioeinstellungen angepasst werden?
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <p>
+                Die Lautstäke kann über den Lautsprecher angepasst werden und die Geschwindigkeit über das Tempomat.
+            </p>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    Gibt es Tastaturhotkeys für verschiedene Funktion?
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <p>
+                Ja, es gibt eine Hotkey Übersicht,
+                welche über den Button rechts oben in der Ecke aufgerufen werden kann.
+            </p>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    Werden die Untertitel nach der Bearbeitung irgendwo abgespeichert?
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <p>
+                Ja, die bearbeiteten Untertitel werden als WebVTT oder SRT Datei abgespeichert.
+            </p>
+        </mat-expansion-panel>
     
     </mat-accordion>
 </div>
