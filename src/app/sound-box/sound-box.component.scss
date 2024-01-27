@@ -11,7 +11,6 @@
 
 /* is for the alignment of the elements*/
 .mover {
-  float: left;
   margin-right: 15px;
   margin-left: 15px;
 }
@@ -23,8 +22,10 @@
 }
 
 .sound-container {
+  width: auto;
   background-color: var(--container-background-color);
   display: flex;
+  justify-content: flex-end;
   padding: 10px;
   border-top: #b0b0b0 1px solid;
 }
@@ -59,6 +60,23 @@
   cursor: pointer;
   border: none;
   background: var(--container-background-color);
+}
+
+.middle-buttons {
+  position: absolute;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.right-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 }
 
 //Different button-images should be fixed later
@@ -104,12 +122,6 @@
   border-radius: 30%;
 }
 
-/* contains all elements of the bottom soundbar*/
-.soundbar-button-container {
-  margin-left: auto;
-  margin-right: auto;
-}
-
 .play-button-image:hover,
 .button-image-1:hover {
   transform: scale(1.1);
@@ -119,7 +131,7 @@
   position: relative;
 }
 
-@media (max-width: 800px) {
+@media (max-width: 650px) {
   .middle-container {
     padding: 20px;
   }
@@ -130,8 +142,8 @@
 
   .sound-container {
     height: auto;
+    width: 650px;
     padding: 10px;
-    justify-content: center;
   }
 
   .sound-button-image {

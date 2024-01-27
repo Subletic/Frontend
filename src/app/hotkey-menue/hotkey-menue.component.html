@@ -4,7 +4,7 @@
       class="button"
       (click)="updateButtonState('hotkey')"
       title="Tastaturkürzel anzeigen"
-      (mousedown)="hotkeyImage.src = '../../../../assets/hotkeyButton_onclick.svg'"
+      (mousedown)="updateImage(!hotkeyButtonPressed, 'hotkey')"
       (mouseup)="updateImage(hotkeyButtonPressed, 'hotkey')"
       (mouseleave)="updateImage(hotkeyButtonPressed, 'hotkey')"
     >
@@ -22,7 +22,7 @@
       class="button"
       (click)="updateButtonState('foot')"
       title="Fußschalter anzeigen"
-      (mousedown)="footImage.src = '../../../../assets/footButton_onclick.svg'"
+      (mousedown)="updateImage(!footButtonPressed, 'foot')"
       (mouseup)="updateImage(footButtonPressed, 'foot')"
       (mouseleave)="updateImage(footButtonPressed, 'foot')"
     >
@@ -40,7 +40,7 @@
       class="button"
       (click)="updateButtonState('hand')"
       title="Handschalter anzeigen"
-      (mousedown)="handImage.src = '../../../../assets/handButton_onclick.svg'"
+      (mousedown)="updateImage(!handButtonPressed, 'hand')"
       (mouseup)="updateImage(handButtonPressed, 'hand')"
       (mouseleave)="updateImage(handButtonPressed, 'hand')"
     >
@@ -59,7 +59,7 @@
     [class.active]="menuButtonPressed"
     (click)="updateButtonState('menu')"
     title="Menü für Tastaturkürzel"
-    (mousedown)="menuImage.src = '../../../../assets/burgermenu_onclick.svg'"
+    (mousedown)="updateImage(!menuButtonPressed, 'menu')"
     (mouseup)="updateImage(menuButtonPressed, 'menu')"
     (mouseleave)="updateImage(menuButtonPressed, 'menu')"
   >
