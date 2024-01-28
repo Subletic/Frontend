@@ -109,7 +109,7 @@ export class DictionaryEditorComponent implements OnInit {
     // remove effect of index++ from updateDictionary AND set to previous entry 
     this.indexInLatestChangesList -= 2;
     console.log(this.indexInLatestChangesList);
-    if (this.alphabeticCallsAtIndex.includes(this.indexInLatestChangesList + 1)) {
+    if (this.alphabeticCallsAtIndex.includes(this.indexInLatestChangesList + 1, 1)) {
       this.alphabeticBoolean = this.alphabeticBoolean? false : true;
     }
     this.cdr.detectChanges();
@@ -126,7 +126,7 @@ export class DictionaryEditorComponent implements OnInit {
     this.configurationService.updateDictionary(DICTIONARY_NODE);
     this.latestChangesList.pop();
     console.log(this.indexInLatestChangesList);
-    if (this.alphabeticCallsAtIndex.includes(this.indexInLatestChangesList - 1)) {
+    if (this.alphabeticCallsAtIndex.includes(this.indexInLatestChangesList, 1)) {
       this.alphabeticBoolean = this.alphabeticBoolean? false : true;
     }
     this.cdr.detectChanges();
