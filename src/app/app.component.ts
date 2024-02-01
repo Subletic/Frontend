@@ -13,6 +13,7 @@ import { SoundBoxComponent } from './sound-box/sound-box.component';
 export class AppComponent {
   showDictionary = true;
   title = 'Frontend';
+  hideForFAQ = false;
 
   private soundBox: SoundBoxComponent | undefined;
 
@@ -33,5 +34,9 @@ export class AppComponent {
 
   public handleShowDictionary(showDictionary: boolean) {
     this.showDictionary = showDictionary;
+  }
+
+  public handleHideForFaq(hideForFAQ: boolean) {
+    this.hideForFAQ = hideForFAQ;
   }
 }

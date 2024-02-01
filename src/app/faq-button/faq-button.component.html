@@ -1,0 +1,12 @@
+<div>
+    <button class="faq-button" (click)="toggleFaq()">
+        <img
+        src="assets/faq.svg"
+        alt="Faq Button"
+        (mousedown)="buttonImage1.src = 'assets/faqOnClick.svg'"
+        (mouseup)="buttonImage1.src = 'assets/faq.svg'"
+        #buttonImage1
+      />
+    </button>
+</div>
+

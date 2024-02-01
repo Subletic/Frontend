@@ -31,9 +31,10 @@ import { NgOptimizedImage } from '@angular/common';
 import { StartConfigComponent } from './start-page/start-config/start-config.component';
 import { StartPageComponent } from './start-page/start-page.component';
 import { ContinuePopupComponent } from './start-page/continue-popup/continue-popup.component';
-import { FaqPageComponent } from './faq-page/faq-page.component';
+import { FaqButtonComponent } from './faq-button/faq-button.component';
+import { FaqComponent } from './faq/faq.component';
+import { AppRoutingModule } from './app-routing.module';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { FaqComponent } from './faq-page/faq/faq.component';
 
 @NgModule({
   declarations: [
@@ -53,7 +54,7 @@ import { FaqComponent } from './faq-page/faq/faq.component';
     StartConfigComponent,
     StartPageComponent,
     ContinuePopupComponent,
-    FaqPageComponent,
+    FaqButtonComponent,
     FaqComponent,
   ],
   imports: [
@@ -69,7 +70,8 @@ import { FaqComponent } from './faq-page/faq/faq.component';
     MatDividerModule,
     ToastrModule.forRoot(),
     NgOptimizedImage,
-    MatExpansionModule,
+    AppRoutingModule,
+    MatExpansionModule
   ],
   providers: [],
   bootstrap: [AppComponent],

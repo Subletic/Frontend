@@ -1,24 +1,22 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { FaqPageComponent } from './faq-page.component';
-import { FaqComponent } from './faq/faq.component';
+import { FaqButtonComponent } from './faq-button.component';
 
 describe('FaqPageComponent', () => {
-  let component: FaqPageComponent;
-  let fixture: ComponentFixture<FaqPageComponent>;
+  let component: FaqButtonComponent;
+  let fixture: ComponentFixture<FaqButtonComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [
-        FaqPageComponent,
-        FaqComponent
+        FaqButtonComponent,
       ],
     }).compileComponents();
     
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(FaqPageComponent);
+    fixture = TestBed.createComponent(FaqButtonComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -1,4 +1,6 @@
 .faq-site {
+    max-width: 2000px;
+
     margin-left: 40px;
     margin-right: Auto;
 
@@ -19,6 +21,16 @@ header {
     font-weight: bolder;
     color: var(--color-black);
     margin-bottom: 10px;
+}
+
+.back {
+    position: fixed;
+    top: 10px;
+    right: 15px;
+    font-size: 15pt;
+    background-color: red;
+    border: none;
+    cursor: pointer;
 }
 
 mat-accordion {
