@@ -5,7 +5,7 @@ import { BehaviorSubject, Subject } from 'rxjs';
  * Service used for broadcasting audio time and resetting it.
  */
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AudioService {
   private variableSubject = new BehaviorSubject<number>(0);

@@ -77,7 +77,10 @@ export class BackendListenerService {
    */
   private abortCorrection(reason: string): void {
     this.consoleHideService.backendListenerLog('Correction aborted: ' + reason);
-    this.toastr.error('Die Seite wird in kürze neu geladen.', '', { timeOut: 10000, extendedTimeOut: 10000 });
+    this.toastr.error('Die Seite wird in kürze neu geladen.', '', {
+      timeOut: 10000,
+      extendedTimeOut: 10000,
+    });
     this.toastr.error(reason, 'Korrektion abgebrochen', { timeOut: 10000, extendedTimeOut: 10000 });
     this.clearBubbles.next();
     setTimeout(() => {
