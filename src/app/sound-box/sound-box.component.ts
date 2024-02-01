@@ -256,6 +256,7 @@ export class SoundBoxComponent {
    * @param bufferLengthInMinutes
    */
   public initAudioContexts(bufferLengthInMinutes: number) {
-    this.audioHandler.initAudioContexts(bufferLengthInMinutes);
+    this.audioHandler.setBufferLength(bufferLengthInMinutes);
+    this.audioHandler.initAudioContexts();
   }
 }

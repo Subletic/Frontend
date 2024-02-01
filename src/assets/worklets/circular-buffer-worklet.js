@@ -98,9 +98,6 @@ class CircularBufferWorklet extends AudioWorkletProcessor {
         this.totalBufferSize = this.samplesPerSecond * this.bufferLengthInSeconds;
         this.buffer = new Float32Array(this.totalBufferSize);
         break;
-      case 'reset':
-        this.setInitialPlaybackState();
-        break;
       default:
         console.log('Unknown message type!');
     }
@@ -135,7 +132,7 @@ class CircularBufferWorklet extends AudioWorkletProcessor {
     this.port.postMessage({
       type: 'playState',
       audioPlaying: this.audioPlaying
-    })
+    });
   }
 
   /**
@@ -151,16 +148,20 @@ class CircularBufferWorklet extends AudioWorkletProcessor {
       return true;
     }
 
-    const outputChannel = outputs[0][0];
-    const FRAME_SIZE = outputChannel.length; // Should be 128
-
-    const bufferPointers = this.calculateNewBufferPointers(FRAME_SIZE);
-
     // Check if Read Pointer is trying to overtake Write Pointer
     if (this.absoluteReadTimeInMilliseconds >= this.absoluteWriteTimeInMilliseconds) {
       this.updatePlayState(false);
       return true;
     }
+
+    console.log("Write: " + this.absoluteWriteTimeInMilliseconds)
+    console.log("Read: " + this.absoluteReadTimeInMilliseconds)
+
+    const outputChannel = outputs[0][0];
+    const FRAME_SIZE = outputChannel.length; // Should be 128
+
+    const bufferPointers = this.calculateNewBufferPointers(FRAME_SIZE);
+
 
     // Check if 1/10 of a second has been read
     if (this.audioChunksRead >= this.samplesPerSecond / 100) {
@@ -191,33 +192,49 @@ class CircularBufferWorklet extends AudioWorkletProcessor {
       this.absoluteWriteTimeInMilliseconds - this.absoluteReadTimeInMilliseconds;
     const AMOUNT_OF_SAMPLES_TO_READ = FRAME_SIZE;
     const SECONDS_TO_MILLISECONDS_MULTIPLIER = 1000;
+    const FRAME_SIZE_IN_SECONDS = FRAME_SIZE / this.samplesPerSecond;
+    const FRAME_SIZE_IN_MILLISECONDS = FRAME_SIZE_IN_SECONDS * SECONDS_TO_MILLISECONDS_MULTIPLIER;
 
     let oldReadPointer = this.readPointer;
     let newReadPointer;
 
-    // Check if read pointer is already overwritten with new data
-    if (
-      READ_WRITE_TIME_DIFFERENCE >=
-      this.bufferLengthInSeconds * SECONDS_TO_MILLISECONDS_MULTIPLIER
-    ) {
-      // Read pointer too old
-      console.log('Read pointer too old!');
-      newReadPointer =
-        this.writePointer -
-        this.totalBufferSize +
-        this.safetyMarginInSeconds * this.samplesPerSecond;
-      oldReadPointer = (newReadPointer - this.samplesPerSecond) % this.totalBufferSize;
-      const ABSOLUTE_BUFFER_START =
-        this.absoluteWriteTimeInMilliseconds -
-        this.bufferLengthInSeconds * SECONDS_TO_MILLISECONDS_MULTIPLIER;
-      this.setNewAbsoluteReadTime(
-        ABSOLUTE_BUFFER_START + this.safetyMarginInSeconds * SECONDS_TO_MILLISECONDS_MULTIPLIER
-      );
-    } else {
-      newReadPointer = (oldReadPointer + AMOUNT_OF_SAMPLES_TO_READ) % this.totalBufferSize;
-      this.audioChunksRead += AMOUNT_OF_SAMPLES_TO_READ;
+    // Check if Read Pointer is too old
+    const READ_POINTER_TOO_OLD = READ_WRITE_TIME_DIFFERENCE >=
+      this.bufferLengthInSeconds * SECONDS_TO_MILLISECONDS_MULTIPLIER;
+    if (READ_POINTER_TOO_OLD) {
+      return this.calculateTooOldReadPointers(SECONDS_TO_MILLISECONDS_MULTIPLIER);
     }
 
+    // Check if Read Pointer is too close to Write Pointer
+    const READ_POINTER_TOO_CLOSE = READ_WRITE_TIME_DIFFERENCE <= FRAME_SIZE_IN_MILLISECONDS
+    if (READ_POINTER_TOO_CLOSE) {
+      const REMAINING_NEW_SAMPLES =
+        Math.floor(READ_WRITE_TIME_DIFFERENCE / FRAME_SIZE_IN_MILLISECONDS);
+      newReadPointer = (oldReadPointer + REMAINING_NEW_SAMPLES) % this.totalBufferSize;
+      this.audioChunksRead += REMAINING_NEW_SAMPLES;
+      return [oldReadPointer, newReadPointer];
+    }
+
+    // All other cases
+    newReadPointer = (oldReadPointer + AMOUNT_OF_SAMPLES_TO_READ) % this.totalBufferSize;
+    this.audioChunksRead += AMOUNT_OF_SAMPLES_TO_READ;
+
+    return [oldReadPointer, newReadPointer];
+  }
+
+  calculateTooOldReadPointers(SECONDS_TO_MILLISECONDS_MULTIPLIER) {
+    console.log('Read pointer too old!');
+    const newReadPointer =
+      this.writePointer -
+      this.totalBufferSize +
+      this.safetyMarginInSeconds * this.samplesPerSecond;
+    const oldReadPointer = (newReadPointer - this.samplesPerSecond) % this.totalBufferSize;
+    const ABSOLUTE_BUFFER_START =
+      this.absoluteWriteTimeInMilliseconds -
+      this.bufferLengthInSeconds * SECONDS_TO_MILLISECONDS_MULTIPLIER;
+    this.setNewAbsoluteReadTime(
+      ABSOLUTE_BUFFER_START + this.safetyMarginInSeconds * SECONDS_TO_MILLISECONDS_MULTIPLIER
+    );
     return [oldReadPointer, newReadPointer];
   }
 

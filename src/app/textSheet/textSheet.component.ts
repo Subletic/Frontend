@@ -229,12 +229,11 @@ export class TextSheetComponent implements OnInit {
     while (current) {
       if (current.data.id == id) {
         this.speechBubbles.remove(current.data);
+        this.checkForTranscriptionEnd();
         return;
       }
       current = current.next;
     }
-
-    this.checkForTranscriptionEnd()
   }
 
   /**

@@ -51,7 +51,8 @@ describe('AudioHandlerComponent', () => {
   });
 
   it('should initialize audio contexts correctly', () => {
-    component.initAudioContexts(1);
+    component.setBufferLength(1)
+    component.initAudioContexts();
 
     expect(component['audioContexts'].length).toEqual(7);
   });

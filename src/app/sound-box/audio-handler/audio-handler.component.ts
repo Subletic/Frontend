@@ -30,6 +30,7 @@ interface WorkletState {
 export class AudioHandlerComponent implements OnInit {
   // Constants for audio buffering and sampling
   private sampleRate = 48000;
+  private bufferLengthInMinutes = 2;
 
   // Audio contexts/source nodes for different playback speeds
   private audioContexts: AudioContext[] = [];
@@ -72,9 +73,8 @@ export class AudioHandlerComponent implements OnInit {
     });
 
     this.audioService.audioResetRequested.subscribe(() => {
-      for (const audioBuffer of this.audioBuffers) {
-        audioBuffer.port.postMessage({ type: 'reset' });
-      }
+      console.log("Reset Requested!")
+      this.initAudioContexts()
     });
 
     this.audioService.updateVariable(this.readTimeInMilliseconds);
@@ -82,15 +82,14 @@ export class AudioHandlerComponent implements OnInit {
 
   /**
    * Initializes all audio contexts for different playback speeds.
-   * @param bufferLengthInMinutes
    */
-  public initAudioContexts(bufferLengthInMinutes: number): void {
+  public initAudioContexts(): void {
     const BASE_SAMPLE_RATE = 48000;
     const SPEED_MULTIPLIERS = [0.7, 0.8, 0.9, 1, 1.1, 1.2, 1.3];
 
     // Setup all audio contexts
     for (const multiplier of SPEED_MULTIPLIERS) {
-      this.initNewAudioContext(BASE_SAMPLE_RATE, multiplier, bufferLengthInMinutes);
+      this.initNewAudioContext(BASE_SAMPLE_RATE, multiplier, this.bufferLengthInMinutes);
     }
   }
 
@@ -339,5 +338,9 @@ export class AudioHandlerComponent implements OnInit {
     this.gainNode.gain.setValueAtTime(this.volume, this.audioContext.currentTime);
     this.audioBufferNode?.connect(this.gainNode);
     this.gainNode.connect(this.audioContext.destination);
+  }
+
+  public setBufferLength(length: number) {
+    this.bufferLengthInMinutes = length
   }
 }
