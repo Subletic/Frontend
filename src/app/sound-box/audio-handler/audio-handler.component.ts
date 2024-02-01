@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { BackendListenerService } from '../service/backend-listener.service';
-import { AudioService } from '../service/audio.service';
-import { ConsoleHideService } from '../service/consoleHide.service';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { BackendListenerService } from '../../service/backend-listener.service';
+import { AudioService } from '../../service/audio.service';
+import { ConsoleHideService } from '../../service/consoleHide.service';
 
 /**
  * The WorkletState interface represents the state of the AudioWorklet.
@@ -25,7 +25,7 @@ interface WorkletState {
 @Component({
   selector: 'app-audio-handler',
   templateUrl: './audio-handler.component.html',
-  styleUrls: ['./audio-handler.component.scss'],
+  styleUrls: ['./audio-handler.component.scss']
 })
 export class AudioHandlerComponent implements OnInit {
   // Constants for audio buffering and sampling
@@ -47,6 +47,8 @@ export class AudioHandlerComponent implements OnInit {
   private audioPlaying = false;
   private readTimeInMilliseconds = 0;
 
+  @Output() playbackChangeEvent = new EventEmitter<boolean>();
+
   /**
    * Gets the reference to required Services.
    * @param backendListener - The SignalRService to get the reference to.
@@ -56,8 +58,9 @@ export class AudioHandlerComponent implements OnInit {
   constructor(
     private backendListener: BackendListenerService,
     private audioService: AudioService,
-    private consoleHideService: ConsoleHideService,
-  ) {}
+    private consoleHideService: ConsoleHideService
+  ) {
+  }
 
   /**
    * Initializes SignalR stream connection.
@@ -100,10 +103,10 @@ export class AudioHandlerComponent implements OnInit {
   private initNewAudioContext(
     BASE_SAMPLE_RATE: number,
     multiplier: number,
-    bufferLengthInMinutes: number,
+    bufferLengthInMinutes: number
   ): void {
     const audioContext = new AudioContext({
-      sampleRate: BASE_SAMPLE_RATE * multiplier,
+      sampleRate: BASE_SAMPLE_RATE * multiplier
     });
     audioContext.audioWorklet
       .addModule('/assets/worklets/circular-buffer-worklet.js')
@@ -114,7 +117,7 @@ export class AudioHandlerComponent implements OnInit {
         const newAudioBufferNode = new AudioWorkletNode(audioContext, 'circular-buffer-worklet');
         newAudioBufferNode.port.postMessage({
           type: 'setBufferLength',
-          bufferLengthInSeconds: bufferLengthInMinutes * 60,
+          bufferLengthInSeconds: bufferLengthInMinutes * 60
         });
         newAudioBufferNode.port.onmessage = (event) => {
           switch (event.data.type) {
@@ -124,6 +127,10 @@ export class AudioHandlerComponent implements OnInit {
             case 'newReadTime': {
               this.readTimeInMilliseconds = event.data.readTime;
               this.audioService.updateVariable(this.readTimeInMilliseconds);
+              break;
+            }
+            case 'playState': {
+              this.playbackChangeEvent.emit(event.data.audioPlaying)
               break;
             }
             default:
@@ -183,8 +190,8 @@ export class AudioHandlerComponent implements OnInit {
         type: 'audioData',
         audioData: convertedAudioData.subarray(
           i * WORKLET_FRAME_SIZE,
-          (i + 1) * WORKLET_FRAME_SIZE,
-        ),
+          (i + 1) * WORKLET_FRAME_SIZE
+        )
       });
     }
   }
@@ -216,7 +223,7 @@ export class AudioHandlerComponent implements OnInit {
   public skipForward(): void {
     this.audioBufferNode?.port.postMessage({
       type: 'skipForward',
-      seconds: this.skipSeconds,
+      seconds: this.skipSeconds
     });
   }
 
@@ -226,7 +233,7 @@ export class AudioHandlerComponent implements OnInit {
   public skipBackward(): void {
     this.audioBufferNode?.port.postMessage({
       type: 'skipBackward',
-      seconds: this.skipSeconds,
+      seconds: this.skipSeconds
     });
   }
 
@@ -246,7 +253,7 @@ export class AudioHandlerComponent implements OnInit {
       LOWEST_INPUT_VOL_LEVEL,
       HIGHEST_INPUT_VOL_LEVEL,
       MIN_VOLUME,
-      MAX_VOLUME,
+      MAX_VOLUME
     );
 
     if (!this.gainNode) return;
@@ -266,7 +273,7 @@ export class AudioHandlerComponent implements OnInit {
     origMin: number,
     origMax: number,
     newMin: number,
-    newMax: number,
+    newMax: number
   ): number {
     return ((value - origMin) * (newMax - newMin)) / (origMax - origMin) + newMin;
   }
@@ -303,7 +310,7 @@ export class AudioHandlerComponent implements OnInit {
     // Send Message to restore old playback state
     this.audioBufferNode?.port.postMessage({
       type: 'setWorkletState',
-      workletState: workletState,
+      workletState: workletState
     });
 
     if (this.audioPlaying) this.audioBufferNode?.port.postMessage({ type: 'play' });

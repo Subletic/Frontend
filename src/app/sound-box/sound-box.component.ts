@@ -1,5 +1,5 @@
 import { Component, ViewChild, ElementRef, HostListener } from '@angular/core';
-import { AudioHandlerComponent } from '../audio-handler/audio-handler.component';
+import { AudioHandlerComponent } from './audio-handler/audio-handler.component';
 import { HidControlService } from '../service/hid-control.service';
 import { SettingsService } from '../settings/settings.service';
 import { SettingsComponent } from '../settings/settings.component';

@@ -1,4 +1,4 @@
-<app-audio-handler #audioHandler></app-audio-handler>
+<app-audio-handler (playbackChangeEvent)='isAudioPlaying = $event' #audioHandler></app-audio-handler>
 
 <div class="sound-container fixed-bottom d-flex align-items-center justify-content-center">
 

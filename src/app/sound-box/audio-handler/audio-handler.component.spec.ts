@@ -1,6 +1,6 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { AudioHandlerComponent } from './audio-handler.component';
-import { BackendListenerService } from '../service/backend-listener.service';
+import { BackendListenerService } from '../../service/backend-listener.service';
 import { ToastrService } from 'ngx-toastr';
 
 // Hard to implement meaningful tests because most methods work directly on the Web Audio API - Audio Elements

@@ -98,7 +98,7 @@ class CircularBufferWorklet extends AudioWorkletProcessor {
         this.totalBufferSize = this.samplesPerSecond * this.bufferLengthInSeconds;
         this.buffer = new Float32Array(this.totalBufferSize);
         break;
-      case 'resetState':
+      case 'reset':
         this.setInitialPlaybackState();
         break;
       default:
@@ -129,6 +129,15 @@ class CircularBufferWorklet extends AudioWorkletProcessor {
     }
   }
 
+  updatePlayState(playState) {
+    this.audioPlaying = playState;
+
+    this.port.postMessage({
+      type: 'playState',
+      audioPlaying: this.audioPlaying
+    })
+  }
+
   /**
    * Moves audio data from the circular buffer to the output buffer of the worklet.
    * Handles playback position and collision detection.
@@ -149,6 +158,7 @@ class CircularBufferWorklet extends AudioWorkletProcessor {
 
     // Check if Read Pointer is trying to overtake Write Pointer
     if (this.absoluteReadTimeInMilliseconds >= this.absoluteWriteTimeInMilliseconds) {
+      this.updatePlayState(false);
       return true;
     }
 
