@@ -45,6 +45,13 @@ class CircularBufferWorklet extends AudioWorkletProcessor {
     this.bufferLengthInSeconds = BUFFER_LENGTH_IN_SECONDS;
     this.safetyMarginInSeconds = SAFETY_MARGIN_IN_SECONDS;
 
+    this.setInitialPlaybackState();
+  }
+
+  /**
+   * Sets the initial playback state of the worklet.
+   */
+  setInitialPlaybackState() {
     this.audioPlaying = false;
     this.writePointer = 0;
     this.readPointer = 0;
@@ -90,6 +97,9 @@ class CircularBufferWorklet extends AudioWorkletProcessor {
         this.bufferLengthInSeconds = message.bufferLengthInSeconds;
         this.totalBufferSize = this.samplesPerSecond * this.bufferLengthInSeconds;
         this.buffer = new Float32Array(this.totalBufferSize);
+        break;
+      case 'resetState':
+        this.setInitialPlaybackState();
         break;
       default:
         console.log('Unknown message type!');
@@ -191,7 +201,7 @@ class CircularBufferWorklet extends AudioWorkletProcessor {
         this.absoluteWriteTimeInMilliseconds -
         this.bufferLengthInSeconds * SECONDS_TO_MILLISECONDS_MULTIPLIER;
       this.setNewAbsoluteReadTime(
-        ABSOLUTE_BUFFER_START + this.safetyMarginInSeconds * SECONDS_TO_MILLISECONDS_MULTIPLIER,
+        ABSOLUTE_BUFFER_START + this.safetyMarginInSeconds * SECONDS_TO_MILLISECONDS_MULTIPLIER
       );
     } else {
       newReadPointer = (oldReadPointer + AMOUNT_OF_SAMPLES_TO_READ) % this.totalBufferSize;
@@ -228,14 +238,14 @@ class CircularBufferWorklet extends AudioWorkletProcessor {
     this.readPointer = (this.readPointer + SAMPLES_TO_ADVANCE) % this.totalBufferSize;
     const SECONDS_TO_MILLISECONDS_MULTIPLIER = 1000;
     this.setNewAbsoluteReadTime(
-      this.absoluteReadTimeInMilliseconds + secondsToAdvance * SECONDS_TO_MILLISECONDS_MULTIPLIER,
+      this.absoluteReadTimeInMilliseconds + secondsToAdvance * SECONDS_TO_MILLISECONDS_MULTIPLIER
     );
 
     // Keep Read Pointer away from Write Pointer
     if (this.absoluteReadTimeInMilliseconds >= this.absoluteWriteTimeInMilliseconds) {
       this.setNewAbsoluteReadTime(
         this.absoluteWriteTimeInMilliseconds -
-          this.safetyMarginInSeconds * SECONDS_TO_MILLISECONDS_MULTIPLIER,
+        this.safetyMarginInSeconds * SECONDS_TO_MILLISECONDS_MULTIPLIER
       );
       this.readPointer = this.writePointer - this.safetyMarginInSeconds * this.samplesPerSecond;
     }
@@ -251,7 +261,7 @@ class CircularBufferWorklet extends AudioWorkletProcessor {
     this.readPointer = (this.readPointer - SAMPLES_TO_DECREASE) % this.totalBufferSize;
     const SECONDS_TO_MILLISECONDS_MULTIPLIER = 1000;
     this.setNewAbsoluteReadTime(
-      this.absoluteReadTimeInMilliseconds - secondsToDecrease * SECONDS_TO_MILLISECONDS_MULTIPLIER,
+      this.absoluteReadTimeInMilliseconds - secondsToDecrease * SECONDS_TO_MILLISECONDS_MULTIPLIER
     );
 
     // Keep Read Pointer away from End of Buffer
@@ -261,7 +271,7 @@ class CircularBufferWorklet extends AudioWorkletProcessor {
     if (this.absoluteReadTimeInMilliseconds <= END_OF_BUFFER_TIME_TIMESTAMP) {
       this.setNewAbsoluteReadTime(
         END_OF_BUFFER_TIME_TIMESTAMP +
-          this.safetyMarginInSeconds * SECONDS_TO_MILLISECONDS_MULTIPLIER,
+        this.safetyMarginInSeconds * SECONDS_TO_MILLISECONDS_MULTIPLIER
       );
       this.readPointer =
         this.writePointer -
@@ -279,7 +289,7 @@ class CircularBufferWorklet extends AudioWorkletProcessor {
     this.absoluteReadTimeInMilliseconds = newReadTimeInMilliseconds;
     this.port.postMessage({
       type: 'newReadTime',
-      readTime: newReadTimeInMilliseconds,
+      readTime: newReadTimeInMilliseconds
     });
   }
 
@@ -298,11 +308,11 @@ class CircularBufferWorklet extends AudioWorkletProcessor {
       audioChunksRead: this.audioChunksRead,
       absoluteReadTimeInSeconds: this.absoluteReadTimeInMilliseconds,
       absoluteWriteTimeInSeconds: this.absoluteWriteTimeInMilliseconds,
-      safetyMarginInSeconds: this.safetyMarginInSeconds,
+      safetyMarginInSeconds: this.safetyMarginInSeconds
     };
     this.port.postMessage({
       type: 'workletState',
-      workletState: workletState,
+      workletState: workletState
     });
   }
 

@@ -16,7 +16,7 @@ import { BackendListenerService } from '../service/backend-listener.service';
 @Component({
   selector: 'app-text-sheet',
   templateUrl: './textSheet.component.html',
-  styleUrls: ['./textSheet.component.scss'],
+  styleUrls: ['./textSheet.component.scss']
 })
 export class TextSheetComponent implements OnInit {
   // Attribute holding all showcased linkedList of Instance SpeechBubble
@@ -33,7 +33,7 @@ export class TextSheetComponent implements OnInit {
   constructor(
     private backendListenerService: BackendListenerService,
     private backendProviderService: BackendProviderService,
-    private audioService: AudioService,
+    private audioService: AudioService
   ) {
     this.audioService.variable$.subscribe((value) => {
       this.readTimeInSeconds = value / 1000;
@@ -104,7 +104,7 @@ export class TextSheetComponent implements OnInit {
           word.confidence,
           word.startTime,
           word.endTime,
-          word.speaker,
+          word.speaker
         );
 
         speechBubbleContent.push(wordExport);
@@ -115,7 +115,7 @@ export class TextSheetComponent implements OnInit {
         speechBubbleExport.speaker,
         speechBubbleExport.startTime,
         speechBubbleExport.endTime,
-        speechBubbleContent,
+        speechBubbleContent
       );
 
       speechBubbleExportArray.push(speechBubbleExport2);
@@ -233,6 +233,19 @@ export class TextSheetComponent implements OnInit {
       }
       current = current.next;
     }
+
+    this.checkForTranscriptionEnd()
+  }
+
+  /**
+   * Checks if the transcription has ended and resets the audio time if so.
+   */
+  private checkForTranscriptionEnd(): void {
+    if (this.speechBubbles.head != null) {
+      return;
+    }
+
+    this.audioService.resetAudioTime();
   }
 
   /**
@@ -272,7 +285,7 @@ export class TextSheetComponent implements OnInit {
    */
   private currentAudioTimeInSpeechbubbleTime(
     SpeechBubble: SpeechBubble,
-    audioTime: number,
+    audioTime: number
   ): boolean {
     return SpeechBubble.begin <= audioTime && SpeechBubble.end >= audioTime;
   }

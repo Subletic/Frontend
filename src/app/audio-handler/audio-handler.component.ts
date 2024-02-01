@@ -51,6 +51,7 @@ export class AudioHandlerComponent implements OnInit {
    * Gets the reference to required Services.
    * @param backendListener - The SignalRService to get the reference to.
    * @param audioService - The AudioService to get the reference to.
+   * @param consoleHideService - The ConsoleHideService to get the reference to.
    */
   constructor(
     private backendListener: BackendListenerService,
@@ -65,6 +66,12 @@ export class AudioHandlerComponent implements OnInit {
     // Subscribe to the received audio stream event from SignalRService
     this.backendListener.receivedAudioStream.subscribe((newChunk) => {
       this.handleAudioData(newChunk);
+    });
+
+    this.audioService.audioResetRequested.subscribe(() => {
+      for (const audioBuffer of this.audioBuffers) {
+        audioBuffer.port.postMessage({ type: 'reset' });
+      }
     });
 
     this.audioService.updateVariable(this.readTimeInMilliseconds);
