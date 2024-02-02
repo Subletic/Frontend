@@ -106,11 +106,11 @@ export class DictionaryEditorComponent implements OnInit {
     const DICTIONARY_NODE = this.latestChangesList[this.indexInLatestChangesList - 1];
     this.configurationService.updateDictionary(DICTIONARY_NODE);
     this.latestChangesList.pop();
-    // remove effect of index++ from updateDictionary AND set to previous entry 
+    // remove effect of index++ from updateDictionary AND set to previous entry
     this.indexInLatestChangesList -= 2;
     console.log(this.indexInLatestChangesList);
     if (this.alphabeticCallsAtIndex.includes(this.indexInLatestChangesList + 1, 1)) {
-      this.alphabeticBoolean = this.alphabeticBoolean? false : true;
+      this.alphabeticBoolean = this.alphabeticBoolean ? false : true;
     }
     this.cdr.detectChanges();
     this.updateHasPrevAndNext();
@@ -127,7 +127,7 @@ export class DictionaryEditorComponent implements OnInit {
     this.latestChangesList.pop();
     console.log(this.indexInLatestChangesList);
     if (this.alphabeticCallsAtIndex.includes(this.indexInLatestChangesList, 1)) {
-      this.alphabeticBoolean = this.alphabeticBoolean? false : true;
+      this.alphabeticBoolean = this.alphabeticBoolean ? false : true;
     }
     this.cdr.detectChanges();
     this.updateHasPrevAndNext();
@@ -217,20 +217,18 @@ export class DictionaryEditorComponent implements OnInit {
    * Shortcuts for going back and forth in the latestChangesList.
    *
    * @param event - Any key event triggered by user.
-  */
-    @HostListener('document:keydown', ['$event'])
-    public handleKeyboardEvent(event: KeyboardEvent): void {
-      if (event.ctrlKey) {
-        switch (event.key) {
-          case 'z':
-            this.goToPreviousChange();
-            break;
-          case 'y':
-            this.goToNextChange();
-            break;
-        }
+   */
+  @HostListener('document:keydown', ['$event'])
+  public handleKeyboardEvent(event: KeyboardEvent): void {
+    if (event.ctrlKey) {
+      switch (event.key) {
+        case 'z':
+          this.goToPreviousChange();
+          break;
+        case 'y':
+          this.goToNextChange();
+          break;
       }
     }
-    
-
+  }
 }

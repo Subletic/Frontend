@@ -16,16 +16,34 @@
             <div class="seconds-value-label">{{ updatedAudioSkipSeconds }} Sekunden</div>
           </div>
           <div class="slider">
-            <input type="range" id="seconds-slider" min="1" max="20" class="styled-slider slider-progress"
-              [(ngModel)]="updatedAudioSkipSeconds" #secondsInput="ngModel" #secondsSlider />
+            <input
+              type="range"
+              id="seconds-slider"
+              min="1"
+              max="20"
+              class="styled-slider slider-progress"
+              [(ngModel)]="updatedAudioSkipSeconds"
+              #secondsInput="ngModel"
+              #secondsSlider
+            />
           </div>
         </div>
 
         <div class="buttons-container">
-          <button mat-stroked-button class="settings-button" [style.color]="getBackgroundColor()" (click)="apply()">
+          <button
+            mat-stroked-button
+            class="settings-button"
+            [style.color]="getBackgroundColor()"
+            (click)="apply()"
+          >
             Anwenden
           </button>
-          <button mat-stroked-button class="settings-button" [style.color]="getBackgroundColor()" (click)="cancel()">
+          <button
+            mat-stroked-button
+            class="settings-button"
+            [style.color]="getBackgroundColor()"
+            (click)="cancel()"
+          >
             Abbrechen
           </button>
         </div>

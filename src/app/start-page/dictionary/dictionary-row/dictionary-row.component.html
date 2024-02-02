@@ -1,6 +1,11 @@
 <div class="row-container">
   <div class="column-container">
-    <div class="word-column" appNoSpecialChars contenteditable="true" (input)="onContentChange('content', $event)">
+    <div
+      class="word-column"
+      appNoSpecialChars
+      contenteditable="true"
+      (input)="onContentChange('content', $event)"
+    >
       {{ content_copy }}
     </div>
   </div>

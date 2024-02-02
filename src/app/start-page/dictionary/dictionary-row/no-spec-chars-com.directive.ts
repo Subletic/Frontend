@@ -1,10 +1,9 @@
 import { Directive, HostListener } from '@angular/core';
 
 @Directive({
-  selector: '[appNoSpecialCharsWithCommas]'
+  selector: '[appNoSpecialCharsWithCommas]',
 })
 export class NoSpecialCharsWithCommasDirective {
-
   @HostListener('keydown', ['$event'])
   onKeyDown(event: KeyboardEvent): void {
     const allowedChars = /^[a-zA-ZäöüÄÖÜß,-]*$/;

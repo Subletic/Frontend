@@ -55,7 +55,7 @@ import { NoSpecialCharsWithCommasDirective } from './start-page/dictionary/dicti
     ContinuePopupComponent,
     HotkeyMenueComponent,
     NoSpecialCharsDirective,
-    NoSpecialCharsWithCommasDirective
+    NoSpecialCharsWithCommasDirective,
   ],
   imports: [
     BrowserModule,
