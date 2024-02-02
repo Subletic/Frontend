@@ -1,6 +1,6 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { AudioHandlerComponent } from './audio-handler.component';
-import { BackendListenerService } from '../service/backend-listener.service';
+import { BackendListenerService } from '../../service/backend-listener.service';
 import { ToastrService } from 'ngx-toastr';
 
 // Hard to implement meaningful tests because most methods work directly on the Web Audio API - Audio Elements
@@ -51,7 +51,8 @@ describe('AudioHandlerComponent', () => {
   });
 
   it('should initialize audio contexts correctly', () => {
-    component.initAudioContexts(1);
+    component.setBufferLength(1);
+    component.initAudioContexts();
 
     expect(component['audioContexts'].length).toEqual(7);
   });

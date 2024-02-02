@@ -7,7 +7,7 @@ import { AppComponent } from './app.component';
 import { SoundBoxComponent } from './sound-box/sound-box.component';
 import { SpeechbubbleComponent } from './textSheet/speechbubble/speechbubble.component';
 import { TextSheetComponent } from './textSheet/textSheet.component';
-import { AudioHandlerComponent } from './audio-handler/audio-handler.component';
+import { AudioHandlerComponent } from './sound-box/audio-handler/audio-handler.component';
 import { SettingsComponent } from './settings/settings.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
