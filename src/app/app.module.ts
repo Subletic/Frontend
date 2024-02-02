@@ -32,6 +32,8 @@ import { StartConfigComponent } from './start-page/start-config/start-config.com
 import { StartPageComponent } from './start-page/start-page.component';
 import { ContinuePopupComponent } from './start-page/continue-popup/continue-popup.component';
 import { HotkeyMenueComponent } from './hotkey-menue/hotkey-menue.component';
+import { NoSpecialCharsDirective } from './start-page/dictionary/dictionary-row/no-special-chars.directive';
+import { NoSpecialCharsWithCommasDirective } from './start-page/dictionary/dictionary-row/no-spec-chars-com.directive';
 
 @NgModule({
   declarations: [
@@ -52,6 +54,8 @@ import { HotkeyMenueComponent } from './hotkey-menue/hotkey-menue.component';
     StartPageComponent,
     ContinuePopupComponent,
     HotkeyMenueComponent,
+    NoSpecialCharsDirective,
+    NoSpecialCharsWithCommasDirective
   ],
   imports: [
     BrowserModule,

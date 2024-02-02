@@ -41,13 +41,24 @@ export class DictionaryRowComponent implements AfterViewInit {
    */
   onContentChange(property: keyof additional_vocab, event: Event): void {
     const TARGET = event.target as HTMLDivElement;
-    const CONTENT = TARGET.textContent;
+
+    if (event instanceof KeyboardEvent && event.key === ' ') {
+      event.preventDefault(); // Verhindere die Standardaktion der Leertaste
+      return;
+    }
+    
+    let CONTENT = TARGET.textContent;
+
+    if (!CONTENT) return;
 
     if (property === 'sounds_like') {
-      this.rowData[property] = CONTENT?.split(',').map((value: string) => value.trim());
+      this.rowData[property] = CONTENT.split(',').map((value: string) => value.trim());
+      console.log(this.rowData[property]);
     } else {
-      if (!CONTENT) return;
+      CONTENT = CONTENT.replace(/[,]/g, '').trim();
       this.rowData[property] = CONTENT;
+      //this.content_copy = CONTENT;
+      console.log(this.rowData[property]);
     }
 
     this.changedRow.emit();
