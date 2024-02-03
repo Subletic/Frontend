@@ -153,9 +153,6 @@ class CircularBufferWorklet extends AudioWorkletProcessor {
       return true;
     }
 
-    console.log("Reaad Time: " + this.absoluteReadTimeInMilliseconds);
-    console.log("Read Pointer: " + this.readPointer);
-
     // Check if Read Pointer is trying to overtake Write Pointer
     if (this.absoluteReadTimeInMilliseconds >= this.absoluteWriteTimeInMilliseconds) {
       this.updatePlayState(false);
@@ -269,20 +266,20 @@ class CircularBufferWorklet extends AudioWorkletProcessor {
    */
   advanceReadPointer(secondsToAdvance) {
     const SAMPLES_TO_ADVANCE = secondsToAdvance * this.samplesPerSecond;
-    this.readPointer = (this.readPointer + SAMPLES_TO_ADVANCE) % this.totalBufferSize;
     const SECONDS_TO_MILLISECONDS_MULTIPLIER = 1000;
-    this.setNewAbsoluteReadTime(
-      this.absoluteReadTimeInMilliseconds + secondsToAdvance * SECONDS_TO_MILLISECONDS_MULTIPLIER
-    );
+    const NEW_READ_TIME = this.absoluteReadTimeInMilliseconds + secondsToAdvance * SECONDS_TO_MILLISECONDS_MULTIPLIER;
+    const SAFETY_MARGIN_IN_MILLISECONDS = this.safetyMarginInSeconds * SECONDS_TO_MILLISECONDS_MULTIPLIER;
 
     // Keep Read Pointer away from Write Pointer
-    if (this.absoluteReadTimeInMilliseconds >= this.absoluteWriteTimeInMilliseconds) {
-      this.setNewAbsoluteReadTime(
-        this.absoluteWriteTimeInMilliseconds -
-        this.safetyMarginInSeconds * SECONDS_TO_MILLISECONDS_MULTIPLIER
-      );
-      this.readPointer = this.writePointer - this.safetyMarginInSeconds * this.samplesPerSecond;
+    if (NEW_READ_TIME >= this.absoluteWriteTimeInMilliseconds) {
+      this.setNewAbsoluteReadTime(this.absoluteWriteTimeInMilliseconds - SAFETY_MARGIN_IN_MILLISECONDS);
+      this.readPointer = (this.writePointer - this.safetyMarginInSeconds * this.samplesPerSecond) % this.totalBufferSize;
+      return;
     }
+
+    // Otherwise advance Read Pointer as usual
+    this.readPointer = (this.readPointer + SAMPLES_TO_ADVANCE) % this.totalBufferSize;
+    this.setNewAbsoluteReadTime(NEW_READ_TIME);
   }
 
   /**
@@ -294,7 +291,7 @@ class CircularBufferWorklet extends AudioWorkletProcessor {
     const SECONDS_TO_MILLISECONDS_MULTIPLIER = 1000;
     const SAMPLES_TO_DECREASE = secondsToDecrease * this.samplesPerSecond;
 
-    const BUFFER_LENGTH_IN_MILLISECONDS = this.bufferLengthInSeconds * SECONDS_TO_MILLISECONDS_MULTIPLIER
+    const BUFFER_LENGTH_IN_MILLISECONDS = this.bufferLengthInSeconds * SECONDS_TO_MILLISECONDS_MULTIPLIER;
     const START_OF_BUFFER_TIMESTAMP = this.absoluteWriteTimeInMilliseconds - BUFFER_LENGTH_IN_MILLISECONDS;
     const LOWER_TIME_BOUND = Math.max(0, START_OF_BUFFER_TIMESTAMP);
     const NEW_READ_TIME = this.absoluteReadTimeInMilliseconds - (secondsToDecrease * SECONDS_TO_MILLISECONDS_MULTIPLIER);
@@ -312,6 +309,7 @@ class CircularBufferWorklet extends AudioWorkletProcessor {
       return;
     }
 
+    // Otherwise decrease Read Pointer as usual
     this.setNewAbsoluteReadTime(NEW_READ_TIME);
     this.readPointer = (this.readPointer - SAMPLES_TO_DECREASE) % this.totalBufferSize;
   }
