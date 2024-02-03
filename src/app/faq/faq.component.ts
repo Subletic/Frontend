@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 
-
 @Component({
   selector: 'app-faq',
   templateUrl: './faq.component.html',
@@ -9,9 +8,4 @@ import { Component } from '@angular/core';
 
 export class FaqComponent {
 
-  close(): void {
-
-    window.close();
-
-  }
 }

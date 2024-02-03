@@ -15,22 +15,12 @@ header {
     justify-content: center;
 }
 
-
 .title {
     font-size: 60px;
     font-weight: bolder;
     color: var(--color-black);
-    margin-bottom: 10px;
-}
-
-.back {
-    position: fixed;
-    top: 10px;
-    right: 15px;
-    font-size: 15pt;
-    background-color: red;
-    border: none;
-    cursor: pointer;
+    margin-top: 20px;
+    margin-bottom: 30px;
 }
 
 mat-accordion {
@@ -48,13 +38,11 @@ mat-expansion-panel-header {
 }
 
 mat-panel-title {
-    font-size: 40px;
-    font-weight: bold;
+    font-size: 30px;
 }
 
 mat-expansion-panel {
     width: 80%;
-    margin-bottom: 18px;
 }
 
 p {

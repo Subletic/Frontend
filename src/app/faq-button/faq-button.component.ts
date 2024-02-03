@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
@@ -7,7 +7,6 @@ import { Router } from '@angular/router';
   styleUrls: ['./faq-button.component.scss']
 })
 export class FaqButtonComponent {
-  @Output() hideForFAQ = new EventEmitter<boolean>();
 
   constructor(
     private router: Router,
@@ -19,6 +18,5 @@ export class FaqButtonComponent {
     );
     
     window.open(componentUrl, '_blank');
-    this.hideForFAQ.emit(true);
   }
 }
