@@ -18,7 +18,7 @@
         draggable="false"
         (mousedown)="buttonImage2Src = 'assets/backOnClick.svg'"
         (mouseup)="buttonImage2Src = 'assets/back.svg'"
-        (keydown)="handleKeyboardEvent($event)"
+        
         [class.key-down]="isKeyDown"
         tabindex="0"
         #buttonImage2
@@ -30,6 +30,7 @@
       class="play-button mover"
       (click)="handlePlayButtonPress()"
       title="Wiedergabe (Ctrl+Space)"
+      #playButton
     >
       <img
         [src]="isAudioPlaying ? 'assets/pause.svg' : 'assets/play.svg'"
@@ -59,8 +60,6 @@
         draggable="false"
         (mousedown)="buttonImage3Src = 'assets/forwardOnClick.svg'"
         (mouseup)="buttonImage3Src = 'assets/forward.svg'"
-        (keydown)="handleKeyboardEvent($event)"
-        [class.key-down]="isKeyDown"
         tabindex="0"
         #buttonImage3
       />
