@@ -96,7 +96,7 @@ describe('DictionaryFsLoaderComponent', () => {
     expect(component.displayDictionarySuccessToast).toHaveBeenCalled();
   });
 
-  it('should not accept a JSON file containing empty language', async () => {
+  it('should accept a JSON file containing empty language', async () => {
     const INVALID_JSON_AS_STRING =
       '{ "transcription_config": { "language": "", "additional_vocab": [ { "content": "gnocchi", "sounds_like": [ "nyohki", "nokey", "nochi" ] }, { "content": "CEO", "sounds_like": [ "C.E.O." ] } ] } }';
     const MOCK_FILE = new File([INVALID_JSON_AS_STRING], 'invalidjson.json', {
@@ -108,11 +108,11 @@ describe('DictionaryFsLoaderComponent', () => {
       },
     } as unknown as Event;
 
-    spyOn(component, 'displayDictionaryErrorToast');
+    spyOn(component, 'displayDictionaryWarningToast');
 
     await component.handleFileUpload(MOCK_EVENT);
 
-    expect(component.displayDictionaryErrorToast).toHaveBeenCalledWith('Keine Sprache angegeben!');
+    expect(component.displayDictionaryWarningToast).toHaveBeenCalledWith('Es wurde keine Sprache des Wörterbuchs angegeben. Die Sprache wurde jetzt automatisch auf Deutsch gesetzt.');
   });
 
   it('should accept a JSON file containing empty additional vocab', async () => {
@@ -151,13 +151,13 @@ describe('DictionaryFsLoaderComponent', () => {
     await component.handleFileUpload(MOCK_EVENT);
 
     expect(component.displayDictionaryErrorToast).toHaveBeenCalledWith(
-      'Kein SoundsLike angegeben!',
+      'Es sind weder benutzerdefinierte Wörter noch klangähnliche Wörter in der Datei angegeben!',
     );
   });
 
   it('should accept a CSV file with empty sounds like', async () => {
-    const INVALID_CSV_AS_STRING = 'Content;SoundsLike\r' + 'gnocchi;\r' + 'CEO;C.E.O.';
-    const MOCK_FILE = new File([INVALID_CSV_AS_STRING], 'invalidcsv.csv', {
+    const VALID_CSV_AS_STRING = 'Content;SoundsLike\r' + 'gnocchi;\r' + 'CEO;C.E.O.';
+    const MOCK_FILE = new File([VALID_CSV_AS_STRING], 'validcsv.csv', {
       type: 'text/csv',
     });
     const MOCK_EVENT = {
@@ -166,19 +166,17 @@ describe('DictionaryFsLoaderComponent', () => {
       },
     } as unknown as Event;
 
-    spyOn(component, 'displayDictionaryErrorToast');
+    spyOn(component, 'displayDictionarySuccessToast');
 
     await component.handleFileUpload(MOCK_EVENT);
 
-    expect(component.displayDictionaryErrorToast).not.toHaveBeenCalledWith(
-      'SoundsLike Angaben fehlerhaft!',
-    );
+    expect(component.displayDictionarySuccessToast).toHaveBeenCalled();
   });
 
   it('should accept a JSON file containing empty string as sounds like', async () => {
-    const INVALID_JSON_AS_STRING =
+    const VALID_JSON_AS_STRING =
       '{ "transcription_config": { "language": "de", "additional_vocab": [{ "content": "gnocchi", "sounds_like": [ "" ] }, { "content": "CEO", "sounds_like": [ "C.E.O." ] } ] } }';
-    const MOCK_FILE = new File([INVALID_JSON_AS_STRING], 'invalid.json', {
+    const MOCK_FILE = new File([VALID_JSON_AS_STRING], 'valid.json', {
       type: 'application/json',
     });
     const MOCK_EVENT = {
@@ -187,16 +185,14 @@ describe('DictionaryFsLoaderComponent', () => {
       },
     } as unknown as Event;
 
-    spyOn(component, 'displayDictionaryErrorToast');
+    spyOn(component, 'displayDictionarySuccessToast');
 
     await component.handleFileUpload(MOCK_EVENT);
 
-    expect(component.displayDictionaryErrorToast).not.toHaveBeenCalledWith(
-      'SoundsLike Angaben fehlerhaft!',
-    );
+    expect(component.displayDictionarySuccessToast).toHaveBeenCalled();
   });
 
-  it('should not accept a JSON file containing empty content', async () => {
+  it('should not accept an empty JSON file', async () => {
     const INVALID_JSON_AS_STRING = '{}';
     const MOCK_FILE = new File([INVALID_JSON_AS_STRING], 'invalidjson.json', {
       type: 'application/json',
@@ -214,7 +210,7 @@ describe('DictionaryFsLoaderComponent', () => {
     expect(component.displayDictionaryErrorToast).toHaveBeenCalledWith();
   });
 
-  it('should not accept a JSON file containing empty content', async () => {
+  it('should accept a JSON file containing empty content', async () => {
     const INVALID_JSON_AS_STRING =
       '{ "transcription_config": { "language": "de", "additional_vocab": [ { "content": "gnocchi", "sounds_like": [ "nokki" ] }, { "content": "", "sounds_like": [ "C.E.O." ] } ] } }';
     const MOCK_FILE = new File([INVALID_JSON_AS_STRING], 'invalidjson.json', {
@@ -226,16 +222,15 @@ describe('DictionaryFsLoaderComponent', () => {
       },
     } as unknown as Event;
 
-    spyOn(component, 'displayDictionaryErrorToast');
+    spyOn(component, 'displayDictionaryWarningToast');
 
     await component.handleFileUpload(MOCK_EVENT);
 
-    expect(component.displayDictionaryErrorToast).toHaveBeenCalledWith(
-      'Content Angaben fehlerhaft!',
-    );
+    expect(component.displayDictionaryWarningToast).toHaveBeenCalledWith('In mind. einer Zeile wurde zu einem klangähnlichen Wort kein benutzerdefiniertes Wort angegeben!');
+
   });
 
-  it('should not accept a CSV file with empty content', async () => {
+  it('should accept a CSV file with empty content', async () => {
     const INVALID_CSV_AS_STRING = 'Content;SoundsLike\r' + ';gnocchi\r' + 'CEO;C.E.O.';
     const MOCK_FILE = new File([INVALID_CSV_AS_STRING], 'invalidcsv.csv', {
       type: 'text/csv',
@@ -246,16 +241,14 @@ describe('DictionaryFsLoaderComponent', () => {
       },
     } as unknown as Event;
 
-    spyOn(component, 'displayDictionaryErrorToast');
+    spyOn(component, 'displayDictionaryWarningToast');
 
     await component.handleFileUpload(MOCK_EVENT);
 
-    expect(component.displayDictionaryErrorToast).toHaveBeenCalledWith(
-      'Content Angaben fehlerhaft!',
-    );
+    expect(component.displayDictionaryWarningToast).toHaveBeenCalledWith('In mind. einer Zeile wurde zu einem klangähnlichen Wort kein benutzerdefiniertes Wort angegeben!');
   });
 
-  it('should not accept a JSON file containing more than 1000 additional vocab', async () => {
+  it('should accept a JSON file containing more than 1000 additional vocab', async () => {
     const transcriptionConfig = new transcription_config('de', [
       { content: 'asdf', sounds_like: ['test'] },
     ]);
@@ -277,12 +270,14 @@ describe('DictionaryFsLoaderComponent', () => {
       },
     } as unknown as Event;
 
-    spyOn(component, 'displayDictionaryErrorToast');
+    // Spy on displayDictionaryWarningToast before the handleFileUpload call
+    const displayWarningSpy = spyOn(component, 'displayDictionaryWarningToast');
 
     await component.handleFileUpload(MOCK_EVENT);
 
-    expect(component.displayDictionaryErrorToast).toHaveBeenCalledWith(
-      'Maximale Anzahl überschritten (1000)!',
+    // Check if the function was called with the expected arguments
+    expect(displayWarningSpy).toHaveBeenCalledWith(
+      'Maximale Anzahl an Wörterbucheinträgen überschritten (1000)!'
     );
   });
 
@@ -298,7 +293,7 @@ describe('DictionaryFsLoaderComponent', () => {
 
     await component.handleFileUpload(MOCK_EVENT);
 
-    expect(component.displayDictionaryErrorToast).toHaveBeenCalledWith();
+    expect(component.displayDictionaryErrorToast).toHaveBeenCalled();
   });
 
   it('should open and close export popup', () => {
