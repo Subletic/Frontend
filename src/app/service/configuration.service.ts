@@ -7,6 +7,7 @@ import { environment } from '../../environments/environment.prod';
 import { Config } from '../data/config/config.model';
 import { DictionaryError } from '../data/error/DictionaryError';
 import { BackendProviderService } from './backend-provider.service';
+import { ToastrService } from 'ngx-toastr';
 
 /**
  * Service to provide the dictionary to the components.
@@ -23,7 +24,8 @@ export class ConfigurationService {
   /**
    * Initializes the dictionary with default values.
    */
-  constructor(private backendProviderService: BackendProviderService) {
+  constructor(private backendProviderService: BackendProviderService, private toastr: ToastrService) {
+
     const DEFAULT_DICTIONARY = this.generateDefaultDictionary();
     this.currentDictionary = DEFAULT_DICTIONARY;
     this.delayLengthInMinutes = 2;
@@ -83,6 +85,7 @@ export class ConfigurationService {
    * @throws DictionaryError if the configuration is invalid
    */
   public isConfigValid(): void {
+    const ADDITIONAL_VOCAB = this.currentDictionary.transcription_config.additional_vocab;
     const VALID_BUFFER_LENGTHS = [0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 6, 7, 8, 9, 10];
     if (
       !VALID_BUFFER_LENGTHS.includes(this.delayLengthInMinutes) ||
@@ -91,23 +94,22 @@ export class ConfigurationService {
       throw new DictionaryError('Ungültige Buffer Länge!');
     }
 
-    if (this.currentDictionary.transcription_config.additional_vocab.length > 1000) {
-      throw new DictionaryError('Maximale SoundsLike Anzahl überschritten (1000)!');
+    if (ADDITIONAL_VOCAB.length > 1000) {
+      throw new DictionaryError('Maximale Anzahl an Wörterbucheinträgen überschritten (1000)!');
     }
 
-    // Check if sounds like exists for empty word
-    for (const word of this.currentDictionary.transcription_config.additional_vocab) {
-      if (!word.content && word.sounds_like != null && word.sounds_like.length > 0) {
-        throw new DictionaryError('SoundsLike Angaben fehlerhaft!');
+    for (let i = 0; i < ADDITIONAL_VOCAB.length; i++) {
+      const vocabItem = ADDITIONAL_VOCAB[i];
+      const soundsLike = vocabItem.sounds_like;
+      const content = vocabItem.content;
+      const filteredSoundsLike = soundsLike?.filter((s) => s.trim() !== '') ?? [];
+
+      // Check if content is provided and not empty or just whitespace
+      if ((!content || content.trim() == '') && filteredSoundsLike.length > 0) {
+        throw new DictionaryError(
+          'In mind. einer Zeile wurde zu einem klangähnlichen Wort kein benutzerdefiniertes Wort angegeben!');
       }
     }
-
-    // Check if language provided
-    if (!this.currentDictionary.transcription_config.language)
-      throw new DictionaryError('Keine Sprache angegeben!');
-
-    if (this.currentDictionary.transcription_config.language != 'de')
-      throw new DictionaryError('Sprache muss als "de" festgelegt sein!');
   }
 
   /**

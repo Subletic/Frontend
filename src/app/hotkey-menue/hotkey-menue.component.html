@@ -1,76 +1,31 @@
 <div class="burgermenu" [class.clicked]="menuButtonPressed">
   <div class="additionalButtons" *ngIf="menuButtonPressed">
-    <button
-      class="button"
-      (click)="updateButtonState('hotkey')"
-      title="Tastaturkürzel anzeigen"
-      (mousedown)="updateImage(!hotkeyButtonPressed, 'hotkey')"
-      (mouseup)="updateImage(hotkeyButtonPressed, 'hotkey')"
-      (mouseleave)="updateImage(hotkeyButtonPressed, 'hotkey')"
-    >
-      <img
-        [src]="hotkeyButtonPressed ? 'assets/hotkeyButton_onclick.svg' : 'assets/hotkeyButton.svg'"
-        alt="Tastatur Symbol"
-        height="45"
-        width="45"
-        draggable="false"
-        #hotkeyImage
-      />
+    <button class="button" (click)="updateButtonState('hotkey')" title="Tastaturkürzel anzeigen"
+      (mousedown)="updateImage(!hotkeyButtonPressed, 'hotkey')" (mouseup)="updateImage(hotkeyButtonPressed, 'hotkey')"
+      (mouseleave)="updateImage(hotkeyButtonPressed, 'hotkey')">
+      <img [src]="hotkeyButtonPressed ? 'assets/hotkeyButton_onclick.svg' : 'assets/hotkeyButton.svg'"
+        alt="Tastatur Symbol" height="45" width="45" draggable="false" #hotkeyImage />
     </button>
 
-    <button
-      class="button"
-      (click)="updateButtonState('foot')"
-      title="Fußschalter anzeigen"
-      (mousedown)="updateImage(!footButtonPressed, 'foot')"
-      (mouseup)="updateImage(footButtonPressed, 'foot')"
-      (mouseleave)="updateImage(footButtonPressed, 'foot')"
-    >
-      <img
-        [src]="footButtonPressed ? 'assets/footButton_onclick.svg' : 'assets/footButton.svg'"
-        alt="Fuß Symbol"
-        height="45"
-        width="45"
-        draggable="false"
-        #footImage
-      />
+    <button class="button" (click)="updateButtonState('foot')" title="Fußschalter anzeigen"
+      (mousedown)="updateImage(!footButtonPressed, 'foot')" (mouseup)="updateImage(footButtonPressed, 'foot')"
+      (mouseleave)="updateImage(footButtonPressed, 'foot')">
+      <img [src]="footButtonPressed ? 'assets/footButton_onclick.svg' : 'assets/footButton.svg'" alt="Fuß Symbol"
+        height="45" width="45" draggable="false" #footImage />
     </button>
 
-    <button
-      class="button"
-      (click)="updateButtonState('hand')"
-      title="Handschalter anzeigen"
-      (mousedown)="updateImage(!handButtonPressed, 'hand')"
-      (mouseup)="updateImage(handButtonPressed, 'hand')"
-      (mouseleave)="updateImage(handButtonPressed, 'hand')"
-    >
-      <img
-        [src]="handButtonPressed ? 'assets/handButton_onclick.svg' : 'assets/handButton.svg'"
-        alt="Hand Symbol"
-        height="45"
-        width="45"
-        draggable="false"
-        #handImage
-      />
+    <button class="button" (click)="updateButtonState('hand')" title="Handschalter anzeigen"
+      (mousedown)="updateImage(!handButtonPressed, 'hand')" (mouseup)="updateImage(handButtonPressed, 'hand')"
+      (mouseleave)="updateImage(handButtonPressed, 'hand')">
+      <img [src]="handButtonPressed ? 'assets/handButton_onclick.svg' : 'assets/handButton.svg'" alt="Hand Symbol"
+        height="45" width="45" draggable="false" #handImage />
     </button>
   </div>
-  <button
-    class="menuebutton"
-    [class.active]="menuButtonPressed"
-    (click)="updateButtonState('menu')"
-    title="Menü für Tastaturkürzel"
-    (mousedown)="updateImage(!menuButtonPressed, 'menu')"
-    (mouseup)="updateImage(menuButtonPressed, 'menu')"
-    (mouseleave)="updateImage(menuButtonPressed, 'menu')"
-  >
-    <img
-      [src]="menuButtonPressed ? 'assets/burgermenu_onclick.svg' : 'assets/burgermenu.svg'"
-      alt="Burgermenü Symbol"
-      height="45"
-      width="45"
-      draggable="false"
-      #menuImage
-    />
+  <button class="menuebutton" [class.active]="menuButtonPressed" (click)="updateButtonState('menu')"
+    title="Menü für Tastaturkürzel" (mousedown)="updateImage(!menuButtonPressed, 'menu')"
+    (mouseup)="updateImage(menuButtonPressed, 'menu')" (mouseleave)="updateImage(menuButtonPressed, 'menu')">
+    <img [src]="menuButtonPressed ? 'assets/burgermenu_onclick.svg' : 'assets/burgermenu.svg'" alt="Burgermenü Symbol"
+      height="45" width="45" draggable="false" #menuImage />
   </button>
 </div>
 
@@ -112,7 +67,7 @@
     <p>Textbearbeitung</p>
     <div class="key-grid">
       <div class="action">Markieren</div>
-      <div class="key1">Ctrl</div>
+      <div class="key1">Shift</div>
       <div class="key2">&#x25C1; / &#x25B7;</div>
 
       <div class="action">Löschen</div>
@@ -121,13 +76,8 @@
   </div>
 
   <div class="keybinding-container" *ngIf="footButtonPressed">
-    <img
-      src="assets/footswitch.svg"
-      alt="Foot Switch Image"
-      class="button-image-4"
-      draggable="false"
-      #footSwitchImage
-    />
+    <img src="assets/footswitch.svg" alt="Foot Switch Image" class="button-image-4" draggable="false"
+      #footSwitchImage />
 
     <mat-divider></mat-divider>
 
@@ -162,13 +112,8 @@
   </div>
 
   <div class="keybinding-container" *ngIf="handButtonPressed">
-    <img
-      src="assets/handswitch.svg"
-      alt="Foot Switch Image"
-      class="button-image-4"
-      draggable="false"
-      #footSwitchImage
-    />
+    <img src="assets/handswitch.svg" alt="Foot Switch Image" class="button-image-4" draggable="false"
+      #footSwitchImage />
 
     <mat-divider></mat-divider>
 
