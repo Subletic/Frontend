@@ -24,7 +24,7 @@ export class StartPageComponent {
   constructor(
     private configurationService: ConfigurationService,
     private toastr: ToastrService,
-  ) { }
+  ) {}
 
   /**
    * Callback function for exiting the configuration screen.
@@ -49,7 +49,10 @@ export class StartPageComponent {
     const DICTIONARY_COPY = this.editorComponent.dictionary;
     this.editorComponent.dictionary.mergeWithDictionary(DICTIONARY_COPY);
 
-    if (!this.editorComponent.dictionary.transcription_config.language || this.editorComponent.dictionary.transcription_config.language != 'de') {
+    if (
+      !this.editorComponent.dictionary.transcription_config.language ||
+      this.editorComponent.dictionary.transcription_config.language != 'de'
+    ) {
       this.editorComponent.dictionary.transcription_config.language = 'de';
       this.closeContinuePopup();
       return;

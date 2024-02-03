@@ -25,7 +25,6 @@ describe('ConfigurationService', () => {
     service = TestBed.inject(ConfigurationService);
   });
 
-
   it('should update dictionary correctly', () => {
     const newDictionary = new dictionary(new transcription_config('en', []));
 
@@ -85,9 +84,7 @@ describe('ConfigurationService', () => {
 
     expect(fetchSpy).toHaveBeenCalled();
   });
-
 });
-
 
 /*
 import { TestBed } from '@angular/core/testing';

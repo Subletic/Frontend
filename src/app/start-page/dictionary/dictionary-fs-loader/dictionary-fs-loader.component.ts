@@ -25,7 +25,7 @@ export class DictionaryFsLoaderComponent {
   public constructor(
     private configurationService: ConfigurationService,
     private toastr: ToastrService,
-  ) { }
+  ) {}
 
   /**
    * Called when the user uploads a file.
@@ -112,10 +112,15 @@ export class DictionaryFsLoaderComponent {
     // Check if additional vocab is valid
     const ADDITIONAL_VOCAB = dictionary.transcription_config.additional_vocab;
     const LANGUAGE = dictionary.transcription_config.language;
-    if (!ADDITIONAL_VOCAB) throw new DictionaryError('Es sind weder benutzerdefinierte Wörter noch klangähnliche Wörter in der Datei angegeben!');
+    if (!ADDITIONAL_VOCAB)
+      throw new DictionaryError(
+        'Es sind weder benutzerdefinierte Wörter noch klangähnliche Wörter in der Datei angegeben!',
+      );
 
     if (ADDITIONAL_VOCAB.length > 1000)
-      this.displayDictionaryWarningToast('Maximale Anzahl an Wörterbucheinträgen überschritten (1000)!');
+      this.displayDictionaryWarningToast(
+        'Maximale Anzahl an Wörterbucheinträgen überschritten (1000)!',
+      );
 
     for (let i = 0; i < ADDITIONAL_VOCAB.length; i++) {
       const vocabItem = ADDITIONAL_VOCAB[i];
@@ -125,15 +130,19 @@ export class DictionaryFsLoaderComponent {
 
       // Check if content is provided and not empty or just whitespace
       if ((!content || content.trim() == '') && filteredSoundsLike.length > 0)
-        this.displayDictionaryWarningToast('In mind. einer Zeile wurde zu einem klangähnlichen Wort kein benutzerdefiniertes Wort angegeben!');
+        this.displayDictionaryWarningToast(
+          'In mind. einer Zeile wurde zu einem klangähnlichen Wort kein benutzerdefiniertes Wort angegeben!',
+        );
     }
 
     if (!LANGUAGE) {
       this.displayDictionaryWarningToast(
-        'Es wurde keine Sprache des Wörterbuchs angegeben. Die Sprache wurde jetzt automatisch auf Deutsch gesetzt.');
+        'Es wurde keine Sprache des Wörterbuchs angegeben. Die Sprache wurde jetzt automatisch auf Deutsch gesetzt.',
+      );
     } else if (LANGUAGE != 'de') {
       this.displayDictionaryWarningToast(
-        'Die Sprache des Wörterbuchs muss Deutsch sein. Die Sprache wurde jetzt automatisch auf Deutsch gesetzt.');
+        'Die Sprache des Wörterbuchs muss Deutsch sein. Die Sprache wurde jetzt automatisch auf Deutsch gesetzt.',
+      );
     }
   }
 

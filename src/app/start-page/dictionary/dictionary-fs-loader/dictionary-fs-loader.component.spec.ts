@@ -112,7 +112,9 @@ describe('DictionaryFsLoaderComponent', () => {
 
     await component.handleFileUpload(MOCK_EVENT);
 
-    expect(component.displayDictionaryWarningToast).toHaveBeenCalledWith('Es wurde keine Sprache des Wörterbuchs angegeben. Die Sprache wurde jetzt automatisch auf Deutsch gesetzt.');
+    expect(component.displayDictionaryWarningToast).toHaveBeenCalledWith(
+      'Es wurde keine Sprache des Wörterbuchs angegeben. Die Sprache wurde jetzt automatisch auf Deutsch gesetzt.',
+    );
   });
 
   it('should accept a JSON file containing empty additional vocab', async () => {
@@ -226,8 +228,9 @@ describe('DictionaryFsLoaderComponent', () => {
 
     await component.handleFileUpload(MOCK_EVENT);
 
-    expect(component.displayDictionaryWarningToast).toHaveBeenCalledWith('In mind. einer Zeile wurde zu einem klangähnlichen Wort kein benutzerdefiniertes Wort angegeben!');
-
+    expect(component.displayDictionaryWarningToast).toHaveBeenCalledWith(
+      'In mind. einer Zeile wurde zu einem klangähnlichen Wort kein benutzerdefiniertes Wort angegeben!',
+    );
   });
 
   it('should accept a CSV file with empty content', async () => {
@@ -245,7 +248,9 @@ describe('DictionaryFsLoaderComponent', () => {
 
     await component.handleFileUpload(MOCK_EVENT);
 
-    expect(component.displayDictionaryWarningToast).toHaveBeenCalledWith('In mind. einer Zeile wurde zu einem klangähnlichen Wort kein benutzerdefiniertes Wort angegeben!');
+    expect(component.displayDictionaryWarningToast).toHaveBeenCalledWith(
+      'In mind. einer Zeile wurde zu einem klangähnlichen Wort kein benutzerdefiniertes Wort angegeben!',
+    );
   });
 
   it('should accept a JSON file containing more than 1000 additional vocab', async () => {
@@ -277,7 +282,7 @@ describe('DictionaryFsLoaderComponent', () => {
 
     // Check if the function was called with the expected arguments
     expect(displayWarningSpy).toHaveBeenCalledWith(
-      'Maximale Anzahl an Wörterbucheinträgen überschritten (1000)!'
+      'Maximale Anzahl an Wörterbucheinträgen überschritten (1000)!',
     );
   });
 

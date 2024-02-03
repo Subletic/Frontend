@@ -24,8 +24,10 @@ export class ConfigurationService {
   /**
    * Initializes the dictionary with default values.
    */
-  constructor(private backendProviderService: BackendProviderService, private toastr: ToastrService) {
-
+  constructor(
+    private backendProviderService: BackendProviderService,
+    private toastr: ToastrService,
+  ) {
     const DEFAULT_DICTIONARY = this.generateDefaultDictionary();
     this.currentDictionary = DEFAULT_DICTIONARY;
     this.delayLengthInMinutes = 2;
@@ -107,7 +109,8 @@ export class ConfigurationService {
       // Check if content is provided and not empty or just whitespace
       if ((!content || content.trim() == '') && filteredSoundsLike.length > 0) {
         throw new DictionaryError(
-          'In mind. einer Zeile wurde zu einem klangähnlichen Wort kein benutzerdefiniertes Wort angegeben!');
+          'In mind. einer Zeile wurde zu einem klangähnlichen Wort kein benutzerdefiniertes Wort angegeben!',
+        );
       }
     }
   }
