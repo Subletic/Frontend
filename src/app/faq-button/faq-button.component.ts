@@ -8,9 +8,7 @@ import { Router } from '@angular/router';
 })
 export class FaqButtonComponent {
 
-  constructor(
-    private router: Router,
-    ) {}
+  constructor(private router: Router) {}
 
   toggleFaq(): void {
     const componentUrl = this.router.serializeUrl(

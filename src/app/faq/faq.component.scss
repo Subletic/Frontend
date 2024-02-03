@@ -1,9 +1,6 @@
 .faq-site {
     max-width: 2000px;
 
-    margin-left: 40px;
-    margin-right: Auto;
-
     background-color: #ffffff;
 }
 
@@ -29,7 +26,6 @@ mat-accordion {
   
     align-items: center;
     justify-content: center;
-    z-index: 1005;
 }
 
 mat-expansion-panel-header {
@@ -38,13 +34,13 @@ mat-expansion-panel-header {
 }
 
 mat-panel-title {
-    font-size: 30px;
+    font-size: 25px;
 }
 
 mat-expansion-panel {
-    width: 80%;
+    width: 60%;
 }
 
 p {
-    font-size: 25px;
+    font-size: 20px;
 }
