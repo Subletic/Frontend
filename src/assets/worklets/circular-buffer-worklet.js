@@ -136,7 +136,7 @@ class CircularBufferWorklet extends AudioWorkletProcessor {
 
     this.port.postMessage({
       type: 'playState',
-      audioPlaying: this.audioPlaying,
+      audioPlaying: this.audioPlaying
     });
   }
 
@@ -152,6 +152,9 @@ class CircularBufferWorklet extends AudioWorkletProcessor {
     if (!this.audioPlaying) {
       return true;
     }
+
+    console.log("Reaad Time: " + this.absoluteReadTimeInMilliseconds);
+    console.log("Read Pointer: " + this.readPointer);
 
     // Check if Read Pointer is trying to overtake Write Pointer
     if (this.absoluteReadTimeInMilliseconds >= this.absoluteWriteTimeInMilliseconds) {
@@ -210,7 +213,7 @@ class CircularBufferWorklet extends AudioWorkletProcessor {
     const READ_POINTER_TOO_CLOSE = READ_WRITE_TIME_DIFFERENCE <= FRAME_SIZE_IN_MILLISECONDS;
     if (READ_POINTER_TOO_CLOSE) {
       const REMAINING_NEW_SAMPLES = Math.floor(
-        READ_WRITE_TIME_DIFFERENCE / FRAME_SIZE_IN_MILLISECONDS,
+        READ_WRITE_TIME_DIFFERENCE / FRAME_SIZE_IN_MILLISECONDS
       );
       newReadPointer = (oldReadPointer + REMAINING_NEW_SAMPLES) % this.totalBufferSize;
       this.audioChunksRead += REMAINING_NEW_SAMPLES;
@@ -237,7 +240,7 @@ class CircularBufferWorklet extends AudioWorkletProcessor {
       this.absoluteWriteTimeInMilliseconds -
       this.bufferLengthInSeconds * SECONDS_TO_MILLISECONDS_MULTIPLIER;
     this.setNewAbsoluteReadTime(
-      ABSOLUTE_BUFFER_START + this.safetyMarginInSeconds * SECONDS_TO_MILLISECONDS_MULTIPLIER,
+      ABSOLUTE_BUFFER_START + this.safetyMarginInSeconds * SECONDS_TO_MILLISECONDS_MULTIPLIER
     );
     return [oldReadPointer, newReadPointer];
   }
@@ -269,14 +272,14 @@ class CircularBufferWorklet extends AudioWorkletProcessor {
     this.readPointer = (this.readPointer + SAMPLES_TO_ADVANCE) % this.totalBufferSize;
     const SECONDS_TO_MILLISECONDS_MULTIPLIER = 1000;
     this.setNewAbsoluteReadTime(
-      this.absoluteReadTimeInMilliseconds + secondsToAdvance * SECONDS_TO_MILLISECONDS_MULTIPLIER,
+      this.absoluteReadTimeInMilliseconds + secondsToAdvance * SECONDS_TO_MILLISECONDS_MULTIPLIER
     );
 
     // Keep Read Pointer away from Write Pointer
     if (this.absoluteReadTimeInMilliseconds >= this.absoluteWriteTimeInMilliseconds) {
       this.setNewAbsoluteReadTime(
         this.absoluteWriteTimeInMilliseconds -
-          this.safetyMarginInSeconds * SECONDS_TO_MILLISECONDS_MULTIPLIER,
+        this.safetyMarginInSeconds * SECONDS_TO_MILLISECONDS_MULTIPLIER
       );
       this.readPointer = this.writePointer - this.safetyMarginInSeconds * this.samplesPerSecond;
     }
@@ -288,27 +291,29 @@ class CircularBufferWorklet extends AudioWorkletProcessor {
    * @param secondsToDecrease - The amount of seconds to decrease the read pointer by.
    */
   decreaseReadPointer(secondsToDecrease) {
-    const SAMPLES_TO_DECREASE = secondsToDecrease * this.samplesPerSecond;
-    this.readPointer = (this.readPointer - SAMPLES_TO_DECREASE) % this.totalBufferSize;
     const SECONDS_TO_MILLISECONDS_MULTIPLIER = 1000;
-    this.setNewAbsoluteReadTime(
-      this.absoluteReadTimeInMilliseconds - secondsToDecrease * SECONDS_TO_MILLISECONDS_MULTIPLIER,
-    );
+    const SAMPLES_TO_DECREASE = secondsToDecrease * this.samplesPerSecond;
 
-    // Keep Read Pointer away from End of Buffer
-    const END_OF_BUFFER_TIME_TIMESTAMP =
-      this.absoluteWriteTimeInMilliseconds -
-      this.bufferLengthInSeconds * SECONDS_TO_MILLISECONDS_MULTIPLIER;
-    if (this.absoluteReadTimeInMilliseconds <= END_OF_BUFFER_TIME_TIMESTAMP) {
-      this.setNewAbsoluteReadTime(
-        END_OF_BUFFER_TIME_TIMESTAMP +
-          this.safetyMarginInSeconds * SECONDS_TO_MILLISECONDS_MULTIPLIER,
-      );
-      this.readPointer =
-        this.writePointer -
-        this.totalBufferSize +
-        this.safetyMarginInSeconds * this.samplesPerSecond;
+    const BUFFER_LENGTH_IN_MILLISECONDS = this.bufferLengthInSeconds * SECONDS_TO_MILLISECONDS_MULTIPLIER
+    const START_OF_BUFFER_TIMESTAMP = this.absoluteWriteTimeInMilliseconds - BUFFER_LENGTH_IN_MILLISECONDS;
+    const LOWER_TIME_BOUND = Math.max(0, START_OF_BUFFER_TIMESTAMP);
+    const NEW_READ_TIME = this.absoluteReadTimeInMilliseconds - (secondsToDecrease * SECONDS_TO_MILLISECONDS_MULTIPLIER);
+
+    const WRITE_OVERFLOWN = this.absoluteWriteTimeInMilliseconds > (this.bufferLengthInSeconds * SECONDS_TO_MILLISECONDS_MULTIPLIER);
+
+    // Check if new Read Time would be too low
+    if (NEW_READ_TIME < LOWER_TIME_BOUND) {
+      this.setNewAbsoluteReadTime(LOWER_TIME_BOUND);
+      if (WRITE_OVERFLOWN) {
+        this.readPointer = (this.writePointer - this.totalBufferSize) % this.totalBufferSize;
+      } else {
+        this.readPointer = 0;
+      }
+      return;
     }
+
+    this.setNewAbsoluteReadTime(NEW_READ_TIME);
+    this.readPointer = (this.readPointer - SAMPLES_TO_DECREASE) % this.totalBufferSize;
   }
 
   /**
@@ -320,7 +325,7 @@ class CircularBufferWorklet extends AudioWorkletProcessor {
     this.absoluteReadTimeInMilliseconds = newReadTimeInMilliseconds;
     this.port.postMessage({
       type: 'newReadTime',
-      readTime: newReadTimeInMilliseconds,
+      readTime: newReadTimeInMilliseconds
     });
   }
 
@@ -339,11 +344,11 @@ class CircularBufferWorklet extends AudioWorkletProcessor {
       audioChunksRead: this.audioChunksRead,
       absoluteReadTimeInSeconds: this.absoluteReadTimeInMilliseconds,
       absoluteWriteTimeInSeconds: this.absoluteWriteTimeInMilliseconds,
-      safetyMarginInSeconds: this.safetyMarginInSeconds,
+      safetyMarginInSeconds: this.safetyMarginInSeconds
     };
     this.port.postMessage({
       type: 'workletState',
-      workletState: workletState,
+      workletState: workletState
     });
   }
 
