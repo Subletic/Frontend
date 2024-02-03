@@ -7,7 +7,7 @@ import { AppComponent } from './app.component';
 import { SoundBoxComponent } from './sound-box/sound-box.component';
 import { SpeechbubbleComponent } from './textSheet/speechbubble/speechbubble.component';
 import { TextSheetComponent } from './textSheet/textSheet.component';
-import { AudioHandlerComponent } from './audio-handler/audio-handler.component';
+import { AudioHandlerComponent } from './sound-box/audio-handler/audio-handler.component';
 import { SettingsComponent } from './settings/settings.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -35,6 +35,9 @@ import { FaqButtonComponent } from './faq-button/faq-button.component';
 import { FaqComponent } from './faq/faq.component';
 import { AppRoutingModule } from './app-routing.module';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { HotkeyMenueComponent } from './hotkey-menue/hotkey-menue.component';
+import { NoSpecialCharsDirective } from './start-page/dictionary/dictionary-row/no-special-chars.directive';
+import { NoSpecialCharsWithCommasDirective } from './start-page/dictionary/dictionary-row/no-spec-chars-com.directive';
 
 @NgModule({
   declarations: [
@@ -56,6 +59,9 @@ import { MatExpansionModule } from '@angular/material/expansion';
     ContinuePopupComponent,
     FaqButtonComponent,
     FaqComponent,
+    HotkeyMenueComponent,
+    NoSpecialCharsDirective,
+    NoSpecialCharsWithCommasDirective,
   ],
   imports: [
     BrowserModule,

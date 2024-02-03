@@ -2,12 +2,13 @@ import { SpeechBubble } from '../data/speechBubble/speechBubble.model';
 import { SpeechBubbleExport } from '../data/speechBubble/speechBubbleExport.model';
 import { WordToken } from '../data/wordToken/wordToken.model';
 import { TextSheetComponent } from './textSheet.component';
-import { backendListener } from '../service/backend-listener.service';
+import { BackendListenerService } from '../service/backend-listener.service';
 import { LinkedList } from '../data/linkedList/linkedList.model';
 import { SpeechBubbleChain } from '../data/speechBubbleChain/speechBubbleChain.module';
 import { AudioService } from '../service/audio.service';
 import { ConsoleHideService } from '../service/consoleHide.service';
 import { BackendProviderService } from '../service/backend-provider.service';
+import { ToastrService } from 'ngx-toastr';
 
 describe('LinkedList', () => {
   let linkedList: LinkedList<SpeechBubble>;
@@ -69,13 +70,14 @@ describe('LinkedList', () => {
 
 describe('TextSheetComponent', () => {
   let component: TextSheetComponent;
-  let signalRService: backendListener;
+  let signalRService: BackendListenerService;
   let audioService: AudioService;
   let consoleHideService: ConsoleHideService;
   let backendProviderService: BackendProviderService;
+  let toastr: ToastrService;
 
   beforeEach(() => {
-    signalRService = new backendListener(consoleHideService);
+    signalRService = new BackendListenerService(consoleHideService, toastr);
     audioService = new AudioService();
     consoleHideService = new ConsoleHideService();
     backendProviderService = new BackendProviderService(consoleHideService);

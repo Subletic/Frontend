@@ -1,7 +1,7 @@
 <div class="overlay">
   <div class="export-popup">
     <div class="top-of-div">
-      <h1>Dictionary exportieren</h1>
+      <h1>Wörterbuch exportieren</h1>
       <button mat-icon-button style="float: right" (click)="close()">
         <mat-icon>close</mat-icon>
       </button>
@@ -11,13 +11,8 @@
       <div class="subtext">Dateiname</div>
 
       <div id="texfield">
-        <input
-          [(ngModel)]="exportFileName"
-          (input)="checkForSpecialCharacters()"
-          type="text"
-          id="fileNameInput"
-          placeholder="Name festlegen (optional)"
-        />
+        <input [(ngModel)]="exportFileName" (input)="checkForSpecialCharacters()" type="text" id="fileNameInput"
+          placeholder="Name festlegen (optional)" />
         <div class="error-container">
           <p id="errorText" *ngIf="checkForSpecialCharacters()">
             Keine Sonderzeichen: / \ * ? " &lt; &gt; |
@@ -28,35 +23,13 @@
       <div class="subtext">Dateiformat</div>
 
       <div class="format-buttons">
-        <button
-          class="download-button"
-          (click)="handleDictionaryDownloadJson()"
-          title="Download als JSON-Format"
-        >
-          <img
-            ngSrc="../../../../../assets/export.svg"
-            alt="Export Symbol"
-            class="sort-button-image"
-            height="28"
-            width="28"
-            draggable="false"
-          />
+        <button class="download-button" (click)="handleDictionaryDownloadJson()" title="Download als JSON-Format">
+          <img ngSrc="../../../../../assets/export.svg" alt="Export Symbol" height="28" width="28" draggable="false" />
           <span>.json</span>
         </button>
 
-        <button
-          class="download-button"
-          (click)="handleDictionaryDownloadCsv()"
-          title="Download als CSV-Format"
-        >
-          <img
-            ngSrc="../../../../../assets/export.svg"
-            alt="Export Symbol"
-            class="sort-button-image"
-            height="28"
-            width="28"
-            draggable="false"
-          />
+        <button class="download-button" (click)="handleDictionaryDownloadCsv()" title="Download als CSV-Format">
+          <img ngSrc="../../../../../assets/export.svg" alt="Export Symbol" height="28" width="28" draggable="false" />
           <span>.csv</span>
         </button>
       </div>

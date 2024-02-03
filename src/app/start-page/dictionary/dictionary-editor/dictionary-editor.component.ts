@@ -1,9 +1,7 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, HostListener } from '@angular/core';
 import { additional_vocab } from 'src/app/data/dictionary/additionalVocab.model';
 import { dictionary } from 'src/app/data/dictionary/dictionary.model';
-import { LinkedList } from 'src/app/data/linkedList/linkedList.model';
 import { ConfigurationService } from 'src/app/service/configuration.service';
-
 import { ToastrService } from 'ngx-toastr';
 
 /**
@@ -16,11 +14,12 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class DictionaryEditorComponent implements OnInit {
   dictionary: dictionary;
-  alphabeticBoolean: boolean;
-  latestChangesList: LinkedList<dictionary> = new LinkedList<dictionary>();
+  latestChangesList: dictionary[];
+  indexInLatestChangesList: number;
   hasPrev: boolean;
   hasNext: boolean;
-
+  alphabeticBoolean: boolean;
+  alphabeticCallsAtIndex: number[];
   wordcount: number;
 
   constructor(
@@ -28,17 +27,20 @@ export class DictionaryEditorComponent implements OnInit {
     public cdr: ChangeDetectorRef,
     private toastr: ToastrService,
   ) {
+    this.latestChangesList = [];
     this.dictionary = new dictionary({
       language: 'de',
       additional_vocab: [{ content: '', sounds_like: [''] }],
     });
     this.addToLatestChanges();
+    this.indexInLatestChangesList = 0;
 
     this.alphabeticBoolean = true;
     this.hasPrev = false;
     this.hasNext = false;
     this.wordcount = 0;
     this.updateWordCount();
+    this.alphabeticCallsAtIndex = [];
   }
 
   ngOnInit(): void {
@@ -55,11 +57,11 @@ export class DictionaryEditorComponent implements OnInit {
   }
 
   /**
-   *
+   * Updates the wordCount with the current value of the dictionary-additional_vocab length.
+   * Throws a warning if the limit of 1000 words is reached.
    */
   updateWordCount(): void {
     this.wordcount = this.dictionary.transcription_config.additional_vocab.length;
-
     if (this.wordcount > 1000) {
       this.toastr.warning(
         'Achtung: Die maximale Anzahl von 1000 Wörtern wurde überschritten.',
@@ -70,7 +72,8 @@ export class DictionaryEditorComponent implements OnInit {
 
   /**
    * Adds the current state of the dictionary to the list of latest changes.
-   * Limits the list to a maximum number of saved changes.
+   * Limits the list to a maximum number of saved changes. In case this limit is reached,
+   * resets the list and index.
    */
   addToLatestChanges(): void {
     // New Objects with values of dictionary (would be a pointer without this procedure)
@@ -81,12 +84,14 @@ export class DictionaryEditorComponent implements OnInit {
     dictionaryZustand.transcription_config = JSON.parse(
       JSON.stringify(this.dictionary.transcription_config),
     );
-    this.latestChangesList.add(dictionaryZustand);
+    this.latestChangesList.push(dictionaryZustand);
+    this.indexInLatestChangesList++;
 
-    const SAVED_CHANGES_SIZE = 200;
-    if (this.latestChangesList.size() > SAVED_CHANGES_SIZE) {
-      if (!this.latestChangesList.head) return;
-      this.latestChangesList.remove(this.latestChangesList.head.data);
+    const SAVED_CHANGES_SIZE = 1000;
+    if (this.latestChangesList.length > SAVED_CHANGES_SIZE) {
+      this.latestChangesList = [];
+      this.indexInLatestChangesList = -1;
+      this.alphabeticCallsAtIndex = [];
     }
 
     this.updateHasPrevAndNext();
@@ -95,32 +100,36 @@ export class DictionaryEditorComponent implements OnInit {
   /**
    * Navigates to the previous change in the list of latest changes.
    * Updates the dictionary with the previous state and removes the corresponding entry from the list.
+   * The index is decremented twice: 1) for the pop 2) for going to the previous change.
    */
   goToPreviousChange(): void {
-    const DICTIONARY_NODE = this.latestChangesList.getNodeByData(this.dictionary);
-    if (!DICTIONARY_NODE || !DICTIONARY_NODE.prev) return;
-
-    this.configurationService.updateDictionary(DICTIONARY_NODE.prev.data);
-    if (!this.latestChangesList.tail) return;
-    this.latestChangesList.remove(this.latestChangesList.tail.data);
+    const DICTIONARY_NODE = this.latestChangesList[this.indexInLatestChangesList - 1];
+    this.configurationService.updateDictionary(DICTIONARY_NODE);
+    this.latestChangesList.pop();
+    // remove effect of index++ from updateDictionary AND set to previous entry
+    this.indexInLatestChangesList -= 2;
+    console.log(this.indexInLatestChangesList);
+    if (this.alphabeticCallsAtIndex.includes(this.indexInLatestChangesList + 1, 1)) {
+      this.alphabeticBoolean = this.alphabeticBoolean ? false : true;
+    }
     this.cdr.detectChanges();
-
     this.updateHasPrevAndNext();
   }
 
   /**
    * Navigates to the next change in the list of latest changes.
    * Updates the dictionary with the next state and removes the corresponding entry from the list.
+   * The index is not decremented at all, because -1 for the pop, but +1 for going to the next change.
    */
   goToNextChange(): void {
-    const DICTIONARY_NODE = this.latestChangesList.getNodeByData(this.dictionary);
-    if (!DICTIONARY_NODE || !DICTIONARY_NODE.next) return;
-
-    this.configurationService.updateDictionary(DICTIONARY_NODE.next.data);
-    if (!this.latestChangesList.tail) return;
-    this.latestChangesList.remove(this.latestChangesList.tail.data);
+    const DICTIONARY_NODE = this.latestChangesList[this.indexInLatestChangesList + 1];
+    this.configurationService.updateDictionary(DICTIONARY_NODE);
+    this.latestChangesList.pop();
+    console.log(this.indexInLatestChangesList);
+    if (this.alphabeticCallsAtIndex.includes(this.indexInLatestChangesList, 1)) {
+      this.alphabeticBoolean = this.alphabeticBoolean ? false : true;
+    }
     this.cdr.detectChanges();
-
     this.updateHasPrevAndNext();
   }
 
@@ -128,9 +137,8 @@ export class DictionaryEditorComponent implements OnInit {
    * Updates the status of the previous and next buttons based on the current state in the list of latest changes.
    */
   private updateHasPrevAndNext(): void {
-    const DICTIONARY_NODE = this.latestChangesList.getNodeByData(this.dictionary);
-    this.hasPrev = !!(DICTIONARY_NODE && DICTIONARY_NODE.prev);
-    this.hasNext = !!(DICTIONARY_NODE && DICTIONARY_NODE.next);
+    this.hasPrev = this.indexInLatestChangesList > 0 && this.latestChangesList.length > 1;
+    this.hasNext = this.latestChangesList.length - 1 > this.indexInLatestChangesList;
   }
 
   /**
@@ -177,6 +185,9 @@ export class DictionaryEditorComponent implements OnInit {
       this.alphabeticBoolean = true;
     }
     this.configurationService.updateDictionary(this.dictionary);
+    console.log(this.latestChangesList.length);
+    this.alphabeticCallsAtIndex.push(this.latestChangesList.length - 1);
+    console.log(this.alphabeticCallsAtIndex);
   }
 
   /**
@@ -190,18 +201,34 @@ export class DictionaryEditorComponent implements OnInit {
 
   /**
    * Clears dictionary of all entries and sets it back to the original state with one empty row.
-   * For the getNodeByData Function to work, there should be no duplicate entries, therefore all
-   * entities of empty dictionarys are deleted in the latestChangesList.
    */
   clearDictionary(): void {
     const EMPTY_DICTIONARY = new dictionary({
       language: 'de',
       additional_vocab: [{ content: '', sounds_like: [''] }],
     });
-    this.latestChangesList.removeAllDeepEqualObjects(EMPTY_DICTIONARY);
 
     this.dictionary = EMPTY_DICTIONARY;
     this.configurationService.updateDictionary(EMPTY_DICTIONARY);
     this.cdr.detectChanges();
+  }
+
+  /**
+   * Shortcuts for going back and forth in the latestChangesList.
+   *
+   * @param event - Any key event triggered by user.
+   */
+  @HostListener('document:keydown', ['$event'])
+  public handleKeyboardEvent(event: KeyboardEvent): void {
+    if (event.ctrlKey) {
+      switch (event.key) {
+        case 'z':
+          this.goToPreviousChange();
+          break;
+        case 'y':
+          this.goToNextChange();
+          break;
+      }
+    }
   }
 }

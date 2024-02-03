@@ -197,4 +197,26 @@ describe('DictionaryEditorComponent', () => {
     expect(component.wordcount).toBe(1000);
     expect(toastrService.warning).not.toHaveBeenCalled();
   });
+
+  it('should clear the dictionary', () => {
+    // Arrange: Set up the component's initial state
+    const initialDictionary = new dictionary({
+      language: 'de',
+      additional_vocab: [{ content: 'word1', sounds_like: ['sound1'] }],
+    });
+    component.dictionary = initialDictionary;
+
+    // Act: Call the method to be tested
+    component.clearDictionary();
+
+    spyOn(dictionaryService, 'updateDictionary');
+
+    // Assert: Check if the dictionary is cleared and the service is updated
+    expect(component.dictionary).toEqual(
+      new dictionary({
+        language: 'de',
+        additional_vocab: [{ content: '', sounds_like: [''] }],
+      }),
+    );
+  });
 });

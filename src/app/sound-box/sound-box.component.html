@@ -1,7 +1,30 @@
-<app-audio-handler #audioHandler></app-audio-handler>
+<app-audio-handler
+  (playbackChangeEvent)="isAudioPlaying = $event"
+  #audioHandler
+></app-audio-handler>
 
-<div class="sound-container fixed-bottom d-flex align-items-center justify-content-start">
-  <div class="soundbar-button-container">
+<div class="sound-container fixed-bottom d-flex align-items-center justify-content-center">
+  <div class="middle-buttons">
+    <!-- Move back Button -->
+    <button
+      class="sound-button-1 mover"
+      (click)="handleSkipBackwardButtonPress()"
+      title="Zurückspulen (Ctrl+R)"
+    >
+      <img
+        [src]="buttonImage2Src"
+        alt="Button Image"
+        class="button-image-2"
+        draggable="false"
+        (mousedown)="buttonImage2Src = 'assets/backOnClick.svg'"
+        (mouseup)="buttonImage2Src = 'assets/back.svg'"
+        (keydown)="handleKeyboardEvent($event)"
+        [class.key-down]="isKeyDown"
+        tabindex="0"
+        #buttonImage2
+      />
+    </button>
+
     <!-- Play Button  -->
     <button
       class="play-button mover"
@@ -20,26 +43,6 @@
         "
         (mouseup)="buttonImage.src = isAudioPlaying ? 'assets/pause.svg' : 'assets/play.svg'"
         #buttonImage
-      />
-    </button>
-
-    <!-- Move back Button -->
-    <button
-      class="sound-button-1 mover"
-      (click)="handleSkipBackwardButtonPress()"
-      title="Zurückspulen (Ctrl+R)"
-    >
-      <img
-        [src]="buttonImage2Src"
-        alt="Button Image"
-        class="button-image-2"
-        draggable="false"
-        (mousedown)="buttonImage2Src = 'assets/backOnClick.svg'"
-        (mouseup)="buttonImage2Src = 'assets/back.svg'"
-        (keydown)="handleKeyboardEvent($event)"
-        [class.key-down]="isKeyDown"
-        tabindex="0"
-        #buttonImage2
       />
     </button>
 
@@ -62,15 +65,12 @@
         #buttonImage3
       />
     </button>
+  </div>
 
-    <!-- audiobar -->
-    <div class="audio-bar mover">
-      <img src="assets/audiobarBeispiel.svg" alt="Button Image" />
-    </div>
-
+  <div class="right-buttons">
     <!-- speed Button -->
     <button
-      class="sound-button-1 mover"
+      class="sound-button-1 mover right-buttons"
       (click)="switchSpeedPopover()"
       #speedButton
       title="Geschwindigkeit (Ctrl+Oben/Unten)"
@@ -100,7 +100,7 @@
 
     <!-- sound button-->
     <button
-      class="sound-button-1 mover"
+      class="sound-button-1 mover right-buttons"
       (click)="switchPopoverAudio()"
       tabindex="0"
       #soundButton
@@ -137,7 +137,7 @@
 
     <!-- settings Button -->
     <button
-      class="sound-button-1 mover"
+      class="sound-button-1 mover right-buttons"
       (click)="openModal('settings')"
       title="Einstellungen (Alt+P)"
     >
@@ -145,8 +145,10 @@
         src="assets/settings.svg"
         alt="Button Image"
         class="button-image-3"
+        draggable="false"
         (mousedown)="buttonImage6.src = 'assets/settingsOnClick.svg'"
         (mouseup)="buttonImage6.src = 'assets/settings.svg'"
+        (mouseleave)="buttonImage6.src = 'assets/settings.svg'"
         #buttonImage6
       />
     </button>

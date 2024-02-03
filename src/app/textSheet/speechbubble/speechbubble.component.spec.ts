@@ -299,7 +299,9 @@ describe('SpeechbubbleComponent', () => {
     component.logInfoAboutTextbox(MOCK_EVENT);
 
     expect(consoleHideService.speechbubbleLog).toHaveBeenCalledWith('Word: Hello, ID: 1');
-    expect(consoleHideService.speechbubbleLog).toHaveBeenCalledWith('Current Word: '+ jasmine.any(WordToken));
+    expect(consoleHideService.speechbubbleLog).toHaveBeenCalledWith(
+      'Current Word: ' + jasmine.any(WordToken),
+    );
     expect(consoleHideService.speechbubbleLog).toHaveBeenCalledWith('Print Text:[Hello, World]');
   });
 
