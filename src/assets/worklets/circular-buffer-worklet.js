@@ -266,20 +266,26 @@ class CircularBufferWorklet extends AudioWorkletProcessor {
    */
   advanceReadPointer(secondsToAdvance) {
     const SAMPLES_TO_ADVANCE = secondsToAdvance * this.samplesPerSecond;
-    this.readPointer = (this.readPointer + SAMPLES_TO_ADVANCE) % this.totalBufferSize;
     const SECONDS_TO_MILLISECONDS_MULTIPLIER = 1000;
-    this.setNewAbsoluteReadTime(
-      this.absoluteReadTimeInMilliseconds + secondsToAdvance * SECONDS_TO_MILLISECONDS_MULTIPLIER,
-    );
+    const NEW_READ_TIME =
+      this.absoluteReadTimeInMilliseconds + secondsToAdvance * SECONDS_TO_MILLISECONDS_MULTIPLIER;
+    const SAFETY_MARGIN_IN_MILLISECONDS =
+      this.safetyMarginInSeconds * SECONDS_TO_MILLISECONDS_MULTIPLIER;
 
-    // Keep Read Pointer away from Write Pointer
-    if (this.absoluteReadTimeInMilliseconds >= this.absoluteWriteTimeInMilliseconds) {
-      this.setNewAbsoluteReadTime(
-        this.absoluteWriteTimeInMilliseconds -
-          this.safetyMarginInSeconds * SECONDS_TO_MILLISECONDS_MULTIPLIER,
-      );
-      this.readPointer = this.writePointer - this.safetyMarginInSeconds * this.samplesPerSecond;
+    // Check that new Read Pointer isn't overtaking Write Pointer
+    if (NEW_READ_TIME < this.absoluteWriteTimeInMilliseconds) {
+      this.readPointer = (this.readPointer + SAMPLES_TO_ADVANCE) % this.totalBufferSize;
+      this.setNewAbsoluteReadTime(NEW_READ_TIME);
+      return;
     }
+
+    // Otherwise set Read Pointer to end of buffer (with safety margin)
+    this.setNewAbsoluteReadTime(
+      this.absoluteWriteTimeInMilliseconds - SAFETY_MARGIN_IN_MILLISECONDS,
+    );
+    this.readPointer =
+      (this.writePointer - this.safetyMarginInSeconds * this.samplesPerSecond) %
+      this.totalBufferSize;
   }
 
   /**
@@ -288,26 +294,34 @@ class CircularBufferWorklet extends AudioWorkletProcessor {
    * @param secondsToDecrease - The amount of seconds to decrease the read pointer by.
    */
   decreaseReadPointer(secondsToDecrease) {
-    const SAMPLES_TO_DECREASE = secondsToDecrease * this.samplesPerSecond;
-    this.readPointer = (this.readPointer - SAMPLES_TO_DECREASE) % this.totalBufferSize;
     const SECONDS_TO_MILLISECONDS_MULTIPLIER = 1000;
-    this.setNewAbsoluteReadTime(
-      this.absoluteReadTimeInMilliseconds - secondsToDecrease * SECONDS_TO_MILLISECONDS_MULTIPLIER,
-    );
+    const SAMPLES_TO_DECREASE = secondsToDecrease * this.samplesPerSecond;
 
-    // Keep Read Pointer away from End of Buffer
-    const END_OF_BUFFER_TIME_TIMESTAMP =
-      this.absoluteWriteTimeInMilliseconds -
+    const BUFFER_LENGTH_IN_MILLISECONDS =
       this.bufferLengthInSeconds * SECONDS_TO_MILLISECONDS_MULTIPLIER;
-    if (this.absoluteReadTimeInMilliseconds <= END_OF_BUFFER_TIME_TIMESTAMP) {
-      this.setNewAbsoluteReadTime(
-        END_OF_BUFFER_TIME_TIMESTAMP +
-          this.safetyMarginInSeconds * SECONDS_TO_MILLISECONDS_MULTIPLIER,
-      );
-      this.readPointer =
-        this.writePointer -
-        this.totalBufferSize +
-        this.safetyMarginInSeconds * this.samplesPerSecond;
+    const START_OF_BUFFER_TIMESTAMP =
+      this.absoluteWriteTimeInMilliseconds - BUFFER_LENGTH_IN_MILLISECONDS;
+    const LOWER_TIME_BOUND = Math.max(0, START_OF_BUFFER_TIMESTAMP);
+    const NEW_READ_TIME =
+      this.absoluteReadTimeInMilliseconds - secondsToDecrease * SECONDS_TO_MILLISECONDS_MULTIPLIER;
+
+    const WRITE_OVERFLOWN =
+      this.absoluteWriteTimeInMilliseconds >
+      this.bufferLengthInSeconds * SECONDS_TO_MILLISECONDS_MULTIPLIER;
+
+    // Check if new Read Time is in bounds
+    if (NEW_READ_TIME >= LOWER_TIME_BOUND) {
+      this.setNewAbsoluteReadTime(NEW_READ_TIME);
+      this.readPointer = (this.readPointer - SAMPLES_TO_DECREASE) % this.totalBufferSize;
+      return;
+    }
+
+    // Otherwise set Read Pointer to start of buffer
+    this.setNewAbsoluteReadTime(LOWER_TIME_BOUND);
+    if (WRITE_OVERFLOWN) {
+      this.readPointer = (this.writePointer - this.totalBufferSize) % this.totalBufferSize;
+    } else {
+      this.readPointer = 0;
     }
   }
 
