@@ -34,7 +34,9 @@ describe('ConfigurationService', () => {
   });
 
   it('should update dictionary and notify subscribers', () => {
-    const mockDictionary: dictionary = new dictionary(new transcription_config('de', [{ content: 'fest', sounds_like: ['test'] }]));
+    const mockDictionary: dictionary = new dictionary(
+      new transcription_config('de', [{ content: 'fest', sounds_like: ['test'] }]),
+    );
     service.updateDictionary(mockDictionary);
 
     service.dictionaryUpdated.subscribe((updatedDictionary) => {
@@ -79,7 +81,9 @@ describe('ConfigurationService', () => {
 
   it('should validate configuration correctly when  empty sounds_like with word', () => {
     service.updateDelayLength(5);
-    service.updateDictionary(new dictionary(new transcription_config('de', [{ content: 'test', sounds_like: [''] }])));
+    service.updateDictionary(
+      new dictionary(new transcription_config('de', [{ content: 'test', sounds_like: [''] }])),
+    );
 
     expect(() => service.isConfigValid()).not.toThrowMatching((e) => e instanceof Error);
   });
@@ -116,7 +120,10 @@ describe('ConfigurationService', () => {
     service.updateDictionary(DICTIONARY);
 
     expect(() => service.isConfigValid()).toThrowMatching((e) => {
-      return e instanceof DictionaryError && e.message === 'Maximale Anzahl an Wörterbucheinträgen überschritten (1000)!';
+      return (
+        e instanceof DictionaryError &&
+        e.message === 'Maximale Anzahl an Wörterbucheinträgen überschritten (1000)!'
+      );
     });
   });
 
