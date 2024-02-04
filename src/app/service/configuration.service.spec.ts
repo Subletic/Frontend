@@ -25,6 +25,23 @@ describe('ConfigurationService', () => {
     service = TestBed.inject(ConfigurationService);
   });
 
+  it('should be created', () => {
+    expect(service).toBeTruthy();
+  });
+
+  it('should generate a default dictionary on initialization', () => {
+    expect(service.getDictionary()).toBeTruthy();
+  });
+
+  it('should update dictionary and notify subscribers', () => {
+    const mockDictionary: dictionary = new dictionary(new transcription_config('de', [{ content: 'fest', sounds_like: ['test'] }]));
+    service.updateDictionary(mockDictionary);
+
+    service.dictionaryUpdated.subscribe((updatedDictionary) => {
+      expect(updatedDictionary).toEqual(mockDictionary);
+    });
+  });
+
   it('should update dictionary correctly', () => {
     const newDictionary = new dictionary(new transcription_config('en', []));
 
@@ -60,20 +77,56 @@ describe('ConfigurationService', () => {
     expect(() => service.isConfigValid()).not.toThrowMatching((e) => e instanceof Error);
   });
 
-  it('should validate configuration correctly when invalid', () => {
+  it('should validate configuration correctly when  empty sounds_like with word', () => {
+    service.updateDelayLength(5);
+    service.updateDictionary(new dictionary(new transcription_config('de', [{ content: 'test', sounds_like: [''] }])));
+
+    expect(() => service.isConfigValid()).not.toThrowMatching((e) => e instanceof Error);
+  });
+
+  it('should validate configuration correctly when empty word with sounds_like', () => {
+    service.updateDelayLength(1);
+    service.updateDictionary(
+      new dictionary(new transcription_config('de', [{ content: '', sounds_like: ['test'] }])),
+    );
+
+    expect(() => service.isConfigValid()).toThrowMatching((e) => e instanceof DictionaryError);
+  });
+
+  it('should validate configuration correctly when invalid transcription_config', () => {
     service.updateDelayLength(0);
     service.updateDictionary(new dictionary(new transcription_config('', [])));
 
     expect(() => service.isConfigValid()).toThrowMatching((e) => e instanceof DictionaryError);
   });
 
-  it('should validate configuration correctly when empty word with sounds_like', () => {
-    service.updateDelayLength(1);
-    service.updateDictionary(
-      new dictionary(new transcription_config('', [{ content: '', sounds_like: ['test'] }])),
-    );
+  it('should validate configuration correctly when max entries exceeded', () => {
+    const transcriptionConfig = new transcription_config('de', [
+      { content: 'asdf', sounds_like: ['test'] },
+    ]);
+    for (let i = 0; i < 1001; i++) {
+      transcriptionConfig.additional_vocab.push({
+        content: 'asdf' + i,
+        sounds_like: ['test' + i],
+      });
+    }
 
-    expect(() => service.isConfigValid()).toThrowMatching((e) => e instanceof DictionaryError);
+    const DICTIONARY = new dictionary(transcriptionConfig);
+    service.updateDelayLength(2);
+    service.updateDictionary(DICTIONARY);
+
+    expect(() => service.isConfigValid()).toThrowMatching((e) => {
+      return e instanceof DictionaryError && e.message === 'Maximale Anzahl an Wörterbucheinträgen überschritten (1000)!';
+    });
+  });
+
+  it('should validate configuration correctly when buffer length invalid', () => {
+    service.updateDelayLength(0);
+    service.updateDictionary(new dictionary(new transcription_config('de', [])));
+
+    expect(() => service.isConfigValid()).toThrowMatching((e) => {
+      return e instanceof DictionaryError && e.message === 'Ungültige Buffer Länge!';
+    });
   });
 
   it('should post configuration to backend', () => {
@@ -85,75 +138,3 @@ describe('ConfigurationService', () => {
     expect(fetchSpy).toHaveBeenCalled();
   });
 });
-
-/*
-import { TestBed } from '@angular/core/testing';
-import { ToastrService, ToastrModule } from 'ngx-toastr';
-import { BackendProviderService } from './backend-provider.service';
-import { ConfigurationService } from './configuration.service';
-import { dictionary } from '../data/dictionary/dictionary.model';
-
-describe('ConfigurationService', () => {
-  let service: ConfigurationService;
-  let toastrService: ToastrService;
-
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [ToastrModule.forRoot()],
-      providers: [ConfigurationService, BackendProviderService, ToastrService],
-    });
-
-    service = TestBed.inject(ConfigurationService);
-    toastrService = TestBed.inject(ToastrService);
-  });
-
-  it('should be created', () => {
-    expect(service).toBeTruthy();
-  });
-
-  it('should generate a default dictionary on initialization', () => {
-    expect(service.getDictionary()).toBeTruthy();
-  });
-
-  it('should update dictionary and notify subscribers', () => {
-    const mockDictionary: dictionary = ; // create a mock dictionary
-    service.updateDictionary(mockDictionary);
-
-    service.dictionaryUpdated.subscribe((updatedDictionary) => {
-      expect(updatedDictionary).toEqual(mockDictionary);
-    });
-  });
-
-  it('should update delay length', () => {
-    const newDelayLength = 5;
-    service.updateDelayLength(newDelayLength);
-
-    expect(service.getBufferLengthInMinutes()).toEqual(newDelayLength);
-  });
-
-  it('should check if configuration is valid', () => {
-    // Create a mock dictionary with valid configuration
-    const validConfigDictionary: dictionary = ; // create a mock dictionary with valid configuration;
-    service.updateDictionary(validConfigDictionary);
-    service.updateDelayLength(2);
-
-    expect(() => service.isConfigValid()).not.toThrow();
-  });
-
-  it('should throw an error if configuration is invalid', () => {
-    // Create a mock dictionary with invalid configuration
-    const invalidConfigDictionary: dictionary = ; // create a mock dictionary with invalid configuration
-    service.updateDictionary(invalidConfigDictionary);
-    service.updateDelayLength(15);
-
-    expect(() => service.isConfigValid()).toThrow();
-  });
-
-  it('should post configuration to backend', () => {
-    spyOn(service['backendProviderService'], 'uploadConfiguration');
-    service.postConfigurationToBackend();
-
-    expect(service['backendProviderService'].uploadConfiguration).toHaveBeenCalled();
-  });
-});
-*/

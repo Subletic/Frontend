@@ -25,7 +25,7 @@ export class DictionaryFsLoaderComponent {
   public constructor(
     private configurationService: ConfigurationService,
     private toastr: ToastrService,
-  ) {}
+  ) { }
 
   /**
    * Called when the user uploads a file.
@@ -34,22 +34,26 @@ export class DictionaryFsLoaderComponent {
   public async handleFileUpload(event: Event): Promise<void> {
     const INPUT = event.target as HTMLInputElement;
 
-    if (INPUT.files && INPUT.files.length > 0) {
-      const file: File | null = INPUT.files[0];
+    if (!INPUT.files || INPUT.files.length === 0) {
+      this.displayDictionaryErrorToast();
+      return;
+    }
 
-      if (file !== null) {
-        // Check file extension to determine the file type
-        const FILE_EXTENSION = file.name.split('.').pop()?.toLowerCase();
+    const file: File | null = INPUT.files[0];
 
-        const DICTIONARY = await this.loadDictionaryFromFile(file, FILE_EXTENSION);
+    if (file === null) {
+      this.displayDictionaryErrorToast();
+      return;
+    }
 
-        if (DICTIONARY != null) {
-          this.configurationService.newDictionaryUpload(DICTIONARY);
-          this.displayDictionarySuccessToast();
-        }
-      } else {
-        this.displayDictionaryErrorToast();
-      }
+    // Check file extension to determine the file type
+    const FILE_EXTENSION = file.name.split('.').pop()?.toLowerCase();
+
+    const DICTIONARY = await this.loadDictionaryFromFile(file, FILE_EXTENSION);
+
+    if (DICTIONARY !== null) {
+      this.configurationService.newDictionaryUpload(DICTIONARY);
+      this.displayDictionarySuccessToast();
     } else {
       this.displayDictionaryErrorToast();
     }
@@ -189,14 +193,14 @@ export class DictionaryFsLoaderComponent {
   /**
    * Opens the export popup.
    */
-  public openExportPopup() {
+  public openExportPopup(): void {
     this.isExportPopupOpen = true;
   }
 
   /**
    * Closes the export popup.
    */
-  public closeExportPopup() {
+  public closeExportPopup(): void {
     this.isExportPopupOpen = false;
   }
 
