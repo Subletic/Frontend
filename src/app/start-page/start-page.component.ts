@@ -31,13 +31,6 @@ export class StartPageComponent {
    */
   public continueToEditor(): void {
     if (!this.editorComponent) return;
-    if (this.editorComponent.wordcount > 1000) {
-      this.toastr.error(
-        'Die Anzahl der Wörter im Dictionary überschreitet 1000. Bitte reduzieren Sie die Anzahl der Wörter.',
-        'Warnung',
-      );
-      return;
-    }
 
     try {
       this.configurationService.isConfigValid();
@@ -52,15 +45,14 @@ export class StartPageComponent {
       );
     }
 
-    // merge with itslef to: 1) ensure language is DE; 2) merge identical words 'soundslike' into one word entity
+    // merge with itself to: 1) ensure language is DE; 2) merge identical words 'soundslike' into one word entity
     const DICTIONARY_COPY = this.editorComponent.dictionary;
     this.editorComponent.dictionary.mergeWithDictionary(DICTIONARY_COPY);
 
-    if (this.editorComponent.dictionary.transcription_config.language != 'de') {
-      this.toastr.error(
-        'Die Sprache des Dictionaries muss Deutsch sein. Die Sprache wurde jetzt automatisch auf Deutsch gesetzt.',
-        'Fehler',
-      );
+    if (
+      !this.editorComponent.dictionary.transcription_config.language ||
+      this.editorComponent.dictionary.transcription_config.language != 'de'
+    ) {
       this.editorComponent.dictionary.transcription_config.language = 'de';
       this.closeContinuePopup();
       return;

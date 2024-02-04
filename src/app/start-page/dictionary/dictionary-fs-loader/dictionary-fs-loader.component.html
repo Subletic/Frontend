@@ -1,13 +1,31 @@
 <div class="interact">
-  <input type="file" class="file-input" accept="application/json" (change)="handleFileUpload($event)" #fileUpload />
+  <input
+    type="file"
+    class="file-input"
+    accept="application/json"
+    (change)="handleFileUpload($event)"
+    #fileUpload
+  />
   <button class="download-button" (click)="fileUpload.click()" title="Wörterbuch importieren">
     <span>Import</span>
-    <img ngSrc="../../../../../assets/import.svg" alt="Import Symbol" height="28" width="28" draggable="false" />
+    <img
+      ngSrc="../../../../../assets/import.svg"
+      alt="Import Symbol"
+      height="28"
+      width="28"
+      draggable="false"
+    />
   </button>
 
   <button class="download-button" (click)="openExportPopup()" title="Wörterbuch exportieren">
     <span>Export</span>
-    <img ngSrc="../../../../../assets/export.svg" alt="Export Symbol" height="28" width="28" draggable="false" />
+    <img
+      ngSrc="../../../../../assets/export.svg"
+      alt="Export Symbol"
+      height="28"
+      width="28"
+      draggable="false"
+    />
   </button>
 
   <app-export-popup *ngIf="isExportPopupOpen" (closed)="closeExportPopup()"></app-export-popup>
