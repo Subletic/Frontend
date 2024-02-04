@@ -3,7 +3,6 @@ import { Subject } from 'rxjs';
 import { dictionary } from '../data/dictionary/dictionary.model';
 import { transcription_config } from '../data/dictionary/transcription_config.module';
 import { additional_vocab } from '../data/dictionary/additionalVocab.model';
-import { environment } from '../../environments/environment.prod';
 import { Config } from '../data/config/config.model';
 import { DictionaryError } from '../data/error/DictionaryError';
 import { BackendProviderService } from './backend-provider.service';
@@ -28,7 +27,6 @@ export class ConfigurationService {
     this.currentDictionary = DEFAULT_DICTIONARY;
     this.delayLengthInMinutes = 2;
     this.dictionaryUpdated.next(DEFAULT_DICTIONARY);
-    console.log('backendUrl: ' + environment.BACKEND_URL);
   }
 
   /**
