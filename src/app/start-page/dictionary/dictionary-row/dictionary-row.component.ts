@@ -41,14 +41,12 @@ export class DictionaryRowComponent implements AfterViewInit {
    */
   onContentChange(property: keyof additional_vocab, event: Event): void {
     const TARGET = event.target as HTMLDivElement;
-    const CONTENT = TARGET.textContent;
-    if (!CONTENT) return;
 
     if (property === 'sounds_like') {
-      this.rowData[property] = CONTENT.split(',').map((value: string) => value.trim());
+      this.rowData[property] = TARGET.textContent!.split(',').map((value: string) => value.trim());
       console.log(this.rowData[property]);
     } else {
-      this.rowData[property] = CONTENT;
+      this.rowData[property] = TARGET.textContent!;
       console.log(this.rowData[property]);
     }
 

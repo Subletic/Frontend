@@ -39,6 +39,8 @@ export class StartPageComponent {
       return;
     }
 
+    console.log(this.editorComponent.dictionary);
+
     try {
       this.configurationService.isConfigValid();
     } catch (e) {
@@ -65,6 +67,8 @@ export class StartPageComponent {
       this.closeContinuePopup();
       return;
     }
+
+    console.log(this.editorComponent.dictionary);
 
     this.showDictionary.emit(false);
     this.configurationService.postConfigurationToBackend();

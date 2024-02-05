@@ -29,7 +29,6 @@ export class SoundBoxComponent {
   @ViewChild('buttonImage3', { static: false }) forwardsButtonImage!: ElementRef;
   @ViewChild('buttonImage2', { static: false }) backwardsButtonImage!: ElementRef;
 
-
   public isPopupOpen = false;
   public isAudioPopoverOpen = false;
   public volume100 = 0;
@@ -80,7 +79,10 @@ export class SoundBoxComponent {
   }
 
   /**
-   * Shortcuts for p
+   * Shortcuts for hotkeys defined in hotkey-menue.
+   *
+   * Keydown events mostly trigger relevant event and SVG-switch,
+   * keyup events only partly change SVG Images back.
    *
    * @param event - Any key event triggered by user.
    */
@@ -122,9 +124,13 @@ export class SoundBoxComponent {
     if (event.type === 'keydown') {
       this.handlePlayButtonPress();
       event.preventDefault();
-      this.isAudioPlaying ? (this.playButtonImage.nativeElement.src = 'assets/pauseOnClick.svg') : (this.playButtonImage.nativeElement.src = 'assets/playOnClick.svg');
+      this.isAudioPlaying
+        ? (this.playButtonImage.nativeElement.src = 'assets/pauseOnClick.svg')
+        : (this.playButtonImage.nativeElement.src = 'assets/playOnClick.svg');
     } else if (event.type === 'keyup') {
-      this.isAudioPlaying ? (this.playButtonImage.nativeElement.src = 'assets/pause.svg') : (this.playButtonImage.nativeElement.src = 'assets/play.svg');
+      this.isAudioPlaying
+        ? (this.playButtonImage.nativeElement.src = 'assets/pause.svg')
+        : (this.playButtonImage.nativeElement.src = 'assets/play.svg');
     }
   }
 
@@ -156,6 +162,10 @@ export class SoundBoxComponent {
     }
   }
 
+  /**
+   * Handles the increase speed shortcut.
+   * @param event Key event triggered by user.
+   */
   private handleHotkeyIncreaseSpeed(event: KeyboardEvent): void {
     if (event.type != 'keydown') return;
     if (this.speedValue >= 1.3) return;
@@ -164,6 +174,10 @@ export class SoundBoxComponent {
     event.preventDefault();
   }
 
+  /**
+   * Handles the decrease speed shortcut.
+   * @param event Key event triggered by user.
+   */
   private handleHotkeyDecreaseSpeed(event: KeyboardEvent): void {
     if (event.type != 'keydown') return;
     // 0.8 - 0.1 hat Rundungsfehler, deswegen der leicht höhere Grenzwert
@@ -173,19 +187,27 @@ export class SoundBoxComponent {
     event.preventDefault();
   }
 
+  /**
+   * Handles the increase volume shortcut.
+   * @param event Key event triggered by user.
+   */
   private handleHotkeyIncreaseVolume(event: KeyboardEvent): void {
     if (event.type != 'keydown') return;
     if (!(this.volume > 0.8 || this.volume < -1)) {
       this.volume += 0.2;
       this.volume100 += 20;
     } else {
-        this.volume = 1;
-        this.volume100 = 100;
+      this.volume = 1;
+      this.volume100 = 100;
     }
     this.onVolumeChange(this.volume);
     event.preventDefault();
   }
 
+  /**
+   * Handles the decrease volume shortcut.
+   * @param event Key event triggered by user.
+   */
   private handleHotkeyDecreaseVolume(event: KeyboardEvent): void {
     if (event.type != 'keydown') return;
     if (!(this.volume > 1 || this.volume <= -0.8)) {
