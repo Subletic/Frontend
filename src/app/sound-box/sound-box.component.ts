@@ -41,8 +41,8 @@ export class SoundBoxComponent {
 
   constructor(
     private settingsService: SettingsService,
-    private router: Router,
     private hidControlService: HidControlService,
+    private router: Router,
   ) {
     hidControlService.configureDevices(
       () => {
@@ -79,7 +79,7 @@ export class SoundBoxComponent {
    * Opens the FAQ in a new tab
    * 
    */
-  toggleFaq(): void {
+  public toggleFaq(): void {
     const componentUrl = this.router.serializeUrl(
       this.router.createUrlTree(['/FAQ'])
     );
