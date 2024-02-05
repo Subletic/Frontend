@@ -1,7 +1,7 @@
 <div *ngIf="this.shouldRenderContent()">
   <div *ngIf="showDictionary; else mainContent" class="dictionaryWrapper">
-      <app-start-page (showDictionary)="handleShowDictionary($event)"></app-start-page>
-      <app-faq-button></app-faq-button>
+    <app-start-page (showDictionary)="handleShowDictionary($event)"></app-start-page>
+    <app-faq-button></app-faq-button>
   </div>
   <ng-template #mainContent>
     <app-text-sheet></app-text-sheet>

@@ -4,19 +4,14 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatDividerModule } from '@angular/material/divider';
 
-
 describe('FaqComponent', () => {
   let component: FaqComponent;
   let fixture: ComponentFixture<FaqComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ 
-        MatExpansionModule,
-        BrowserAnimationsModule,
-        MatDividerModule
-      ],
-      declarations: [FaqComponent]
+      imports: [MatExpansionModule, BrowserAnimationsModule, MatDividerModule],
+      declarations: [FaqComponent],
     });
     fixture = TestBed.createComponent(FaqComponent);
     component = fixture.componentInstance;

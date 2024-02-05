@@ -25,7 +25,7 @@ describe('SettingsComponent', () => {
         BrowserAnimationsModule,
         MatTabsModule,
         MatDividerModule,
-        ToastrModule.forRoot()
+        ToastrModule.forRoot(),
       ],
       providers: [{ provide: ToastrService, useClass: ToastrService }],
     }).compileComponents();

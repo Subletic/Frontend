@@ -6,16 +6,13 @@ import { FaqComponent } from './faq/faq.component';
 const routes: Routes = [
   {
     path: 'FAQ',
-    component: FaqComponent
-  }
-]
+    component: FaqComponent,
+  },
+];
 
 @NgModule({
   imports: [CommonModule, RouterModule.forRoot(routes)],
   exports: [RouterModule],
-  providers: []
-
+  providers: [],
 })
-export class AppRoutingModule { 
-
-}
+export class AppRoutingModule {}

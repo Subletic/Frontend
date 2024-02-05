@@ -82,25 +82,11 @@ export class SoundBoxComponent {
 
   /**
    * Opens the FAQ in a new tab
-   * 
+   *
    */
   public toggleFaq(): void {
-    const componentUrl = this.router.serializeUrl(
-      this.router.createUrlTree(['/FAQ'])
-    );
-    
-    window.open(componentUrl, '_blank');
-  }
+    const componentUrl = this.router.serializeUrl(this.router.createUrlTree(['/FAQ']));
 
-  /**
-   * Opens the FAQ in a new tab
-   * 
-   */
-  public toggleFaq(): void {
-    const componentUrl = this.router.serializeUrl(
-      this.router.createUrlTree(['/FAQ'])
-    );
-    
     window.open(componentUrl, '_blank');
   }
 

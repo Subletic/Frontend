@@ -22,9 +22,7 @@ export class ConfigurationService {
   /**
    * Initializes the dictionary with default values.
    */
-  constructor(
-    private backendProviderService: BackendProviderService,
-  ) {
+  constructor(private backendProviderService: BackendProviderService) {
     const DEFAULT_DICTIONARY = this.generateDefaultDictionary();
     this.currentDictionary = DEFAULT_DICTIONARY;
     this.delayLengthInMinutes = 2;
