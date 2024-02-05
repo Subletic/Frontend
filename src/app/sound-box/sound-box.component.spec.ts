@@ -17,8 +17,7 @@ import { DictionaryFsLoaderComponent } from '../start-page/dictionary/dictionary
 import { ToastrService } from 'ngx-toastr';
 import { HidControlService } from '../service/hid-control.service';
 import { ConsoleHideService } from '../service/consoleHide.service';
-import { Router, RouterModule } from '@angular/router';
-import { FaqComponent } from '../faq/faq.component';
+import { Router } from '@angular/router';
 
 describe('SoundBoxComponent', () => {
   let component: SoundBoxComponent;
