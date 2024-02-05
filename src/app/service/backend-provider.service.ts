@@ -3,12 +3,16 @@ import { environment } from '../../environments/environment.prod';
 import { Config } from '../data/config/config.model';
 import { SpeechBubbleChain } from '../data/speechBubbleChain/speechBubbleChain.module';
 import { ConsoleHideService } from './consoleHide.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Injectable({
   providedIn: 'root',
 })
 export class BackendProviderService {
-  constructor(private consoleHideService: ConsoleHideService) {}
+  constructor(
+    private consoleHideService: ConsoleHideService,
+    private toastr: ToastrService,
+  ) {}
 
   /**
    * Uploads the user configuration to the backend.
@@ -21,10 +25,29 @@ export class BackendProviderService {
       headers: {
         'Content-Type': 'application/json',
       },
-    }).then((response) => {
-      console.log(response);
-      if (response.ok) return;
-      console.error('Error while uploading configuration to backend.');
+    }).then(async (response) => {
+      if (response.ok) {
+        this.consoleHideService.backendProviderLog(
+          'Einstellungen wurden an Backend gesendet'
+        );
+        if (response.status == 202) {
+          this.toastr.warning('Einstellungen wurden akzeptiert, aber das Dictionary kann erst bei'
+            + ' der nächsten Echtzeitübertragung verwendet werden!', '', {
+              timeOut: 10000,
+              extendedTimeOut: 10000,
+            }
+          );
+        }
+        return;
+      } else {
+        throw await response.text();
+      }
+    }).catch((error) => {
+      console.error('Error while uploading configuration to backend: ', error);
+      this.toastr.error('Einstellungen konnten nicht gesendet werden: ' + error, '', {
+        timeOut: 10000,
+        extendedTimeOut: 10000,
+      });
     });
   }
 

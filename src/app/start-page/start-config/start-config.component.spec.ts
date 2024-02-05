@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { StartConfigComponent } from './start-config.component';
 import { MatSliderModule } from '@angular/material/slider';
+import { ToastrService, ToastrModule } from 'ngx-toastr';
 
 describe('StartConfigComponent', () => {
   let component: StartConfigComponent;
@@ -10,7 +10,8 @@ describe('StartConfigComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [StartConfigComponent],
-      imports: [MatSliderModule],
+      imports: [MatSliderModule, ToastrModule.forRoot()],
+      providers: [ToastrService],
     });
     fixture = TestBed.createComponent(StartConfigComponent);
     component = fixture.componentInstance;

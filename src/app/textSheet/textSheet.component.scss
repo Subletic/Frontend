@@ -2,8 +2,8 @@
   max-width: 1000px;
   overflow-y: scroll;
   overflow-x: hidden;
-
-  //height: 95.65vh;
+  
+  height: 100vh;
 
   min-height: 95.65%;
   max-height: 95.65%;
@@ -82,9 +82,7 @@
 
 @media (max-width: 768px) {
   .middle-container {
-    height: auto;
     padding: 20px;
-    height: 100vh;
   }
 
   .middle-container h1 {

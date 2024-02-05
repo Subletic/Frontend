@@ -17,6 +17,7 @@ import { DictionaryFsLoaderComponent } from '../start-page/dictionary/dictionary
 import { ToastrService } from 'ngx-toastr';
 import { HidControlService } from '../service/hid-control.service';
 import { ConsoleHideService } from '../service/consoleHide.service';
+import { Router } from '@angular/router';
 
 describe('SoundBoxComponent', () => {
   let component: SoundBoxComponent;
@@ -151,7 +152,7 @@ describe('SoundBoxComponent', () => {
     const CONSOLE_HIDE_SERVICE = new ConsoleHideService();
     const SETTINGS_SERVICE = new SettingsService();
     const HID_DEVICES_SERVICE = new HidControlService(CONSOLE_HIDE_SERVICE);
-    const component = new SoundBoxComponent(SETTINGS_SERVICE, HID_DEVICES_SERVICE);
+    const component = new SoundBoxComponent(SETTINGS_SERVICE, HID_DEVICES_SERVICE, TestBed.inject(Router));
     component.isSpeedPopoverOpen = true;
 
     component.closePopoverSpeed();
@@ -163,7 +164,7 @@ describe('SoundBoxComponent', () => {
     const CONSOLE_HIDE_SERVICE = new ConsoleHideService();
     const SETTINGS_SERVICE = new SettingsService();
     const HID_DEVICES_SERVICE = new HidControlService(CONSOLE_HIDE_SERVICE);
-    const component = new SoundBoxComponent(SETTINGS_SERVICE, HID_DEVICES_SERVICE);
+    const component = new SoundBoxComponent(SETTINGS_SERVICE, HID_DEVICES_SERVICE, TestBed.inject(Router));
     component.isSpeedPopoverOpen = false;
 
     component.switchSpeedPopover();
@@ -180,6 +181,7 @@ describe('SoundBoxComponent', () => {
     const component = new SoundBoxComponent(
       new SettingsService(),
       new HidControlService(consoleHideService),
+      TestBed.inject(Router),
     );
     const settingsService = jasmine.createSpyObj('SettingsService', ['open']);
     component.setSettingsService(settingsService);
@@ -195,6 +197,7 @@ describe('SoundBoxComponent', () => {
     const component = new SoundBoxComponent(
       new SettingsService(),
       new HidControlService(consoleHideService),
+      TestBed.inject(Router),
     );
     const settingsService = jasmine.createSpyObj('SettingsService', ['close']);
     component.setSettingsService(settingsService);
@@ -210,6 +213,7 @@ describe('SoundBoxComponent', () => {
     const component = new SoundBoxComponent(
       new SettingsService(),
       new HidControlService(consoleHideService),
+      TestBed.inject(Router),
     );
     const audioHandler = jasmine.createSpyObj('AudioHandlerComponent', ['setSkipSeconds']);
     component.audioHandler = audioHandler;
@@ -225,6 +229,7 @@ describe('SoundBoxComponent', () => {
     const component = new SoundBoxComponent(
       new SettingsService(),
       new HidControlService(consoleHideService),
+      TestBed.inject(Router)
     );
     const audioHandler = jasmine.createSpyObj('AudioHandlerComponent', ['setPlaybackSpeed']);
     component.audioHandler = audioHandler;
@@ -239,7 +244,7 @@ describe('SoundBoxComponent', () => {
     const CONSOLE_HIDE_SERVICE = new ConsoleHideService();
     const SETTINGS_SERVICE = new SettingsService();
     const HID_DEVICES_SERVICE = new HidControlService(CONSOLE_HIDE_SERVICE);
-    const component = new SoundBoxComponent(SETTINGS_SERVICE, HID_DEVICES_SERVICE);
+    const component = new SoundBoxComponent(SETTINGS_SERVICE, HID_DEVICES_SERVICE, TestBed.inject(Router));
 
     const RESULT = component.getSettingsService();
 
@@ -247,6 +252,18 @@ describe('SoundBoxComponent', () => {
   });
 
   it('should handle the keyboard events for skipBackwardEvent', () => {
+    const consoleHideService = new ConsoleHideService();
+    const component = new SoundBoxComponent(
+      new SettingsService(),
+      new HidControlService(consoleHideService),
+      TestBed.inject(Router),
+    );
+    const audioHandler = jasmine.createSpyObj('AudioHandlerComponent', [
+      'playOrStopAudio',
+      'skipBackward',
+      'skipForward',
+    ]);
+    component.audioHandler = audioHandler;
     const skipBackwardSpy = spyOn(component.audioHandler, 'skipBackward');
 
     const SKIP_BACKWARD_EVENT = new KeyboardEvent('keydown', {
@@ -260,7 +277,17 @@ describe('SoundBoxComponent', () => {
   });
 
   it('should handle the keyboard events for skipForwardEvent', () => {
-    const skipForwardSpy = spyOn(component.audioHandler, 'skipForward');
+    const consoleHideService = new ConsoleHideService();
+    const component = new SoundBoxComponent(
+      new SettingsService(),
+      new HidControlService(consoleHideService),
+    );
+    const audioHandler = jasmine.createSpyObj('AudioHandlerComponent', [
+      'playOrStopAudio',
+      'skipBackward',
+      'skipForward',
+    ]);
+    component.audioHandler = audioHandler;
 
     const SKIP_FORWARD_EVENT = new KeyboardEvent('keydown', {
       key: 'Enter',

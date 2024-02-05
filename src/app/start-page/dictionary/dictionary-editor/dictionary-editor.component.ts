@@ -191,15 +191,6 @@ export class DictionaryEditorComponent implements OnInit {
   }
 
   /**
-   * Opens window for further explanation of the purpose of the dictionary.
-   * Intended for users that do not yet know the function of the dictionary-process.
-   */
-  callHelp(): void {
-    // Should call help window later
-    console.log('Help is called!');
-  }
-
-  /**
    * Clears dictionary of all entries and sets it back to the original state with one empty row.
    */
   clearDictionary(): void {
