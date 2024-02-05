@@ -8,6 +8,7 @@ import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatDividerModule } from '@angular/material/divider';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
 
 describe('SettingsComponent', () => {
   let component: SettingsComponent;
@@ -24,7 +25,9 @@ describe('SettingsComponent', () => {
         BrowserAnimationsModule,
         MatTabsModule,
         MatDividerModule,
+        ToastrModule.forRoot()
       ],
+      providers: [{ provide: ToastrService, useClass: ToastrService }],
     }).compileComponents();
   });
 
