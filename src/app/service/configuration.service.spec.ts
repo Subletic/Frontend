@@ -20,6 +20,7 @@ describe('ConfigurationService', () => {
         { provide: ToastrService, useClass: ToastrService }, // Hier useClass verwenden
       ],
       imports: [ToastrModule.forRoot()],
+      teardown: {destroyAfterEach: false}
     });
 
     service = TestBed.inject(ConfigurationService);

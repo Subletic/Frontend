@@ -6,7 +6,6 @@ import { additional_vocab } from '../data/dictionary/additionalVocab.model';
 import { Config } from '../data/config/config.model';
 import { DictionaryError } from '../data/error/DictionaryError';
 import { BackendProviderService } from './backend-provider.service';
-import { ToastrService } from 'ngx-toastr';
 
 /**
  * Service to provide the dictionary to the components.
@@ -25,7 +24,6 @@ export class ConfigurationService {
    */
   constructor(
     private backendProviderService: BackendProviderService,
-    private toastr: ToastrService,
   ) {
     const DEFAULT_DICTIONARY = this.generateDefaultDictionary();
     this.currentDictionary = DEFAULT_DICTIONARY;
