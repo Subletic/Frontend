@@ -79,6 +79,33 @@
   align-items: center;
 }
 
+.left.buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.faq-button {
+  position: fixed;
+  bottom: 1%;
+  left: 1%;
+  width: 30px;
+  height: auto;
+  border-radius: 50%;
+  border:none;
+  background-color: #ffffff;
+  
+  cursor: pointer;
+  font-size: 25px;
+  font-weight: bold;
+  color: #0147b1;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+}
+
 //Different button-images should be fixed later
 .button-image-1 {
   width: 30px;

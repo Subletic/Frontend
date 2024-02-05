@@ -5,6 +5,7 @@ import { SettingsService } from '../settings/settings.service';
 import { SettingsComponent } from '../settings/settings.component';
 import { SliderPopupComponent } from './slider-popup/slider-popup.component';
 import { SpeedPopupComponent } from './speed-popup/speed-popup.component';
+import { Router } from '@angular/router';
 
 /**
  * The SoundBoxComponent represents a component that displays the bottom bar of the application.
@@ -41,6 +42,7 @@ export class SoundBoxComponent {
   constructor(
     private settingsService: SettingsService,
     private hidControlService: HidControlService,
+    private router: Router,
   ) {
     hidControlService.configureDevices(
       () => {
@@ -71,6 +73,18 @@ export class SoundBoxComponent {
     if (!IS_INSIDE_SPEEDBUTTON) {
       this.closePopoverSpeed();
     }
+  }
+
+  /**
+   * Opens the FAQ in a new tab
+   * 
+   */
+  public toggleFaq(): void {
+    const componentUrl = this.router.serializeUrl(
+      this.router.createUrlTree(['/FAQ'])
+    );
+    
+    window.open(componentUrl, '_blank');
   }
 
   /**

@@ -31,6 +31,10 @@ import { NgOptimizedImage } from '@angular/common';
 import { StartConfigComponent } from './start-page/start-config/start-config.component';
 import { StartPageComponent } from './start-page/start-page.component';
 import { ContinuePopupComponent } from './start-page/continue-popup/continue-popup.component';
+import { FaqButtonComponent } from './faq-button/faq-button.component';
+import { FaqComponent } from './faq/faq.component';
+import { AppRoutingModule } from './app-routing.module';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { HotkeyMenueComponent } from './hotkey-menue/hotkey-menue.component';
 import { NoSpecialCharsDirective } from './start-page/dictionary/dictionary-row/no-special-chars.directive';
 import { NoSpecialCharsWithCommasDirective } from './start-page/dictionary/dictionary-row/no-spec-chars-com.directive';
@@ -53,6 +57,8 @@ import { NoSpecialCharsWithCommasDirective } from './start-page/dictionary/dicti
     StartConfigComponent,
     StartPageComponent,
     ContinuePopupComponent,
+    FaqButtonComponent,
+    FaqComponent,
     HotkeyMenueComponent,
     NoSpecialCharsDirective,
     NoSpecialCharsWithCommasDirective,
@@ -70,6 +76,8 @@ import { NoSpecialCharsWithCommasDirective } from './start-page/dictionary/dicti
     MatDividerModule,
     ToastrModule.forRoot(),
     NgOptimizedImage,
+    AppRoutingModule,
+    MatExpansionModule
   ],
   providers: [],
   bootstrap: [AppComponent],
