@@ -3,12 +3,16 @@ import { environment } from '../../environments/environment.prod';
 import { Config } from '../data/config/config.model';
 import { SpeechBubbleChain } from '../data/speechBubbleChain/speechBubbleChain.module';
 import { ConsoleHideService } from './consoleHide.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Injectable({
   providedIn: 'root',
 })
 export class BackendProviderService {
-  constructor(private consoleHideService: ConsoleHideService) {}
+  constructor(
+    private consoleHideService: ConsoleHideService,
+    private toastr: ToastrService,
+  ) {}
 
   /**
    * Uploads the user configuration to the backend.
@@ -21,9 +25,21 @@ export class BackendProviderService {
       headers: {
         'Content-Type': 'application/json',
       },
-    }).then((response) => {
-      if (response.ok) return;
-      console.error('Error while uploading configuration to backend.');
+    }).then(async (response) => {
+      if (response.ok) {
+        this.consoleHideService.backendProviderLog(
+          'Einstellungen wurden an Backend gesendet'
+        );
+        return;
+      } else {
+        throw await response.text();
+      }
+    }).catch((error) => {
+      console.error('Error while uploading configuration to backend: ', error);
+      this.toastr.error('Einstellungen konnten nicht gesendet werden: ' + error, '', {
+        timeOut: 10000,
+        extendedTimeOut: 10000,
+      });
     });
   }
 
