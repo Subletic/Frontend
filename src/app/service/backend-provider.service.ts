@@ -30,6 +30,14 @@ export class BackendProviderService {
         this.consoleHideService.backendProviderLog(
           'Einstellungen wurden an Backend gesendet'
         );
+        if (response.status == 202) {
+          this.toastr.warning('Einstellungen wurden akzeptiert, aber das Dictionary kann erst bei'
+            + ' der nächsten Echtzeitübertragung verwendet werden!', '', {
+              timeOut: 10000,
+              extendedTimeOut: 10000,
+            }
+          );
+        }
         return;
       } else {
         throw await response.text();
