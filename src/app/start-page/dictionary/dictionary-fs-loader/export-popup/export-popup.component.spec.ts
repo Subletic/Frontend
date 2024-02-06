@@ -49,7 +49,7 @@ describe('ExportPopupComponent', () => {
     expect(document.createElement).toHaveBeenCalledWith('a');
 
     expect(spyObject.href).toContain('blob:');
-    expect(spyObject.download).toBe('dictionary.json');
+    expect(spyObject.download).toBe('woerterbuch.json');
     expect(spyObject.click).toHaveBeenCalledTimes(1);
     expect(spyObject.click).toHaveBeenCalledWith();
   });
@@ -64,7 +64,7 @@ describe('ExportPopupComponent', () => {
     expect(document.createElement).toHaveBeenCalledWith('a');
 
     expect(spyObject.href).toContain('blob:');
-    expect(spyObject.download).toBe('dictionary.csv');
+    expect(spyObject.download).toBe('woerterbuch.csv');
     expect(spyObject.click).toHaveBeenCalledTimes(1);
     expect(spyObject.click).toHaveBeenCalledWith();
   });

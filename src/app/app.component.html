@@ -1,7 +1,11 @@
-<div *ngIf="showDictionary; else mainContent" class="dictionaryWrapper">
-  <app-start-page (showDictionary)="handleShowDictionary($event)"></app-start-page>
+<div *ngIf="this.shouldRenderContent()">
+  <div *ngIf="showDictionary; else mainContent" class="dictionaryWrapper">
+    <app-start-page (showDictionary)="handleShowDictionary($event)"></app-start-page>
+    <app-faq-button></app-faq-button>
+  </div>
+  <ng-template #mainContent>
+    <app-text-sheet></app-text-sheet>
+    <app-sound-box #soundBox></app-sound-box>
+  </ng-template>
 </div>
-<ng-template #mainContent>
-  <app-text-sheet *ngIf="!showDictionary"></app-text-sheet>
-  <app-sound-box #soundBox *ngIf="!showDictionary"></app-sound-box>
-</ng-template>
+<router-outlet></router-outlet>

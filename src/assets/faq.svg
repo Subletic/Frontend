@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="11mm"
+   height="11mm"
+   viewBox="0 0 13.229167 13.229167"
+   version="1.1"
+   id="svg5"
+   sodipodi:docname="path792.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#ffffff"
+     borderopacity="0.25"
+     inkscape:showpageshadow="false"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     showgrid="false"
+     showborder="false"
+     borderlayer="false" />
+  <defs
+     id="defs2" />
+  <g
+     inkscape:label="Ebene 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="matrix(0.34740375,0,0,0.26458333,-46.083389,-40.019916)"
+     style="opacity:1;stroke-width:1e-08;stroke-dasharray:none">
+    <g
+       id="g847"
+       style="stroke-width:1e-08;stroke-dasharray:none;paint-order:fill markers stroke"
+       inkscape:export-filename="g847.svg"
+       inkscape:export-xdpi="25.4"
+       inkscape:export-ydpi="25.4">
+      <ellipse
+         style="fill:#0147b1;fill-opacity:1;stroke-width:1e-08;stroke-dasharray:none;paint-order:fill markers stroke"
+         id="path792"
+         cx="151.69086"
+         cy="176.25638"
+         inkscape:export-filename="path792.svg"
+         inkscape:export-xdpi="25.4"
+         inkscape:export-ydpi="25.4"
+         rx="19.040047"
+         ry="25" />
+      <text
+         xml:space="preserve"
+         style="font-size:49.6286px;display:inline;fill:#ffffff;fill-opacity:1;stroke-width:1e-08;stroke-dasharray:none;paint-order:fill markers stroke"
+         x="135.8089"
+         y="197.26511"
+         id="text1682"
+         transform="scale(1.0190723,0.98128464)"><tspan
+           sodipodi:role="line"
+           id="tspan1680"
+           style="fill:#ffffff;fill-opacity:1;stroke-width:1e-08;stroke-dasharray:none;paint-order:fill markers stroke"
+           x="135.8089"
+           y="197.26511">?</tspan></text>
+    </g>
+  </g>
+</svg>

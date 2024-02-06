@@ -209,12 +209,14 @@ describe('DictionaryEditorComponent', () => {
     // Act: Call the method to be tested
     component.clearDictionary();
 
-    spyOn(dictionaryService, "updateDictionary");
+    spyOn(dictionaryService, 'updateDictionary');
 
     // Assert: Check if the dictionary is cleared and the service is updated
-    expect(component.dictionary).toEqual(new dictionary({
-      language: 'de',
-      additional_vocab: [{ content: '', sounds_like: [''] }],
-    }));
+    expect(component.dictionary).toEqual(
+      new dictionary({
+        language: 'de',
+        additional_vocab: [{ content: '', sounds_like: [''] }],
+      }),
+    );
   });
 });

@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { SoundBoxComponent } from './sound-box.component';
-import { AudioHandlerComponent } from '../audio-handler/audio-handler.component';
+import { AudioHandlerComponent } from './audio-handler/audio-handler.component';
 import { SliderPopupComponent } from './slider-popup/slider-popup.component';
 import { By } from '@angular/platform-browser';
 import { SettingsComponent } from '../settings/settings.component';
@@ -17,6 +17,7 @@ import { DictionaryFsLoaderComponent } from '../start-page/dictionary/dictionary
 import { ToastrService } from 'ngx-toastr';
 import { HidControlService } from '../service/hid-control.service';
 import { ConsoleHideService } from '../service/consoleHide.service';
+import { Router } from '@angular/router';
 
 describe('SoundBoxComponent', () => {
   let component: SoundBoxComponent;
@@ -42,6 +43,12 @@ describe('SoundBoxComponent', () => {
         DictionaryFsLoaderComponent,
       ],
       providers: [{ provide: ToastrService, useValue: ToastrService }],
+    }).compileComponents();
+  });
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      declarations: [SoundBoxComponent],
     }).compileComponents();
   });
 
@@ -143,7 +150,11 @@ describe('SoundBoxComponent', () => {
     const CONSOLE_HIDE_SERVICE = new ConsoleHideService();
     const SETTINGS_SERVICE = new SettingsService();
     const HID_DEVICES_SERVICE = new HidControlService(CONSOLE_HIDE_SERVICE);
-    const component = new SoundBoxComponent(SETTINGS_SERVICE, HID_DEVICES_SERVICE);
+    const component = new SoundBoxComponent(
+      SETTINGS_SERVICE,
+      HID_DEVICES_SERVICE,
+      TestBed.inject(Router),
+    );
     component.isSpeedPopoverOpen = true;
 
     component.closePopoverSpeed();
@@ -155,7 +166,11 @@ describe('SoundBoxComponent', () => {
     const CONSOLE_HIDE_SERVICE = new ConsoleHideService();
     const SETTINGS_SERVICE = new SettingsService();
     const HID_DEVICES_SERVICE = new HidControlService(CONSOLE_HIDE_SERVICE);
-    const component = new SoundBoxComponent(SETTINGS_SERVICE, HID_DEVICES_SERVICE);
+    const component = new SoundBoxComponent(
+      SETTINGS_SERVICE,
+      HID_DEVICES_SERVICE,
+      TestBed.inject(Router),
+    );
     component.isSpeedPopoverOpen = false;
 
     component.switchSpeedPopover();
@@ -172,6 +187,7 @@ describe('SoundBoxComponent', () => {
     const component = new SoundBoxComponent(
       new SettingsService(),
       new HidControlService(consoleHideService),
+      TestBed.inject(Router),
     );
     const settingsService = jasmine.createSpyObj('SettingsService', ['open']);
     component.setSettingsService(settingsService);
@@ -187,6 +203,7 @@ describe('SoundBoxComponent', () => {
     const component = new SoundBoxComponent(
       new SettingsService(),
       new HidControlService(consoleHideService),
+      TestBed.inject(Router),
     );
     const settingsService = jasmine.createSpyObj('SettingsService', ['close']);
     component.setSettingsService(settingsService);
@@ -202,6 +219,7 @@ describe('SoundBoxComponent', () => {
     const component = new SoundBoxComponent(
       new SettingsService(),
       new HidControlService(consoleHideService),
+      TestBed.inject(Router),
     );
     const audioHandler = jasmine.createSpyObj('AudioHandlerComponent', ['setSkipSeconds']);
     component.audioHandler = audioHandler;
@@ -217,6 +235,7 @@ describe('SoundBoxComponent', () => {
     const component = new SoundBoxComponent(
       new SettingsService(),
       new HidControlService(consoleHideService),
+      TestBed.inject(Router),
     );
     const audioHandler = jasmine.createSpyObj('AudioHandlerComponent', ['setPlaybackSpeed']);
     component.audioHandler = audioHandler;
@@ -231,70 +250,81 @@ describe('SoundBoxComponent', () => {
     const CONSOLE_HIDE_SERVICE = new ConsoleHideService();
     const SETTINGS_SERVICE = new SettingsService();
     const HID_DEVICES_SERVICE = new HidControlService(CONSOLE_HIDE_SERVICE);
-    const component = new SoundBoxComponent(SETTINGS_SERVICE, HID_DEVICES_SERVICE);
+    const component = new SoundBoxComponent(
+      SETTINGS_SERVICE,
+      HID_DEVICES_SERVICE,
+      TestBed.inject(Router),
+    );
 
     const RESULT = component.getSettingsService();
 
     expect(RESULT).toBe(SETTINGS_SERVICE);
   });
 
-  // Sollte Eigentlich keinen Fehler werfen und hat es ursprünglich auch nicht? Die anderen 2 funktionieren ja auch
   /*
-  it('should handle the keyboard events for playOrStopAudioEvent', () => {
-    const component = new SoundBoxComponent(new SettingsService());
-    const audioHandler = jasmine.createSpyObj('AudioHandlerComponent', ['playOrStopAudio', 'skipBackward', 'skipForward']);
-    component.audioHandler = audioHandler;
+  it('should handle the keyboard events for increaseSpeedEvent', () => {
+    const increaseSpeedSpy = spyOn(component as any, 'handleHotkeyIncreaseSpeed');
 
-    const playOrStopAudioEvent = new KeyboardEvent('keydown', { key: 'd', ctrlKey: true, altKey: true });
-    component.handleKeyboardEvent(playOrStopAudioEvent);
+    const INCREASE_SPEED_EVENT = new KeyboardEvent('keydown', {
+      key: 'ArrowUp',
+      ctrlKey: true,
+    });
 
-    expect(audioHandler.playOrStopAudio).toHaveBeenCalled();
+    component.handleKeyboardEvent(INCREASE_SPEED_EVENT);
+
+    expect(increaseSpeedSpy).toHaveBeenCalled();
+  });
+
+  it('should handle the keyboard events for decreaseSpeedEvent', () => {
+    const decreaseSpeedSpy = spyOn(component as any, 'handleHotkeyDecreaseSpeed');
+
+    const DECREASE_SPEED_EVENT = new KeyboardEvent('keydown', {
+      key: 'ArrowDown',
+      ctrlKey: true,
+    });
+
+    component.handleKeyboardEvent(DECREASE_SPEED_EVENT);
+
+    expect(decreaseSpeedSpy).toHaveBeenCalled();
+  });
+
+  it('should handle the keyboard events for increaseVolumeEvent', () => {
+    const increaseVolumeSpy = spyOn(component as any, 'handleHotkeyIncreaseVolume');
+
+    const INCREASE_VOLUME_EVENT = new KeyboardEvent('keydown', {
+      key: '9',
+      ctrlKey: true,
+    });
+
+    component.handleKeyboardEvent(INCREASE_VOLUME_EVENT);
+
+    expect(increaseVolumeSpy).toHaveBeenCalled();
+  });
+
+  it('should handle the keyboard events for decreaseVolumeEvent', () => {
+    const decreaseVolumeSpy = spyOn(component as any, 'handleHotkeyDecreaseVolume');
+
+    const DECREASE_VOLUME_EVENT = new KeyboardEvent('keydown', {
+      key: '8',
+      ctrlKey: true,
+    });
+
+    component.handleKeyboardEvent(DECREASE_VOLUME_EVENT);
+
+    expect(decreaseVolumeSpy).toHaveBeenCalled();
+  });
+
+  it('should handle the keyboard events for playEvent', () => {
+    const playSpy = spyOn(component as any, 'handleHotkeyPlay');
+
+    const PLAY_EVENT = new KeyboardEvent('keydown', {
+      key: ' ',
+      ctrlKey: true,
+    });
+
+    component.handleKeyboardEvent(PLAY_EVENT);
+
+    expect(playSpy).toHaveBeenCalled();
   });
   */
-
-  it('should handle the keyboard events for skipBackwardEvent', () => {
-    const consoleHideService = new ConsoleHideService();
-    const component = new SoundBoxComponent(
-      new SettingsService(),
-      new HidControlService(consoleHideService),
-    );
-    const audioHandler = jasmine.createSpyObj('AudioHandlerComponent', [
-      'playOrStopAudio',
-      'skipBackward',
-      'skipForward',
-    ]);
-    component.audioHandler = audioHandler;
-
-    const SKIP_BACKWARD_EVENT = new KeyboardEvent('keydown', {
-      key: 'y',
-      ctrlKey: true,
-      altKey: true,
-    });
-    component.handleKeyboardEvent(SKIP_BACKWARD_EVENT);
-
-    expect(audioHandler.skipBackward).toHaveBeenCalled();
-  });
-
-  it('should handle the keyboard events for skipForwardEvent', () => {
-    const consoleHideService = new ConsoleHideService();
-    const component = new SoundBoxComponent(
-      new SettingsService(),
-      new HidControlService(consoleHideService),
-    );
-    const audioHandler = jasmine.createSpyObj('AudioHandlerComponent', [
-      'playOrStopAudio',
-      'skipBackward',
-      'skipForward',
-    ]);
-    component.audioHandler = audioHandler;
-
-    const SKIP_FORWARD_EVENT = new KeyboardEvent('keydown', {
-      key: 'w',
-      ctrlKey: true,
-      altKey: true,
-    });
-    component.handleKeyboardEvent(SKIP_FORWARD_EVENT);
-
-    expect(audioHandler.skipForward).toHaveBeenCalled();
-  });
 });

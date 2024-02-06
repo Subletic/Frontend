@@ -14,7 +14,7 @@ export class JsonHandler implements DictionaryFileFormatHandler {
     const link = document.createElement('a');
 
     link.href = window.URL.createObjectURL(BLOB);
-    link.download = fileName === '' ? 'dictionary.json' : `${fileName}`;
+    link.download = fileName === '' ? 'woerterbuch.json' : `${fileName}`;
     link.click();
     URL.revokeObjectURL(link.href);
   }

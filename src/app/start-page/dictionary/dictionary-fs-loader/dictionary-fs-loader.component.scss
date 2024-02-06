@@ -21,42 +21,33 @@
   padding-top: 0.5%;
 }
 
-.text {
-  align-self: center;
-  justify-content: center;
-
-  //evtl noch zu variable machen?
+span {
+  margin-right: 10px;
   font-size: 24px;
   font-weight: 500;
 }
 
-.sort-button {
-  background-color: var(--white);
-  border-radius: 4px;
-  cursor: pointer;
-  border: none;
-  color: white;
-  margin-right: 10px;
-
-  //evtl noch zu variable machen?
-  font-size: 24px;
-}
-
-.sort-button-image {
+.download-button {
   display: flex;
   align-items: center;
-  justify-content: center;
-  background-color: transparent;
-  border-radius: 4px;
-  padding: 5px 10px;
-  outline: none;
+  padding: 12px;
   cursor: pointer;
-  border: none;
-  width: auto;
-  background: var(--container-background-color);
-  margin-top: 2.2px;
-}
+  margin: 0 10px;
 
-.white {
-  width: 3%;
+  border: 2px solid;
+  border-color: white;
+
+  border-radius: 6px;
+  font-size: 16px;
+  background-color: var(--white);
+
+  &:hover {
+    border-color: rgb(165, 165, 165);
+    background-color: rgb(230, 230, 230);
+  }
+
+  &:active {
+    border-color: var(--color-main-blue);
+    background-color: rgb(230, 230, 230);
+  }
 }

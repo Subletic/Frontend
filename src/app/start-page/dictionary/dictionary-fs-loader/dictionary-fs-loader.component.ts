@@ -34,22 +34,28 @@ export class DictionaryFsLoaderComponent {
   public async handleFileUpload(event: Event): Promise<void> {
     const INPUT = event.target as HTMLInputElement;
 
-    if (INPUT.files == null || INPUT.files[0] == null) {
+    if (!INPUT.files || INPUT.files.length === 0) {
       this.displayDictionaryErrorToast();
       return;
     }
 
-    const file: File = INPUT.files[0];
+    const file: File | null = INPUT.files[0];
+
+    if (file === null) {
+      this.displayDictionaryErrorToast();
+      return;
+    }
 
     // Check file extension to determine the file type
-    const fileExtension = file.name.split('.').pop()?.toLowerCase();
+    const FILE_EXTENSION = file.name.split('.').pop()?.toLowerCase();
 
-    const DICTIONARY = await this.loadDictionaryFromFile(file, fileExtension);
+    const DICTIONARY = await this.loadDictionaryFromFile(file, FILE_EXTENSION);
 
-    if (DICTIONARY != null) {
+    if (DICTIONARY !== null) {
       this.configurationService.newDictionaryUpload(DICTIONARY);
-
       this.displayDictionarySuccessToast();
+    } else {
+      this.displayDictionaryErrorToast();
     }
   }
 
@@ -67,7 +73,7 @@ export class DictionaryFsLoaderComponent {
     return new Promise((resolve) => {
       fileReader.onload = () => {
         try {
-          const fileString = fileReader.result as string;
+          const FILE_STRING = fileReader.result as string;
           let formatHandler;
           switch (format) {
             case 'csv':
@@ -78,16 +84,16 @@ export class DictionaryFsLoaderComponent {
               break;
             default:
               throw new DictionaryError(
-                'Unsupported file format. Please select a JSON or CSV file.',
+                'Dateiformat wird nicht unterstützt. Bitte wählen Sie eine JSON oder CSV Datei.',
               );
           }
-          const dictionary = formatHandler.convertToDictionary(fileString);
-          this.validateDictionary(dictionary);
-          if (dictionary == null) {
+          const DICTIONARY = formatHandler.convertToDictionary(FILE_STRING);
+          this.validateDictionary(DICTIONARY);
+          if (DICTIONARY == null) {
             resolve(null);
             return;
           }
-          resolve(dictionary);
+          resolve(DICTIONARY);
         } catch (e) {
           if (e instanceof DictionaryError) this.displayDictionaryErrorToast(e.message);
           else this.displayDictionaryErrorToast();
@@ -107,28 +113,40 @@ export class DictionaryFsLoaderComponent {
    * @throws DictionaryError if the dictionary is invalid
    */
   private validateDictionary(dictionary: dictionary): void {
-    // Check if language is provided
-    if (!dictionary.transcription_config.language)
-      throw new DictionaryError('Keine Sprache angegeben!');
-
     // Check if additional vocab is valid
     const ADDITIONAL_VOCAB = dictionary.transcription_config.additional_vocab;
-    if (!ADDITIONAL_VOCAB) throw new DictionaryError('Kein SoundsLike angegeben!');
+    const LANGUAGE = dictionary.transcription_config.language;
+    if (!ADDITIONAL_VOCAB)
+      throw new DictionaryError(
+        'Es sind weder benutzerdefinierte Wörter noch klangähnliche Wörter in der Datei angegeben!',
+      );
 
     if (ADDITIONAL_VOCAB.length > 1000)
-      throw new DictionaryError('Maximale Anzahl überschritten (1000)!');
+      this.displayDictionaryWarningToast(
+        'Maximale Anzahl an Wörterbucheinträgen überschritten (1000)!',
+      );
 
     for (let i = 0; i < ADDITIONAL_VOCAB.length; i++) {
       const vocabItem = ADDITIONAL_VOCAB[i];
+      const soundsLike = vocabItem.sounds_like;
+      const content = vocabItem.content;
+      const filteredSoundsLike = soundsLike?.filter((s) => s.trim() !== '') ?? [];
 
       // Check if content is provided and not empty or just whitespace
-      if (!vocabItem.content || vocabItem.content.trim() === '')
-        throw new DictionaryError('Content Angaben fehlerhaft!');
+      if ((!content || content.trim() == '') && filteredSoundsLike.length > 0)
+        this.displayDictionaryWarningToast(
+          'In mind. einer Zeile wurde zu einem klangähnlichen Wort kein benutzerdefiniertes Wort angegeben!',
+        );
+    }
 
-      // Check if sounds_like is provided and not empty
-      const soundsLike = vocabItem.sounds_like;
-      if (!soundsLike || !Array.isArray(soundsLike))
-        throw new DictionaryError('SoundsLike Angaben fehlerhaft!');
+    if (!LANGUAGE) {
+      this.displayDictionaryWarningToast(
+        'Es wurde keine Sprache des Wörterbuchs angegeben. Die Sprache wurde jetzt automatisch auf Deutsch gesetzt.',
+      );
+    } else if (LANGUAGE != 'de') {
+      this.displayDictionaryWarningToast(
+        'Die Sprache des Wörterbuchs muss Deutsch sein. Die Sprache wurde jetzt automatisch auf Deutsch gesetzt.',
+      );
     }
   }
 
@@ -138,9 +156,17 @@ export class DictionaryFsLoaderComponent {
    */
   public displayDictionarySuccessToast(): void {
     try {
-      this.toastr.success('Dictionary wurde erfolgreich geladen!');
+      this.toastr.success('Wörterbuch wurde erfolgreich geladen!');
     } catch (e) {
-      console.log('Dictionary wurde erfolgreich geladen!');
+      console.log('Wörterbuch wurde erfolgreich geladen!');
+    }
+  }
+
+  public displayDictionaryWarningToast(warningMessage: string): void {
+    try {
+      this.toastr.warning(warningMessage, 'Warnung', { timeOut: 8000, extendedTimeOut: 8000 });
+    } catch (e) {
+      console.log(warningMessage);
     }
   }
 
@@ -148,11 +174,11 @@ export class DictionaryFsLoaderComponent {
    * Displays an error toast when the user uploads an invalid file.
    * @param errorMessage Error message to display
    */
-  public displayDictionaryErrorToast(errorMessage = 'Ungültige Datei!'): void {
+  public displayDictionaryErrorToast(errorMessage = 'Es ist ein Fehler aufgetreten'): void {
     try {
-      this.toastr.error(errorMessage, 'Fehler');
+      this.toastr.error(errorMessage, 'Fehler', { timeOut: 8000, extendedTimeOut: 8000 });
     } catch (e) {
-      console.error('Ungültige Datei!');
+      console.error('Es ist ein Fehler aufgetreten');
     }
   }
 
@@ -167,14 +193,14 @@ export class DictionaryFsLoaderComponent {
   /**
    * Opens the export popup.
    */
-  public openExportPopup() {
+  public openExportPopup(): void {
     this.isExportPopupOpen = true;
   }
 
   /**
    * Closes the export popup.
    */
-  public closeExportPopup() {
+  public closeExportPopup(): void {
     this.isExportPopupOpen = false;
   }
 

@@ -66,6 +66,8 @@ export class WordComponent implements OnInit, AfterViewInit {
       this.handleBackspacePressAtStart(IS_IN_FULL_SELECTION);
       return;
     }
+
+    this.word.fontWeight = 'normal';
   }
 
   /**
@@ -86,13 +88,10 @@ export class WordComponent implements OnInit, AfterViewInit {
     const WORD_BEFORE_CURSOR = this.selfRef.nativeElement.textContent.substring(0, cursorPosition);
     const WORD_AFTER_CURSOR = this.selfRef.nativeElement.textContent.substring(cursorPosition);
 
-    console.log('SOWEIT');
-
     if (WORD_BEFORE_CURSOR.trim() == '') return;
 
     this.word.word = WORD_BEFORE_CURSOR;
-    this.word.confidence = 1;
-
+    this.word.updateWordColor();
     this.dataUpdate.emit({ changedWord: this.word, idOfEmitter: this.id });
     this.newWordAfter.emit({
       wordAfter: WORD_AFTER_CURSOR,
@@ -152,6 +151,7 @@ export class WordComponent implements OnInit, AfterViewInit {
    */
   public updateWord(): void {
     this.word.word = this.selfRef.nativeElement.textContent;
+    this.word.updateWordColor();
     this.dataUpdate.emit({ changedWord: this.word, idOfEmitter: this.id });
   }
 }

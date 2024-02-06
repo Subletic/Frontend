@@ -29,23 +29,23 @@ export class HotkeyMenueComponent {
   private buttonImages: {
     [key: string]: { normal: string; clicked: string };
   } = {
-      menu: {
-        normal: 'assets/burgermenu.svg',
-        clicked: 'assets/burgermenu_onclick.svg',
-      },
-      foot: {
-        normal: 'assets/footButton.svg',
-        clicked: 'assets/footButton_onclick.svg',
-      },
-      hand: {
-        normal: 'assets/handButton.svg',
-        clicked: 'assets/handButton_onclick.svg',
-      },
-      hotkey: {
-        normal: 'assets/hotkeyButton.svg',
-        clicked: 'assets/hotkeyButton_onclick.svg',
-      },
-    };
+    menu: {
+      normal: 'assets/burgermenu.svg',
+      clicked: 'assets/burgermenu_onclick.svg',
+    },
+    foot: {
+      normal: 'assets/footButton.svg',
+      clicked: 'assets/footButton_onclick.svg',
+    },
+    hand: {
+      normal: 'assets/handButton.svg',
+      clicked: 'assets/handButton_onclick.svg',
+    },
+    hotkey: {
+      normal: 'assets/hotkeyButton.svg',
+      clicked: 'assets/hotkeyButton_onclick.svg',
+    },
+  };
 
   constructor() {
     this.menuImage = {} as ElementRef;

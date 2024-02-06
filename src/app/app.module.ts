@@ -7,7 +7,7 @@ import { AppComponent } from './app.component';
 import { SoundBoxComponent } from './sound-box/sound-box.component';
 import { SpeechbubbleComponent } from './textSheet/speechbubble/speechbubble.component';
 import { TextSheetComponent } from './textSheet/textSheet.component';
-import { AudioHandlerComponent } from './audio-handler/audio-handler.component';
+import { AudioHandlerComponent } from './sound-box/audio-handler/audio-handler.component';
 import { SettingsComponent } from './settings/settings.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -31,7 +31,13 @@ import { NgOptimizedImage } from '@angular/common';
 import { StartConfigComponent } from './start-page/start-config/start-config.component';
 import { StartPageComponent } from './start-page/start-page.component';
 import { ContinuePopupComponent } from './start-page/continue-popup/continue-popup.component';
+import { FaqButtonComponent } from './faq-button/faq-button.component';
+import { FaqComponent } from './faq/faq.component';
+import { AppRoutingModule } from './app-routing.module';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { HotkeyMenueComponent } from './hotkey-menue/hotkey-menue.component';
+import { NoSpecialCharsDirective } from './start-page/dictionary/dictionary-row/no-special-chars.directive';
+import { NoSpecialCharsWithCommasDirective } from './start-page/dictionary/dictionary-row/no-spec-chars-com.directive';
 
 @NgModule({
   declarations: [
@@ -51,7 +57,11 @@ import { HotkeyMenueComponent } from './hotkey-menue/hotkey-menue.component';
     StartConfigComponent,
     StartPageComponent,
     ContinuePopupComponent,
+    FaqButtonComponent,
+    FaqComponent,
     HotkeyMenueComponent,
+    NoSpecialCharsDirective,
+    NoSpecialCharsWithCommasDirective,
   ],
   imports: [
     BrowserModule,
@@ -66,6 +76,8 @@ import { HotkeyMenueComponent } from './hotkey-menue/hotkey-menue.component';
     MatDividerModule,
     ToastrModule.forRoot(),
     NgOptimizedImage,
+    AppRoutingModule,
+    MatExpansionModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

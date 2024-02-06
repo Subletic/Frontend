@@ -84,8 +84,8 @@ export class TextSheetComponent implements OnInit {
 
   /**
    * Imports data from a JSON string and converts it into an array of SpeechBubbleExport objects.
-   * @param jsonString The JSON string to import.
    * @returns An array of SpeechBubbleExport objects.
+   * @param speechBubbleChain - The imported SpeechBubble Chain.
    */
   public importfromJson(speechBubbleChain: SpeechBubbleExport[]): void {
     if (!speechBubbleChain || speechBubbleChain.length === 0) {
@@ -133,8 +133,7 @@ export class TextSheetComponent implements OnInit {
    * Handles the focusout event for the textbox.
    * Stops the timer for the specified index to prevent duplicate execution,
    * and starts the timer again for the specified index.
-   * @param event - The focusout event object.
-   * @param index - The index of the textbox.
+   * @param id - The id of the textbox.
    */
   public onFocusOut(id: number) {
     const SPEECHBUBBLE = this.getSpeechBubbleById(id);
@@ -229,10 +228,22 @@ export class TextSheetComponent implements OnInit {
     while (current) {
       if (current.data.id == id) {
         this.speechBubbles.remove(current.data);
+        this.checkForTranscriptionEnd();
         return;
       }
       current = current.next;
     }
+  }
+
+  /**
+   * Checks if the transcription has ended and resets the audio time if so.
+   */
+  private checkForTranscriptionEnd(): void {
+    if (this.speechBubbles.head != null) {
+      return;
+    }
+
+    this.audioService.resetAudioTime();
   }
 
   /**
@@ -268,6 +279,7 @@ export class TextSheetComponent implements OnInit {
   /**
    * Checks if given audioTime and SpeechBubble time slot match.
    *
+   * @param SpeechBubble - The SpeechBubble to compare with.
    * @param audioTime - Time stamp to compare own time slot with.
    */
   private currentAudioTimeInSpeechbubbleTime(
