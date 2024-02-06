@@ -134,7 +134,6 @@ export class SpeechbubbleComponent implements AfterViewInit {
     const EMITTER = this.speechBubble.words.getDataById(idOfEmitter);
     if (!EMITTER) return;
     this.speechBubble.words.replaceData(EMITTER, changedWord);
-
     this.cdr.detectChanges();
   }
 
