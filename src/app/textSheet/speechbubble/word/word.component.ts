@@ -91,8 +91,7 @@ export class WordComponent implements OnInit, AfterViewInit {
     if (WORD_BEFORE_CURSOR.trim() == '') return;
 
     this.word.word = WORD_BEFORE_CURSOR;
-    this.updateWord();
-
+    this.word.updateWordColor();
     this.dataUpdate.emit({ changedWord: this.word, idOfEmitter: this.id });
     this.newWordAfter.emit({
       wordAfter: WORD_AFTER_CURSOR,
@@ -151,6 +150,7 @@ export class WordComponent implements OnInit, AfterViewInit {
    * @param event - Any KeyboardEvent
    */
   public updateWord(): void {
+    this.word.word = this.selfRef.nativeElement.textContent;
     this.word.updateWordColor();
     this.dataUpdate.emit({ changedWord: this.word, idOfEmitter: this.id });
   }
