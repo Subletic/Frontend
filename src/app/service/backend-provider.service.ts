@@ -25,30 +25,33 @@ export class BackendProviderService {
       headers: {
         'Content-Type': 'application/json',
       },
-    }).then(async (response) => {
-      if (response.ok) {
-        this.consoleHideService.backendProviderLog(
-          'Einstellungen wurden an Backend gesendet'
-        );
-        if (response.status == 202) {
-          this.toastr.warning('Einstellungen wurden akzeptiert, aber das Dictionary kann erst bei'
-            + ' der nächsten Echtzeitübertragung verwendet werden!', '', {
-              timeOut: 10000,
-              extendedTimeOut: 10000,
-            }
-          );
+    })
+      .then(async (response) => {
+        if (response.ok) {
+          this.consoleHideService.backendProviderLog('Einstellungen wurden an Backend gesendet');
+          if (response.status == 202) {
+            this.toastr.warning(
+              'Einstellungen wurden akzeptiert, aber das Dictionary kann erst bei' +
+                ' der nächsten Echtzeitübertragung verwendet werden!',
+              '',
+              {
+                timeOut: 10000,
+                extendedTimeOut: 10000,
+              },
+            );
+          }
+          return;
+        } else {
+          throw await response.text();
         }
-        return;
-      } else {
-        throw await response.text();
-      }
-    }).catch((error) => {
-      console.error('Error while uploading configuration to backend: ', error);
-      this.toastr.error('Einstellungen konnten nicht gesendet werden: ' + error, '', {
-        timeOut: 10000,
-        extendedTimeOut: 10000,
+      })
+      .catch((error) => {
+        console.error('Error while uploading configuration to backend: ', error);
+        this.toastr.error('Einstellungen konnten nicht gesendet werden: ' + error, '', {
+          timeOut: 10000,
+          extendedTimeOut: 10000,
+        });
       });
-    });
   }
 
   /**

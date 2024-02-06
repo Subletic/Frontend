@@ -26,9 +26,14 @@ export class SoundBoxComponent {
   @ViewChild(SpeedPopupComponent) speedPopup!: SpeedPopupComponent;
   @ViewChild(SettingsComponent) settingsComponent!: SettingsComponent;
 
+  @ViewChild('buttonImage', { static: false }) playButtonImage!: ElementRef;
+  @ViewChild('buttonImage3', { static: false }) forwardsButtonImage!: ElementRef;
+  @ViewChild('buttonImage2', { static: false }) backwardsButtonImage!: ElementRef;
+
   public isPopupOpen = false;
   public isAudioPopoverOpen = false;
   public volume100 = 0;
+  public volume = 0;
   public isAudioPlaying = false;
   public bodyText = '';
 
@@ -77,33 +82,47 @@ export class SoundBoxComponent {
 
   /**
    * Opens the FAQ in a new tab
-   * 
+   *
    */
   public toggleFaq(): void {
-    const componentUrl = this.router.serializeUrl(
-      this.router.createUrlTree(['/FAQ'])
-    );
-    
+    const componentUrl = this.router.serializeUrl(this.router.createUrlTree(['/FAQ']));
+
     window.open(componentUrl, '_blank');
   }
 
   /**
-   * Shortcuts for play/pause, skipBack and skipForwards.
+   * Shortcuts for hotkeys defined in hotkey-menue.
+   *
+   * Keydown events mostly trigger relevant event and SVG-switch,
+   * keyup events only partly change SVG Images back.
    *
    * @param event - Any key event triggered by user.
    */
   @HostListener('document:keydown', ['$event'])
+  @HostListener('document:keyup', ['$event'])
   public handleKeyboardEvent(event: KeyboardEvent): void {
-    if (event.ctrlKey && event.altKey) {
+    if (event.ctrlKey) {
       switch (event.key) {
-        case 'd':
+        case ' ':
           this.handleHotkeyPlay(event);
           break;
-        case 'y':
+        case 'r':
           this.handleHotkeySkipBackward(event);
           break;
-        case 'w':
+        case 'Enter':
           this.handleHotkeySkipForward(event);
+          break;
+        case 'ArrowUp':
+          this.handleHotkeyIncreaseSpeed(event);
+          break;
+        case 'ArrowDown':
+          this.handleHotkeyDecreaseSpeed(event);
+          break;
+        case '9':
+          this.handleHotkeyIncreaseVolume(event);
+          break;
+        case '8':
+          this.handleHotkeyDecreaseVolume(event);
           break;
       }
     }
@@ -111,11 +130,20 @@ export class SoundBoxComponent {
 
   /**
    * Handles the play/pause shortcut.
-   * @param event Key event triggered by user.
+   * @param event Key event triggered by user. Can be keydown or keyup event.
    */
   private handleHotkeyPlay(event: KeyboardEvent): void {
-    this.handlePlayButtonPress();
-    event.preventDefault();
+    if (event.type === 'keydown') {
+      this.handlePlayButtonPress();
+      event.preventDefault();
+      this.isAudioPlaying
+        ? (this.playButtonImage.nativeElement.src = 'assets/pauseOnClick.svg')
+        : (this.playButtonImage.nativeElement.src = 'assets/playOnClick.svg');
+    } else if (event.type === 'keyup') {
+      this.isAudioPlaying
+        ? (this.playButtonImage.nativeElement.src = 'assets/pause.svg')
+        : (this.playButtonImage.nativeElement.src = 'assets/play.svg');
+    }
   }
 
   /**
@@ -123,10 +151,13 @@ export class SoundBoxComponent {
    * @param event Key event triggered by user.
    */
   private handleHotkeySkipBackward(event: KeyboardEvent): void {
-    this.handleSkipBackwardButtonPress();
-    event.preventDefault();
-    this.isKeyDown = true;
-    this.buttonImage2Src = 'assets/backOnClick.svg';
+    if (event.type === 'keydown') {
+      this.handleSkipBackwardButtonPress();
+      event.preventDefault();
+      this.backwardsButtonImage.nativeElement.src = 'assets/backOnClick.svg';
+    } else if (event.type === 'keyup') {
+      this.backwardsButtonImage.nativeElement.src = 'assets/back.svg';
+    }
   }
 
   /**
@@ -134,24 +165,72 @@ export class SoundBoxComponent {
    * @param event Key event triggered by user.
    */
   private handleHotkeySkipForward(event: KeyboardEvent): void {
-    this.handleSkipForwardButtonPress();
-    event.preventDefault();
-    this.isKeyDown = true;
-    this.buttonImage3Src = 'assets/forwardOnClick.svg';
+    if (event.type === 'keydown') {
+      this.handleSkipForwardButtonPress();
+      event.preventDefault();
+      this.forwardsButtonImage.nativeElement.src = 'assets/forwardOnClick.svg';
+    } else if (event.type === 'keyup') {
+      this.forwardsButtonImage.nativeElement.src = 'assets/forward.svg';
+    }
   }
 
   /**
-   * Resets for the shortcuts.
-   *
-   * @param event - Key event reset by user.
+   * Handles the increase speed shortcut.
+   * @param event Key event triggered by user.
    */
-  @HostListener('document:keyup', ['$event'])
-  public handleKeyUp(event: KeyboardEvent): void {
-    if (event.ctrlKey && event.altKey) {
-      this.isKeyDown = false;
-      this.buttonImage2Src = 'assets/back.svg';
-      this.buttonImage3Src = 'assets/forward.svg';
+  private handleHotkeyIncreaseSpeed(event: KeyboardEvent): void {
+    if (event.type != 'keydown') return;
+    if (this.speedValue >= 1.3) return;
+    this.speedValue += 0.1;
+    this.onSpeedChange(this.speedValue);
+    event.preventDefault();
+  }
+
+  /**
+   * Handles the decrease speed shortcut.
+   * @param event Key event triggered by user.
+   */
+  private handleHotkeyDecreaseSpeed(event: KeyboardEvent): void {
+    if (event.type != 'keydown') return;
+    // 0.8 - 0.1 hat Rundungsfehler, deswegen der leicht höhere Grenzwert
+    if (this.speedValue <= 0.7001) return;
+    this.speedValue -= 0.1;
+    this.onSpeedChange(this.speedValue);
+    event.preventDefault();
+  }
+
+  /**
+   * Handles the increase volume shortcut.
+   * @param event Key event triggered by user.
+   */
+  private handleHotkeyIncreaseVolume(event: KeyboardEvent): void {
+    if (event.type != 'keydown') return;
+    if (!(this.volume > 0.8 || this.volume < -1)) {
+      this.volume += 0.2;
+      this.volume100 += 20;
+    } else {
+      this.volume = 1;
+      this.volume100 = 100;
     }
+    this.onVolumeChange(this.volume);
+    event.preventDefault();
+  }
+
+  /**
+   * Handles the decrease volume shortcut.
+   * @param event Key event triggered by user.
+   */
+  private handleHotkeyDecreaseVolume(event: KeyboardEvent): void {
+    if (event.type != 'keydown') return;
+    if (!(this.volume > 1 || this.volume <= -0.8)) {
+      this.volume -= 0.2;
+      this.volume100 -= 20;
+    } else {
+      this.volume = -1;
+      this.volume100 = -100;
+    }
+    this.onVolumeChange(this.volume);
+    event.preventDefault();
   }
 
   /**
@@ -224,6 +303,7 @@ export class SoundBoxComponent {
    * @param {number} volume - The new volume value.
    */
   public onVolumeChange(volume: number): void {
+    this.volume = volume;
     this.audioHandler.setVolume(volume);
   }
 

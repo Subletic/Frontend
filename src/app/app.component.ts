@@ -29,7 +29,10 @@ export class AppComponent {
    * Initializes the configuration service.
    * @param configurationService Reference to the configuration service.
    */
-  constructor(private configurationService: ConfigurationService, private router: Router) {}
+  constructor(
+    private configurationService: ConfigurationService,
+    private router: Router,
+  ) {}
 
   public handleShowDictionary(showDictionary: boolean) {
     this.showDictionary = showDictionary;

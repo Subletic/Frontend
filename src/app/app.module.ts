@@ -77,7 +77,7 @@ import { NoSpecialCharsWithCommasDirective } from './start-page/dictionary/dicti
     ToastrModule.forRoot(),
     NgOptimizedImage,
     AppRoutingModule,
-    MatExpansionModule
+    MatExpansionModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
