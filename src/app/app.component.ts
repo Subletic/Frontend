@@ -39,7 +39,6 @@ export class AppComponent {
   }
 
   shouldRenderContent(): boolean {
-    console.log(this.router.url !== '/FAQ');
     return this.router.url !== '/FAQ';
   }
 }
