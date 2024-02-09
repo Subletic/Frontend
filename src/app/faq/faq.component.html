@@ -3,24 +3,63 @@
 </header>
 
 <mat-accordion>
+
+  <h1>Wörterbuch und Konfiguration</h1>
+
   <mat-expansion-panel>
     <mat-expansion-panel-header>
       <mat-panel-title>
-        Kann das Wörterbuch nach der Festlegung weiterverwendet werden?
+        Was passiert in der Konfigurationsansicht?
       </mat-panel-title>
     </mat-expansion-panel-header>
     <mat-divider></mat-divider>
-    <p>Nein, das Wörterbuch dient zur Unterstützung der Worterkennung in der Audio.</p>
+    <p>
+      In dieser Übersicht werden alle Einstellungen vorgenommen, die vor der Korrektur getätigt werden müssen.
+      Prinzipiell kann zu jedem Zeitpunkt auf die Konfigurationsübersicht zurückgekehrt werden, jedoch werden dabei
+      alle bisherigen Sprechblasen gelöscht und es erscheinen nur neue.
+    </p>
   </mat-expansion-panel>
 
   <mat-expansion-panel>
     <mat-expansion-panel-header>
       <mat-panel-title>
-        Welche Dateiformate können für das Wörterbuch importiert werden?
+        Wozu ist das Wörterbuch gedacht?
       </mat-panel-title>
     </mat-expansion-panel-header>
     <mat-divider></mat-divider>
-    <p>Es können Json und Csv Dateien importiert werden.</p>
+    <p>
+      Mit dem Wörterbuch können Begriffe die schlecht bei der Generierung erkannt werden übergeben werden.
+      Das können beispielsweise Eigennamen oder Fachbegriffe sein.
+      Zu jedem Begriff können mehrere klangähnliche Wörter hinterlegt werden.
+    </p>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Kann das Wörterbuch auch während der Korrektur angepasst werden?
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <mat-divider></mat-divider>
+    <p>
+      Ein Wörterbuch kann nur vor Anfang einer Korrektur angepasst werden.
+      Wurde bereits eine Korrektur gestartet, so wird das Wörterbuch zwar gespeichert, aber erst beim Start des nächsten
+      Korrekturprozesses geladen.
+      Das Senden des Wörterbuchs überschreibt dabei das bestehende Wörterbuch.
+    </p>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Kann das Wörterbuch zwischen Korrektursessions gespeichert werden?
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <mat-divider></mat-divider>
+    <p>
+      Ja, ein Wörterbuch kann zwischen Korrektursessions gespeichert werden.
+      Dazu kann dieses als Json- oder Csv-Datei heruntergeladen oder importiert werden.
+    </p>
   </mat-expansion-panel>
 
   <mat-expansion-panel>
@@ -38,7 +77,10 @@
       <mat-panel-title> Kann man mehrere Wörterbücher hinzufügen? </mat-panel-title>
     </mat-expansion-panel-header>
     <mat-divider></mat-divider>
-    <p>Ja, es ist möglich mehrere Wörterbücher hinzufügen.</p>
+    <p>
+      Ja, es ist möglich mehrere Wörterbücher hinzufügen.
+      Dabei werden die Wörterbücher zu einem großen Wörterbuch zusammengefasst.
+    </p>
   </mat-expansion-panel>
 
   <mat-expansion-panel>
@@ -69,28 +111,18 @@
 
   <mat-expansion-panel>
     <mat-expansion-panel-header>
-      <mat-panel-title> Wo kann man die Datei beim Export abspeichern? </mat-panel-title>
-    </mat-expansion-panel-header>
-    <mat-divider></mat-divider>
-    <p>
-      Wenn man der Datei einen Namen gegeben hat und sich für ein Exportformat entschieden hat und
-      dieses anklickt öffnet sich der Explorer und man kann selber entscheiden wo man die Datei
-      abspeichert.
-    </p>
-  </mat-expansion-panel>
-
-  <mat-expansion-panel>
-    <mat-expansion-panel-header>
       <mat-panel-title>
         Was lässt sich mit der Konfiguration der Bufferlänge verändern?
       </mat-panel-title>
     </mat-expansion-panel-header>
     <mat-divider></mat-divider>
     <p>
-      Die Bufferlänge legt fest wie lange die Audio im Frontend gehalten wird und in ihr hin und her
-      gesprungen werden kann.
+      Die Bufferlänge legt fest wie lange Sprechblasen bearbeitet werden können, bevor sie als Untertitel ausgespielt
+      werden.
     </p>
   </mat-expansion-panel>
+
+  <h1>Eingabegeräte</h1>
 
   <mat-expansion-panel>
     <mat-expansion-panel-header>
@@ -99,17 +131,22 @@
       </mat-panel-title>
     </mat-expansion-panel-header>
     <mat-divider></mat-divider>
-    <p>Es ist möglich einen Fuß- und einen Handschalter mit der Software zu verbinden.</p>
+    <p>
+      Es ist möglich einen Fußschalter oder einen Handschalter mit der Software zu verbinden.
+      Dazu öffnet sich ein PopUp Fenster, nachdem man auf die Korrekturanicht gelangt ist.
+      Nach Erscheinen des Fensters kann das Gerät verbunden werden und ist betriebsbereit.
+    </p>
   </mat-expansion-panel>
 
   <mat-expansion-panel>
     <mat-expansion-panel-header>
-      <mat-panel-title> Muss man beim Anschließen der Hardware etwas beachten? </mat-panel-title>
+      <mat-panel-title>
+        Können Handschalter und Fußschalter gleichzeitig verwendet werden?
+      </mat-panel-title>
     </mat-expansion-panel-header>
     <mat-divider></mat-divider>
     <p>
-      Beide Schalter werden einfach über ein USB-Kabel an den eigenen Rechner angeschlossen und auf
-      der Hauptseite können sie über ein Pop Fenster die erkannte Hardware verbinden.
+      Nein, es ist nicht möglich Handschalter und Fußschalter gleichzeitig zu verwenden.
     </p>
   </mat-expansion-panel>
 
@@ -119,30 +156,73 @@
     </mat-expansion-panel-header>
     <mat-divider></mat-divider>
     <p>
-      Nein, die einzeln Tasten haben eine vorgeschriebe Funktion und diese können nicht geändert
-      werden .
+      Nein, die einzeln Tasten haben eine vorgeschriebe Funktion und können nicht geändert
+      werden.
+    </p>
+  </mat-expansion-panel>
+
+  <h1>Korrekturansicht</h1>
+
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title> Was passiert in der Korrekturansicht?</mat-panel-title>
+    </mat-expansion-panel-header>
+    <mat-divider></mat-divider>
+    <p>
+      In der Korrekturansicht werden, sobald ein Livestream ankommt, nach und nach die Transkriptionen in Form von
+      Sprechblasen angezeigt.
+      Diese können im Rahmen eines vorher festgelegten Zeitrahmens bearbeitet werden.
     </p>
   </mat-expansion-panel>
 
   <mat-expansion-panel>
     <mat-expansion-panel-header>
-      <mat-panel-title> Können Audioeinstellungen angepasst werden? </mat-panel-title>
+      <mat-panel-title>Welche Bedeutung haben die farbigen Wörter?</mat-panel-title>
     </mat-expansion-panel-header>
     <mat-divider></mat-divider>
     <p>
-      Die Lautstäke kann über den Lautsprecher angepasst werden und die Geschwindigkeit über das
-      Tempomat.
+      Die farbigen Wörter heben Generierungen der KI hervor, die höchst wahrscheinlich fehlerhaft sind und korrigiert
+      werden müssen.
     </p>
   </mat-expansion-panel>
 
   <mat-expansion-panel>
     <mat-expansion-panel-header>
-      <mat-panel-title> Gibt es Tastaturhotkeys für verschiedene Funktion? </mat-panel-title>
+      <mat-panel-title> Wofür sind die drei Knöpfe am unteren rechten Bildrand auf der Hauptseite?</mat-panel-title>
     </mat-expansion-panel-header>
     <mat-divider></mat-divider>
     <p>
-      Ja, es gibt eine Hotkey Übersicht, welche über den Button rechts oben in der Ecke aufgerufen
-      werden kann.
+      1. Das Tachometer-Symbol öffnet ein PopUp Fenster, in dem die Wiedergabegeschwindigkeit der Audio angepasst werden
+      kann.<br />
+      2. Mit dem Lautsprecher-Symbol kann die Lautstärke angepasst werden.<br />
+      3. Das Zahnrad-Symbol öffnet das Einstellungsmenü, in dem die Sprungweite der Audio angepasst werden kann.
     </p>
   </mat-expansion-panel>
+
+
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>Welche Funktion haben die Knöpfe in der Mitte des unteren Bildrandes?</mat-panel-title>
+    </mat-expansion-panel-header>
+    <mat-divider></mat-divider>
+    <p>
+      Mit den Knöpfen kann das Abspielen der Audio gesteuert werden.
+      Dazu zählt das Starten, Pausieren und Springen in der Audio.
+      Das Steuern betrifft außer die Audio auch die visuelle Markierung in den Sprechblasen, die anzeigt wo die Audio im
+      Text gerade ist.
+    </p>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>Welche Funktion hat der Knopf am oberen rechten Bildrand?</mat-panel-title>
+    </mat-expansion-panel-header>
+    <mat-divider></mat-divider>
+    <p>
+      Der Knopf öffnet eine Hotkeyübersicht.
+      Zunächst kann jedoch in einem Untermenü zwischen den Hotkeys für die Tastatur, den Handschalter und den
+      Fußschalter gewählt werden.
+    </p>
+  </mat-expansion-panel>
+
 </mat-accordion>
