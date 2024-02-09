@@ -18,8 +18,7 @@ In some cases it can help to use `cmd` instead of the `powershell`, if `npm` or 
 
 ## Ports and Connection
 
-| Software     | Port  |
-|--------------|-------|
-| Frontend     | 40110 |
-| Backend      | 40114 |
-| Mock Server  | 40118 |
+| Software     | HTTP-Port  | HTTPS-Port  |
+|--------------|------------|-------------|
+| Frontend     | 40110 (80) | 40111 (443) |
+| Backend      | 40114      | 40115       |
